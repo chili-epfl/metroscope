@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D14AFC9A-33B0-4093-8517-02B828E100A5}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Metroscope</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\..\..\frameworks;C:\lamp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\lamp\lib-msvc10.0;$(LibraryPath)</LibraryPath>
+    <OutDir>..\..\..\Debug\metroscope\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\..\..\frameworks;C:\lamp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\lamp\lib-msvc10.0;$(LibraryPath)</LibraryPath>
+    <OutDir>..\..\..\Release\metroscope\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>cv210.lib;cxcore210.lib;highgui210.lib;libhpdf.lib;uEye_api.lib;uEye_tools.lib;FlyCapture2.lib;SDL.lib;SDLmain.lib;freeglut_d.lib;freetype.lib;glut32.lib;libpngd.lib;ftgl_D.lib;zlib.lib;libconfig++_d.lib;libjpeg-static-mt-debug.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>cv210.lib;cxcore210.lib;highgui210.lib;libhpdf.lib;uEye_api.lib;uEye_tools.lib;FlyCapture2.lib;SDL.lib;SDLmain.lib;freeglut.lib;freetype.lib;glut32.lib;libpng.lib;ftgl.lib;zlib.lib;libconfig++.lib;libjpeg-static-mt.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\AngleModel.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\AngleViewArc.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\AngleViewMeasure.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\AreaAnimation.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\AreaCalcAnswer.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\AreaCalculation.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\AreaGrid.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\AreaGridCloseToRect.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\AreaGridFixed.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\AreaInformation.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\AreaModel.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\Compass.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\Grid.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\Image.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\InterventionLogger.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\JunkModel.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\JunkShot.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\JunkViewLaser.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\JunkViewSpace.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\Line.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\Link.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\QuadModel.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\QuadrilaterValidation2Boxes.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\QuadrilaterValidation3Boxes.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\QuadViewAngleMeasures.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\QuadViewLines.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\QuadViewPerimeter.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\QuadViewSideMeasures.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\SetModel.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\decorators\SetViewMembership.cpp" />
+    <ClCompile Include="..\..\..\applications\metroscope\replay.cxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\all.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\AngleModel.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\AngleViewArc.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\AngleViewMeasure.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\AreaAnimation.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\AreaCalcAnswer.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\AreaCalculation.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\AreaGrid.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\AreaGridCloseToRect.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\AreaGridFixed.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\AreaInformation.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\AreaModel.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\Compass.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\Grid.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\Image.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\InterventionLogger.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\JunkModel.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\JunkShot.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\JunkViewLaser.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\JunkViewSpace.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\Line.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\Link.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\QuadModel.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\QuadrilaterValidation2Boxes.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\QuadrilaterValidation3Boxes.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\QuadViewAngleMeasures.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\QuadViewLines.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\QuadViewPerimeter.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\QuadViewSideMeasures.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\SetModel.hpp" />
+    <ClInclude Include="..\..\..\applications\metroscope\decorators\SetViewMembership.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\qa\qa.vcxproj">
+      <Project>{f1d0268b-0b9c-446c-86ec-652f0c94b6ba}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\tinkar\tinkar.vcxproj">
+      <Project>{a07b903b-bdb9-4f5d-8fcb-88e973b5c2fd}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

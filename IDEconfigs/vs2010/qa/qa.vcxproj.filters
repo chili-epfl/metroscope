@@ -1,0 +1,792 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="pipeables">
+      <UniqueIdentifier>{0d388c84-4b0e-4f05-96d0-4ca1610c2042}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components">
+      <UniqueIdentifier>{35e2a665-64bf-452e-97a8-014c08b5b842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\vision">
+      <UniqueIdentifier>{841b4e11-565a-4c66-9b98-fc851c89e7ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\vision">
+      <UniqueIdentifier>{8b537d84-2c6e-4eb4-9dcc-df89ddbb634c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\vision\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="pipeables\vision\Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="pipeables\grabbers">
+      <UniqueIdentifier>{f27b1559-26b8-4b55-9389-b0d3ee928483}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\grabbers\Header Files">
+      <UniqueIdentifier>{891f1a1a-8b6c-4177-963b-6de30ec087ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\grabbers\Source Files">
+      <UniqueIdentifier>{c1176810-96bb-4b5d-a872-5382d10cf7d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\io">
+      <UniqueIdentifier>{56ea5067-3b25-47ed-adcb-6593808b2f56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\io\Header Files">
+      <UniqueIdentifier>{61822e34-04f7-4e6b-a0b0-aa4d64ec47a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\io\Source Files">
+      <UniqueIdentifier>{b6148c7c-3dc2-449c-877b-7cfc16777c13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\machinelearning">
+      <UniqueIdentifier>{3377f4c2-302c-42f8-9a63-32e929ae1ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\machinelearning\Header Files">
+      <UniqueIdentifier>{72945262-a5b5-4165-bd06-2abaaad9adb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\machinelearning\Source Files">
+      <UniqueIdentifier>{f704cbcd-9ff5-474c-abc0-c9cd60997ec5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\misc">
+      <UniqueIdentifier>{ab8c8a66-7c02-4728-b52c-46ccbf3d47b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\misc\Header Files">
+      <UniqueIdentifier>{614e88e2-23a5-4954-88d4-b47544071ee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\misc\Source Files">
+      <UniqueIdentifier>{63686b59-3432-4066-806d-d7e783a4219c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\modelfitting">
+      <UniqueIdentifier>{64f26f9e-c65c-42b0-a856-bf2f98428291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\modelfitting\Header Files">
+      <UniqueIdentifier>{779e5ef9-d3d8-469b-a835-6112e70bd4c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeables\modelfitting\Source Files">
+      <UniqueIdentifier>{ac755b73-3216-40c3-8cd0-5f257c9762c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\vision\Header Files">
+      <UniqueIdentifier>{3f3e143e-ba1f-47b7-817f-f285ccfc2626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\vision\Source Files">
+      <UniqueIdentifier>{e28cbb88-ff1c-4aa8-9d6a-2225158a7c81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\decorators">
+      <UniqueIdentifier>{db7fbc48-9d49-4fdb-876a-f57561a605d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\decorators\Header Files">
+      <UniqueIdentifier>{15237b0f-7a71-49d1-a437-fc7ebf9fde7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\decorators\Source Files">
+      <UniqueIdentifier>{f0066601-f7f5-4785-8f6f-6d0b16b8c86d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\geometry">
+      <UniqueIdentifier>{5a3703d4-e334-4c2d-a96a-b31287a9a9cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\geometry\Header Files">
+      <UniqueIdentifier>{95be8296-69ad-4dd0-8826-1b638836edc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\geometry\Source Files">
+      <UniqueIdentifier>{27b41fb9-c462-4b55-9a3b-e34074584b88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\machinelearning">
+      <UniqueIdentifier>{905a4e45-78c4-4029-9c1f-bd67f29bc89f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\machinelearning\Header Files">
+      <UniqueIdentifier>{cdf27b80-7607-44f0-bc1b-5965e27fec71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\machinelearning\Source Files">
+      <UniqueIdentifier>{6ed467af-e206-4876-9ae2-c8c2c72623e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{43d4425a-887f-4699-847a-e7ecbd3c3a0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\Header Files">
+      <UniqueIdentifier>{33f76572-4bd1-4c34-b950-9b560ccd959c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\Source Files">
+      <UniqueIdentifier>{930f8b0c-83fe-447a-8bcc-36072a6fbae4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\factories">
+      <UniqueIdentifier>{ca75904b-f28a-4e05-b38a-a4998fb95a58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\io">
+      <UniqueIdentifier>{70f72081-1779-47e0-ab7b-8eed1419c033}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\io\Header Files">
+      <UniqueIdentifier>{de1399e1-375f-4ca0-b0f7-9e218086f41a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\io\Source Files">
+      <UniqueIdentifier>{6fafe896-334d-4c98-99e5-56a14c02f7ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\factories\Header Files">
+      <UniqueIdentifier>{41f8a964-4951-4714-b8fd-70765c3860fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\factories\Source Files">
+      <UniqueIdentifier>{059d0c1d-3796-4437-83e9-23a9bdea2546}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components\misc">
+      <UniqueIdentifier>{b8ff8185-c603-40ec-a5f0-ac778ea8fc5e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\AdaptiveThreshold.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Blur.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CannyEdgeDetector.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Color2Gray.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\ColourFilter.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\ConnectedComponents.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CornerDetector.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRefinerHough.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Dilate.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Erode.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Filter.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Flip.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Gray2Color.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\HoughLineDetector.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\ImageCropper.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Inverter.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\PerspectiveWarper.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Pixels2Points.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\PyrDown.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\PyrUp.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\QuadixFinder.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Resize.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\SlowAdaptiveThreshold.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Split.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Threshold.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Undistorter.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\FileGrabber.cpp">
+      <Filter>pipeables\grabbers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\IDSGrabber.cpp">
+      <Filter>pipeables\grabbers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\ImageGrabberOnDemand.cpp">
+      <Filter>pipeables\grabbers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\OpenCVGrabber.cpp">
+      <Filter>pipeables\grabbers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\VideoGrabber.cpp">
+      <Filter>pipeables\grabbers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\OpenGl2DDisplay.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\OpenGl3DDisplay.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\OpenGLTextureLoader.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\TinkarDisplay.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\VideoSaver.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\CraftagLogger.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\CvShower.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\CvWaiter.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\ImageSaver.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\InputRecorder.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\machinelearning\DBScan.cpp">
+      <Filter>pipeables\machinelearning\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\FPSPrinter.cpp">
+      <Filter>pipeables\misc\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\Stopper.cpp">
+      <Filter>pipeables\misc\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\Timer.cpp">
+      <Filter>pipeables\misc\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\DecoratorManager.cpp">
+      <Filter>pipeables\misc\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\DifferenceOutput.cpp">
+      <Filter>pipeables\misc\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\modelfitting\Ransac.cpp">
+      <Filter>pipeables\modelfitting\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\Pipeable.cpp">
+      <Filter>pipeables</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\MergedFiducialMarker.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\PlaneCoordinateMapper.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\ProximityMarker.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\RotatedFiducialMarker.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\AggregatedFiducialMarker.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\BistableFiducialMarker.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\Color.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\Craftag.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\CraftagRegistrar.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\FiducialMarker.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\decorators\MarkerMask.cpp">
+      <Filter>components\decorators\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\geometry\Angle.cpp">
+      <Filter>components\geometry\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\machinelearning\DBScanCluster.cpp">
+      <Filter>components\machinelearning\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\machinelearning\DBScanPoint.cpp">
+      <Filter>components\machinelearning\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\StabilizedFiducialMarker.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\TagTranscoder.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\TranslatedFiducialMarker.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\SnapshotTaker.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\OpenGlGrabber.cpp">
+      <Filter>pipeables\grabbers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\machinelearning\ParameterAdapter.cpp">
+      <Filter>pipeables\machinelearning\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\FlyCapture2Grabber.cpp">
+      <Filter>pipeables\grabbers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\CraftagReplay.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\DataRecorder.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\utils\Histogram.cpp">
+      <Filter>utils\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\utils\Shell.cpp">
+      <Filter>utils\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\utils\Tests.cpp">
+      <Filter>utils\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\io\DataLoader.cpp">
+      <Filter>components\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\Camera.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\utils\factories\Make_Camera.cpp">
+      <Filter>utils\factories\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\utils\factories\Make_Undistorter.cpp">
+      <Filter>utils\factories\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\EllipseFitter.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\HoughCircleDetector.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagDecode.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagReadBits.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRefine.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRegister.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagUndistort.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagUpdate.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\utils\Conversions.cpp">
+      <Filter>utils\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\HaarClassifier.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Rotate.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\machinelearning\HMMBlobClassifier.cpp">
+      <Filter>pipeables\machinelearning\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\utils\Geometry.cpp">
+      <Filter>utils\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\ImagesCombiner.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\misc\OpenGlCamera.cpp">
+      <Filter>components\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\OpenGlCameraUpdater.cpp">
+      <Filter>pipeables\misc\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\DataRecorder2.cpp">
+      <Filter>pipeables\io\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Normalize.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Sharpen.cpp">
+      <Filter>pipeables\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\FlippedMarker.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\LimitedTimeMarker.cpp">
+      <Filter>components\vision\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\AdaptiveThreshold.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Blur.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CannyEdgeDetector.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Color2Gray.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\ColourFilter.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\ConnectedComponents.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CornerDetector.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRefinerHough.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Dilate.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Erode.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Filter.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Flip.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Gray2Color.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\HoughLineDetector.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\ImageCropper.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Inverter.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\PerspectiveWarper.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Pixels2Points.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\PyrDown.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\PyrUp.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\QuadixFinder.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Resize.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\SlowAdaptiveThreshold.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Split.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Threshold.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Undistorter.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\FileGrabber.hpp">
+      <Filter>pipeables\grabbers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\IDSGrabber.hpp">
+      <Filter>pipeables\grabbers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\ImageGrabberOnDemand.hpp">
+      <Filter>pipeables\grabbers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\OpenCVGrabber.hpp">
+      <Filter>pipeables\grabbers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\VideoGrabber.hpp">
+      <Filter>pipeables\grabbers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\CraftagStop.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\CvShower.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\CvWaiter.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\ImageSaver.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\InputRecorder.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\OpenGl2DDisplay.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\OpenGl3DDisplay.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\OpenGLTextureLoader.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\TinkarDisplay.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\VideoSaver.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\CraftagLogger.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\machinelearning\DBScan.hpp">
+      <Filter>pipeables\machinelearning\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\FPSPrinter.hpp">
+      <Filter>pipeables\misc\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\Stopper.hpp">
+      <Filter>pipeables\misc\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\StopWatch.hpp">
+      <Filter>pipeables\misc\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\Timer.hpp">
+      <Filter>pipeables\misc\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\DecoratorManager.hpp">
+      <Filter>pipeables\misc\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\DelayedStopper.hpp">
+      <Filter>pipeables\misc\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\DifferenceOutput.hpp">
+      <Filter>pipeables\misc\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\modelfitting\Ransac.hpp">
+      <Filter>pipeables\modelfitting\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\Pipeable.hpp">
+      <Filter>pipeables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\DummyMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\FiducialMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\MergedFiducialMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\PlaneCoordinateMapper.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\ProximityMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\RotatedFiducialMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\StabilizedFiducialMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\TagTranscoder.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\TranslatedFiducialMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\AggregatedFiducialMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\BistableFiducialMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\CachedFiducialMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\Color.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\Craftag.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\CraftagRegistrar.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\decorators\MarkerMask.hpp">
+      <Filter>components\decorators\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\geometry\Angle.hpp">
+      <Filter>components\geometry\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\machinelearning\DBScanCluster.hpp">
+      <Filter>components\machinelearning\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\machinelearning\DBScanPoint.hpp">
+      <Filter>components\machinelearning\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\SnapshotTaker.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\OpenGlGrabber.hpp">
+      <Filter>pipeables\grabbers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\machinelearning\ParameterAdapter.hpp">
+      <Filter>pipeables\machinelearning\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Camera3DProjections.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Camera3DReconstructions.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Url.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\FlyCapture2Grabber.hpp">
+      <Filter>pipeables\grabbers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Geometry.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Draw.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\CraftagReplay.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\DataRecorder.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\combination.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Histogram.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Math.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Image.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Shell.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Tests.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Time.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\io\DataLoader.hpp">
+      <Filter>components\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\Camera.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\factories\Make_Camera.hpp">
+      <Filter>utils\factories\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\factories\Make_Undistorter.hpp">
+      <Filter>utils\factories\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Dynamics.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\EllipseFitter.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\HoughCircleDetector.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagDecode.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagReadBits.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRefine.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRegister.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagUndistort.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagUpdate.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Conversions.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\HaarClassifier.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Rotate.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\machinelearning\HMMBlobClassifier.hpp">
+      <Filter>pipeables\machinelearning\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\CvWykobiBridge.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\ImagesCombiner.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\misc\OpenGlCamera.hpp">
+      <Filter>components\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\OpenGlCameraUpdater.hpp">
+      <Filter>pipeables\misc\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\DataRecorder2.hpp">
+      <Filter>pipeables\io\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Geometry_printing.hpp">
+      <Filter>utils\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Normalize.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Sharpen.hpp">
+      <Filter>pipeables\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\FlippedMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\LimitedTimeMarker.hpp">
+      <Filter>components\vision\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

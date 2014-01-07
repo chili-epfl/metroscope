@@ -1,0 +1,308 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F1D0268B-0B9C-446C-86EC-652F0C94B6BA}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>qa</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>..\..\..\frameworks;C:\lamp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\lamp\lib-msvc10.0;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>C:\lamp\lib-msvc10.0;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\..\frameworks;C:\lamp\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\frameworks\qa\components\decorators\MarkerMask.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\geometry\Angle.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\io\DataLoader.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\machinelearning\DBScanCluster.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\machinelearning\DBScanPoint.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\misc\OpenGlCamera.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\AggregatedFiducialMarker.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\BistableFiducialMarker.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\Camera.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\Color.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\Craftag.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\CraftagRegistrar.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\FiducialMarker.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\FlippedMarker.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\LimitedTimeMarker.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\MergedFiducialMarker.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\PlaneCoordinateMapper.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\ProximityMarker.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\RotatedFiducialMarker.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\StabilizedFiducialMarker.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\TagTranscoder.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\components\vision\TranslatedFiducialMarker.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\FileGrabber.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\FlyCapture2Grabber.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\IDSGrabber.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\ImageGrabberOnDemand.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\OpenCVGrabber.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\OpenGlGrabber.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\grabbers\VideoGrabber.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\CraftagLogger.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\CraftagReplay.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\CvShower.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\CvWaiter.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\DataRecorder.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\DataRecorder2.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\ImageSaver.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\ImagesCombiner.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\InputRecorder.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\OpenGl2DDisplay.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\OpenGl3DDisplay.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\OpenGLTextureLoader.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\SnapshotTaker.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\TinkarDisplay.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\io\VideoSaver.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\machinelearning\DBScan.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\machinelearning\HMMBlobClassifier.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\machinelearning\ParameterAdapter.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\DecoratorManager.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\DifferenceOutput.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\FPSPrinter.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\OpenGlCameraUpdater.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\Stopper.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\misc\Timer.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\modelfitting\Ransac.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\Pipeable.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\AdaptiveThreshold.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Blur.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CannyEdgeDetector.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Color2Gray.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\ColourFilter.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\ConnectedComponents.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CornerDetector.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagDecode.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagReadBits.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRefine.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRefinerHough.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRegister.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagUndistort.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\CraftagUpdate.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Dilate.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\EllipseFitter.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Erode.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Filter.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Flip.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Gray2Color.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\HaarClassifier.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\HoughCircleDetector.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\HoughLineDetector.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\ImageCropper.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Inverter.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Normalize.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\PerspectiveWarper.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Pixels2Points.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\PyrDown.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\PyrUp.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\QuadixFinder.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Resize.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Rotate.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Sharpen.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\SlowAdaptiveThreshold.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Split.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Threshold.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\pipeables\vision\Undistorter.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\utils\Conversions.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\utils\factories\Make_Camera.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\utils\factories\Make_Undistorter.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\utils\Geometry.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\utils\Histogram.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\utils\Shell.cpp" />
+    <ClCompile Include="..\..\..\frameworks\qa\utils\Tests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\frameworks\qa\components\decorators\MarkerMask.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\geometry\Angle.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\io\DataLoader.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\machinelearning\DBScanCluster.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\machinelearning\DBScanPoint.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\misc\OpenGlCamera.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\AggregatedFiducialMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\BistableFiducialMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\CachedFiducialMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\Camera.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\Color.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\Craftag.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\CraftagRegistrar.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\DummyMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\FiducialMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\FlippedMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\LimitedTimeMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\MergedFiducialMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\PlaneCoordinateMapper.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\ProximityMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\RotatedFiducialMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\StabilizedFiducialMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\TagTranscoder.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\components\vision\TranslatedFiducialMarker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\FileGrabber.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\FlyCapture2Grabber.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\IDSGrabber.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\ImageGrabberOnDemand.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\OpenCVGrabber.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\OpenGlGrabber.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\grabbers\VideoGrabber.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\CraftagLogger.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\CraftagReplay.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\CraftagStop.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\CvShower.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\CvWaiter.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\DataRecorder.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\DataRecorder2.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\ImageSaver.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\ImagesCombiner.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\InputRecorder.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\OpenGl2DDisplay.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\OpenGl3DDisplay.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\OpenGLTextureLoader.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\SnapshotTaker.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\TinkarDisplay.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\io\VideoSaver.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\machinelearning\DBScan.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\machinelearning\HMMBlobClassifier.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\machinelearning\ParameterAdapter.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\DecoratorManager.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\DelayedStopper.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\DifferenceOutput.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\FPSPrinter.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\OpenGlCameraUpdater.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\Stopper.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\StopWatch.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\misc\Timer.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\modelfitting\Ransac.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\Pipeable.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\AdaptiveThreshold.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Blur.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CannyEdgeDetector.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Color2Gray.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\ColourFilter.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\ConnectedComponents.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CornerDetector.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagDecode.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagReadBits.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRefine.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRefinerHough.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagRegister.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagUndistort.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\CraftagUpdate.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Dilate.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\EllipseFitter.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Erode.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Filter.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Flip.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Gray2Color.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\HaarClassifier.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\HoughCircleDetector.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\HoughLineDetector.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\ImageCropper.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Inverter.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Normalize.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\PerspectiveWarper.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Pixels2Points.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\PyrDown.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\PyrUp.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\QuadixFinder.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Resize.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Rotate.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Sharpen.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\SlowAdaptiveThreshold.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Split.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Threshold.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\pipeables\vision\Undistorter.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Camera3DProjections.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Camera3DReconstructions.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\combination.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Conversions.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\CvWykobiBridge.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Draw.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Dynamics.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\factories\Make_Camera.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\factories\Make_Undistorter.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Geometry.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Geometry_printing.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Histogram.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Image.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Math.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Shell.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Tests.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Time.hpp" />
+    <ClInclude Include="..\..\..\frameworks\qa\utils\Url.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
