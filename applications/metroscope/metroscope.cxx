@@ -19,7 +19,6 @@
 
 #include <qa/pipeables/io/OpenGl2DDisplay.hpp>
 #include <qa/pipeables/grabbers/OpenCVGrabber.hpp>
-#include <qa/pipeables/grabbers/IDSGrabber.hpp>
 #include <qa/pipeables/grabbers/FlyCapture2Grabber.hpp>
 #include <qa/pipeables/vision/Color2Gray.hpp>
 #include <qa/pipeables/vision/Flip.hpp>
@@ -52,12 +51,6 @@ int main(int argc, char* argv[])
 			tGrabber = new OpenCVGrabber(640, 480, 30);
 			tPreProcess = new Color2Gray(((OpenCVGrabber *) tGrabber)->Image());
 			tGrabbedImage = ((Color2Gray *)tPreProcess)->GetOutputImage();
-		}
-		else if (tArgument == "-ids")
-		{
-			tGrabber = new IDSGrabber("config/IDS_parameters.ini");
-			tGrabbedImage = ((IDSGrabber*) tGrabber)->Image();
-			tPreProcess = new Noop();
 		}
 		else if (tArgument == "-nolog")
 		{
