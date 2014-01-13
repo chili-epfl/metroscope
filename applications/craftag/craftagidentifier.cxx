@@ -35,7 +35,7 @@ int main(int , char* [])
 	Pipeable *tGrabber = 0;
 	Pipeable *tPreProcess = 0;
 	const IplImage* const *tGrabbedImage = 0;
-			tGrabber = new OpenCVGrabber(640, 480, 30, 1);
+			tGrabber = new OpenCVGrabber(640, 480, 30, 0);
 			tPreProcess = new Color2Gray(((OpenCVGrabber *) tGrabber)->Image());
 			tGrabbedImage = ((Color2Gray *)tPreProcess)->GetOutputImage();
 
