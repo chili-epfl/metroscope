@@ -81,3 +81,6 @@
 #include "FractionAnswerChecker.hpp"
 #include "FractionHint.hpp"
 #include "FractionSimplifier.hpp"
+
+//silly examples
+#include "SimpleText.hpp"
