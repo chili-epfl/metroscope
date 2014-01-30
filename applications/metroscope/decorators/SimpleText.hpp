@@ -43,7 +43,8 @@ static const float scHINT_MESSAGE_OFFSET_X = 0.2*scCARD_WIDTH_IN_PROJECTOR_COORD
 static const float scHINT_MESSAGE_OFFSET_Y = -0.2*scCARD_HEIGHT_IN_PROJECTOR_COORDS;
 static const float scHINT_MESSAGE_WIDTH = 0.5*scCARD_WIDTH_IN_PROJECTOR_COORDS;
 static const color scGREEN			(0.1725f, 0.7451f, 0.2941f);
-static const color * const scHINT_MESSAGE_COLOR = &scGREEN;
+static const color scBLACK			(0.0f, 0.0f, 0.0f);
+static const color * const scHINT_MESSAGE_COLOR = &scBLACK;
 
 
 
