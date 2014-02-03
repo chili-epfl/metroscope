@@ -82,5 +82,8 @@
 #include "FractionHint.hpp"
 #include "FractionSimplifier.hpp"
 
+//grammaire
+#include "SentenceAnalysisModel.hpp"
+
 //silly examples
 #include "SimpleText.hpp"

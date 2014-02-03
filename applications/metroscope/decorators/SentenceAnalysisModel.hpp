@@ -21,43 +21,23 @@
 #define SentenceAnalysisModel_HPP
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
-#include "WordsModel.hpp"
-
-	//COLORS
-	struct color{
-		float r;
-		float g;
-		float b;
-		float a;
-		color(float pR, float pG, float pB, float pA = 1.0f) {r = pR; g = pG; b = pB; a = pA;}
-	};
-
-	//Grammatical groups, e.g. sujet, verbe, complement du verbe... and associated colors
-	struct grammar_category{
-		std::string name;
-		color category_color;
-		grammar_category(std::string pName, color pColor){name = pName; category_color = pColor;}
-	};
-
-	//Analysis = vector of [category, vector of sentence pieces in this category]
-	struct analysis_element{
-		grammar_category category;
-		int num_pieces;
-		WordsModel **pieces;
-		analysis_element(grammar_category pCat, int num_pieces, WordsModel *pPieces){category = pCat; pieces = pPieces;}
-	};
-	struct analysis{
-		analysis_element *elements;
-		int num_categories;
-		analysis(int pNumCategories, analysis_element *)
-	};
+#include "../FractionsConstants.hpp"
 
 
-	static const color scGREEN			(0.15f, 1.0f, 0.15f);
-	static const color scBLACK			(0.0f, 0.0f, 0.0f);
-	static const color scYELLOW			(0.95f, 0.95f, 0.0f);
-	static const color scRED			(1.0f, 0.25f, 0.25f);
-	static const color scBLUE			(0.25f, 0.25f, 1.0f);
+
+	static const color scGrammarGREEN			(0.15f, 1.0f, 0.15f);
+	static const color scGrammarBLACK			(0.0f, 0.0f, 0.0f);
+	static const color scGrammarYELLOW			(0.95f, 0.95f, 0.0f);
+	static const color scGrammarRED				(1.0f, 0.25f, 0.25f);
+	static const color scGrammarBLUE			(0.25f, 0.25f, 1.0f);
+
+	static const float scGrammarREAL_WORLD_MARKER_WIDTH_MM = 20.0f;//FIXME These constants are taken from FractionsConstants.hpp, shouldn't we just include it?
+	static const float scGrammarREAL_WORLD_MARKER_HEIGHT_MM = 20.0f;
+
+	static const float scGrammarMESSAGE_OFFSET_X = 0.0f;
+	static const float scGrammarMESSAGE_OFFSET_Y = 0.0f;
+	static const float scGrammarMESSAGE_WIDTH = 1000.0f;
+	static const float scGrammarMESSAGE_SCALE = 1.0f;
 
 
 namespace decorators {
@@ -66,15 +46,19 @@ class SentenceAnalysisModel : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		SentenceAnalysisModel(DecoratorManager &pDecoratorManager, std::string pSentence, int pNumCategories, const int pNumPieces, WordsModel **pPieces);
+		SentenceAnalysisModel(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pSentence,  FiducialMarker *pTextPosition);
 
 	protected:
 		void update();
+		void displayInitialMessage();
+
 
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-		const std::vector<grammar_category> cCategories;
+		const std::string mSentence;
+		const FiducialMarker *mMessagePositionMarker;
+
 };
 
 }

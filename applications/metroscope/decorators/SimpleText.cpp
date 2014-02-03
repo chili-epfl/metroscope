@@ -56,7 +56,7 @@ void decorators::SimpleText::displayMessage(){
 				mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(sMessage.c_str(), scTEXT_DELIMITERS,
 						scHINT_MESSAGE_OFFSET_X, scHINT_MESSAGE_OFFSET_Y, scHINT_MESSAGE_WIDTH,
 						false, scHINT_MESSAGE_SCALE,
-						scHINT_MESSAGE_COLOR->r, scHINT_MESSAGE_COLOR->g, scHINT_MESSAGE_COLOR->b, scHINT_MESSAGE_COLOR->a);
+						scMESSAGE_COLOR->r, scMESSAGE_COLOR->g, scMESSAGE_COLOR->b, scMESSAGE_COLOR->a);
 				mDecoratorManager.GetDisplay().PopTransformation();
 	}
 }
