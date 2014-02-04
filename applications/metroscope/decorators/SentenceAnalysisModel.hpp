@@ -22,7 +22,7 @@
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "../FractionsConstants.hpp"
-
+#include "WordsCard.hpp"
 
 
 	static const color scGrammarGREEN			(0.15f, 1.0f, 0.15f);
@@ -39,6 +39,30 @@
 	static const float scGrammarMESSAGE_WIDTH = 1000.0f;
 	static const float scGrammarMESSAGE_SCALE = 1.0f;
 
+	static const std::string scINITIAL_MESSAGE = "Placez sur la table les pièces de la phrase:";
+	static const std::string scQUESTION_MESSAGE = "Quelle fonction jouen les pièces dans la phrase?";
+	static const float scLINE_SPACE = 40.0f;
+
+	//COLORS
+	struct category{
+		std::string mName;
+		std::string mAbbreviation;
+		color mColor;
+		category(std::string pName, std::string pAbbreviation, color pColor) {
+			mName = pName;
+			mAbbreviation = pAbbreviation;
+			mColor = pColor;
+		}
+	};
+
+	static const int mNumCategories = 4;
+	static const category mCategories[mNumCategories] = {
+			{"Groupe Nominal Sujet","GNS", scGrammarYELLOW},
+			{"Verbe", "V", scGrammarRED},
+			{"Complement du Verbe", "CV", scGrammarBLUE},
+			{"Complement de Phrase", "CP", scGrammarGREEN}
+	};
+
 
 namespace decorators {
 
@@ -46,11 +70,13 @@ class SentenceAnalysisModel : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		SentenceAnalysisModel(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pSentence,  FiducialMarker *pTextPosition);
+		SentenceAnalysisModel(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pSentence,  FiducialMarker *pTextPosition, WordsCard **pPieces, int pNumPieces);
 
 	protected:
 		void update();
 		void displayInitialMessage();
+		void displayPlacementInterface();
+		bool allPiecesPresent();
 
 
 	private:
@@ -58,6 +84,10 @@ class SentenceAnalysisModel : public FiducialDecorator
 		static const DecoratorManager::Registerer mRegisterer;
 		const std::string mSentence;
 		const FiducialMarker *mMessagePositionMarker;
+
+		const int mNumPieces;
+		WordsCard **mPieces; //array of pointers to all of the WordsCard objects
+
 
 };
 

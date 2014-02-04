@@ -30,6 +30,7 @@
 		float g;
 		float b;
 		float a;
+		color() {r=0.0f;g=0.0f;b=0.0f;a=1.0f;}
 		color(float pR, float pG, float pB, float pA = 1.0f) {r = pR; g = pG; b = pB; a = pA;}
 	};
 
