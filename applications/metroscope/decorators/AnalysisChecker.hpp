@@ -17,28 +17,33 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef WordsCard_HPP
-#define WordsCard_HPP
+#ifndef AnalysisChecker_HPP
+#define AnalysisChecker_HPP
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
+#include "Flipper.hpp"
+#include "SentenceAnalysisModel.hpp"
 
 namespace decorators {
 
-class WordsCard : public FiducialDecorator
+class AnalysisChecker : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		WordsCard(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pWords);
-		std::string GetWords() const {return mWords;}
+
+		AnalysisChecker(DecoratorManager &pDecoratorManager, Flipper * pFlipper, SentenceAnalysisModel *pModel);
+
 
 	protected:
 		void update();
 
+		Flipper *mFlipper;
+		SentenceAnalysisModel *mModel;
+		long mLastShot;
+
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-
-		const std::string mWords;
 };
 
 }

@@ -134,7 +134,7 @@ void decorators::SentenceAnalysisModel::displayPlacementInterface(){
 			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMessagePositionMarker, scGrammarREAL_WORLD_MARKER_WIDTH_MM,
 					scGrammarREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 
-					//OUtput the instruction message
+			//OUtput the instruction message
 			mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(scQUESTION_MESSAGE.c_str(), scTEXT_DELIMITERS,
 						scGrammarMESSAGE_OFFSET_X-40, scGrammarMESSAGE_OFFSET_Y+(2*scLINE_SPACE), scGrammarMESSAGE_WIDTH,
 						false, scGrammarMESSAGE_SCALE,
@@ -147,5 +147,39 @@ void decorators::SentenceAnalysisModel::displayPlacementInterface(){
 	}
 }
 
+void decorators::SentenceAnalysisModel::Correct()
+{
+	//TODO: revise/delete this and implement correction
+//	int tSelectedLaser = mCurrentLaser->Selection();
+//	if (mAngle->Angle() < 0.0f || mAngle->Angle() > 180.0f) return;
+//	mLastLaserShotTimestamp = Time::MillisTimestamp();
+//	mLastLaserShotAngle = mAngle->Angle();
+//	AngleModel::NormalizeAngle(mLastLaserShotAngle);
+//	if (mCurrentJunk < mNJunks)
+//	{
+//		float tLaserX = scEarthRadius*cos(scAngleOffsets[tSelectedLaser]*wykobi::PIDiv180);
+//		float tLaserY = scEarthRadius*sin(scAngleOffsets[tSelectedLaser]*wykobi::PIDiv180);
+//		wykobi::vector2d<float> tJunkVector = wykobi::make_vector(mJunkXs[mCurrentJunk]-tLaserX, mJunkYs[mCurrentJunk]-tLaserY);
+//		float tErrorMargin = atan2(mJunkRadiuses[mCurrentJunk], wykobi::vector_norm(tJunkVector))*wykobi::_180DivPI;
+//		float tJunkAngle = wykobi::cartesian_angle(tJunkVector) - scAngleOffsets[tSelectedLaser] + 90.0f;
+//		float tDifference = AngleModel::AbsoluteDifference(mLastLaserShotAngle, tJunkAngle);
+//
+//		if (tDifference <= tErrorMargin)
+//		{
+//			mJunkStates[mCurrentJunk++] = DESTROYED;
+//			if (mCurrentJunk < mNJunks) mJunkStates[mCurrentJunk] = TARGET;
+//		}
+//	}
 
+	if(mMarker->isPresent()){
+			mDecoratorManager.GetDisplay().PushTransformation();
+			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scGrammarREAL_WORLD_MARKER_WIDTH_MM, scGrammarREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+			mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth("Correct!", scTEXT_DELIMITERS,
+						scGrammarMESSAGE_OFFSET_X, scGrammarMESSAGE_OFFSET_Y, 100.0f,
+						false, scGrammarMESSAGE_SCALE,
+						scGrammarBLACK.r, scGrammarBLACK.g, scGrammarBLACK.b, scGrammarBLACK.a);
+			mDecoratorManager.GetDisplay().PopTransformation();
+	}
+
+}
 

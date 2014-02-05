@@ -17,8 +17,8 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef SentenceAnalysisModel_HPP
-#define SentenceAnalysisModel_HPP
+#ifndef WordsCombinator_HPP
+#define WordsCombinator_HPP
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "../FractionsConstants.hpp"
@@ -39,66 +39,41 @@
 	static const float scGrammarMESSAGE_WIDTH = 1000.0f;
 	static const float scGrammarMESSAGE_SCALE = 1.0f;
 
-	static const std::string scINITIAL_MESSAGE = "Placez sur la table les pièces de la phrase:";
-	static const std::string scQUESTION_MESSAGE = "Quelle fonction jouen les pièces dans la phrase?";
 	static const float scLINE_SPACE = 40.0f;
 
-	static const float scRESET_TIMER = 10000.0f; //Time needed for the activity to reset itself to the initial state (if the word cards are removed)
-
-	enum analysis_phases {
-		Placez,
-		Fonction
-	};
-
-	//COLORS
-	struct category{
-		std::string mName;
-		std::string mAbbreviation;
-		color mColor;
-		category(std::string pName, std::string pAbbreviation, color pColor) {
-			mName = pName;
-			mAbbreviation = pAbbreviation;
-			mColor = pColor;
-		}
-	};
-
-	static const int mNumCategories = 4;
-	static const category mCategories[mNumCategories] = {
-			{"Groupe Nominal Sujet","GNS", scGrammarYELLOW},
-			{"Verbe", "V", scGrammarRED},
-			{"Complement du Verbe", "CV", scGrammarBLUE},
-			{"Complement de Phrase", "CP", scGrammarGREEN}
-	};
+	static const std::string scCOMBINATOR_INTRO = "Quelles combinations sont correctes?";
+	static const float scCOMBINATIONS_SCALE = 0.7f;
 
 
 namespace decorators {
 
-class SentenceAnalysisModel : public FiducialDecorator
+class WordsCombinator : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		SentenceAnalysisModel(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pSentence,  FiducialMarker *pTextPosition, WordsCard **pPieces, int pNumPieces);
-
-		void Correct();
+		WordsCombinator(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pTextPosition, WordsCard **pPieces, int pNumPieces);
 
 	protected:
 		void update();
-		void displayInitialMessage();
-		void displayPlacementInterface();
-		bool allPiecesPresent();
-
+		void displayCombinations();
+		void getPiecesPresent();
+		void generateCombinations();
 
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-		const std::string mSentence;
 		const FiducialMarker *mMessagePositionMarker;
 
 		const int mNumPieces;
 		WordsCard **mPieces; //array of pointers to all of the WordsCard objects
 
-		analysis_phases mPhase;
-		long mInactiveTimestamp;
+		int mNumPresentPieces;
+		WordsCard **mPresentPieces;//array of pieces present at any given moment
+
+		int mNumCombinations;
+		std::string *mCombinations;//array of combined phrases
+
+		int factorial(int n);
 };
 
 }

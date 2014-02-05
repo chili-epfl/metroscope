@@ -85,6 +85,8 @@
 //grammaire
 #include "SentenceAnalysisModel.hpp"
 #include "WordsCard.hpp"
+#include "AnalysisChecker.hpp"
+#include "WordsCombinator.hpp"
 
 //silly examples
 #include "SimpleText.hpp"
