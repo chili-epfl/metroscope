@@ -43,6 +43,13 @@
 	static const std::string scQUESTION_MESSAGE = "Quelle fonction jouen les pièces dans la phrase?";
 	static const float scLINE_SPACE = 40.0f;
 
+	static const float scRESET_TIMER = 10000.0f; //Time needed for the activity to reset itself to the initial state (if the word cards are removed)
+
+	enum analysis_phases {
+		Placez,
+		Fonction
+	};
+
 	//COLORS
 	struct category{
 		std::string mName;
@@ -88,7 +95,8 @@ class SentenceAnalysisModel : public FiducialDecorator
 		const int mNumPieces;
 		WordsCard **mPieces; //array of pointers to all of the WordsCard objects
 
-
+		analysis_phases mPhase;
+		long mInactiveTimestamp;
 };
 
 }

@@ -19,6 +19,7 @@
 
 #include "SentenceAnalysisModel.hpp"
 #include <iostream>
+#include <qa/utils/Time.hpp>
 
 const std::string decorators::SentenceAnalysisModel::scDecoratorName("SentenceAnalysisModel");
 const  DecoratorManager::Registerer decorators::SentenceAnalysisModel::mRegisterer(decorators::SentenceAnalysisModel::scDecoratorName, &decorators::SentenceAnalysisModel::create);
@@ -50,19 +51,30 @@ FiducialDecorator(pDecoratorManager, pMarker),
 mSentence(pSentence),
 mMessagePositionMarker(pTextPosition),
 mNumPieces(pNumPieces),
-mPieces(pPieces)
+mPieces(pPieces),
+mPhase(Placez),
+mInactiveTimestamp(0)
 {
 }
 
 void decorators::SentenceAnalysisModel::update() {
 	if (mMarker->isPresent())
 	{
-		if (!allPiecesPresent()){
+		mInactiveTimestamp=0;
+		if (!allPiecesPresent() && mPhase == Placez){
 			displayInitialMessage();
 		}else{
+			mPhase=Fonction;
 			displayPlacementInterface();
 		}
+	}else{//if the marker is not present and we had not already detected inactivity, we initialize the reset timestamp
+		if(mInactiveTimestamp==0) mInactiveTimestamp = Time::MillisTimestamp();
+
+		long currentTime = Time::MillisTimestamp();
+		//if enough time has passed, we reset to the initial state of the activity
+		if(currentTime>(mInactiveTimestamp+scRESET_TIMER)) mPhase = Placez;
 	}
+
 }
 
 /*Just displays a text message in the designated position marker, with the sentence*/
@@ -97,28 +109,39 @@ bool decorators::SentenceAnalysisModel::allPiecesPresent(){
 void decorators::SentenceAnalysisModel::displayPlacementInterface(){
 	if(mMarker->isPresent()){
 			mDecoratorManager.GetDisplay().PushTransformation();
-			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMessagePositionMarker, scGrammarREAL_WORLD_MARKER_WIDTH_MM, scGrammarREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-			//OUtput the instruction message
-			mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(scQUESTION_MESSAGE.c_str(), scTEXT_DELIMITERS,
-						scGrammarMESSAGE_OFFSET_X, scGrammarMESSAGE_OFFSET_Y+(2*scLINE_SPACE), scGrammarMESSAGE_WIDTH,
-						false, scGrammarMESSAGE_SCALE,
-						scGrammarBLACK.r, scGrammarBLACK.g, scGrammarBLACK.b, scGrammarBLACK.a);
 
 			int boxWidth = static_cast<int>(mDecoratorManager.GetDisplay().GetWidth()/mNumCategories);
 			int boxHeigth = static_cast<int>(mDecoratorManager.GetDisplay().GetHeight()/4);//25% of the screen
 
-			//Output the category boxes
-			/*mDecoratorManager.GetDisplay().RenderQuadFilled(0,mDecoratorManager.GetDisplay().GetHeight()-boxHeigth,
-					boxWidth,mDecoratorManager.GetDisplay().GetHeight()-boxHeigth,
-					boxWidth,mDecoratorManager.GetDisplay().GetHeight()-1,
-					0,mDecoratorManager.GetDisplay().GetHeight()-1,
-					mCategories[0].mColor.r, mCategories[0].mColor.g, mCategories[0].mColor.b, mCategories[0].mColor.a);*/
-			mDecoratorManager.GetDisplay().RenderQuadFilled(0,0,
-								10,0,
-								10,10,
-								0,10,
-								mCategories[0].mColor.r, mCategories[0].mColor.g, mCategories[0].mColor.b, mCategories[0].mColor.a);
-			//Output the category names
+			for (int i=0;i<mNumCategories;i++){
+				//Output the category boxes
+				mDecoratorManager.GetDisplay().RenderQuadFilled(i*boxWidth,mDecoratorManager.GetDisplay().GetHeight()-boxHeigth,
+						((i+1)*boxWidth)-1,mDecoratorManager.GetDisplay().GetHeight()-boxHeigth,
+						((i+1)*boxWidth)-1,mDecoratorManager.GetDisplay().GetHeight()-1,
+						i*boxWidth,mDecoratorManager.GetDisplay().GetHeight()-1,
+						mCategories[i].mColor.r, mCategories[i].mColor.g, mCategories[i].mColor.b, mCategories[i].mColor.a);
+				//Output the category names
+				mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(mCategories[i].mName.c_str(), scTEXT_DELIMITERS,
+						(i*boxWidth)+(boxWidth/2),
+						mDecoratorManager.GetDisplay().GetHeight()-boxHeigth-scLINE_SPACE,boxWidth*0.9,true,1.0f,
+						scGrammarBLACK.r, scGrammarBLACK.g, scGrammarBLACK.b, scGrammarBLACK.a);
+			}
+
+
+
+
+			//This is used to put the text on a marker?
+			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMessagePositionMarker, scGrammarREAL_WORLD_MARKER_WIDTH_MM,
+					scGrammarREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+					//OUtput the instruction message
+			mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(scQUESTION_MESSAGE.c_str(), scTEXT_DELIMITERS,
+						scGrammarMESSAGE_OFFSET_X-40, scGrammarMESSAGE_OFFSET_Y+(2*scLINE_SPACE), scGrammarMESSAGE_WIDTH,
+						false, scGrammarMESSAGE_SCALE,
+						scGrammarBLACK.r, scGrammarBLACK.g, scGrammarBLACK.b, scGrammarBLACK.a);
+
+
+
 
 			mDecoratorManager.GetDisplay().PopTransformation();
 	}
