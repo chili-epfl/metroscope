@@ -23,23 +23,8 @@
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "../FractionsConstants.hpp"
 #include "WordsCard.hpp"
+#include "SentenceAnalysisModel.hpp"
 
-
-	static const color scGrammarGREEN			(0.15f, 1.0f, 0.15f);
-	static const color scGrammarBLACK			(0.0f, 0.0f, 0.0f);
-	static const color scGrammarYELLOW			(0.95f, 0.95f, 0.0f);
-	static const color scGrammarRED				(1.0f, 0.25f, 0.25f);
-	static const color scGrammarBLUE			(0.25f, 0.25f, 1.0f);
-
-	static const float scGrammarREAL_WORLD_MARKER_WIDTH_MM = 20.0f;//FIXME These constants are taken from FractionsConstants.hpp, shouldn't we just include it?
-	static const float scGrammarREAL_WORLD_MARKER_HEIGHT_MM = 20.0f;
-
-	static const float scGrammarMESSAGE_OFFSET_X = 0.0f;
-	static const float scGrammarMESSAGE_OFFSET_Y = 0.0f;
-	static const float scGrammarMESSAGE_WIDTH = 1000.0f;
-	static const float scGrammarMESSAGE_SCALE = 1.0f;
-
-	static const float scLINE_SPACE = 40.0f;
 
 	static const std::string scCOMBINATOR_INTRO = "Quelles combinations sont correctes?";
 	static const float scCOMBINATIONS_SCALE = 0.7f;
