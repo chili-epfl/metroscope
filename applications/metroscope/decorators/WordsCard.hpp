@@ -22,13 +22,16 @@
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 
+static const float scGUIDELINE_DISTANCE = 70.0f;
+
+
 namespace decorators {
 
 class WordsCard : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		WordsCard(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pWords);
+		WordsCard(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pWords, bool pGuideline);
 		std::string GetWords() const {return mWords;}
 
 	protected:
@@ -37,8 +40,8 @@ class WordsCard : public FiducialDecorator
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-
 		const std::string mWords;
+		const bool mGuideline;
 };
 
 }
