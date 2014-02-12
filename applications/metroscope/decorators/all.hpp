@@ -87,6 +87,7 @@
 #include "WordsCard.hpp"
 #include "AnalysisChecker.hpp"
 #include "WordsCombinator.hpp"
+#include "GrammarChecker.hpp"
 
 //silly examples
 #include "SimpleText.hpp"

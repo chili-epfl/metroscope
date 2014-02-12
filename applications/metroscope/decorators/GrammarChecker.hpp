@@ -17,33 +17,38 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef WordsCard_HPP
-#define WordsCard_HPP
+#ifndef GrammarChecker_HPP
+#define GrammarChecker_HPP
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
+#include "../FractionsConstants.hpp"
+#include "WordsCard.hpp"
 
-static const float scGUIDELINE_DISTANCE = 70.0f;
 
 
 namespace decorators {
 
-class WordsCard : public FiducialDecorator
+class GrammarChecker : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		WordsCard(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pWords, bool pGuideline);
+		GrammarChecker(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, WordsCard **pPieces, int pNumPieces);
 
-		std::string GetWords() const {return mWords;}
-		float GetX() const {return mMarker->getCenter().x;}
+		void Correct(std::string pSentence, std::string *message, bool *isCorrect);
+		void displayMessageHint(std::string pMessage, bool pIsCorrect);
+		std::string getAlignedMarkersSentence();
 
 	protected:
 		void update();
 
+
 	private:
+
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-		const std::string mWords;
-		const bool mGuideline;
+
+		const int mNumPieces;
+		WordsCard **mPieces; //array of pointers to all of the WordsCard objects
 };
 
 }
