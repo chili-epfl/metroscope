@@ -227,7 +227,6 @@ void decorators::FractionModel::getCardsInsideRectangle(std::vector<FractionCard
 			}
 		}
 	}
-
 }
 
 bool decorators::FractionModel::valueIsInRange(float &pValue, float pRangeStart, float pRangeEnd){

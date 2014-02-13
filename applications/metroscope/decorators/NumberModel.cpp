@@ -27,10 +27,11 @@
 	{
 		try {
 			libconfig::Setting & tCardStrings = pSetting["cards"];
+			std::string i = tCardStrings[0];
 			int tNumCards = pSetting["num_cards"];
 			NumberCard **tNumberCards = new NumberCard *[tNumCards];
 			for (int i = 0; i < tNumCards; ++i) {
-				tNumberCards[i] = (NumberCard *) pDecoratorManager.loadDecorator(tCardStrings[i]);
+				tNumberCards[i] = (NumberCard *)pDecoratorManager.loadDecorator(tCardStrings[i]);
 			}
 
 			return new decorators::NumberModel(pDecoratorManager, tNumberCards, tNumCards);
@@ -41,6 +42,7 @@
 			std::cerr << "Failed to load " << scDecoratorName << ". Wrong type for marker parameter: " << e.getPath() << std::endl;
 		}
 		return 0;
+
 	}
 
 	decorators::NumberModel::NumberModel(DecoratorManager &pDecoratorManager, NumberCard **pCards, const int pNumCards):
@@ -65,6 +67,10 @@
 	}
 
 	std::vector<decorators::NumberCard *> & decorators::NumberModel::GetActiveCards() {
+		ClearActiveCards();
+		for(int i=0; i < mNumCards; i++){
+			if(mNumberCards[i]->IsPresent()) mActiveCards.push_back(mNumberCards[i]);
+		}
 		return mActiveCards;
 	}
 
@@ -86,30 +92,38 @@
 		mActiveCards.clear();
 	}
 
-	void decorators::NumberModel::getCardsInsideRectangle(std::vector<NumberCard *> & pCardArray, wykobi::point2d<float> pOrigin, wykobi::vector2d<float> pTransformXVector, wykobi::vector2d<float> pTransformYVector, float pXMin, float pXMax, float pYMin, float pYMax)
-	{
-		wykobi::line<float,2> tTransformXAxis = wykobi::make_line(make_ray(pOrigin, pTransformXVector));
-		wykobi::line<float,2> tTransformYAxis = wykobi::make_line(make_ray(pOrigin, pTransformYVector));
+	void decorators::NumberModel::ClearGroupedCards(){
+		mGroupedCards.clear();
+	}
 
-		for(int i=0; i < mNumCards; i++){
-			wykobi::point2d<float> tPoint = mNumberCards[i]->GetLocation();
-			if(!(tPoint.x ==0.0f && tPoint.y == 0.0f)){
-				mDecoratorManager.GetCam2World().InterpolatedMap(tPoint);
-				wykobi::point2d<float> tTransformedPoint;
+	std::vector<decorators::NumberCard *> & decorators::NumberModel::GetGroupOf(NumberCard *pNumberMember){
+		ClearGroupedCards();
+		wykobi::point2d<float> tFirstMemberPoint = pNumberMember->GetLocation();
+		NumberCard * tAuxNumberCard;
+		float tAuxMinDistance = 10000.0f;
 
-				float tXOrientation = (wykobi::dot_product(pTransformXVector, wykobi::make_vector(pOrigin) - wykobi::make_vector(tPoint)) > 0) ? -1.0f : 1.0f;
-				float tYOrientation = (wykobi::dot_product(pTransformYVector, wykobi::make_vector(pOrigin) - wykobi::make_vector(tPoint)) > 0) ? -1.0f : 1.0f;
+		for(unsigned int i = 0; i < mActiveCards.size(); i++ ){
 
-				tTransformedPoint.x = tXOrientation*wykobi::distance(wykobi::closest_point_on_line_from_point(tTransformXAxis, tPoint), pOrigin);
-				tTransformedPoint.y = tYOrientation*wykobi::distance(wykobi::closest_point_on_line_from_point(tTransformYAxis, tPoint), pOrigin);
+			if(!(mActiveCards[i]->GetMarker()== pNumberMember->GetMarker())){
+				wykobi::point2d<float> tSecondMemberPoint = mActiveCards[i]->GetLocation();
+				float tDistance = wykobi::distance(tFirstMemberPoint.x,tFirstMemberPoint.y,tSecondMemberPoint.x,tSecondMemberPoint.y);
 
-				if(valueIsInRange(tTransformedPoint.x, pXMin, pXMax)&& valueIsInRange(tTransformedPoint.y, pYMin, pYMax)) {
-					pCardArray.push_back(mNumberCards[i]);
+				if(tDistance<tAuxMinDistance){
+					tAuxMinDistance = tDistance;
+					tAuxNumberCard = mActiveCards[i];
 				}
 			}
 		}
+
+		if(tAuxMinDistance < 90.0f) {
+							mGroupedCards.push_back(pNumberMember);
+							mGroupedCards.push_back(tAuxNumberCard);
+						}
+
+		return mGroupedCards;
 	}
 
+
 	bool decorators::NumberModel::valueIsInRange(float &pValue, float pRangeStart, float pRangeEnd){
-		return pValue > pRangeStart && pValue < pRangeEnd;
+		return (pRangeEnd-pRangeStart)>abs(pValue);
 	}

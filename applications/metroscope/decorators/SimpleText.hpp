@@ -24,28 +24,6 @@
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 
-	//COLORS
-	struct color{
-		float r;
-		float g;
-		float b;
-		float a;
-		color(float pR, float pG, float pB, float pA = 1.0f) {r = pR; g = pG; b = pB; a = pA;}
-	};
-
-static const float scREAL_WORLD_MARKER_WIDTH_MM = 20.0f;//FIXME These constants are taken from FractionsConstants.hpp, shouldn't we just include it?
-static const float scREAL_WORLD_MARKER_HEIGHT_MM = 20.0f;
-static const char * const scTEXT_DELIMITERS = " -";
-static const float scCARD_WIDTH_IN_PROJECTOR_COORDS = 111.4f;
-static const float scCARD_HEIGHT_IN_PROJECTOR_COORDS = 154.1f;
-static const float scHINT_MESSAGE_SCALE = 0.75f;
-static const float scHINT_MESSAGE_OFFSET_X = 0.2*scCARD_WIDTH_IN_PROJECTOR_COORDS;
-static const float scHINT_MESSAGE_OFFSET_Y = -0.2*scCARD_HEIGHT_IN_PROJECTOR_COORDS;
-static const float scHINT_MESSAGE_WIDTH = 0.5*scCARD_WIDTH_IN_PROJECTOR_COORDS;
-static const color scGREEN			(0.1725f, 0.7451f, 0.2941f);
-static const color * const scHINT_MESSAGE_COLOR = &scGREEN;
-
-
 
 namespace decorators {
 

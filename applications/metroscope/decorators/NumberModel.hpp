@@ -42,19 +42,17 @@ class NumberModel : public FiducialDecorator
 		NumberCard **GetCardArray() const {return mNumberCards;}
 		int GetNumCards() const {return mNumCards;}
 		const char *GetCurrentActivity () const;
-
 		std::vector<NumberCard *> & GetActiveCards();
+		std::vector<const char*> & GetPresentActivities();
+
 		void ClearActiveCards();
-		void getCardsInsideRectangle(std::vector<NumberCard *> & pCardArray,
-				wykobi::point2d<float> pOrigin,
-				wykobi::vector2d<float> pTransformXVector,
-				wykobi::vector2d<float> pTransformYVector,
-				float pXMin, float pXMax,
-				float pYMin, float pYMax);
+		void ClearGroupedCards();
+
+		std::vector<NumberCard *> & GetGroupOf(NumberCard *pNumberMember);
+		NumberCard* & GetClosestCard(NumberCard *pNumberCard);
 
 		void SetCurrentActivity (const char *pActivityName);
 		void RemoveActivity(const char *pActivityName);
-		std::vector<const char*> & GetPresentActivities();
 
 	protected:
 		void update();
@@ -68,7 +66,7 @@ class NumberModel : public FiducialDecorator
 
 		std::vector<const char *> mPresentActivities; //front of this vector is the current activity
 		std::vector<NumberCard *> mActiveCards;
-
+		std::vector<NumberCard *> mGroupedCards;
 
 		bool valueIsInRange(float &pValue, float pRangeStart, float pRangeEnd);
 

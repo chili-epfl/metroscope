@@ -84,3 +84,9 @@
 
 //silly examples
 #include "SimpleText.hpp"
+
+//arithmetics
+#include "SumClassificationModel.hpp"
+//#include "SumClassification.hpp"
+#include "NumberCard.hpp"
+#include "NumberActivityCard.hpp"

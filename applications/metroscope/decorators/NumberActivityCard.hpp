@@ -25,34 +25,31 @@
 
 namespace decorators {
 
-class NumberActivityCard : public FiducialDecorator
-{
-	public:
-		NumberActivityCard(DecoratorManager &pDecoratorManager,
-				FiducialMarker *pMarker,
-				NumberModel *pModel,
-				const char * const pActivityName);
-		virtual ~NumberActivityCard();
+	class NumberActivityCard : public FiducialDecorator
+	{
+		public:
+			NumberActivityCard(DecoratorManager &pDecoratorManager,
+					FiducialMarker *pMarker,
+					NumberModel *pModel,
+					const char * const pActivityName);
+			virtual ~NumberActivityCard();
 
+		protected:
+			void update();
 
-	protected:
-		void update();
+			NumberModel *mNumberModel;
 
-		bool mPreviouslyCurrentActivity; //Tells whether this card was the current activity on the last cycle
+			const char *const mActivityName;
 
-		NumberModel *mNumberModel;
-		const char *const mActivityName;
-		bool mOperatorsPresent;
+			void showInstruction();
+			void showActiveCards();
+			void drawGroups();
+			void DrawEllipseOutsideCards(wykobi::point2d<float> pFirstCard, wykobi::point2d<float> pSecondCard, int pFirstNumber, int pSecondNumber);
 
-		void PlaceCenteredTextAtLocationRelativeToMarker(const char *pText, const FiducialMarker *pMarker, float pTextOffsetX, float pTextOffsetY, float pTextScale, float pTextWidth, float pR, float pG, float pB, float pA);
-		void showInstruction();
+		private:
+			static const std::string scDecoratorName;
+			static const DecoratorManager::Registerer mRegisterer;
 
-
-	private:
-		static const std::string scDecoratorName;
-		static const DecoratorManager::Registerer mRegisterer;
-
-};
-
+	};
 }
 #endif

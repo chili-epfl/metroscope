@@ -26,9 +26,7 @@ const  DecoratorManager::Registerer decorators::NumberCard::mRegisterer(decorato
 	decorators::FiducialDecorator *decorators::NumberCard::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 	{
 		try {
-			return new decorators::NumberCard(pDecoratorManager,
-					pDecoratorManager.loadMarker(pSetting["marker"]),
-					pSetting["number"]);
+			return new decorators::NumberCard(pDecoratorManager,pDecoratorManager.loadMarker(pSetting["marker"]),pSetting["number"]);
 
 		} catch(libconfig::SettingNotFoundException &e) {
 			std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
@@ -41,7 +39,8 @@ const  DecoratorManager::Registerer decorators::NumberCard::mRegisterer(decorato
 	decorators::NumberCard::NumberCard(DecoratorManager &pDecoratorManager,
 			FiducialMarker *pMarker, const int pNumber):
 	FiducialDecorator(pDecoratorManager, pMarker),
-	mNumber(pNumber)
+	mNumber(pNumber),
+	isInsideRectangle(false)
 	{
 
 	}
