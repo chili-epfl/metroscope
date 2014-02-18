@@ -22,6 +22,7 @@
 #include <qa/utils/Time.hpp>
 #include <vector>
 #include <map>
+#include "../CURLHelper.hpp"
 
 const std::string decorators::GrammarChecker::scDecoratorName("GrammarChecker");
 const  DecoratorManager::Registerer decorators::GrammarChecker::mRegisterer(decorators::GrammarChecker::scDecoratorName, &decorators::GrammarChecker::create);
@@ -78,10 +79,18 @@ void decorators::GrammarChecker::Correct(std::string pSentence, std::string *mes
 	*message = pSentence;
 
 	if(mMarker->isPresent()){
-		//TODO: call some kind of grammar analyzer (e.g. on the web?)
+		//call some kind of grammar analyzer (e.g. on the web?), possibly using http://curl.haxx.se/libcurl/c/simple.html
+		//Correctors: http://wiki.languagetool.org/http-server
+		//TODO: since there is a limitation in the number of requests, we can eventually run a local checker server, as described in http://wiki.languagetool.org/http-server
+		//TODO: also, find a way of not blocking the interface for 1 sec while the request is sent and processed! for now, just comment this out and always say it is correct
+//		CURLHelper request;
+//		std::string urlEncodedSentence = request.urlEncode(pSentence);
+//		request.makeRequest("https://languagetool.org:8081/?language=fr&text="+urlEncodedSentence);
+//		std::string response = request.getData();
+//		*message = response;
+//		request.cleanup();
 
 		//TODO: also, we could call google and calculate the points obtained by this phrase if it is correct
-
 	}
 
 }
@@ -96,7 +105,7 @@ void decorators::GrammarChecker::displayMessageHint(std::string pMessage, bool p
 				mDecoratorManager.GetDisplay().GetWidth(), mMarker->getCenter().y+scGUIDELINE_DISTANCE,
 				mDecoratorManager.GetDisplay().GetWidth(), mMarker->getCenter().y-scGUIDELINE_DISTANCE,
 				0.0f, mMarker->getCenter().y-scGUIDELINE_DISTANCE,
-				scGREEN.r, scGREEN.g, scGREEN.b, scGREEN.a);
+				scGREEN.r, scGREEN.g, scGREEN.b, 0.5f);
 
 		//display the message or hint - GET RID OF MAGIC NUMBERS!
 		mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(pMessage.c_str(), scTEXT_DELIMITERS,
