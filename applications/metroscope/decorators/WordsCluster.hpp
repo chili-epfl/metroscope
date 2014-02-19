@@ -17,40 +17,49 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef WordsCard_HPP
-#define WordsCard_HPP
+#ifndef WordsCluster_HPP
+#define WordsCluster_HPP
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include <wykobi/wykobi.hpp>
+#include "../FractionsConstants.hpp"
+#include "WordsCard.hpp"
 
-static const float scGUIDELINE_DISTANCE = 70.0f;
 
+	static const std::string scCLUSTER_CORRECT_MSG = "Ça y est! Les groupes sont correctes :)";
+	static const float scCLUSTER_MSG_SCALE = 1.0f;
+	static const float scCLUSTER_MSG_WIDTH = 600.0f;
+
+	static const float scCLUSTER_RANGE = 200.0f;
+	static const float scCLUSTER_OVERFLOW = 50.0f;
 
 namespace decorators {
 
-class WordsCard : public FiducialDecorator
+class WordsCluster : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		WordsCard(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pWords, bool pGuideline);
-
-		std::string GetWords() const {return mWords;}
-		float GetX() const {return mMarker->getCenter().x;}
-
-		wykobi::point2d<float> GetLocation() const {
-			wykobi::point2d<float> tLocation;
-			if (mMarker->isPresent())return mMarker->getCenter();
-			else return tLocation;
-		}
+		WordsCluster(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pTextPosition, WordsCard **pPieces, int pNumPieces);
 
 	protected:
 		void update();
+		void displayMessage();
+		void displayClusters();
+		void getPresentPieces();
+		void getClusters();
 
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-		const std::string mWords;
-		const bool mGuideline;
+		const FiducialMarker *mMessagePositionMarker;
+
+		const int mNumPieces;
+		WordsCard **mPieces; //array of pointers to all of the WordsCard objects
+
+		std::vector<WordsCard *> mPresentPieces;//array of pieces present at any given moment
+
+		std::vector<std::vector<WordsCard *>> mClusters;//array of word card clusters
+
 };
 
 }

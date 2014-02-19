@@ -17,41 +17,37 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef WordsCard_HPP
-#define WordsCard_HPP
+#ifndef ACTIVITYINSTRUCTION_HPP_
+#define ACTIVITYINSTRUCTION_HPP_
+
+
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
-#include <wykobi/wykobi.hpp>
+#include "../FractionsConstants.hpp"
 
-static const float scGUIDELINE_DISTANCE = 70.0f;
+static const color * const scMESSAGE_COLOR = &scBLACK;
+static const float scINSTRUCTION_WIDTH = 1000.0f;
+static const float scINSTRUCTION_SCALE = 1.0f;
 
 
 namespace decorators {
 
-class WordsCard : public FiducialDecorator
+class ActivityInstruction : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		WordsCard(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pWords, bool pGuideline);
-
-		std::string GetWords() const {return mWords;}
-		float GetX() const {return mMarker->getCenter().x;}
-
-		wykobi::point2d<float> GetLocation() const {
-			wykobi::point2d<float> tLocation;
-			if (mMarker->isPresent())return mMarker->getCenter();
-			else return tLocation;
-		}
+		ActivityInstruction(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pMessage, FiducialMarker *pPosition);
 
 	protected:
 		void update();
+		void displayMessage();
 
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-		const std::string mWords;
-		const bool mGuideline;
+		const std::string mMessage;
+		const FiducialMarker *mMessagePositionMarker;
 };
 
 }
-#endif
+#endif /* ActivityInstruction_HPP_ */

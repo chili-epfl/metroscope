@@ -88,6 +88,8 @@
 #include "AnalysisChecker.hpp"
 #include "WordsCombinator.hpp"
 #include "GrammarChecker.hpp"
+#include "ActivityInstruction.hpp"
+#include "WordsCluster.hpp"
 
 //silly examples
 #include "SimpleText.hpp"
