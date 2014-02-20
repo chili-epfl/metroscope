@@ -19,6 +19,7 @@
 
 #include "WordsCombinator.hpp"
 #include <iostream>
+#include <algorithm>
 
 const std::string decorators::WordsCombinator::scDecoratorName("WordsCombinator");
 const  DecoratorManager::Registerer decorators::WordsCombinator::mRegisterer(decorators::WordsCombinator::scDecoratorName, &decorators::WordsCombinator::create);
@@ -62,22 +63,24 @@ void decorators::WordsCombinator::update() {
 void decorators::WordsCombinator::displayCombinations(){
 	if(mMarker->isPresent()){
 
-		getPiecesPresent();
+		getPresentPieces();
 
-		if(mNumPresentPieces>0){
+		getActivePieces();
+
+		if(mActivePieces.size()>0){
 
 			mDecoratorManager.GetDisplay().PushTransformation();
-			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMessagePositionMarker, scGrammarREAL_WORLD_MARKER_WIDTH_MM, scGrammarREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+			//mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMessagePositionMarker, scGrammarREAL_WORLD_MARKER_WIDTH_MM, scGrammarREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 			mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(scCOMBINATOR_INTRO.c_str(), scTEXT_DELIMITERS,
-						scGrammarMESSAGE_OFFSET_X, scGrammarMESSAGE_OFFSET_Y, scGrammarMESSAGE_WIDTH,
+					    mDecoratorManager.GetDisplay().GetWidth()/2, scGUIDELINE_DISTANCE, scGrammarMESSAGE_WIDTH,
 						false, scGrammarMESSAGE_SCALE,
 						scGrammarBLACK.r, scGrammarBLACK.g, scGrammarBLACK.b, scGrammarBLACK.a);
 
 			generateCombinations();
 
-			for(int i=0;i<mNumCombinations;i++){
+			for(int i=0;i<std::min(mNumCombinations,scDISPLAYED_COMBINATIONS);i++){
 				mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(mCombinations[i].c_str(), scTEXT_DELIMITERS,
-										scGrammarMESSAGE_OFFSET_X, scGrammarMESSAGE_OFFSET_Y+((i+1)*scLINE_SPACE), scGrammarMESSAGE_WIDTH,
+										mDecoratorManager.GetDisplay().GetWidth()/2, scGUIDELINE_DISTANCE+((i+1)*scLINE_SPACE), scGrammarMESSAGE_WIDTH,
 										false, scCOMBINATIONS_SCALE,
 										scGrammarBLACK.r, scGrammarBLACK.g, scGrammarBLACK.b, scGrammarBLACK.a);
 			}
@@ -87,23 +90,31 @@ void decorators::WordsCombinator::displayCombinations(){
 	}
 }
 
-void decorators::WordsCombinator::getPiecesPresent(){
-	mPresentPieces = NULL;
-	mNumPresentPieces = 0;
+void decorators::WordsCombinator::getPresentPieces(){
+	mPresentPieces.clear();
 
-	//TODO: do this in only one pass! use vectors?
-	for(int i=0; i<mNumPieces;i++){
-		if(mPieces[i]->getMarker().isPresent()) mNumPresentPieces++;
-	}
-	mPresentPieces = new WordsCard *[mNumPresentPieces];
-	int currentIndex = 0;
 	for(int i=0; i<mNumPieces;i++){
 		if(mPieces[i]->getMarker().isPresent()){
-			mPresentPieces[currentIndex] = mPieces[i];
-			currentIndex++;
+			mPresentPieces.push_back(mPieces[i]);
 		}
 	}
 
+}
+
+void decorators::WordsCombinator::getActivePieces(){
+
+	mActivePieces.clear();
+
+	//we calculate the range of screen that we are checking (y values around the corrector marker)
+	float minimum_y = mMessagePositionMarker->getCenter().y-scGUIDELINE_DISTANCE;
+	float maximum_y = mMessagePositionMarker->getCenter().y+scGUIDELINE_DISTANCE;
+
+	//get the markers present, their position, and y-position
+	for(int i=0;i<mPresentPieces.size();i++){
+		if(mPresentPieces[i]->getMarker().getCenter().y>=minimum_y && mPresentPieces[i]->getMarker().getCenter().y<=maximum_y){
+			mActivePieces[mPresentPieces[i]->getMarker().getCenter().x] = mPresentPieces[i];
+		}
+	}
 
 }
 
@@ -111,23 +122,32 @@ void decorators::WordsCombinator::generateCombinations(){
 	mNumCombinations=0;
 	mCombinations = NULL;
 
-	if(mNumPresentPieces>0){
-		mNumCombinations = factorial(mNumPresentPieces);
+	if(mActivePieces.size()>0){
+		mNumCombinations = factorial(mActivePieces.size());
 		mCombinations = new std::string[mNumCombinations];
 
-		std::sort (mPresentPieces,mPresentPieces+mNumPresentPieces);
+		std::string activeWords[mActivePieces.size()];
+
+		//We put the map into a vector
+		int i=0;
+	    for( std::map<float,WordsCard *>::iterator it = mActivePieces.begin(); it != mActivePieces.end(); ++it ) {
+	    	activeWords[i] = it->second->GetWords();
+	    	i++;
+	    }
+
+		std::sort (activeWords,activeWords+mActivePieces.size());
 
 		//we do the permutations themselves
 		int currentIndex=0;
 		do
 		  {
 			mCombinations[currentIndex]="";
-		    for (int i = 0; i < mNumPresentPieces; ++i)
+		    for (int it=0; it<mActivePieces.size(); ++it)
 		    {
-		      mCombinations[currentIndex]=mCombinations[currentIndex]+mPresentPieces[i]->GetWords()+" ";
+		    	mCombinations[currentIndex]=mCombinations[currentIndex]+activeWords[it]+" ";
 		    }
 	        currentIndex++;
-		  } while (std::next_permutation(mPresentPieces, mPresentPieces + mNumPresentPieces));
+		  } while (std::next_permutation(activeWords, activeWords + mActivePieces.size()));
 
 
 	}

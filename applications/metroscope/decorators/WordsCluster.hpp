@@ -30,8 +30,8 @@
 	static const float scCLUSTER_MSG_SCALE = 1.0f;
 	static const float scCLUSTER_MSG_WIDTH = 600.0f;
 
-	static const float scCLUSTER_RANGE = 200.0f;
-	static const float scCLUSTER_OVERFLOW = 50.0f;
+	static const float scCLUSTER_RANGE = 250.0f;
+	static const float scCLUSTER_OVERFLOW = 100.0f;
 
 namespace decorators {
 

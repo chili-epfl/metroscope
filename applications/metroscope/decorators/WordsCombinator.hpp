@@ -26,9 +26,9 @@
 #include "SentenceAnalysisModel.hpp"
 
 
-	static const std::string scCOMBINATOR_INTRO = "Quelles combinations sont correctes?";
+	static const std::string scCOMBINATOR_INTRO = "Et ces phrases, sont-elles correctes? Pourquoi?";
 	static const float scCOMBINATIONS_SCALE = 0.7f;
-
+	static const int scDISPLAYED_COMBINATIONS = 3;
 
 namespace decorators {
 
@@ -41,7 +41,9 @@ class WordsCombinator : public FiducialDecorator
 	protected:
 		void update();
 		void displayCombinations();
-		void getPiecesPresent();
+		void getActivePieces();
+		void getPresentPieces();
+
 		void generateCombinations();
 
 	private:
@@ -52,8 +54,9 @@ class WordsCombinator : public FiducialDecorator
 		const int mNumPieces;
 		WordsCard **mPieces; //array of pointers to all of the WordsCard objects
 
-		int mNumPresentPieces;
-		WordsCard **mPresentPieces;//array of pieces present at any given moment
+		std::vector<WordsCard *> mPresentPieces;//array of pieces present at any given moment
+
+		std::map<float, WordsCard *> mActivePieces;
 
 		int mNumCombinations;
 		std::string *mCombinations;//array of combined phrases
