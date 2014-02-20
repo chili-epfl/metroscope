@@ -18,6 +18,7 @@
 *******************************************************************************/
 
 #include "WordsCluster.hpp"
+#include <qa/components/vision/DummyMarker.hpp>
 #include <iostream>
 
 const std::string decorators::WordsCluster::scDecoratorName("WordsCluster");
@@ -119,9 +120,11 @@ void decorators::WordsCluster::displayClusters(){
 
 			//for each cluster, we draw a circle with radius equal to the distance to the furthest piece + some other distance
 			mDecoratorManager.GetDisplay().PushTransformation();
-			mDecoratorManager.GetDisplay().RenderEllipse(center.x, center.y, radius, radius, scBLACK.r, scBLACK.g, scBLACK.b);
+			//Do we generate a new marker?
+			const DummyMarker centerMarker(center.x-(scREAL_WORLD_MARKER_WIDTH_MM/2), center.y-(scREAL_WORLD_MARKER_HEIGHT_MM/2), center.x+(scREAL_WORLD_MARKER_WIDTH_MM/2), center.y-(scREAL_WORLD_MARKER_HEIGHT_MM/2), center.x+(scREAL_WORLD_MARKER_WIDTH_MM/2), center.y+(scREAL_WORLD_MARKER_HEIGHT_MM/2),  center.x-(scREAL_WORLD_MARKER_WIDTH_MM/2), center.y+(scREAL_WORLD_MARKER_HEIGHT_MM/2));
+			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(centerMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+			mDecoratorManager.GetDisplay().RenderEllipse(0, 0, radius, radius, scBLACK.r, scBLACK.g, scBLACK.b);
 			mDecoratorManager.GetDisplay().PopTransformation();
-
 
 		}
 
