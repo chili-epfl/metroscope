@@ -97,19 +97,21 @@ void decorators::GrammarChecker::Correct(std::string pSentence, std::string *mes
 
 void decorators::GrammarChecker::displayMessageHint(std::string pMessage, bool pIsCorrect){
 
+	wykobi::point2d<float> sentenceCenter = getActiveSentenceCenter();
+
 	//We only display the correction if there is any feedback to give to the user
 	if(pMessage.length()>0){
 		mDecoratorManager.GetDisplay().PushTransformation();
 		//display the color bar indicating if it is correct or not
-		mDecoratorManager.GetDisplay().RenderQuadFilled(0.0f, mMarker->getCenter().y+scGUIDELINE_DISTANCE,
-				mDecoratorManager.GetDisplay().GetWidth(), mMarker->getCenter().y+scGUIDELINE_DISTANCE,
-				mDecoratorManager.GetDisplay().GetWidth(), mMarker->getCenter().y-scGUIDELINE_DISTANCE,
-				0.0f, mMarker->getCenter().y-scGUIDELINE_DISTANCE,
+		mDecoratorManager.GetDisplay().RenderQuadFilled(0.0f, sentenceCenter.y+scGUIDELINE_DISTANCE,
+				mDecoratorManager.GetDisplay().GetWidth(), sentenceCenter.y+scGUIDELINE_DISTANCE,
+				mDecoratorManager.GetDisplay().GetWidth(), sentenceCenter.y-scGUIDELINE_DISTANCE,
+				0.0f, sentenceCenter.y-scGUIDELINE_DISTANCE,
 				scGREEN.r, scGREEN.g, scGREEN.b, 0.5f);
 
 		//display the message or hint - GET RID OF MAGIC NUMBERS!
 		mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(pMessage.c_str(), scTEXT_DELIMITERS,
-					600.0f, mMarker->getCenter().y-100.0f, 600.0f,
+					600.0f, sentenceCenter.y-100.0f, 600.0f,
 					false, 1.0f,
 					scBLACK.r, scBLACK.g, scBLACK.b, scBLACK.a);
 		mDecoratorManager.GetDisplay().PopTransformation();
@@ -119,31 +121,70 @@ void decorators::GrammarChecker::displayMessageHint(std::string pMessage, bool p
 
 }
 
-std::string decorators::GrammarChecker::getAlignedMarkersSentence(){
+void decorators::GrammarChecker::getPresentPieces(){
+	mPresentPieces.clear();
 
-	std::string sentence = "";
+	for(int i=0; i<mNumPieces;i++){
+		if(mPieces[i]->getMarker().isPresent()){
+			mPresentPieces.push_back(mPieces[i]);
+		}
+	}
 
+}
 
-	std::map<float, std::string> presentPieces;
+void decorators::GrammarChecker::getActivePieces(){
 
+	activePieces.clear();
 
 	//we calculate the range of screen that we are checking (y values around the corrector marker)
 	float minimum_y = mMarker->getCenter().y-scGUIDELINE_DISTANCE;
 	float maximum_y = mMarker->getCenter().y+scGUIDELINE_DISTANCE;
 
 	//get the markers present, their position, and y-position
-	for(int i=0;i<mNumPieces;i++){
-		if(mPieces[i]->getMarker().isPresent() && mPieces[i]->getMarker().getCenter().y>=minimum_y && mPieces[i]->getMarker().getCenter().y<=maximum_y){
-			presentPieces[mPieces[i]->getMarker().getCenter().x] = mPieces[i]->GetWords();
+	for(int i=0;i<mPresentPieces.size();i++){
+		if(mPresentPieces[i]->getMarker().getCenter().y>=minimum_y && mPresentPieces[i]->getMarker().getCenter().y<=maximum_y){
+			activePieces[mPresentPieces[i]->getMarker().getCenter().x] = mPresentPieces[i];
 		}
 	}
 
+}
+
+
+std::string decorators::GrammarChecker::getAlignedMarkersSentence(){
+
+	std::string sentence = "";
+
+	getPresentPieces();
+
+	getActivePieces();
+
 	//construct a sentence with the markers in range
-	for(std::map<float,std::string>::iterator i=presentPieces.begin(); i!=presentPieces.end(); ++i){
-		if(sentence.length()==0) sentence += i->second;
-		else sentence += " "+i->second;
+	for(std::map<float,WordsCard *>::iterator i=activePieces.begin(); i!=activePieces.end(); ++i){
+		if(sentence.length()==0) sentence += i->second->GetWords();
+		else sentence += " "+i->second->GetWords();
 	}
 
 	return sentence;
 
 }
+
+wykobi::point2d<float> decorators::GrammarChecker::getActiveSentenceCenter(){
+
+	//we calculate the cluster's center and radius
+	std::vector<wykobi::point2d<float>> sentencePoints;
+	for(std::map<float,WordsCard *>::iterator i=activePieces.begin(); i!=activePieces.end(); ++i) sentencePoints.push_back(i->second->GetLocation());
+
+	//Depending on the number of points, we create a polygon... or just a point or a line
+	wykobi::point2d<float> center;
+	if(sentencePoints.size()==1) center = sentencePoints[0];
+	else if(sentencePoints.size()==2){
+		center.x = (sentencePoints[0].x+sentencePoints[1].x)/2;
+		center.y = (sentencePoints[0].y+sentencePoints[1].y)/2;
+	}else{
+		wykobi::polygon<float,2> cardsPolygon = wykobi::make_polygon<float>(sentencePoints);
+		center = wykobi::centroid(cardsPolygon);
+	}
+
+	return center;
+}
+

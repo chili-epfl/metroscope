@@ -21,6 +21,7 @@
 #define GrammarChecker_HPP
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
+#include <wykobi/wykobi.hpp>
 #include "../FractionsConstants.hpp"
 #include "WordsCard.hpp"
 
@@ -36,7 +37,10 @@ class GrammarChecker : public FiducialDecorator
 
 		void Correct(std::string pSentence, std::string *message, bool *isCorrect);
 		void displayMessageHint(std::string pMessage, bool pIsCorrect);
+		void getPresentPieces();
+		void getActivePieces();
 		std::string getAlignedMarkersSentence();
+		wykobi::point2d<float> getActiveSentenceCenter();
 
 	protected:
 		void update();
@@ -49,6 +53,12 @@ class GrammarChecker : public FiducialDecorator
 
 		const int mNumPieces;
 		WordsCard **mPieces; //array of pointers to all of the WordsCard objects
+
+		std::vector<WordsCard *> mPresentPieces;//array of pieces present at any given moment
+
+		std::map<float, WordsCard *> activePieces;
+
+
 };
 
 }
