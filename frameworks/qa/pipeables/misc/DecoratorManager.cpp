@@ -105,9 +105,9 @@ void DecoratorManager::run()
 	for (std::list<decorators::FiducialDecorator *>::iterator it = mOrderedDecorators.begin(); it != mOrderedDecorators.end(); ++it) {
 		(*it)->update();
 	}
-	//for (std::map<int, decorators::FiducialDecorator *>::iterator it = mMarkerMasks.begin(); it != mMarkerMasks.end(); ++it) {
-	//	(*it).second->update();
-	//}
+	for (std::map<int, decorators::FiducialDecorator *>::iterator it = mMarkerMasks.begin(); it != mMarkerMasks.end(); ++it) {
+		(*it).second->update();
+	}
 }
 
 DecoratorManager::~DecoratorManager()
