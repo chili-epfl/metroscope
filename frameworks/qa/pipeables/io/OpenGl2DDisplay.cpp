@@ -20,7 +20,6 @@
 #include "OpenGl2DDisplay.hpp"
 #include <tinkar/GlTextRenderer.h>
 #include <iostream>
-#include <GL/glut.h>
 #include <SDL/SDL.h>
 #include <math.h>
 #include <opencv2/highgui/highgui.hpp>
@@ -64,8 +63,6 @@ mHeight(pDisplayHeight)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_LINE_SMOOTH);								// Set Line Antialiasing
 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-	int argc = 0;
-	glutInit (&argc, 0);
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glLineWidth(1.0f);
