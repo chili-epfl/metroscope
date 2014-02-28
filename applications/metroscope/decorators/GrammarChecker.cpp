@@ -103,16 +103,16 @@ void decorators::GrammarChecker::displayMessageHint(std::string pMessage, bool p
 	if(pMessage.length()>0){
 		mDecoratorManager.GetDisplay().PushTransformation();
 		//display the color bar indicating if it is correct or not
-		/*mDecoratorManager.GetDisplay().RenderQuadFilled(0.0f, sentenceCenter.y+scGUIDELINE_DISTANCE,
+		mDecoratorManager.GetDisplay().RenderQuadFilled(0.0f, sentenceCenter.y+scGUIDELINE_DISTANCE,
 				mDecoratorManager.GetDisplay().GetWidth(), sentenceCenter.y+scGUIDELINE_DISTANCE,
 				mDecoratorManager.GetDisplay().GetWidth(), sentenceCenter.y-scGUIDELINE_DISTANCE,
 				0.0f, sentenceCenter.y-scGUIDELINE_DISTANCE,
-				scGREEN.r, scGREEN.g, scGREEN.b, 0.3f);*/
-		mDecoratorManager.GetDisplay().RenderQuad(0.0f, sentenceCenter.y+scGUIDELINE_DISTANCE,
+				scGREEN.r, scGREEN.g, scGREEN.b, 0.3f);
+		/*mDecoratorManager.GetDisplay().RenderQuad(0.0f, sentenceCenter.y+scGUIDELINE_DISTANCE,
 				mDecoratorManager.GetDisplay().GetWidth(), sentenceCenter.y+scGUIDELINE_DISTANCE,
 				mDecoratorManager.GetDisplay().GetWidth(), sentenceCenter.y-scGUIDELINE_DISTANCE,
 				0.0f, sentenceCenter.y-scGUIDELINE_DISTANCE,
-				scGREEN.r, scGREEN.g, scGREEN.b, 1.0f);
+				scGREEN.r, scGREEN.g, scGREEN.b, 1.0f);*/
 
 		//display the message or hint - GET RID OF MAGIC NUMBERS!
 		mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(pMessage.c_str(), scTEXT_DELIMITERS,
