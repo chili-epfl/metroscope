@@ -90,6 +90,7 @@
 #include "GrammarChecker.hpp"
 #include "ActivityInstruction.hpp"
 #include "WordsCluster.hpp"
+#include "ResetSentenceChecker.hpp"
 
 //silly examples
 #include "SimpleText.hpp"

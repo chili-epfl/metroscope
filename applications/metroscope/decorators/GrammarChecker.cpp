@@ -22,6 +22,7 @@
 #include <qa/utils/Time.hpp>
 #include <vector>
 #include <map>
+#include <sstream>
 #include "../CURLHelper.hpp"
 
 const std::string decorators::GrammarChecker::scDecoratorName("GrammarChecker");
@@ -57,19 +58,65 @@ void decorators::GrammarChecker::update() {
 	if (mMarker->isPresent())
 	{
 		//check which other markers are present and within the same y-range that this one is, and construct the phrase
-		std::string sentence = getAlignedMarkersSentence();
+		//std::string sentence = getAlignedMarkersSentence();
+		std::vector<WordsCard *> sentenceVector= getAlignedMarkersVector();
 
 		std::string message="";
 		bool isCorrect=false;
 
+		std::string sentence = getSentenceFromVector(sentenceVector);
+
 		//call the grammar analyzer
 		Correct(sentence, &message, &isCorrect);
+
+		if(isCorrect && sentenceVector.size()>0){//If it is correct (and not empty), we store the sentenceVector in our buffer
+
+			//FIXME: if the card arrives progressively to the words line, it may produce different sentences progressively longer!
+			storeSentenceVector(sentenceVector);
+		}
 
 		//display message or hints
 		displayMessageHint(message, isCorrect);
 	}
 	//TODO: implement correction timer to avoid trial and error strategy
 }
+
+void decorators::GrammarChecker::ResetBuffer() {
+	sentenceBuffer.clear();
+}
+
+std::string decorators::GrammarChecker::getSentenceFromVector(std::vector<decorators::WordsCard *> vector){
+
+	std::string sentence;
+
+	//construct a sentence with the markers in range
+	for(std::vector<decorators::WordsCard *>::size_type i=0; i!=vector.size(); i++){
+		if(sentence.length()==0) sentence += vector[i]->GetWords();
+		else sentence += " "+vector[i]->GetWords();
+	}
+
+	return sentence;
+}
+
+
+void decorators::GrammarChecker::storeSentenceVector(std::vector<WordsCard *> sentenceVector){
+
+	std::string sentence = getSentenceFromVector(sentenceVector);
+
+	bool alreadyExists=false;
+
+	//we check that the sentence is not already in the buffer
+	for(std::vector<std::vector<decorators::WordsCard *>>::size_type i=0; i!=sentenceBuffer.size(); i++){
+
+		std::string bufferSentence = getSentenceFromVector(sentenceBuffer[i]);
+		if(bufferSentence==sentence) alreadyExists=true;
+
+	}
+
+	if(!alreadyExists) sentenceBuffer.push_back(sentenceVector);
+
+}
+
 
 
 void decorators::GrammarChecker::Correct(std::string pSentence, std::string *message, bool *isCorrect)
@@ -87,10 +134,17 @@ void decorators::GrammarChecker::Correct(std::string pSentence, std::string *mes
 //		std::string urlEncodedSentence = request.urlEncode(pSentence);
 //		request.makeRequest("https://languagetool.org:8081/?language=fr&text="+urlEncodedSentence);
 //		std::string response = request.getData();
-//		*message = response;
+		//TODO: get from the response whether the response is correct or not
 //		request.cleanup();
 
 		//TODO: also, we could call google and calculate the points obtained by this phrase if it is correct
+		//		CURLHelper request2;
+		//		std::string urlEncodedSentence = request2.urlEncode("\""+pSentence+"\"");
+		//		request2.makeRequest("https://www.google.com/search?q="+urlEncodedSentence);
+		//		std::string response2 = request.getData();
+		//		TODO: extract number of results as points for the sentence, like <div id="resultStats">About 65,300,000 results<nobr>
+		//		*message = response+response2;
+		//		request2.cleanup();
 	}
 
 }
@@ -121,7 +175,9 @@ void decorators::GrammarChecker::displayMessageHint(std::string pMessage, bool p
 					scBLACK.r, scBLACK.g, scBLACK.b, scBLACK.a);
 
 		//display the message or hint - GET RID OF MAGIC NUMBERS!
-		mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth("C'est correct!", scTEXT_DELIMITERS,
+		std::string s = static_cast<std::ostringstream*>( &(std::ostringstream() << sentenceBuffer.size()) )->str();
+		std::string message = "C'est correct! On a dèja "+s+" phrases.";
+		mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(message.c_str(), scTEXT_DELIMITERS,
 					600.0f, sentenceCenter.y+100.0f, 600.0f,
 					false, 1.0f,
 					scGREEN.r, scGREEN.g, scGREEN.b, scGREEN.a);
@@ -176,6 +232,23 @@ std::string decorators::GrammarChecker::getAlignedMarkersSentence(){
 	}
 
 	return sentence;
+
+}
+
+std::vector<decorators::WordsCard *> decorators::GrammarChecker::getAlignedMarkersVector(){
+
+	std::vector<WordsCard *> sentenceVector;
+
+	getPresentPieces();
+
+	getActivePieces();
+
+	//construct a sentence with the markers in range
+	for(std::map<float,WordsCard *>::iterator i=activePieces.begin(); i!=activePieces.end(); ++i){
+		sentenceVector.push_back(i->second);
+	}
+
+	return sentenceVector;
 
 }
 

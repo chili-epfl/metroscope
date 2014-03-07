@@ -40,11 +40,15 @@ class GrammarChecker : public FiducialDecorator
 		void getPresentPieces();
 		void getActivePieces();
 		std::string getAlignedMarkersSentence();
+		std::vector<WordsCard *> getAlignedMarkersVector();
 		wykobi::point2d<float> getActiveSentenceCenter();
+		void storeSentenceVector(std::vector<WordsCard *> sentenceVector);
+		void ResetBuffer();
+		int GetNumSentences() const {return sentenceBuffer.size();}
 
 	protected:
 		void update();
-
+		std::string getSentenceFromVector(std::vector<decorators::WordsCard *> vector);
 
 	private:
 
@@ -56,8 +60,9 @@ class GrammarChecker : public FiducialDecorator
 
 		std::vector<WordsCard *> mPresentPieces;//array of pieces present at any given moment
 
-		std::map<float, WordsCard *> activePieces;
+		std::map<float, WordsCard *> activePieces;//map of pieces in line with the checker card
 
+		std::vector<std::vector<WordsCard *> > sentenceBuffer;//Array of the correct sentences checked so far
 
 };
 

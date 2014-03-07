@@ -116,4 +116,14 @@ void decorators::Flipper::update() {
 	}
 }
 
+bool decorators::Flipper::IsSide1(){
 
+	if(mCurrentSide->isPresent() && mCurrentSide == mMarker) return true;
+	else return false;
+}
+
+bool decorators::Flipper::IsSide2(){
+
+	if(mCurrentSide->isPresent() && mCurrentSide == mMarker2) return true;
+	else return false;
+}

@@ -1,5 +1,5 @@
 /*******************************************************************************
-*   Copyright 2013 EPFL                                                        *
+*   Copyright 2014 EPFL                                                        *
 *                                                                              *
 *   This file is part of metroscope.                                           *
 *                                                                              *
@@ -17,56 +17,44 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef Flipper_HPP
-#define Flipper_HPP
+#ifndef ResetSentenceChecker_HPP
+#define ResetSentenceChecker_HPP
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
-#include <qa/components/vision/Craftag.hpp>
+#include "Flipper.hpp"
+#include "GrammarChecker.hpp"
+#include "../FractionsConstants.hpp"
+
+static const std::string scRESET_QUESTION = "êtes-vous sûr que vous voulez réinitialiser l'archive des phrases?";
+static const std::string scRESET_MESSAGE = "l'archive a été réinitialisé";
+static const float scRESET_SCALE = 1.0f;
+static const float scRESET_MESSAGE_OFFSET_X = 0.0f;
+static const float scRESET_MESSAGE_OFFSET_Y = 40.0f;
+static const float scRESET_MESSAGE_WIDTH = 600.0f;
+static const float scRESET_MESSAGE_TIMER = 3.0f*1000.0f;
 
 namespace decorators {
 
-class Flipper : public FiducialDecorator
+class ResetSentenceChecker : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
 
-		/*If there is only one tag on each side, pass in NULL for pSide1Tag2 and pSide2Tag2*/
-		Flipper(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pMarker2,
-				Craftag *pSide1Tag1,
-				Craftag *pSide1Tag2,
-				Craftag *pSide2Tag1,
-				Craftag *pSide2Tag2);
+		ResetSentenceChecker(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, Flipper * pFlipper, GrammarChecker *pChecker);
 
-		~Flipper();
-
-		bool IsPresent() const {return mMarker->isPresent() || mMarker2->isPresent();}
-		bool IsFlipped() const {return mIsFlipped;}
-		const FiducialMarker *GetCurrentSide() const {return mCurrentSide;}
-		long GetTimeOfLastFlip() const {return mLastFlipTimestamp;}
-		void SetTimeOfLastFlip(long pTimestamp) {mLastFlipTimestamp = pTimestamp;}
-		bool IsSide1();
-		bool IsSide2();
 
 	protected:
 		void update();
+		void displayConfirmationQuestion();
+		void displayConfirmationReset(int numSentencesDeleted);
+
+		Flipper *mFlipper;
+		GrammarChecker *mChecker;
+		long mLastShot;
 
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-
-		const FiducialMarker *mMarker2;
-
-		const FiducialMarker *mCurrentSide;
-		long mLastFlipTimestamp;
-		bool mIsFlipped;
-
-		Craftag *mSide1Tag1;
-		Craftag *mSide1Tag2; //If the marker is not aggregated, set this to NULL
-
-		Craftag *mSide2Tag1;
-		Craftag *mSide2Tag2; //If the marker is not aggregated, set this to NULL
-
-
 };
 
 }
