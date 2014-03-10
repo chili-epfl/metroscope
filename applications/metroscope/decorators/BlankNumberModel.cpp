@@ -122,16 +122,16 @@
 			cents2.x = pXRectangle2;
 			cents2.y = pYRectangle2;
 
-			tens1.x = cents1.x + 81.0f;
+			tens1.x = cents1.x + 100.0f;
 			tens1.y = cents1.y;
 
-			tens2.x = cents2.x + 81.0f;
+			tens2.x = cents2.x + 100.0f;
 			tens2.y = cents2.y;
 
-			units1.x = tens1.x + 81.0f;
+			units1.x = tens1.x + 100.0f;
 			units1.y = tens1.y;
 
-			units2.x = tens2.x + 81.0f;
+			units2.x = tens2.x + 100.0f;
 			units2.y = tens2.y;
 
 			for (unsigned int i = 0; i < mActiveCards.size(); i++){
@@ -140,16 +140,16 @@
 				switch(mActiveCards[i]->mType)
 						{
 							case 0: //units
-								 if((units1.x < position.x  && position.x < (units1.x+80.0f)) && (units1.y < position.y  && position.y < (units1.y+100.0f))) numberOfCorrectCards++;
-								 else if ((units2.x < position.x  && position.x < (units2.x+80.0f)) && (units2.y < position.y  && position.y < (units2.y+100.0f))) numberOfCorrectCards++;
+								 if((units1.x < position.x  && position.x < (units1.x+99.0f)) && (units1.y < position.y  && position.y < (units1.y+133.0f))) numberOfCorrectCards++;
+								 else if ((units2.x < position.x  && position.x < (units2.x+99.0f)) && (units2.y < position.y  && position.y < (units2.y+133.0f))) numberOfCorrectCards++;
 								 break;
 							case 1: //tens
-								if((tens1.x < position.x  && position.x < (tens1.x+80.0f)) && (tens1.y < position.y  && position.y < (tens1.y+100.0f))) numberOfCorrectCards++;
-								else if ((tens2.x < position.x  && position.x < (tens2.x+80.0f)) && (tens2.y < position.y  && position.y < (tens2.y+100.0f))) numberOfCorrectCards++;
+								if((tens1.x < position.x  && position.x < (tens1.x+99.0f)) && (tens1.y < position.y  && position.y < (tens1.y+133.0f))) numberOfCorrectCards++;
+								else if ((tens2.x < position.x  && position.x < (tens2.x+99.0f)) && (tens2.y < position.y  && position.y < (tens2.y+133.0f))) numberOfCorrectCards++;
 								break;
 							case 2: //Cents
-								if((cents1.x < position.x  && position.x < (cents1.x+80.0f)) && (cents1.y < position.y  && position.y < (cents1.y+100.0f))) numberOfCorrectCards++;
-								else if ((cents2.x < position.x  && position.x < (cents2.x+80.0f)) && (cents2.y < position.y  && position.y < (cents2.y+100.0f))) numberOfCorrectCards++;
+								if((cents1.x < position.x  && position.x < (cents1.x+99.0f)) && (cents1.y < position.y  && position.y < (cents1.y+133.0f))) numberOfCorrectCards++;
+								else if ((cents2.x < position.x  && position.x < (cents2.x+99.0f)) && (cents2.y < position.y  && position.y < (cents2.y+133.0f))) numberOfCorrectCards++;
 								break;
 						}
 			}

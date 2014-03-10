@@ -71,7 +71,7 @@ void decorators::BlankActivityCard::update() {
 		ShowInstruction();
 		DrawRectangles();
 		ShowActiveCards();
-		if(mNumberModel->AreCardsInsideRectangles(120.0f,50.0f,478.0f,50.0f)){
+		if(mNumberModel->AreCardsInsideRectangles(120.0f,250.0f,535.0f,250.0f)){
 			SetNumbers();
 		}
 		if(mNumbersAreSet){
@@ -209,7 +209,7 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 
 	mDecoratorManager.GetDisplay().PushTransformation();
 	for(unsigned int i = 0; i < tActiveCards.size(); i++){
-		if(!mNumberModel->AreCardsInsideRectangles(120.0f,50.0f,478.0f,50.0f)){
+		if(!mNumberModel->AreCardsInsideRectangles(120.0f,250.0f,535.0f,250.0f)){
 			tLocation = tActiveCards[i]->GetLocation();
 			switch(tActiveCards[i]->mType){
 			case 2:
@@ -233,7 +233,7 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 		}else {
 				sprintf(tNumberText, "%d", tActiveCards[i]->GetNumber());
 		}
-			mDecoratorManager.GetDisplay().RenderText(tNumberText, tActiveCards[i]->GetLocation().x+20.0f,tActiveCards[i]->GetLocation().y+25.0f,1.0f,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+			mDecoratorManager.GetDisplay().RenderText(tNumberText, tActiveCards[i]->GetLocation().x+20.0f,tActiveCards[i]->GetLocation().y+25.0f,3.0f,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
 
 		}
 	}
@@ -246,27 +246,27 @@ void decorators::BlankActivityCard::DrawDigits(){
 	//Cent 1
 	char* tDigitText = new char [1];
 	sprintf(tDigitText, "%d",tCent1);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,160.0f,100.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,169.0f,317.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
 	//Cent 2
 	sprintf(tDigitText, "%d",tCent2);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,518.0f,100.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,584.0f,317.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
 	//Ten 1
 	sprintf(tDigitText, "%d",tTen1);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,241.0f,100.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,269.0f,317.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
 	//Ten 2
 	sprintf(tDigitText, "%d",tTen2);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,599.0f,100.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,684.0f,317.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
 	//Unit 1
 	sprintf(tDigitText, "%d",tUnit1);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,322.0f,100.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,369.0f,317.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
 	//Unit 2
 	sprintf(tDigitText, "%d",tUnit2);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,680.0f,100.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,784.0f,317.0f,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
