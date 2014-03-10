@@ -90,3 +90,7 @@
 //#include "SumClassification.hpp"
 #include "NumberCard.hpp"
 #include "NumberActivityCard.hpp"
+//#include "RhombusPuzzle.hpp"
+#include "BlankNumberCard.hpp"
+#include "BlankActivityCard.hpp"
+#include "BlankNumberModel.hpp"
