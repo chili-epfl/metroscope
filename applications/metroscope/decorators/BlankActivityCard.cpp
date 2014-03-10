@@ -46,14 +46,20 @@ decorators::FiducialDecorator *decorators::BlankActivityCard::create(libconfig::
 decorators::BlankActivityCard::BlankActivityCard(DecoratorManager &pDecoratorManager,
 		FiducialMarker *pMarker,
 		BlankNumberModel *pModel,
-		int pFirstSummand,
-		int pSecondSummand):
+		const int pFirstSummand,
+		const int pSecondSummand):
 			FiducialDecorator(pDecoratorManager, pMarker),
 			mNumberModel(pModel),
 			mFirstSummand(pFirstSummand),
 			mSecondSummand(pSecondSummand),
 			mNumbersAreSet(false)
 			{
+				tCent1 = mFirstSummand/100;
+				tCent2 = mSecondSummand/100;
+				tTen1 = (mFirstSummand/10)%10;
+				tTen2 = (mSecondSummand/10)%10;
+				tUnit1 = mFirstSummand%10;
+				tUnit2 = mSecondSummand%10;
 			}
 
 decorators::BlankActivityCard::~BlankActivityCard(){

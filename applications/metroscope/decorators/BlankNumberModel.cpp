@@ -106,8 +106,6 @@
 	bool decorators::BlankNumberModel::AreCardsInsideRectangles(float pXRectangle1, float pYRectangle1, float pXRectangle2, float pYRectangle2){
 		int numberOfCorrectCards = 0;
 
-		int a = mActiveCards.size();
-
 		if((unsigned) mActiveCards.size()!= (unsigned) mNumSummand*3) return false;
 
 		else{
@@ -136,7 +134,7 @@
 			units2.x = tens2.x + 81.0f;
 			units2.y = tens2.y;
 
-			for (int i = 0; i < mActiveCards.size(); i++){
+			for (unsigned int i = 0; i < mActiveCards.size(); i++){
 				wykobi::point2d<float> position = mActiveCards[i]->GetLocation();
 
 				switch(mActiveCards[i]->mType)

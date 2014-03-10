@@ -32,16 +32,15 @@ namespace decorators {
 		BlankActivityCard (DecoratorManager &pDecoratorManager,
 				FiducialMarker *pMarker,
 				BlankNumberModel *pModel,
-				int firstSummand,
-				int secondSummand);
+				const int firstSummand,
+				const int secondSummand);
 		virtual ~BlankActivityCard();
 
 	protected:
 		void update();
 
 		BlankNumberModel *mNumberModel;
-		int mFirstSummand;
-		int mSecondSummand;
+
 		bool mNumbersAreSet;
 
 		void ShowInstruction();
@@ -54,13 +53,22 @@ namespace decorators {
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
+		const int mFirstSummand;
+		const int mSecondSummand;
+		/*
 		int tCent1 = mFirstSummand/100;
 		int tCent2 = mSecondSummand/100;
 		int tTen1 = (mFirstSummand/10)%10;
 		int tTen2 = (mSecondSummand/10)%10;
 		int tUnit1 = mFirstSummand%10;
 		int tUnit2 = mSecondSummand%10;
-
+		*/
+		int tCent1;
+		int tCent2;
+		int tTen1;
+		int tTen2;
+		int tUnit1;
+		int tUnit2;
 	};
 }
 

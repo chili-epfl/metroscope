@@ -40,7 +40,7 @@ decorators::BlankNumberCard::BlankNumberCard(DecoratorManager &pDecoratorManager
 		mType(pType),
 		mIsInsideRectangle(false)
 {
-	switch(pType)
+	switch(mType)
 		{
 			case 0: r = 0.0f; g = 0.0f; b = 204.0f; break;
 			case 1: r = 0.0f; g = 153.0f; b = 0.0f;break;
@@ -55,10 +55,6 @@ void decorators::BlankNumberCard::update() {
 void decorators::BlankNumberCard::DisplayNumber(const char *pNumber, float pXOffset, float pYOffset, char pType){
 	mDecoratorManager.GetDisplay().PushTransformation();
 	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-
-
-
-
 
 	mDecoratorManager.GetDisplay().RenderCenteredText(pNumber,pXOffset, pYOffset,true, 1.0f,r, g, b, 1.0f);
 	mDecoratorManager.GetDisplay().PopTransformation();
