@@ -84,31 +84,31 @@ void decorators::BlankActivityCard::update() {
 
 void decorators::BlankActivityCard::ShowInstruction(){
 	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().RenderText("Put the cards in the boxes", 300.0f, 700.0f, 1.0f,255.0f, 0.0f, 0.0f, 1.0f);
+	mDecoratorManager.GetDisplay().RenderText("Put the cards in the boxes", 300.0f, 150.0f, 1.0f,255.0f, 0.0f, 0.0f, 1.0f);
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
 void decorators::BlankActivityCard::DrawRectangles(){
 	mDecoratorManager.GetDisplay().PushTransformation();
 	//mDecoratorManager.GetDisplay().RenderQuadFilled(120.0f,50.0f,200.0f,50.0f,200.0f,150.0f,120.0f,150.0f,255.0f,255.0f,0.0f,0.40f);//1st yellow
-	mDecoratorManager.GetDisplay().RenderQuad(120.0f,50.0f,200.0f,50.0f,200.0f,150.0f,120.0f,150.0f,255.0f,255.0f,0.0f,1.0f); //1st yellow
+	mDecoratorManager.GetDisplay().RenderQuad(120.0f,250.0f,219.0f,250.0f,219.0f,384.0f,120.0f,384.0f,255.0f,255.0f,0.0f,1.0f); //1st yellow
 
 	//mDecoratorManager.GetDisplay().RenderQuadFilled(201.0f,50.0f,281.0f,50.0f,281.0f,150.0f,201.0f,150.0f,0.0f,153.0f,0.0f,0.40f);//1st green
-	mDecoratorManager.GetDisplay().RenderQuad(201.0f,50.0f,281.0f,50.0f,281.0f,150.0f,201.0f,150.0f,0.0f,153.0f,0.0f,1.0f); //1st greeen
+	mDecoratorManager.GetDisplay().RenderQuad(220.0f,250.0f,319.0f,250.0f,319.0f,384.0f,220.0f,384.0f,0.0f,153.0f,0.0f,1.0f); //1st greeen
 
 	//mDecoratorManager.GetDisplay().RenderQuadFilled(282.0f,50.0f,362.0f,50.0f,362.0f,150.0f,282.0f,150.0f,0.0f,0.0f,204.0f,0.40f);//1st blue
-	mDecoratorManager.GetDisplay().RenderQuad(282.0f,50.0f,362.0f,50.0f,362.0f,150.0f,282.0f,150.0f,0.0f,0.0f,204.0f,1.0f); //1st blue
+	mDecoratorManager.GetDisplay().RenderQuad(320.0f,250.0f,419.0f,250.0f,419.0f,384.0f,320.0f,384.0f,0.0f,0.0f,204.0f,1.0f); //1st blue
 
-	mDecoratorManager.GetDisplay().RenderCenteredText("+",420.0f,100.0f,true,3.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText("+",485.0f,317.0f,true,3.0f,0.0f,0.0f,0.0f,1.0f);
 
 	//mDecoratorManager.GetDisplay().RenderQuadFilled(478.0f,50.0f,558.0f,50.0f,558.0f,150.0f,478.0f,150.0f,255.0f,255.0f,0.0f,0.40f);
-	mDecoratorManager.GetDisplay().RenderQuad(478.0f,50.0f,558.0f,50.0f,558.0f,150.0f,478.0f,150.0f,255.0f,255.0f,0.0f,1.0f); //2nd yellow
+	mDecoratorManager.GetDisplay().RenderQuad(535.0f,250.0f,634.0f,250.0f,634.0f,384.0f,535.0f,384.0f,255.0f,255.0f,0.0f,1.0f); //2nd yellow
 
 	//mDecoratorManager.GetDisplay().RenderQuadFilled(559.0f,50.0f,639.0f,50.0f,639.0f,150.0f,559.0f,150.0f,0.0f,153.0f,0.0f,0.40f);
-	mDecoratorManager.GetDisplay().RenderQuad(559.0f,50.0f,639.0f,50.0f,639.0f,150.0f,559.0f,150.0f,0.0f,153.0f,0.0f,1.0f); //2nd greeen
+	mDecoratorManager.GetDisplay().RenderQuad(635.0f,250.0f,734.0f,250.0f,734.0f,384.0f,635.0f,384.0f,0.0f,153.0f,0.0f,1.0f); //2nd greeen
 
 	//mDecoratorManager.GetDisplay().RenderQuadFilled(640.0f,50.0f,720.0f,50.0f,720.0f,150.0f,640.0f,150.0f,0.0f,0.0f,204.0f,.4f);
-	mDecoratorManager.GetDisplay().RenderQuad(640.0f,50.0f,720.0f,50.0f,720.0f,150.0f,640.0f,150.0f,0.0f,0.0f,204.0f,1.0f); //2nd blue
+	mDecoratorManager.GetDisplay().RenderQuad(735.0f,250.0f,834.0f,250.0f,834.0f,384.0f,735.0f,384.0f,0.0f,0.0f,204.0f,1.0f); //2nd blue
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
@@ -215,20 +215,20 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 			case 2:
 				sprintf(tNumberText, "%d", (tActiveCards[i]->GetNumber()*100));
 
-				if(tActiveCards[i]->GetNumber() == tCent1) mDecoratorManager.GetDisplay().RenderLine(160.0f,150.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
-				else mDecoratorManager.GetDisplay().RenderLine(518.0f,150.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+				if(tActiveCards[i]->GetNumber() == tCent1) mDecoratorManager.GetDisplay().RenderLine(169.0f,317.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+				else mDecoratorManager.GetDisplay().RenderLine(584.0f,317.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
 			break;
 			case 1:
 				sprintf(tNumberText, "%d", (tActiveCards[i]->GetNumber()*10));
 
-				if(tActiveCards[i]->GetNumber() == tTen1) mDecoratorManager.GetDisplay().RenderLine(241.0f,150.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
-				else mDecoratorManager.GetDisplay().RenderLine(599.0f,150.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+				if(tActiveCards[i]->GetNumber() == tTen1) mDecoratorManager.GetDisplay().RenderLine(269.0f,317.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+				else mDecoratorManager.GetDisplay().RenderLine(684.0f,317.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
 			break;
 			case 0:
 				sprintf(tNumberText, "%d", tActiveCards[i]->GetNumber());
 
-				if(tActiveCards[i]->GetNumber() == tUnit1) mDecoratorManager.GetDisplay().RenderLine(322.0f,150.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
-				else mDecoratorManager.GetDisplay().RenderLine(680.0f,150.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+				if(tActiveCards[i]->GetNumber() == tUnit1) mDecoratorManager.GetDisplay().RenderLine(369.0f,317.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+				else mDecoratorManager.GetDisplay().RenderLine(784.0f,317.0f,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
 			}
 		}else {
 				sprintf(tNumberText, "%d", tActiveCards[i]->GetNumber());
