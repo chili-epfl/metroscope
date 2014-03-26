@@ -44,10 +44,11 @@ namespace decorators {
 		void ClearActiveCards();
 
 
-		std::vector<BlankNumberCard *> & GetGroupOf(BlankNumberCard *pCardMember);
 		BlankNumberCard * & GetClosestCard(BlankNumberCard *pCard);
 
 		bool AreCardsInsideRectangles(float pXRectangle1, float pYRectangle1, float pXRectangle2, float pYRectangle2);
+		bool AreCardsSemiStacked(int pType);
+		std::vector<BlankNumberCard *> & GetCardsByType(int pType);
 
 	protected:
 		void update();
@@ -56,11 +57,16 @@ namespace decorators {
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
 
+		bool mAreCardsStacked;
 		const int mNumSummand;
 		BlankNumberCard ** mBlankCards;
 
 		std::vector<BlankNumberCard *> mActiveCards;
 		std::vector<BlankNumberCard *> mGroupedCards;
+		std::vector<BlankNumberCard *> mCentCards;
+		std::vector<BlankNumberCard *> mTenCards;
+		std::vector<BlankNumberCard *> mUnitCards;
+
 
 	};
 }

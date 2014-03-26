@@ -48,9 +48,16 @@
 			FiducialDecorator(pDecoratorManager,0),
 			mNumSummand(pSummandNumber),
 			mBlankCards(pCards),
+			mAreCardsStacked(false),
 			mActiveCards()
 			{
-
+				for(unsigned int i = 0; i < mNumSummand*3; i++){
+					switch(mBlankCards[i]->mType){
+						case 0: mUnitCards.push_back(mBlankCards[i]); break;
+						case 1: mTenCards.push_back(mBlankCards[i]); break;
+						case 2: mCentCards.push_back(mBlankCards[i]); break;
+					}
+				}
 			}
 
 	decorators::BlankNumberModel::~BlankNumberModel(){
@@ -77,32 +84,25 @@
 		mGroupedCards.clear();
 	}
 
-	std::vector<decorators::BlankNumberCard *> & decorators::BlankNumberModel::GetGroupOf(BlankNumberCard *pCardMember){
-		ClearGroupedCards();
-		wykobi::point2d<float> tFirstMemberPoint = pCardMember->GetLocation();
-		BlankNumberCard * tAuxNumberCard;
-		float tAuxMinDistance = 10000.0f;
+	bool decorators::BlankNumberModel::AreCardsSemiStacked(int pType){
+		std::vector<decorators::BlankNumberCard *> tCards = GetCardsByType(pType);
 
-		for(unsigned int i = 0; i < mActiveCards.size(); i++ ){
-			if(!(mActiveCards[i]->GetMarker() == pCardMember->GetMarker())){
-				wykobi::point2d<float> tSecondMemberPoint = mActiveCards[i]->GetLocation();
-				float tDistance = wykobi::distance(tFirstMemberPoint.x,tFirstMemberPoint.y,tSecondMemberPoint.x,tSecondMemberPoint.y);
+		if(abs(tCards[0]->GetLocation().y-tCards[1]->GetLocation().y)<66.0f && abs(tCards[0]->GetLocation().x-tCards[1]->GetLocation().x)<10.0f){
+			return true;
+		}else{
+			return false;
+		}
 
-				if(tDistance<tAuxMinDistance){
-					tAuxMinDistance = tDistance;
-					tAuxNumberCard = mActiveCards[i];
-						}
-					}
-				}
-
-				if(tAuxMinDistance < 90.0f) {
-					mGroupedCards.push_back(pCardMember);
-					mGroupedCards.push_back(tAuxNumberCard);
-				}
-
-		return mGroupedCards;
 	}
 
+	std::vector<decorators::BlankNumberCard *> & decorators::BlankNumberModel::GetCardsByType(int pType){
+		switch (pType)
+		{
+		case 0: return mUnitCards;
+		case 1: return mTenCards;
+		case 2: return mCentCards;
+		}
+	}
 	bool decorators::BlankNumberModel::AreCardsInsideRectangles(float pXRectangle1, float pYRectangle1, float pXRectangle2, float pYRectangle2){
 		int numberOfCorrectCards = 0;
 

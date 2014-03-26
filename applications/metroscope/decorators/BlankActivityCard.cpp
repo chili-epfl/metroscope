@@ -60,6 +60,10 @@ decorators::BlankActivityCard::BlankActivityCard(DecoratorManager &pDecoratorMan
 				tTen2 = (mSecondSummand/10)%10;
 				tUnit1 = mFirstSummand%10;
 				tUnit2 = mSecondSummand%10;
+
+				mCentsSum = (tCent1 + tCent2)*100;
+				mTensSum = (tTen1 + tTen2)*10;
+				mUnitsSum = tUnit1 + tUnit2;
 			}
 
 decorators::BlankActivityCard::~BlankActivityCard(){
@@ -71,13 +75,17 @@ void decorators::BlankActivityCard::update() {
 		ShowInstruction();
 		DrawRectangles();
 		ShowActiveCards();
-		if(mNumberModel->AreCardsInsideRectangles(120.0f,250.0f,535.0f,250.0f)&& !mNumbersAreSet){
+		if(mNumberModel->AreCardsInsideRectangles(scCENT1_X1,scY1,scCENT2_X1,scY1) && !mNumbersAreSet){
 			SetNumbers();
 		}
+
 		if(mNumbersAreSet){
+			if(!mNumberModel->AreCardsInsideRectangles(scCENT1_X1,scY1,scCENT2_X1,scY1))	DrawNumbersAndLines();
+
 			DrawDigits();
-			DrawNumbersAndLines();
 		}
+
+
 	}
 }
 
@@ -147,6 +155,12 @@ void decorators::BlankActivityCard::SetNumbers(){
 void decorators::BlankActivityCard::DrawNumbersAndLines(){
 	if(mNumbersAreSet){
 	char * tNumberText = new char[3];
+	char * tNumberSumText = new char [3];
+	float tFactor = 0.0f;
+	float tLocationX = 0.0f;
+	float tLocationY = 0.0f;
+	//bool tSumInCard = false;
+
 	wykobi::point2d<float> tLocation;
 	std::vector<BlankNumberCard *> tActiveCards = mNumberModel->GetActiveCards();
 
@@ -154,28 +168,83 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 	for(unsigned int i = 0; i < tActiveCards.size(); i++){
 		if(!mNumberModel->AreCardsInsideRectangles(scCENT1_X1,scY1,scCENT2_X1,scY1)){
 			tLocation = tActiveCards[i]->GetLocation();
-			switch(tActiveCards[i]->mType){
-			case 2:
-				sprintf(tNumberText, "%d", (tActiveCards[i]->GetNumber()*100));
-				if(tActiveCards[i]->GetNumber() == tCent1) mDecoratorManager.GetDisplay().RenderLine(scCENT1_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
-				else mDecoratorManager.GetDisplay().RenderLine(scCENT2_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
-			break;
+				switch(tActiveCards[i]->mType){
+					case 2:
+						sprintf(tNumberText, "%d", (tActiveCards[i]->GetNumber()*100));
+						sprintf(tNumberSumText,"%d",mCentsSum);
 
-			case 1:
-				sprintf(tNumberText, "%d", (tActiveCards[i]->GetNumber()*10));
-				if(tActiveCards[i]->GetNumber() == tTen1) mDecoratorManager.GetDisplay().RenderLine(scTEN1_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
-				else mDecoratorManager.GetDisplay().RenderLine(scTEN2_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
-			break;
+						if (!mNumberModel -> AreCardsSemiStacked(2)){
+							tLocationX = tLocation.x - 30.0f;
+							tLocationY = tLocation.y + 80.0f;
+							tFactor = 3.0f;
+						}else{
+							tLocationX = tLocation.x + 30.0f;
+							tLocationY = tLocation.y;
+							tFactor = 1.0f;
 
-			case 0:
-				sprintf(tNumberText, "%d", tActiveCards[i]->GetNumber());
-				if(tActiveCards[i]->GetNumber() == tUnit1) mDecoratorManager.GetDisplay().RenderLine(scUNIT1_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
-				else mDecoratorManager.GetDisplay().RenderLine(scUNIT2_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+							if(tActiveCards[i]->GetNumber() == tCent1) //tSumInCard = true;
+								mDecoratorManager.GetDisplay().RenderText(tNumberSumText, tLocation.x,tLocation.y+90.0f,3.0f,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+						}
+
+						if(tActiveCards[i]->GetNumber() == tCent1) mDecoratorManager.GetDisplay().RenderLine(scCENT1_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+						else mDecoratorManager.GetDisplay().RenderLine(scCENT2_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+
+						mDecoratorManager.GetDisplay().RenderText(tNumberText, tLocationX,tLocationY, tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+
+
+					break;
+
+					case 1:
+						sprintf(tNumberText, "%d", (tActiveCards[i]->GetNumber()*10));
+						sprintf(tNumberSumText,"%d",mTensSum);
+
+						if(!mNumberModel->AreCardsSemiStacked(1))
+						{
+							tLocationX = tLocation.x - 30.0f;
+							tLocationY = tLocation.y + 80.0f;
+							tFactor = 3.0f;
+
+						}else{
+							tLocationX = tLocation.x + 30.0f;
+							tLocationY = tLocation.y;
+							tFactor = 1.0f;
+
+							if(tActiveCards[i]->GetNumber() == tTen1) //tSumInCard = true;
+								mDecoratorManager.GetDisplay().RenderText(tNumberSumText, tLocation.x,tLocation.y+90.0f,3.0f,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+						}
+
+						if(tActiveCards[i]->GetNumber() == tTen1) mDecoratorManager.GetDisplay().RenderLine(scTEN1_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+						else mDecoratorManager.GetDisplay().RenderLine(scTEN2_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+						mDecoratorManager.GetDisplay().RenderText(tNumberText, tLocationX,tLocationY, tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+
+
+					break;
+
+				case 0:
+					sprintf(tNumberText, "%d", tActiveCards[i]->GetNumber());
+					sprintf(tNumberSumText,"%d",mUnitsSum);
+
+					if(!mNumberModel->AreCardsSemiStacked(0))
+					{
+						tLocationX = tLocation.x - 30.0f;
+						tLocationY = tLocation.y + 80.0f;
+						tFactor = 3.0f;
+
+
+					}else{
+						tLocationX = tLocation.x + 30.0f;
+						tLocationY = tLocation.y;
+						tFactor = 1.0f;
+
+						if(tActiveCards[i]->GetNumber() == tUnit1) //tSumInCard = true;
+							mDecoratorManager.GetDisplay().RenderText(tNumberSumText, tLocation.x,tLocation.y+90.0f,3.0f,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+					}
+
+					if(tActiveCards[i]->GetNumber() == tUnit1) mDecoratorManager.GetDisplay().RenderLine(scUNIT1_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+					else mDecoratorManager.GetDisplay().RenderLine(scUNIT2_X_AVG,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(tNumberText, tLocationX,tLocationY, tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+				}
 			}
-		}else {
-				sprintf(tNumberText, "%d", tActiveCards[i]->GetNumber());
-		}
-		mDecoratorManager.GetDisplay().RenderText(tNumberText, tLocation.x-30.0f,tLocation.y+80.0f,3.0f,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
 		}
 	}
 	mDecoratorManager.GetDisplay().PopTransformation();
@@ -185,30 +254,38 @@ void decorators::BlankActivityCard::DrawDigits(){
 	mDecoratorManager.GetDisplay().PushTransformation();
 	char* tDigitText = new char [1];
 
-	//Cent 1
-	sprintf(tDigitText, "%d",tCent1);
+	sprintf(tDigitText, "%d",tCent1);//Cent 1
 	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,scCENT1_X_AVG,scY_AVG,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
-	//Cent 2
-	sprintf(tDigitText, "%d",tCent2);
+	sprintf(tDigitText, "%d",tCent2);//Cent 2
 	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,scCENT2_X_AVG,scY_AVG,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
-	//Ten 1
-	sprintf(tDigitText, "%d",tTen1);
+	sprintf(tDigitText, "%d",tTen1);//Ten 1
 	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,scTEN1_X_AVG,scY_AVG,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
-	//Ten 2
-	sprintf(tDigitText, "%d",tTen2);
+	sprintf(tDigitText, "%d",tTen2);//Ten 2
 	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,scTEN2_X_AVG,scY_AVG,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
-	//Unit 1
-	sprintf(tDigitText, "%d",tUnit1);
+	sprintf(tDigitText, "%d",tUnit1);//Unit 1
 	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,scUNIT1_X_AVG,scY_AVG,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
-	//Unit 2
-	sprintf(tDigitText, "%d",tUnit2);
+	sprintf(tDigitText, "%d",tUnit2); //Unit 2
 	mDecoratorManager.GetDisplay().RenderCenteredText(tDigitText,scUNIT2_X_AVG,scY_AVG,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
+void decorators::BlankActivityCard::CheckSemiStack(){
+	if(!mNumberModel->AreCardsInsideRectangles(scCENT1_X1,scY1,scCENT2_X1,scY1)){
+		//Cents are stacked
+		if(mNumberModel->AreCardsSemiStacked(2)){
+
+		}
+		else if (mNumberModel->AreCardsSemiStacked(1)){
+
+		}
+		else if (mNumberModel->AreCardsSemiStacked(0)){
+
+		}
+	}
+}
