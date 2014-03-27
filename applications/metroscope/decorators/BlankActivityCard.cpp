@@ -75,17 +75,15 @@ void decorators::BlankActivityCard::update() {
 		ShowInstruction();
 		DrawRectangles();
 		ShowActiveCards();
+
 		if(mNumberModel->AreCardsInsideRectangles(scCENT1_X1,scY1,scCENT2_X1,scY1) && !mNumbersAreSet){
 			SetNumbers();
 		}
 
 		if(mNumbersAreSet){
 			if(!mNumberModel->AreCardsInsideRectangles(scCENT1_X1,scY1,scCENT2_X1,scY1))	DrawNumbersAndLines();
-
 			DrawDigits();
 		}
-
-
 	}
 }
 
@@ -120,8 +118,10 @@ void decorators::BlankActivityCard::DrawRectangles(){
 void decorators::BlankActivityCard::ShowActiveCards(){
 	std::vector<BlankNumberCard *> tActiveCards = mNumberModel->GetActiveCards();
 
+
 	for(unsigned int i = 0; i < tActiveCards.size(); i++){
 		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(tActiveCards[i]->getMarker(), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 		mDecoratorManager.GetDisplay().RenderText(".", tActiveCards[i]->GetLocation().x-15.0f,tActiveCards[i]->GetLocation().y-15.0f,1.0f,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
 	}
@@ -131,7 +131,7 @@ void decorators::BlankActivityCard::SetNumbers(){
 
 	std::vector<BlankNumberCard *> tActiveCards = mNumberModel->GetActiveCards();
 	for(unsigned int i = 0; i < tActiveCards.size(); i++){
-			mDecoratorManager.GetDisplay().PushTransformation();
+			//mDecoratorManager.GetDisplay().PushTransformation();
 
 			switch(tActiveCards[i]->mType){
 			case 2://cents
@@ -168,6 +168,9 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 	for(unsigned int i = 0; i < tActiveCards.size(); i++){
 		if(!mNumberModel->AreCardsInsideRectangles(scCENT1_X1,scY1,scCENT2_X1,scY1)){
 			tLocation = tActiveCards[i]->GetLocation();
+			//Added
+			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(tActiveCards[i]->getMarker(), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
 				switch(tActiveCards[i]->mType){
 					case 2:
 						sprintf(tNumberText, "%d", (tActiveCards[i]->GetNumber()*100));
@@ -183,6 +186,7 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 							tFactor = 1.0f;
 
 							if(tActiveCards[i]->GetNumber() == tCent1) //tSumInCard = true;
+
 								mDecoratorManager.GetDisplay().RenderText(tNumberSumText, tLocation.x,tLocation.y+90.0f,3.0f,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
 						}
 

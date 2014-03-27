@@ -83,7 +83,7 @@ namespace decorators {
 
 		BlankNumberModel *mNumberModel;
 
-		bool mNumbersAreSet;
+
 
 		void ShowInstruction();
 		void ShowActiveCards();
@@ -98,6 +98,7 @@ namespace decorators {
 		static const DecoratorManager::Registerer mRegisterer;
 		const int mFirstSummand;
 		const int mSecondSummand;
+		bool mNumbersAreSet;
 
 		int tCent1;
 		int tCent2;

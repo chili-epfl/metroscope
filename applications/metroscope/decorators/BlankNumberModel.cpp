@@ -137,6 +137,7 @@
 			for (unsigned int i = 0; i < mActiveCards.size(); i++){
 				wykobi::point2d<float> position = mActiveCards[i]->GetLocation();
 
+
 				switch(mActiveCards[i]->mType)
 						{
 							case 0: //units
