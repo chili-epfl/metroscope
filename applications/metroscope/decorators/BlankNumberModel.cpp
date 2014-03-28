@@ -87,14 +87,24 @@
 	bool decorators::BlankNumberModel::AreCardsSemiStacked(int pType){
 		std::vector<decorators::BlankNumberCard *> tCards = GetCardsByType(pType);
 
+		return (abs(tCards[0]->GetLocation().y - tCards[1]->GetLocation().y) < 66.0f && abs(tCards[0]->GetLocation().x - tCards[1]->GetLocation().x) < 10.0f);
+		/*
 		if(abs(tCards[0]->GetLocation().y-tCards[1]->GetLocation().y)<66.0f && abs(tCards[0]->GetLocation().x-tCards[1]->GetLocation().x)<10.0f){
 			return true;
 		}else{
 			return false;
-		}
+		}*/
 
 	}
 
+	std::vector<decorators::BlankNumberCard *> & decorators::BlankNumberModel::GetCardsByType(int pType){
+		switch (pType)
+		{
+		case 0: return mUnitCards;
+		case 1: return mTenCards;
+		case 2: return mCentCards;
+		}
+	}
 
 	bool decorators::BlankNumberModel::AreCardsInsideRectangles(){
 		int numberOfCorrectCards = 0;
