@@ -22,48 +22,7 @@
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "BlankNumberModel.hpp"
-
-static const float scINSTRUCTION_X = 300.0f;
-static const float scINSTRUCTION_Y = 150.0f;
-static const char* const scINSTRUCTION_TEXT = "Put the cards in the boxes";
-static const float scCENT1_X1 = 120.0f;
-static const float scCENT1_X2 = 219.0f;
-static const float scCENT2_X1 = 535.0f;
-static const float scCENT2_X2 = 634.0f;
-static const float scTEN1_X1 = 220.0f;
-static const float scTEN1_X2 = 319.0f;
-static const float scTEN2_X1 = 635.0f;
-static const float scTEN2_X2 = 734.0f;
-static const float scUNIT1_X1 = 320.0f;
-static const float scUNIT1_X2 = 419.0f;
-static const float scUNIT2_X1 = 735.0f;
-static const float scUNIT2_X2 = 834.0f;
-static const float scCENT_SOLUTION_X1 = 950.0f;
-static const float scCENT_SOLUTION_X2 = 1049.0f;
-static const float scTEN_SOLUTION_X1 = 1050.0f;
-static const float scTEN_SOLUTION_X2 = 1149.0f;
-static const float scUNIT_SOLUTION_X1 = 1150.0f;
-static const float scUNIT_SOLUTION_X2 = 1249.0f;
-static const float scY1 = 250.0f;
-static const float scY2 = 384.0;
-static const float scCENT1_X_AVG = 169.0f;
-static const float scCENT2_X_AVG = 584.0f;
-static const float scTEN1_X_AVG = 269.0f;
-static const float scTEN2_X_AVG = 684.0f;
-static const float scUNIT1_X_AVG = 369.0f;
-static const float scUNIT2_X_AVG = 784.0f;
-static const float scY_AVG = 317.0f;
-static const float scGREEN_R = 0.0f;
-static const float scGREEN_G = 153.0f;
-static const float scGREEN_B = 0.0f;
-static const float scBLUE_R = 0.0f;
-static const float scBLUE_G = 0.0f;
-static const float scBLUE_B = 204.0f;
-static const float scYELLOW_R = 255.0f;
-static const float scYELLOW_G = 255.0f;
-static const float scYELLOW_B = 0.0f;
-static const float scPLUS_X = 485.0f;
-static const float scEQUAL_X = 900.0f;
+#include "../ArithmeticsConstants.hpp"
 
 namespace decorators {
 	class BlankActivityCard : public FiducialDecorator

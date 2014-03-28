@@ -95,67 +95,33 @@
 
 	}
 
-	std::vector<decorators::BlankNumberCard *> & decorators::BlankNumberModel::GetCardsByType(int pType){
-		switch (pType)
-		{
-		case 0: return mUnitCards;
-		case 1: return mTenCards;
-		case 2: return mCentCards;
-		}
-	}
-	bool decorators::BlankNumberModel::AreCardsInsideRectangles(float pXRectangle1, float pYRectangle1, float pXRectangle2, float pYRectangle2){
+
+	bool decorators::BlankNumberModel::AreCardsInsideRectangles(){
 		int numberOfCorrectCards = 0;
-
-		if((unsigned) mActiveCards.size()!= (unsigned) mNumSummand*3) return false;
-
-		else{
-			wykobi::point2d<float> cents1;
-			wykobi::point2d<float> cents2;
-			wykobi::point2d<float> tens1;
-			wykobi::point2d<float> tens2;
-			wykobi::point2d<float> units1;
-			wykobi::point2d<float> units2;
-
-			cents1.x = pXRectangle1;
-			cents1.y = pYRectangle1;
-
-			cents2.x = pXRectangle2;
-			cents2.y = pYRectangle2;
-
-			tens1.x = cents1.x + 100.0f;
-			tens1.y = cents1.y;
-
-			tens2.x = cents2.x + 100.0f;
-			tens2.y = cents2.y;
-
-			units1.x = tens1.x + 100.0f;
-			units1.y = tens1.y;
-
-			units2.x = tens2.x + 100.0f;
-			units2.y = tens2.y;
-
-			for (unsigned int i = 0; i < mActiveCards.size(); i++){
-				wykobi::point2d<float> position = mActiveCards[i]->GetLocation();
+		for (unsigned int i = 0; i < mActiveCards.size(); i++){
+			wykobi::point2d<float> position = mActiveCards[i]->GetLocation();
 
 
-				switch(mActiveCards[i]->mType)
-						{
-							case 0: //units
-								 if((units1.x < position.x  && position.x < (units1.x+99.0f)) && (units1.y < position.y  && position.y < (units1.y+133.0f))) numberOfCorrectCards++;
-								 else if ((units2.x < position.x  && position.x < (units2.x+99.0f)) && (units2.y < position.y  && position.y < (units2.y+133.0f))) numberOfCorrectCards++;
-								 break;
-							case 1: //tens
-								if((tens1.x < position.x  && position.x < (tens1.x+99.0f)) && (tens1.y < position.y  && position.y < (tens1.y+133.0f))) numberOfCorrectCards++;
-								else if ((tens2.x < position.x  && position.x < (tens2.x+99.0f)) && (tens2.y < position.y  && position.y < (tens2.y+133.0f))) numberOfCorrectCards++;
-								break;
-							case 2: //Cents
-								if((cents1.x < position.x  && position.x < (cents1.x+99.0f)) && (cents1.y < position.y  && position.y < (cents1.y+133.0f))) numberOfCorrectCards++;
-								else if ((cents2.x < position.x  && position.x < (cents2.x+99.0f)) && (cents2.y < position.y  && position.y < (cents2.y+133.0f))) numberOfCorrectCards++;
-								break;
-						}
+			if(scY1 < position.y && position.y < scY2) {
+				switch(mActiveCards[i]->mType){
+				case 0: //units
+					if((scUNIT1_X1 < position.x && position.x < scUNIT1_X2) || (scUNIT2_X1 < position.x && position.x < scUNIT2_X2)){
+						numberOfCorrectCards++;
+					}
+					break;
+				case 1: //tens
+					if((scTEN1_X1 < position.x && position.x < scTEN1_X2) || (scTEN2_X1 < position.x && position.x < scTEN2_X2)){
+						numberOfCorrectCards++;
+					}
+					break;
+				case 2: //Cents
+					if((scCENT1_X1 < position.x && position.x < scCENT1_X2) || (scCENT2_X1 < position.x && position.x < scCENT2_X2)){
+						numberOfCorrectCards++;
+					}
+				break;
+				}
 			}
 		}
-
 		return (numberOfCorrectCards == mNumSummand*3);
 	}
 

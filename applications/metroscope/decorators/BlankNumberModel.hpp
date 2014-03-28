@@ -23,6 +23,7 @@
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include <wykobi/wykobi.hpp>
 #include "BlankNumberCard.hpp"
+#include "../ArithmeticsConstants.hpp"
 
 #include <list>
 #include <queue>
@@ -46,7 +47,7 @@ namespace decorators {
 
 		BlankNumberCard * & GetClosestCard(BlankNumberCard *pCard);
 
-		bool AreCardsInsideRectangles(float pXRectangle1, float pYRectangle1, float pXRectangle2, float pYRectangle2);
+		bool AreCardsInsideRectangles();
 		bool AreCardsSemiStacked(int pType);
 		std::vector<BlankNumberCard *> & GetCardsByType(int pType);
 
