@@ -38,6 +38,7 @@ decorators::FiducialDecorator *decorators::BlankNumberCard::create(libconfig::Se
 decorators::BlankNumberCard::BlankNumberCard(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pType):
 		FiducialDecorator(pDecoratorManager, pMarker),
 		mType(pType),
+		mNumber(),
 		mIsInsideRectangle(false)
 {
 	switch(mType)
@@ -52,7 +53,7 @@ void decorators::BlankNumberCard::update() {
 
 }
 
-void decorators::BlankNumberCard::DisplayNumber(const char *pNumber, float pXOffset, float pYOffset, char pType){
+void decorators::BlankNumberCard::DisplayNumber(const char *pNumber, float pXOffset, float pYOffset){
 	mDecoratorManager.GetDisplay().PushTransformation();
 	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 

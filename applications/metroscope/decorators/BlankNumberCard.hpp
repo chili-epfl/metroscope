@@ -41,7 +41,7 @@ namespace decorators{
 			if (mMarker->isPresent())return mMarker->getCenter();
 			else return tLocation;
 		}
-		void DisplayNumber(const char *pNumber, float pXOffset, float pYOffset, char pType);
+		//void DisplayNumber(const char *pNumber, float pXOffset, float pYOffset);
 
 		const FiducialMarker *GetMarker() const {return mMarker;}
 		float r;
