@@ -71,7 +71,7 @@
 	}
 
 	std::vector<decorators::BlankNumberCard *> & decorators::BlankNumberModel::GetActiveCards() {
-		//if(mActiveBlankCards.size()!= 0) ClearActiveCards();
+		if(mActiveBlankCards.size()!= 0) ClearActiveCards();
 
 		for (int i = 0; i < mNumSummand*3; i++){
 			if (mBlankCards[i]->IsPresent()) mActiveBlankCards.push_back(mBlankCards[i]);
