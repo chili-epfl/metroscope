@@ -154,6 +154,7 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 		char * tNumberText = new char[3];
 		char * tNumberSumText = new char [3];
 		float tFactor = 0.0f;
+		float tFactorSum = 0.0f;
 		float tLocationX = 0.0f;
 		float tLocationY = 0.0f;
 
@@ -210,11 +211,12 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 
 			tLocationX = (!tNumberIsStacked) ? tLocation.x-30.0f : tLocation.x+30.0f;
 			tLocationY = (!tNumberIsStacked) ? tLocation.y + 80.0f: tLocation.y;
-			tFactor = (tNumberIsStacked) ? 3.0f : 1.0f;
+			tFactor = (!tNumberIsStacked) ? 3.0f : 1.0f;
+			tFactorSum = (tNumberHasSum && tNumberIsStacked) ? 3.0 : 1.0f;
 
 			if(tNumberHasSum && tNumberIsStacked){
 
-				mDecoratorManager.GetDisplay().RenderText(tNumberSumText, tLocation.x,tLocation.y+10.0f,tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+				mDecoratorManager.GetDisplay().RenderText(tNumberSumText, tLocation.x,tLocation.y+50.0f,tFactorSum,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
 			}
 
 			mDecoratorManager.GetDisplay().RenderText(tNumberText, tLocationX,tLocationY, tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);

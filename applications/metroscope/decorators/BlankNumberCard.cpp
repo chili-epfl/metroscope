@@ -55,8 +55,6 @@ void decorators::BlankNumberCard::update() {
 
 void decorators::BlankNumberCard::DisplayNumber(const char *pNumber, float pXOffset, float pYOffset){
 	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-
 	mDecoratorManager.GetDisplay().RenderCenteredText(pNumber,pXOffset, pYOffset,true, 1.0f,r, g, b, 1.0f);
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
