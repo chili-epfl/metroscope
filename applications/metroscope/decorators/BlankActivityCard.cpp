@@ -210,11 +210,11 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 
 			tLocationX = (!tNumberIsStacked) ? tLocation.x-30.0f : tLocation.x+30.0f;
 			tLocationY = (!tNumberIsStacked) ? tLocation.y + 80.0f: tLocation.y;
-			tFactor = (!tNumberIsStacked) ? 3.0f : 1.0f;
+			tFactor = (tNumberIsStacked) ? 3.0f : 1.0f;
 
 			if(tNumberHasSum && tNumberIsStacked){
 
-				mDecoratorManager.GetDisplay().RenderText(tNumberSumText, tLocation.x,tLocation.y,tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+				mDecoratorManager.GetDisplay().RenderText(tNumberSumText, tLocation.x,tLocation.y+10.0f,tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
 			}
 
 			mDecoratorManager.GetDisplay().RenderText(tNumberText, tLocationX,tLocationY, tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
