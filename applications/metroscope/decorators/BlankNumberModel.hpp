@@ -17,14 +17,13 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef BLANKNUMBERMODEL_HPP_
-#define BLANKNUMBERMODEL_HPP_
+#ifndef BlanKNumberModel_HPP_
+#define BlanKNumberModel_HPP_
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include <wykobi/wykobi.hpp>
-#include "BlankNumberCard.hpp"
 #include "../ArithmeticsConstants.hpp"
-
+#include "BlankNumberCard.hpp"
 #include <list>
 #include <queue>
 #include <deque>
@@ -34,16 +33,16 @@ namespace decorators {
 	class BlankNumberModel : public FiducialDecorator
 	{
 	public:
+
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
 
-		BlankNumberModel (DecoratorManager &pDecoratorManager,BlankNumberCard **pCards, const int pSummandNumber);
+		BlankNumberModel (DecoratorManager &pDecoratorManager, BlankNumberCard **pCards, const int pSummandNumber);
 		~BlankNumberModel();
 
 		std::vector<BlankNumberCard *> & GetActiveCards();
+
 		void ClearGroupedCards();
-
 		void ClearActiveCards();
-
 
 		BlankNumberCard * & GetClosestCard(BlankNumberCard *pCard);
 
@@ -55,14 +54,18 @@ namespace decorators {
 		void update();
 
 	private:
+
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
 
-		bool mAreCardsStacked;
-		const int mNumSummand;
-		BlankNumberCard ** mBlankCards;
 
-		std::vector<BlankNumberCard *> mActiveCards;
+		BlankNumberCard **mBlankCards;
+		const int mNumSummand;
+		bool mAreCardsStacked;
+
+		std::vector<BlankNumberCard *> mActiveBlankCards;
+
+
 		std::vector<BlankNumberCard *> mGroupedCards;
 		std::vector<BlankNumberCard *> mCentCards;
 		std::vector<BlankNumberCard *> mTenCards;

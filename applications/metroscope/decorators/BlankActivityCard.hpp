@@ -35,7 +35,10 @@ namespace decorators {
 				BlankNumberModel *pModel,
 				const int firstSummand,
 				const int secondSummand);
+		const FiducialMarker *GetMarker() const {return mMarker;}
+
 		virtual ~BlankActivityCard();
+
 
 	protected:
 		void update();

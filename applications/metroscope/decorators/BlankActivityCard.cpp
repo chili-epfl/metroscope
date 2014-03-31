@@ -118,10 +118,9 @@ void decorators::BlankActivityCard::DrawRectangles(){
 void decorators::BlankActivityCard::ShowActiveCards(){
 	std::vector<BlankNumberCard *> tActiveCards = mNumberModel->GetActiveCards();
 
-
 	for(unsigned int i = 0; i < tActiveCards.size(); i++){
 		mDecoratorManager.GetDisplay().PushTransformation();
-		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(tActiveCards[i]->getMarker(), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(tActiveCards[i]->GetMarker()), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 		mDecoratorManager.GetDisplay().RenderText(".", tActiveCards[i]->GetLocation().x,tActiveCards[i]->GetLocation().y,1.0f,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
 	}
@@ -203,21 +202,22 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 				break;
 			}
 
-			mDecoratorManager.GetDisplay().RenderLine(tLineOrigin,scY2,tLocation.x+5.0f, tLocation.y+5.0f, 0.0f,0.0f,0.0f,1.0f);
+			mDecoratorManager.GetDisplay().RenderLine(tLineOrigin,scY2,tLocation.x, tLocation.y, 0.0f,0.0f,0.0f,1.0f);
+
+			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(tActiveCards[i]->GetMarker()), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+
 
 			tLocationX = (!tNumberIsStacked) ? tLocation.x-30.0f : tLocation.x+30.0f;
 			tLocationY = (!tNumberIsStacked) ? tLocation.y + 80.0f: tLocation.y;
 			tFactor = (!tNumberIsStacked) ? 3.0f : 1.0f;
 
 			if(tNumberHasSum && tNumberIsStacked){
-				mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(tActiveCards[i]->getMarker(), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
 				mDecoratorManager.GetDisplay().RenderText(tNumberSumText, tLocation.x,tLocation.y,tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
 			}
 
-			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(tActiveCards[i]->getMarker(), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-
 			mDecoratorManager.GetDisplay().RenderText(tNumberText, tLocationX,tLocationY, tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
-
 
 			}
 		}
@@ -227,6 +227,7 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 
 void decorators::BlankActivityCard::DrawDigits(){
 	mDecoratorManager.GetDisplay().PushTransformation();
+
 	char* tDigitText = new char [1];
 
 	sprintf(tDigitText, "%d",tCent1);//Cent 1
