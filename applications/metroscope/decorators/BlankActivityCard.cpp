@@ -221,9 +221,9 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 
 			mDecoratorManager.GetDisplay().PushTransformation();
 			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(tActiveCards[i]->GetMarker()), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-			tLocationX = (!tNumberIsStacked) ? 0.5f : 20.0f;
-			tLocationY = (!tNumberIsStacked) ? 40.0f: 0.0f;
-			tFactor = (!tNumberIsStacked) ? 2.0f : 1.0f;
+			tLocationX = (!tNumberIsStacked) ? -0.5f : 20.0f;
+			tLocationY = (!tNumberIsStacked) ? 60.0f: 0.0f;
+			tFactor = (!tNumberIsStacked) ? 3.0f : 1.0f;
 			tFactorSum = (tNumberHasSum && tNumberIsStacked) ? 3.0 : 1.0f;
 
 /*
@@ -234,7 +234,7 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 */
 			if(tNumberHasSum && tNumberIsStacked){
 
-				mDecoratorManager.GetDisplay().RenderText(tNumberSumText, tLocation.x,tLocation.y+50.0f,tFactorSum,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+				mDecoratorManager.GetDisplay().RenderText(tNumberSumText, -1.0f,70.0f,tFactorSum,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
 			}
 
 			mDecoratorManager.GetDisplay().RenderText(tNumberText, tLocationX,tLocationY, tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
