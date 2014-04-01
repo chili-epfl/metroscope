@@ -22,6 +22,7 @@
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "BlankNumberModel.hpp"
+#include "Flipper.hpp"
 #include "../ArithmeticsConstants.hpp"
 
 namespace decorators {
@@ -33,6 +34,7 @@ namespace decorators {
 		BlankActivityCard (DecoratorManager &pDecoratorManager,
 				FiducialMarker *pMarker,
 				BlankNumberModel *pModel,
+				Flipper **pFlipper,
 				const int firstSummand,
 				const int secondSummand);
 		const FiducialMarker *GetMarker() const {return mMarker;}
@@ -44,20 +46,8 @@ namespace decorators {
 		void update();
 
 		BlankNumberModel *mNumberModel;
-
-
-
-		void ShowInstruction();
-		void ShowActiveCards();
-		void DrawNumbersAndLines();
-		void SetNumbers();
-		void DrawRectangles();
-		void DrawDigits();
-		void CheckSemiStack();
-
-	private:
-		static const std::string scDecoratorName;
-		static const DecoratorManager::Registerer mRegisterer;
+		Flipper **mFlippers;
+		long mLastShot;
 		const int mFirstSummand;
 		const int mSecondSummand;
 		bool mNumbersAreSet;
@@ -71,6 +61,20 @@ namespace decorators {
 		int mCentsSum;
 		int mTensSum;
 		int mUnitsSum;
+
+
+		void ShowInstruction();
+		void ShowActiveCards();
+		void DrawNumbersAndLines();
+		void SetNumbers();
+		void DrawRectangles();
+		void DrawDigits();
+		void CheckSemiStack();
+
+	private:
+		static const std::string scDecoratorName;
+		static const DecoratorManager::Registerer mRegisterer;
+
 	};
 }
 

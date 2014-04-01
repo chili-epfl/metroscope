@@ -30,9 +30,15 @@ namespace {
 decorators::FiducialDecorator *decorators::BlankActivityCard::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 {
 	try {
+		libconfig::Setting & tFlippersStrings = pSetting["flippers"];
+		Flipper **tFlippers = new Flipper *[2];
+		tFlippers [0] = (Flipper *)pDecoratorManager.loadDecorator(tFlippersStrings[0]);
+		tFlippers [1] = (Flipper *)pDecoratorManager.loadDecorator(tFlippersStrings[1]);
+
 		return new decorators::BlankActivityCard(pDecoratorManager,
 						pDecoratorManager.loadMarker(pSetting["marker"]),
 						(BlankNumberModel *)pDecoratorManager.loadDecorator(pSetting["number_model"]),
+						tFlippers,
 						pSetting["first_summand"],
 						pSetting["second_summand"]);
 			} catch(libconfig::SettingNotFoundException &e) {
@@ -46,13 +52,16 @@ decorators::FiducialDecorator *decorators::BlankActivityCard::create(libconfig::
 decorators::BlankActivityCard::BlankActivityCard(DecoratorManager &pDecoratorManager,
 		FiducialMarker *pMarker,
 		BlankNumberModel *pModel,
+		Flipper **pFlipper,
 		const int pFirstSummand,
 		const int pSecondSummand):
 			FiducialDecorator(pDecoratorManager, pMarker),
 			mNumberModel(pModel),
+			mFlippers (pFlipper),
 			mFirstSummand(pFirstSummand),
 			mSecondSummand(pSecondSummand),
-			mNumbersAreSet(false)
+			mNumbersAreSet(false),
+			mLastShot(Time::MillisTimestamp())
 			{
 				tCent1 = mFirstSummand/100;
 				tCent2 = mSecondSummand/100;
