@@ -22,7 +22,7 @@
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "BlankNumberModel.hpp"
-#include "Flipper.hpp"
+#include "RegroupDigits.hpp"
 #include "../ArithmeticsConstants.hpp"
 
 namespace decorators {
@@ -34,7 +34,7 @@ namespace decorators {
 		BlankActivityCard (DecoratorManager &pDecoratorManager,
 				FiducialMarker *pMarker,
 				BlankNumberModel *pModel,
-				Flipper **pFlipper,
+				RegroupDigits *pRegroup,
 				const int firstSummand,
 				const int secondSummand);
 		const FiducialMarker *GetMarker() const {return mMarker;}
@@ -46,8 +46,7 @@ namespace decorators {
 		void update();
 
 		BlankNumberModel *mNumberModel;
-		Flipper **mFlippers;
-		long mLastShot;
+		RegroupDigits *mRegroupDigits;
 		const int mFirstSummand;
 		const int mSecondSummand;
 		bool mNumbersAreSet;

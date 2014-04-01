@@ -19,6 +19,8 @@
 
 #include "BlankActivityCard.hpp"
 #include <iostream>
+#include <qa/utils/Time.hpp>
+#include <wykobi/wykobi_utilities.hpp>
 
 const std::string decorators::BlankActivityCard::scDecoratorName("BlankActivityCard");
 const  DecoratorManager::Registerer decorators::BlankActivityCard::mRegisterer(decorators::BlankActivityCard::scDecoratorName, &decorators::BlankActivityCard::create);
@@ -30,15 +32,11 @@ namespace {
 decorators::FiducialDecorator *decorators::BlankActivityCard::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 {
 	try {
-		libconfig::Setting & tFlippersStrings = pSetting["flippers"];
-		Flipper **tFlippers = new Flipper *[2];
-		tFlippers [0] = (Flipper *)pDecoratorManager.loadDecorator(tFlippersStrings[0]);
-		tFlippers [1] = (Flipper *)pDecoratorManager.loadDecorator(tFlippersStrings[1]);
 
 		return new decorators::BlankActivityCard(pDecoratorManager,
 						pDecoratorManager.loadMarker(pSetting["marker"]),
 						(BlankNumberModel *)pDecoratorManager.loadDecorator(pSetting["number_model"]),
-						tFlippers,
+						(RegroupDigits *)pDecoratorManager.loadDecorator(pSetting["regroup_digits"]),
 						pSetting["first_summand"],
 						pSetting["second_summand"]);
 			} catch(libconfig::SettingNotFoundException &e) {
@@ -52,16 +50,15 @@ decorators::FiducialDecorator *decorators::BlankActivityCard::create(libconfig::
 decorators::BlankActivityCard::BlankActivityCard(DecoratorManager &pDecoratorManager,
 		FiducialMarker *pMarker,
 		BlankNumberModel *pModel,
-		Flipper **pFlipper,
+		RegroupDigits *pRegroup,
 		const int pFirstSummand,
 		const int pSecondSummand):
 			FiducialDecorator(pDecoratorManager, pMarker),
 			mNumberModel(pModel),
-			mFlippers (pFlipper),
+			mRegroupDigits(pRegroup),
 			mFirstSummand(pFirstSummand),
 			mSecondSummand(pSecondSummand),
-			mNumbersAreSet(false),
-			mLastShot(Time::MillisTimestamp())
+			mNumbersAreSet(false)
 			{
 				tCent1 = mFirstSummand/100;
 				tCent2 = mSecondSummand/100;
@@ -85,6 +82,8 @@ void decorators::BlankActivityCard::update() {
 		DrawRectangles();
 		ShowActiveCards();
 
+		mRegroupDigits->Regroup(1,6,100.0f,300.0f,200.0f,550.0f);
+
 		if(mNumberModel->AreCardsInsideRectangles() && !mNumbersAreSet){
 			SetNumbers();
 		}
@@ -93,7 +92,11 @@ void decorators::BlankActivityCard::update() {
 			if(!mNumberModel->AreCardsInsideRectangles())	DrawNumbersAndLines();
 			DrawDigits();
 		}
-	}
+
+
+
+
+}
 }
 
 void decorators::BlankActivityCard::ShowInstruction(){
@@ -129,8 +132,8 @@ void decorators::BlankActivityCard::ShowActiveCards(){
 
 	for(unsigned int i = 0; i < tActiveCards.size(); i++){
 		mDecoratorManager.GetDisplay().PushTransformation();
-		//mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(tActiveCards[i]->GetMarker()), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-		mDecoratorManager.GetDisplay().RenderText(".", tActiveCards[i]->GetLocation().x,tActiveCards[i]->GetLocation().y,1.0f,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(tActiveCards[i]->GetMarker()), 19.0f, 19.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+		mDecoratorManager.GetDisplay().RenderText(".", 1.5f,1.5f,1.0f,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
 	}
 }
@@ -214,15 +217,21 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 
 			mDecoratorManager.GetDisplay().RenderLine(tLineOrigin,scY2,tLocation.x, tLocation.y, 0.0f,0.0f,0.0f,1.0f);
 
-			//mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(tActiveCards[i]->GetMarker()), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+			mDecoratorManager.GetDisplay().PopTransformation();
 
+			mDecoratorManager.GetDisplay().PushTransformation();
+			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(tActiveCards[i]->GetMarker()), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+			tLocationX = (!tNumberIsStacked) ? 0.5f : 20.0f;
+			tLocationY = (!tNumberIsStacked) ? 40.0f: 0.0f;
+			tFactor = (!tNumberIsStacked) ? 2.0f : 1.0f;
+			tFactorSum = (tNumberHasSum && tNumberIsStacked) ? 3.0 : 1.0f;
 
-
+/*
 			tLocationX = (!tNumberIsStacked) ? tLocation.x-30.0f : tLocation.x+30.0f;
 			tLocationY = (!tNumberIsStacked) ? tLocation.y + 80.0f: tLocation.y;
 			tFactor = (!tNumberIsStacked) ? 3.0f : 1.0f;
 			tFactorSum = (tNumberHasSum && tNumberIsStacked) ? 3.0 : 1.0f;
-
+*/
 			if(tNumberHasSum && tNumberIsStacked){
 
 				mDecoratorManager.GetDisplay().RenderText(tNumberSumText, tLocation.x,tLocation.y+50.0f,tFactorSum,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);

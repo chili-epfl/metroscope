@@ -94,4 +94,4 @@
 #include "BlankNumberCard.hpp"
 #include "BlankNumberModel.hpp"
 #include "BlankActivityCard.hpp"
-
+#include "RegroupDigits.hpp"

@@ -112,7 +112,10 @@
 		int numberOfCorrectCards = 0;
 		wykobi::point2d<float> position;
 		for (unsigned int i = 0; i < mActiveBlankCards.size(); i++){
+
 			position = mActiveBlankCards[i]->GetLocation();
+
+
 			if(scY1 < position.y && position.y < scY2) {
 				switch(mActiveBlankCards[i]->mType){
 				case 0: //units

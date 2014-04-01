@@ -41,6 +41,7 @@ class Flipper : public FiducialDecorator
 
 		bool IsPresent() const {return mMarker->isPresent() || mMarker2->isPresent();}
 		bool IsFlipped() const {return mIsFlipped;}
+		bool IsSecondSideUp() const {return (mCurrentSide == mMarker2);}
 		const FiducialMarker *GetCurrentSide() const {return mCurrentSide;}
 		long GetTimeOfLastFlip() const {return mLastFlipTimestamp;}
 		void SetTimeOfLastFlip(long pTimestamp) {mLastFlipTimestamp = pTimestamp;}
