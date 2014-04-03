@@ -48,6 +48,7 @@ namespace decorators {
 
 		bool AreCardsInsideRectangles();
 		bool AreCardsSemiStacked(int pType);
+
 		std::vector<BlankNumberCard *> & GetCardsByType(int pType);
 
 	protected:

@@ -21,6 +21,7 @@
 #define BLANKNUMBERCARD_HPP_
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
+#include "../ArithmeticsConstants.hpp"
 
 
 namespace decorators{
@@ -33,6 +34,7 @@ namespace decorators{
 		~BlankNumberCard (){}
 
 		void SetNumber (int pNumber) { mNumber = pNumber; }
+		void SetOperator (int pOperator) { mOperator = pOperator; }
 		void DisplayNumber (const char *pNumStr, float pXOffset, float pYOffset);
 		int GetNumber () const {return mNumber;}
 		bool IsPresent()const {return mMarker->isPresent();}
@@ -44,6 +46,7 @@ namespace decorators{
 		//void DisplayNumber(const char *pNumber, float pXOffset, float pYOffset);
 
 		const FiducialMarker *GetMarker() const {return mMarker;}
+		bool IsCardInsideRectangle(); //int pType
 		float r;
 		float g;
 		float b;
@@ -56,7 +59,7 @@ namespace decorators{
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
 		int mNumber;
-
+		int mOperator; //0 first operator or 1 second operator
 		bool mIsInsideRectangle;
 
 	};

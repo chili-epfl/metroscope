@@ -92,10 +92,6 @@ void decorators::BlankActivityCard::update() {
 			if(!mNumberModel->AreCardsInsideRectangles())	DrawNumbersAndLines();
 			DrawDigits();
 		}
-
-
-
-
 }
 }
 
@@ -141,27 +137,121 @@ void decorators::BlankActivityCard::ShowActiveCards(){
 void decorators::BlankActivityCard::SetNumbers(){
 
 	std::vector<BlankNumberCard *> tActiveCards = mNumberModel->GetActiveCards();
+
+
+	if(tActiveCards.size()==6){
+
 	for(unsigned int i = 0; i < tActiveCards.size(); i++){
+		int tCardNumber = 0;
+		int tCardOperator = 0;
+
 		switch(tActiveCards[i]->mType){
 		case 2://cents
-			if(tActiveCards[i]->GetLocation().x < scTEN1_X1) tActiveCards[i]->SetNumber(tCent1);
-			else tActiveCards[i]->SetNumber(tCent2);
+			tCardNumber = (tActiveCards[i]->GetLocation().x < scTEN1_X1) ? tCent1 : tCent2;
+			tCardOperator = (tActiveCards[i]->GetLocation().x < scTEN1_X1) ? 0 : 1;
+			//if(tActiveCards[i]->GetLocation().x < scTEN1_X1) tActiveCards[i]->SetNumber(tCent1);
+			//else tActiveCards[i]->SetNumber(tCent2);
 		break;
 		case 1: //tens
-			if(tActiveCards[i]->GetLocation().x < scUNIT1_X1) tActiveCards[i]->SetNumber(tTen1);
-			else tActiveCards[i]->SetNumber(tTen2);
+			tCardNumber = (tActiveCards[i]->GetLocation().x < scUNIT1_X1) ? tTen1 : tTen2;
+			tCardOperator = (tActiveCards[i]->GetLocation().x < scUNIT1_X1) ? 0 : 1;
+			//if(tActiveCards[i]->GetLocation().x < scUNIT1_X1) tActiveCards[i]->SetNumber(tTen1);
+			//else tActiveCards[i]->SetNumber(tTen2);
 		break;
 		case 0: //units
-			if(tActiveCards[i]->GetLocation().x < scUNIT1_X2) tActiveCards[i]->SetNumber(tUnit1);
-			else tActiveCards[i]->SetNumber(tUnit2);
+			tCardNumber = (tActiveCards[i]->GetLocation().x < scUNIT1_X2) ? tUnit1 : tUnit2;
+			tCardOperator = (tActiveCards[i]->GetLocation().x < scUNIT1_X2) ? 0 : 1;
+			//if(tActiveCards[i]->GetLocation().x < scUNIT1_X2) tActiveCards[i]->SetNumber(tUnit1);
+			//else tActiveCards[i]->SetNumber(tUnit2);
 		break;
 		}
+
+		tActiveCards[i]->SetNumber(tCardNumber);
+		tActiveCards[i]->SetOperator(tCardOperator);
 	}
+}
 	mNumbersAreSet = true;
 }
 
 void decorators::BlankActivityCard::DrawNumbersAndLines(){
 
+	//Agregado
+	char * tNumberText = new char[3];
+	char * tNumberSumText = new char [3];
+	float tFactor = 0.0f;
+	float tFactorSum = 0.0f;
+	float tLocationX = 0.0f;
+	float tLocationY = 0.0f;
+
+	wykobi::point2d<float> tLocation;
+	std::vector<BlankNumberCard *> tActiveCards = mNumberModel->GetActiveCards();
+
+	for(unsigned int i = 0; i < tActiveCards.size(); i++){
+		bool tNumberIsStacked =false ;
+		bool tNumberHasSum = false;
+		float tLineOrigin = 0.0;
+
+		if(!tActiveCards[i]->IsCardInsideRectangle()){
+			switch(tActiveCards[i]->mType){
+
+						case 2:
+							sprintf(tNumberText, "%d", (tActiveCards[i]->GetNumber()*100));
+							sprintf(tNumberSumText,"%d",mCentsSum);
+
+							tNumberHasSum = (tActiveCards[i]->GetNumber() == tCent1);
+							tNumberIsStacked = (mNumberModel -> AreCardsSemiStacked(2));
+							tLineOrigin = (tActiveCards[i]->GetNumber() == tCent1) ? scCENT1_X_AVG : scCENT2_X_AVG;
+
+							break;
+
+						case 1:
+							sprintf(tNumberText, "%d", (tActiveCards[i]->GetNumber()*10));
+							sprintf(tNumberSumText,"%d",mTensSum);
+
+							tNumberHasSum = (tActiveCards[i]->GetNumber() == tTen1);
+							tNumberIsStacked = (mNumberModel -> AreCardsSemiStacked(1));
+							tLineOrigin = (tActiveCards[i]->GetNumber() == tTen1) ? scTEN1_X_AVG : scTEN2_X_AVG;
+
+							break;
+
+						case 0:
+							sprintf(tNumberText, "%d", tActiveCards[i]->GetNumber());
+							sprintf(tNumberSumText,"%d",mUnitsSum);
+
+							tNumberHasSum = (tActiveCards[i]->GetNumber() == tUnit1);
+							tNumberIsStacked = (mNumberModel -> AreCardsSemiStacked(0));
+							tLineOrigin = (tActiveCards[i]->GetNumber() == tUnit1) ? scUNIT1_X_AVG : scUNIT2_X_AVG;
+
+							break;
+						}
+
+						mDecoratorManager.GetDisplay().RenderLine(tLineOrigin,scY2,tLocation.x, tLocation.y, 0.0f,0.0f,0.0f,1.0f);
+
+						mDecoratorManager.GetDisplay().PopTransformation();
+
+						mDecoratorManager.GetDisplay().PushTransformation();
+
+						mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(tActiveCards[i]->GetMarker()), 19.0f, 19.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+						tLocationX = (!tNumberIsStacked) ? -0.5f : 30.0f;
+						tLocationY = (!tNumberIsStacked) ? 60.0f: 0.0f;
+						tFactor = (!tNumberIsStacked) ? 3.0f : 1.0f;
+						tFactorSum = (tNumberHasSum && tNumberIsStacked) ? 3.0 : 1.0f;
+
+						if(tNumberHasSum && tNumberIsStacked){
+
+							mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-1.0f,80.0f,tFactorSum,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+						}
+						mDecoratorManager.GetDisplay().RenderText(tNumberText, tLocationX,tLocationY, tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+
+		}
+
+		mDecoratorManager.GetDisplay().PopTransformation();
+	}
+	//
+
+
+	/*
 	if(mNumbersAreSet){
 		char * tNumberText = new char[3];
 		char * tNumberSumText = new char [3];
@@ -220,21 +310,17 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 			mDecoratorManager.GetDisplay().PopTransformation();
 
 			mDecoratorManager.GetDisplay().PushTransformation();
-			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(tActiveCards[i]->GetMarker()), 20.0f, 20.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-			tLocationX = (!tNumberIsStacked) ? -0.5f : 20.0f;
+
+			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(tActiveCards[i]->GetMarker()), 19.0f, 19.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+			tLocationX = (!tNumberIsStacked) ? -0.5f : 30.0f;
 			tLocationY = (!tNumberIsStacked) ? 60.0f: 0.0f;
 			tFactor = (!tNumberIsStacked) ? 3.0f : 1.0f;
 			tFactorSum = (tNumberHasSum && tNumberIsStacked) ? 3.0 : 1.0f;
 
-/*
-			tLocationX = (!tNumberIsStacked) ? tLocation.x-30.0f : tLocation.x+30.0f;
-			tLocationY = (!tNumberIsStacked) ? tLocation.y + 80.0f: tLocation.y;
-			tFactor = (!tNumberIsStacked) ? 3.0f : 1.0f;
-			tFactorSum = (tNumberHasSum && tNumberIsStacked) ? 3.0 : 1.0f;
-*/
 			if(tNumberHasSum && tNumberIsStacked){
 
-				mDecoratorManager.GetDisplay().RenderText(tNumberSumText, -1.0f,70.0f,tFactorSum,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
+				mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-1.0f,80.0f,tFactorSum,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
 			}
 
 			mDecoratorManager.GetDisplay().RenderText(tNumberText, tLocationX,tLocationY, tFactor,tActiveCards[i]->r,tActiveCards[i]->g,tActiveCards[i]->b,1.0f);
@@ -243,6 +329,8 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 		}
 	}
 	mDecoratorManager.GetDisplay().PopTransformation();
+
+	*/
 }
 
 void decorators::BlankActivityCard::DrawDigits(){

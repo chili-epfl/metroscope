@@ -39,6 +39,7 @@ decorators::BlankNumberCard::BlankNumberCard(DecoratorManager &pDecoratorManager
 		FiducialDecorator(pDecoratorManager, pMarker),
 		mType(pType),
 		mNumber(),
+		mOperator(),
 		mIsInsideRectangle(false)
 {
 	switch(mType)
@@ -54,9 +55,65 @@ void decorators::BlankNumberCard::update() {
 }
 
 void decorators::BlankNumberCard::DisplayNumber(const char *pNumber, float pXOffset, float pYOffset){
+
 	mDecoratorManager.GetDisplay().PushTransformation();
 	mDecoratorManager.GetDisplay().RenderCenteredText(pNumber,pXOffset, pYOffset,true, 1.0f,r, g, b, 1.0f);
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
+bool decorators::BlankNumberCard::IsCardInsideRectangle(){
+	bool tIsInsideRectangle = false;
+	wykobi::point2d<float> tLocation = GetLocation();
+
+	if(scY1 < tLocation.y && tLocation.y < scY2){
+		switch(mType){
+		case 0: //units
+			switch(mOperator){
+			case 0: //First operator Unit
+				tIsInsideRectangle = (scUNIT1_X1 < tLocation.x && tLocation.x < scUNIT1_X2);
+				break;
+			case 1: //Second operator Unit
+				tIsInsideRectangle = (scUNIT2_X1 < tLocation.x && tLocation.x < scUNIT2_X2);
+				break;
+			}
+			break;
+		case 1: //tens
+			switch(mOperator){
+			case 0: //First operator tens
+				tIsInsideRectangle = (scTEN1_X1 < tLocation.x && tLocation.x < scTEN1_X2);
+				break;
+			case 1: //Second operator tens
+				tIsInsideRectangle = (scTEN2_X1 < tLocation.x && tLocation.x < scTEN2_X2);
+				break;
+			}
+			break;
+		case 2: //cents
+			switch(mOperator){
+			case 0: //first operator cents
+				tIsInsideRectangle = (scCENT1_X1 < tLocation.x && tLocation.x < scCENT1_X2);
+				break;
+			case 1: //second operator cents
+				tIsInsideRectangle = (scCENT2_X1 < tLocation.x && tLocation.x < scCENT2_X2);
+				break;
+			}
+			break;
+		}
+	}
+	return tIsInsideRectangle;
+}
+
+/*
+ * if((scUNIT1_X1 < position.x && position.x < scUNIT1_X2) || (scUNIT2_X1 < position.x && position.x < scUNIT2_X2)){
+						numberOfCorrectCards++;
+					}
+					break;
+				case 1: //tens
+					if((scTEN1_X1 < position.x && position.x < scTEN1_X2) || (scTEN2_X1 < position.x && position.x < scTEN2_X2)){
+						numberOfCorrectCards++;
+					}
+					break;
+				case 2: //Cents
+					if((scCENT1_X1 < position.x && position.x < scCENT1_X2) || (scCENT2_X1 < position.x && position.x < scCENT2_X2)){
+						numberOfCorrectCards++;
+ */
 

@@ -86,16 +86,15 @@
 		mActiveBlankCards.clear();
 	}
 
-
 	void decorators::BlankNumberModel::ClearGroupedCards(){
 		mGroupedCards.clear();
 	}
 
-
 	bool decorators::BlankNumberModel::AreCardsSemiStacked(int pType){
 		std::vector<decorators::BlankNumberCard *> tCards = GetCardsByType(pType);
 
-		return (abs(tCards[0]->GetLocation().y - tCards[1]->GetLocation().y) < 66.0f && abs(tCards[0]->GetLocation().x - tCards[1]->GetLocation().x) < 10.0f);
+		float tDistance = wykobi::distance(tCards[0]->GetLocation().x,tCards[0]->GetLocation().y,tCards[1]->GetLocation().x,tCards[1]->GetLocation().y);
+		return (tDistance < 50.0f);
 	}
 
 	std::vector<decorators::BlankNumberCard *> & decorators::BlankNumberModel::GetCardsByType(int pType){
@@ -114,7 +113,6 @@
 		for (unsigned int i = 0; i < mActiveBlankCards.size(); i++){
 
 			position = mActiveBlankCards[i]->GetLocation();
-
 
 			if(scY1 < position.y && position.y < scY2) {
 				switch(mActiveBlankCards[i]->mType){
@@ -138,5 +136,7 @@
 		}
 		return (numberOfCorrectCards == mNumSummand*3);
 	}
+
+
 
 

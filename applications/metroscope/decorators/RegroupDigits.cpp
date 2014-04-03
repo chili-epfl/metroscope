@@ -93,7 +93,7 @@ void decorators::RegroupDigits::Regroup(int pType, int pDigit, float pOriginPoin
 										//tPartialX2, tPartialY2,
 										//scX1, scY2,
 										//tFull?0.0f:1.0f, 1.0f, 0.0f);
-								mDecoratorManager.GetDisplay().RenderText("*",tPartialX2,tPartialY2,1.5f,1.0f,1.0f,15.0f,1.0f);
+								mDecoratorManager.GetDisplay().RenderText("  *",tPartialX2,tPartialY2,2.5f,125.0f,125.0f,150.0f,1.0f);
 								//mDecoratorManager.GetDisplay().RenderText(tFull?"Prêt!":"En charge...", tFull?0.5f:-1.0f, 6.0f, 0.04f);
 								mDecoratorManager.GetDisplay().PopTransformation();
 			}
