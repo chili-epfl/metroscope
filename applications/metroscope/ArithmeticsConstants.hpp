@@ -59,6 +59,11 @@ static const float scTEN2_X_AVG = (scTEN2_X1 + scTEN2_X2)/2.0;
 static const float scUNIT1_X_AVG = (scUNIT1_X1 + scUNIT1_X2)/2.0;
 static const float scUNIT2_X_AVG = (scUNIT2_X1 + scUNIT2_X2)/2.0;
 
+static const float scCENT_SOLUTION_X_AVG = (scCENT_SOLUTION_X1 + scCENT_SOLUTION_X2)/2.0f;
+static const float scTEN_SOLUTION_X_AVG = (scTEN_SOLUTION_X1 + scTEN_SOLUTION_X2)/2.0f;
+static const float scUNIT_SOLUTION_X_AVG = (scUNIT_SOLUTION_X1 + scUNIT_SOLUTION_X2)/2.0f;
+
+
 static const float scY_AVG = (scY1 + scY2)/2.0;
 
 static const float scGREEN_R = 0.0f;
@@ -70,5 +75,9 @@ static const float scBLUE_B = 204.0f;
 static const float scYELLOW_R = 255.0f;
 static const float scYELLOW_G = 255.0f;
 static const float scYELLOW_B = 0.0f;
+static const float scRED_R = 255.0f;
+static const float scRED_G = 0.0f;
+static const float scRED_B = 0.0f;
+
 
 #endif

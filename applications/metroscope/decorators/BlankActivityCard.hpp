@@ -60,7 +60,12 @@ namespace decorators {
 		int mCentsSum;
 		int mTensSum;
 		int mUnitsSum;
-
+		int mSolutionUnit;
+		int mSolutionTen;
+		int mSolutionCent;
+		bool mIsSolutionUnitCorrect;
+		bool mIsSolutionTenCorrect;
+		bool mIsSolutionCentCorrect;
 
 		void ShowInstruction();
 		void ShowActiveCards();
@@ -69,6 +74,9 @@ namespace decorators {
 		void DrawRectangles();
 		void DrawDigits();
 		void CheckSemiStack();
+		void CheckSolution();
+		void FillSolutionRectangles();
+		void DrawSolutionDigits();
 
 	private:
 		static const std::string scDecoratorName;

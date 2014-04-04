@@ -51,7 +51,6 @@
 			mAreCardsStacked(false),
 			mActiveBlankCards()
 			{
-
 				for(int i = 0; i < mNumSummand*3; i++){
 					switch(mBlankCards[i]->mType){
 						case 0: mUnitCards.push_back(mBlankCards[i]); break;
@@ -93,8 +92,13 @@
 	bool decorators::BlankNumberModel::AreCardsSemiStacked(int pType){
 		std::vector<decorators::BlankNumberCard *> tCards = GetCardsByType(pType);
 
-		float tDistance = wykobi::distance(tCards[0]->GetLocation().x,tCards[0]->GetLocation().y,tCards[1]->GetLocation().x,tCards[1]->GetLocation().y);
-		return (tDistance < 50.0f);
+		if(tCards[0]->IsPresent() && tCards[1]->IsPresent()){
+			float tDistance = wykobi::distance(tCards[0]->GetLocation().x,tCards[0]->GetLocation().y,tCards[1]->GetLocation().x,tCards[1]->GetLocation().y);
+			return (tDistance < 50.0f);
+		}
+
+		return 0;
+
 	}
 
 	std::vector<decorators::BlankNumberCard *> & decorators::BlankNumberModel::GetCardsByType(int pType){
@@ -137,6 +141,72 @@
 		return (numberOfCorrectCards == mNumSummand*3);
 	}
 
+	bool decorators::BlankNumberModel::IsAStackNearRectangle(){
+		return (IsStackNearRectangle(0) || IsStackNearRectangle(1) || IsStackNearRectangle(2));
+	}
+
+	float decorators::BlankNumberModel::GetStackXAvg(int pType){
+		if(AreCardsSemiStacked(pType)){
+			std::vector<decorators::BlankNumberCard *> tCards = GetCardsByType(pType);
+			return (tCards[0]->GetLocation().x +tCards[1]->GetLocation().x)/2.0;
+		}
+		return -1.0;
+	}
+
+	float decorators::BlankNumberModel::GetStackYAvg(int pType){
+			if(AreCardsSemiStacked(pType)){
+				std::vector<decorators::BlankNumberCard *> tCards = GetCardsByType(pType);
+				return (tCards[0]->GetLocation().y +tCards[1]->GetLocation().y)/2.0;
+			}
+			return 0.0;
+		}
+
+	bool decorators::BlankNumberModel::IsStackNearRectangle(int pType){
+		float tRectangleX = 0.0f;
+		float tRectangleY = scY2;
+
+		switch(pType){
+		case 0: //units
+			tRectangleX = scUNIT_SOLUTION_X_AVG;
+			break;
+		case 1:
+			tRectangleX = scTEN_SOLUTION_X_AVG;
+			break;
+		case 2:
+			tRectangleX = scCENT_SOLUTION_X_AVG;
+			break;
+		}
+
+		if(AreCardsSemiStacked(pType)){
+			float tDistance = wykobi::distance(GetStackXAvg(pType),GetStackYAvg(pType),tRectangleX,tRectangleY);
+			return (tDistance < 50.0f);
+		}
+		return 0;
+	}
+
+	bool decorators::BlankNumberModel::AreCardsInsideSolution(){
+		return (IsStackInsideSolution(0) || IsStackInsideSolution(1) || IsStackInsideSolution(2));
+	}
+
+	bool decorators::BlankNumberModel::IsStackInsideSolution(int pType){
+				wykobi::point2d<float> position;
+				for (unsigned int i = 0; i < mActiveBlankCards.size(); i++){
+
+					position = mActiveBlankCards[i]->GetLocation();
+
+					if(scY1 < position.y && position.y < scY2) {
+						switch(pType){
+						case 0: //units
+							if(scUNIT_SOLUTION_X1 < position.x && position.x < scUNIT_SOLUTION_X2) return true; break;
+						case 1: //tens
+							if(scTEN_SOLUTION_X1 < position.x && position.x < scTEN_SOLUTION_X2) return true; break;
+						case 2: //Cents
+							if(scCENT_SOLUTION_X1 < position.x && position.x < scCENT_SOLUTION_X2) return true; break;
+						}
+					}
+				}
+				return false;
+	}
 
 
 

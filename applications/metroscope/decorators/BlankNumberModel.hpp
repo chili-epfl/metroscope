@@ -40,6 +40,8 @@ namespace decorators {
 		~BlankNumberModel();
 
 		std::vector<BlankNumberCard *> & GetActiveCards();
+		float GetStackXAvg(int pType);
+		float GetStackYAvg(int pType);
 
 		void ClearGroupedCards();
 		void ClearActiveCards();
@@ -48,7 +50,10 @@ namespace decorators {
 
 		bool AreCardsInsideRectangles();
 		bool AreCardsSemiStacked(int pType);
-
+		bool IsAStackNearRectangle();
+		bool IsStackNearRectangle(int pType);
+		bool AreCardsInsideSolution();
+		bool IsStackInsideSolution(int pType);
 		std::vector<BlankNumberCard *> & GetCardsByType(int pType);
 
 	protected:
