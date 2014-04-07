@@ -47,18 +47,16 @@ decorators::FiducialDecorator *decorators::BlankActivityCard::create(libconfig::
 			return 0;
 }
 
-decorators::BlankActivityCard::BlankActivityCard(DecoratorManager &pDecoratorManager,
-		FiducialMarker *pMarker,
-		BlankNumberModel *pModel,
-		RegroupDigits *pRegroup,
-		const int pFirstSummand,
-		const int pSecondSummand):
+decorators::BlankActivityCard::BlankActivityCard(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, BlankNumberModel *pModel, RegroupDigits *pRegroup, const int pFirstSummand, const int pSecondSummand):
 			FiducialDecorator(pDecoratorManager, pMarker),
 			mNumberModel(pModel),
 			mRegroupDigits(pRegroup),
 			mFirstSummand(pFirstSummand),
 			mSecondSummand(pSecondSummand),
-			mNumbersAreSet(false)
+			mNumbersAreSet(false),
+			mIsSolutionUnitCorrect(false),
+			mIsSolutionTenCorrect (false),
+			mIsSolutionCentCorrect (false)
 			{
 				tCent1 = mFirstSummand/100;
 				tCent2 = mSecondSummand/100;
@@ -93,15 +91,15 @@ void decorators::BlankActivityCard::update() {
 		}
 
 		if(mNumbersAreSet){
-			if(!mNumberModel->AreCardsInsideRectangles() && !mNumberModel->AreCardsInsideSolution())	DrawNumbersAndLines();
 			DrawDigits();
 
-			if(mNumberModel->IsAStackNearRectangle()){
-				CheckSolution();
-				FillSolutionRectangles();
-			}
+			if(!mNumberModel->AreCardsInsideRectangles() && !mNumberModel->AreCardsInsideSolution())	DrawNumbersAndLines();
+
+			if(mNumberModel->IsAStackNearRectangle()) CheckSolution(); FillSolutionRectangles();
+
 
 			if(mNumberModel ->AreCardsInsideSolution()){
+				CheckSolution();
 				DrawSolutionDigits();
 			}
 		}
@@ -308,19 +306,19 @@ void decorators::BlankActivityCard::DrawSolutionDigits(){
 	char* tDigitSolutionText = new char [1];
 
 	sprintf(tDigitSolutionText, "%d",mSolutionCent);
-	if(mIsSolutionCentCorrect){
+	if(mIsSolutionCentCorrect && mNumberModel->IsStackInsideSolution(2)){
 		mDecoratorManager.GetDisplay().RenderCenteredText(tDigitSolutionText,scCENT_SOLUTION_X_AVG,scY_AVG,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 		mDecoratorManager.GetDisplay().RenderQuadFilled(scCENT_SOLUTION_X1,scY1,scCENT_SOLUTION_X2,scY1,scCENT_SOLUTION_X2,scY2,scCENT_SOLUTION_X1,scY2,255.0f,255.0f,255.0f, 0.0f);
 	}
 
 	sprintf(tDigitSolutionText, "%d",mSolutionTen);
-	if(mIsSolutionTenCorrect){
+	if(mIsSolutionTenCorrect && mNumberModel->IsStackInsideSolution(1)){
 		mDecoratorManager.GetDisplay().RenderCenteredText(tDigitSolutionText,scTEN_SOLUTION_X_AVG,scY_AVG,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 		mDecoratorManager.GetDisplay().RenderQuadFilled(scTEN_SOLUTION_X1,scY1,scTEN_SOLUTION_X2,scY1,scTEN_SOLUTION_X2,scY2,scTEN_SOLUTION_X1,scY2,255.0f,255.0f,255.0f, 0.0f);
 	}
 
 	sprintf(tDigitSolutionText, "%d",mSolutionUnit);
-	if(mIsSolutionUnitCorrect){
+	if(mIsSolutionUnitCorrect && mNumberModel->IsStackInsideSolution(0)){
 		mDecoratorManager.GetDisplay().RenderCenteredText(tDigitSolutionText,scUNIT_SOLUTION_X_AVG,scY_AVG,true,4.0f,0.0f,0.0f,0.0f,1.0f);
 		mDecoratorManager.GetDisplay().RenderQuadFilled(scUNIT_SOLUTION_X1,scY1,scUNIT_SOLUTION_X2,scY1,scUNIT_SOLUTION_X2,scY2,scUNIT_SOLUTION_X1,scY2,255.0f,255.0f,255.0f, 0.0f);
 	}
