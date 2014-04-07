@@ -195,6 +195,7 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 		float tLineOrigin = 0.0;
 
 		if(!tActiveCards[i]->IsCardInsideRectangle()){
+			tLocation = tActiveCards[i]->GetLocation();
 			switch(tActiveCards[i]->mType){
 
 						case 2:
