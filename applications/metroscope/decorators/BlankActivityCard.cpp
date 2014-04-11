@@ -72,6 +72,9 @@ decorators::BlankActivityCard::BlankActivityCard(DecoratorManager &pDecoratorMan
 				mSolutionUnit = (mFirstSummand + mSecondSummand)%10;
 				mSolutionTen = ((mFirstSummand + mSecondSummand)/10)%10;
 				mSolutionCent = (mFirstSummand + mSecondSummand)/100;
+
+				mIsNecessaryU2T = (tUnit1 + tUnit2) != mSolutionUnit;
+				mIsNecessaryT2C = (tTen1 + tTen2) != mSolutionTen;
 			}
 
 decorators::BlankActivityCard::~BlankActivityCard(){
@@ -79,25 +82,23 @@ decorators::BlankActivityCard::~BlankActivityCard(){
 }
 
 void decorators::BlankActivityCard::update() {
+
 	if(mMarker->isPresent()){
 		ShowInstruction();
 		DrawRectangles();
 		ShowActiveCards();
-
-		//mRegroupDigits->Regroup(1,6,100.0f,300.0f,200.0f,550.0f);
 
 		if(mNumberModel->AreCardsInsideRectangles() && !mNumbersAreSet){
 			SetNumbers();
 		}
 
 		if(mNumbersAreSet){
-
 			DrawDigits();
-
 			DrawNumbersAndLines();
 
-			if(mNumberModel->IsAStackNearRectangle()) CheckSolution(); FillSolutionRectangles();
+			if(mRegroupDigits->IsGrouperPresent())	UpdateDigits();
 
+			if(mNumberModel->IsAStackNearRectangle()) CheckSolution(); FillSolutionRectangles();
 
 			if(mNumberModel ->AreCardsInsideSolution()){
 				CheckSolution();
@@ -133,6 +134,29 @@ void decorators::BlankActivityCard::DrawRectangles(){
 	mDecoratorManager.GetDisplay().RenderQuad(scUNIT_SOLUTION_X1,scY1,scUNIT_SOLUTION_X2,scY1,scUNIT_SOLUTION_X2,scY2,scUNIT_SOLUTION_X1,scY2,scBLUE_R,scBLUE_G,scBLUE_B, 1.0f);
 
 	mDecoratorManager.GetDisplay().PopTransformation();
+}
+
+void decorators::BlankActivityCard::UpdateDigits(){
+
+	if (mRegroupDigits->IsGrouperPresent(0)) {
+		bool isAnimationU2TDone = mRegroupDigits->Regroup(0,6,100.0f,300.0f,200.0f,550.0f,(mIsNecessaryU2T && mNumberModel->AreCardsSemiStacked(1) && mNumberModel->AreCardsSemiStacked(0)));
+
+		if(isAnimationU2TDone && mNumberModel->AreCardsSemiStacked(1) && mNumberModel->AreCardsSemiStacked(0) && mIsNecessaryU2T){
+			mTensSum+=10;
+			mUnitsSum%=10;
+			mIsNecessaryU2T = false;
+		}
+	}
+	if (mRegroupDigits->IsGrouperPresent(1) && mNumberModel->AreCardsSemiStacked(2) && mNumberModel->AreCardsSemiStacked(1)) {
+		bool isAnimationT2CDone = mRegroupDigits->Regroup(1,6,100.0f,300.0f,200.0f,550.0f,mIsNecessaryT2C && mNumberModel->AreCardsSemiStacked(2) && mNumberModel->AreCardsSemiStacked(1));
+		if(isAnimationT2CDone){
+			mCentsSum+=100;
+			mTensSum%=100;
+			mIsNecessaryT2C = false;
+		}
+	}
+
+
 }
 
 void decorators::BlankActivityCard::ShowActiveCards(){

@@ -237,8 +237,8 @@
 					mDecoratorManager.GetDisplay().PushTransformation();
 					mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(mActiveBlankCards[i]->GetMarker()), 19.0f, 19.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 
-					if(IsStackNearRectangle(mActiveBlankCards[i]->mType) && !tCorrectSolution) mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-2.0f,85.0f,3.0f,scRED_R,scRED_G, scRED_B, 1.0f);
-					else mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-2.0f,85.0f,3.0f,mActiveBlankCards[i]->mR,mActiveBlankCards[i]->mG, mActiveBlankCards[i]->mB, 1.0f);
+					if(IsStackNearRectangle(mActiveBlankCards[i]->mType) && !tCorrectSolution) mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-5.0f,85.0f,3.0f,scRED_R,scRED_G, scRED_B, 1.0f);
+					else mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-5.0f,85.0f,3.0f,mActiveBlankCards[i]->mR,mActiveBlankCards[i]->mG, mActiveBlankCards[i]->mB, 1.0f);
 
 					mDecoratorManager.GetDisplay().PopTransformation();
 				}

@@ -131,7 +131,7 @@ void decorators::BlankNumberCard::SetNumber (int pNumber){
 
 void decorators::BlankNumberCard::DisplayNumber(bool tStacked){
 	if(!IsCardInsideBigRectangles()){
-		float tX = tStacked ? 25.0f : -2.0f;
+		float tX = tStacked ? 30.0f : -2.0f;
 		float tY = tStacked ? 0.0f : 70.0f;
 		float tFactor = tStacked ? 1.0f : 3.0f;
 

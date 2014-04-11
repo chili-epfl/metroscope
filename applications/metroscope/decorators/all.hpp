@@ -95,3 +95,4 @@
 #include "BlankNumberModel.hpp"
 #include "BlankActivityCard.hpp"
 #include "RegroupDigits.hpp"
+#include "Regrouper.hpp"

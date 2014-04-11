@@ -68,10 +68,13 @@ namespace decorators {
 		void CheckSolution();
 		void FillSolutionRectangles();
 		void DrawSolutionDigits();
+		void UpdateDigits();
 
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
+		bool mIsNecessaryU2T;
+		bool mIsNecessaryT2C;
 
 	};
 }
