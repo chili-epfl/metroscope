@@ -33,10 +33,11 @@ namespace decorators{
 		BlankNumberCard (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pType); //pType: 0= units, 1=tens and 2= cents
 		~BlankNumberCard (){}
 
-		void SetNumber (int pNumber) { mNumber = pNumber; }
+		//void SetNumber (int pNumber) { mNumber = pNumber; }
+		void SetNumber (int pNumber);
 		void SetOperator (int pOperator) { mOperator = pOperator; }
-		void DisplayNumber (const char *pNumStr, float pXOffset, float pYOffset);
 		int GetNumber () const {return mNumber;}
+		char * GetNumberText () const {return mNumberText;}
 		bool IsPresent()const {return mMarker->isPresent();}
 		wykobi::point2d<float> GetLocation() const {
 			wykobi::point2d<float> tLocation;
@@ -47,23 +48,27 @@ namespace decorators{
 
 		const FiducialMarker *GetMarker() const {return mMarker;}
 		bool IsCardInsideRectangle(); //int pType
-		float r;
-		float g;
-		float b;
+		bool IsCardInsideBigRectangles();
+		float mR;
+		float mG;
+		float mB;
 		int mType;
+
+		void DisplayNumber(bool tStackedCard);
 
 	protected:
 		void update();
 
 	private:
+
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
 		int mNumber;
 		int mOperator; //0 first operator or 1 second operator
 		bool mIsInsideRectangle;
+		char * mNumberText;
 
 	};
 }
-
 
 #endif /* BLANKNUMBERCARD_HPP_ */

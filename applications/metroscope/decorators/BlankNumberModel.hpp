@@ -56,6 +56,9 @@ namespace decorators {
 		bool IsStackInsideSolution(int pType);
 		std::vector<BlankNumberCard *> & GetCardsByType(int pType);
 
+		void DrawNumbers(float tCentsSum, float tTensSum, float tUnitsSum, int tCentsSol, int tTensSol, int tUnitsSol);
+		bool IsStackInsideBigRectangles(int tType);
+
 	protected:
 		void update();
 

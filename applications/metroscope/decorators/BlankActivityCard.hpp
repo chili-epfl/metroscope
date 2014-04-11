@@ -51,21 +51,12 @@ namespace decorators {
 		const int mSecondSummand;
 		bool mNumbersAreSet;
 
-		int tCent1;
-		int tCent2;
-		int tTen1;
-		int tTen2;
-		int tUnit1;
-		int tUnit2;
-		int mCentsSum;
-		int mTensSum;
-		int mUnitsSum;
-		int mSolutionUnit;
-		int mSolutionTen;
-		int mSolutionCent;
-		bool mIsSolutionUnitCorrect;
-		bool mIsSolutionTenCorrect;
-		bool mIsSolutionCentCorrect;
+		int tCent1, tCent2;
+		int tTen1, tTen2;
+		int tUnit1, tUnit2;
+		int mCentsSum, mTensSum, mUnitsSum;
+		int mSolutionUnit, mSolutionTen, mSolutionCent;
+		bool mIsSolutionUnitCorrect, mIsSolutionTenCorrect, mIsSolutionCentCorrect;
 
 		void ShowInstruction();
 		void ShowActiveCards();

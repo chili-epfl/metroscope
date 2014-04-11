@@ -40,27 +40,39 @@ decorators::BlankNumberCard::BlankNumberCard(DecoratorManager &pDecoratorManager
 		mType(pType),
 		mNumber(),
 		mOperator(),
-		mIsInsideRectangle(false)
-{
-	switch(mType)
+		mIsInsideRectangle(false),
+		mNumberText(new char[3])
 		{
-			case 0: r = 0.0f; g = 0.0f; b = 204.0f; break;
-			case 1: r = 0.0f; g = 153.0f; b = 0.0f;break;
-			case 2: r = 255.0f; g = 255.0f; b = 0.0f;break;
+			switch(mType)
+				{
+					case 0: mR = 0.0f; mG = 0.0f; mB = 204.0f; break;
+					case 1: mR = 0.0f; mG = 153.0f; mB = 0.0f;break;
+					case 2: mR = 255.0f; mG = 255.0f; mB = 0.0f;break;
+				}
 		}
-}
 
 void decorators::BlankNumberCard::update() {
 
 }
 
-void decorators::BlankNumberCard::DisplayNumber(const char *pNumber, float pXOffset, float pYOffset){
 
-	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().RenderCenteredText(pNumber,pXOffset, pYOffset,true, 1.0f,r, g, b, 1.0f);
-	mDecoratorManager.GetDisplay().PopTransformation();
+bool decorators::BlankNumberCard::IsCardInsideBigRectangles(){
+	bool tIsInsideBigRectangle = false;
+	bool tIsInsideFirstRectangle = false;
+	bool tIsInsideSecondRectangle = false;
+	bool tIsInsideSolutionRectangle = false;
+
+	wykobi::point2d<float> tLocation = GetLocation();
+
+	if(scY1 < tLocation.y && tLocation.y < scY2){
+		tIsInsideFirstRectangle = (scCENT1_X1 < tLocation.x && tLocation.x < scUNIT1_X2);
+		tIsInsideSecondRectangle = (scCENT2_X1 < tLocation.x && tLocation.x < scUNIT2_X2);
+		tIsInsideSolutionRectangle = (scCENT_SOLUTION_X1 < tLocation.x && tLocation.x < scUNIT_SOLUTION_X2);
+
+		return (tIsInsideFirstRectangle || tIsInsideSecondRectangle || tIsInsideSolutionRectangle);
+	}
+	return tIsInsideBigRectangle;
 }
-
 bool decorators::BlankNumberCard::IsCardInsideRectangle(){
 	bool tIsInsideRectangle = false;
 	wykobi::point2d<float> tLocation = GetLocation();
@@ -102,18 +114,31 @@ bool decorators::BlankNumberCard::IsCardInsideRectangle(){
 	return tIsInsideRectangle;
 }
 
-/*
- * if((scUNIT1_X1 < position.x && position.x < scUNIT1_X2) || (scUNIT2_X1 < position.x && position.x < scUNIT2_X2)){
-						numberOfCorrectCards++;
-					}
-					break;
-				case 1: //tens
-					if((scTEN1_X1 < position.x && position.x < scTEN1_X2) || (scTEN2_X1 < position.x && position.x < scTEN2_X2)){
-						numberOfCorrectCards++;
-					}
-					break;
-				case 2: //Cents
-					if((scCENT1_X1 < position.x && position.x < scCENT1_X2) || (scCENT2_X1 < position.x && position.x < scCENT2_X2)){
-						numberOfCorrectCards++;
- */
+void decorators::BlankNumberCard::SetNumber (int pNumber){
+	mNumber = pNumber;
+	switch(mType){
+	case 0: //unit
+		sprintf(mNumberText, "%d", mNumber);
+		break;
+	case 1: //ten
+		sprintf(mNumberText, "%d", mNumber*10);
+		break;
+	case 2: //cent
+		sprintf(mNumberText, "%d", mNumber*100);
+		break;
+	}
+}
+
+void decorators::BlankNumberCard::DisplayNumber(bool tStacked){
+	if(!IsCardInsideBigRectangles()){
+		float tX = tStacked ? 25.0f : -2.0f;
+		float tY = tStacked ? 0.0f : 70.0f;
+		float tFactor = tStacked ? 1.0f : 3.0f;
+
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker,19.0f,19.0f,mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+		mDecoratorManager.GetDisplay().RenderText(mNumberText,tX,tY,tFactor, mR,mG,mB,1.0f);
+		mDecoratorManager.GetDisplay().PopTransformation();
+	}
+}
 

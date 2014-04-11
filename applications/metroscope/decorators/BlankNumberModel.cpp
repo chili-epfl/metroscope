@@ -145,6 +145,8 @@
 		return (IsStackNearRectangle(0) || IsStackNearRectangle(1) || IsStackNearRectangle(2));
 	}
 
+
+
 	float decorators::BlankNumberModel::GetStackXAvg(int pType){
 		if(AreCardsSemiStacked(pType)){
 			std::vector<decorators::BlankNumberCard *> tCards = GetCardsByType(pType);
@@ -159,27 +161,20 @@
 				return (tCards[0]->GetLocation().y +tCards[1]->GetLocation().y)/2.0;
 			}
 			return 0.0;
-		}
+	}
 
 	bool decorators::BlankNumberModel::IsStackNearRectangle(int pType){
 		float tRectangleX = 0.0f;
 		float tRectangleY = scY2;
 
 		switch(pType){
-		case 0: //units
-			tRectangleX = scUNIT_SOLUTION_X_AVG;
-			break;
-		case 1:
-			tRectangleX = scTEN_SOLUTION_X_AVG;
-			break;
-		case 2:
-			tRectangleX = scCENT_SOLUTION_X_AVG;
-			break;
+		case 0: tRectangleX = scUNIT_SOLUTION_X_AVG; break; //units
+		case 1: tRectangleX = scTEN_SOLUTION_X_AVG;	break; //tens
+		case 2: tRectangleX = scCENT_SOLUTION_X_AVG; break;
 		}
 
 		if(AreCardsSemiStacked(pType)){
-			float tDistance = wykobi::distance(GetStackXAvg(pType),GetStackYAvg(pType),tRectangleX,tRectangleY);
-			return (tDistance < 50.0f);
+			return (wykobi::distance(GetStackXAvg(pType),GetStackYAvg(pType),tRectangleX,tRectangleY) < 50.0f);
 		}
 		return 0;
 	}
@@ -189,23 +184,72 @@
 	}
 
 	bool decorators::BlankNumberModel::IsStackInsideSolution(int pType){
-				wykobi::point2d<float> position;
-				for (unsigned int i = 0; i < mActiveBlankCards.size(); i++){
+		wykobi::point2d<float> position;
 
-					position = mActiveBlankCards[i]->GetLocation();
+		for (unsigned int i = 0; i < mActiveBlankCards.size(); i++){
+			position = mActiveBlankCards[i]->GetLocation();
 
-					if(scY1 < position.y && position.y < scY2) {
-						switch(pType){
-						case 0: //units
-							if(scUNIT_SOLUTION_X1 < position.x && position.x < scUNIT_SOLUTION_X2) return true; break;
-						case 1: //tens
-							if(scTEN_SOLUTION_X1 < position.x && position.x < scTEN_SOLUTION_X2) return true; break;
-						case 2: //Cents
-							if(scCENT_SOLUTION_X1 < position.x && position.x < scCENT_SOLUTION_X2) return true; break;
-						}
-					}
+			if(scY1 < position.y && position.y < scY2) {
+				switch(pType){
+				case 0: //units
+					if(scUNIT_SOLUTION_X1 < position.x && position.x < scUNIT_SOLUTION_X2) return true; break;
+				case 1: //tens
+					if(scTEN_SOLUTION_X1 < position.x && position.x < scTEN_SOLUTION_X2) return true; break;
+				case 2: //Cents
+					if(scCENT_SOLUTION_X1 < position.x && position.x < scCENT_SOLUTION_X2) return true; break;
 				}
-				return false;
+			}
+		}
+		return false;
+	}
+
+
+
+	void decorators::BlankNumberModel::DrawNumbers(float tCentsSum, float tTensSum, float tUnitsSum, int tCentsSol, int tTensSol, int tUnitsSol){
+		for(unsigned int i = 0; i < mActiveBlankCards.size(); i++){
+			bool tStackedCards = AreCardsSemiStacked(mActiveBlankCards[i]->mType);
+			bool tCorrectSolution = false;
+
+			mActiveBlankCards[i]->DisplayNumber(tStackedCards);
+
+			if (tStackedCards) {
+				int tNumber = 0;
+				bool tHasSum = false;
+				char * tNumberSumText = new char [3];
+
+				switch(mActiveBlankCards[i]->mType){
+				case 0:
+					tNumber = tUnitsSum;
+					tCorrectSolution = (tUnitsSum == tUnitsSol); break;
+				case 1:
+					tNumber = tTensSum;
+					tCorrectSolution = (tTensSum/10 == tTensSol); break;
+				case 2:
+					tNumber = tCentsSum;
+					tCorrectSolution = (tCentsSum/100 == tCentsSol); break;
+				}
+				sprintf(tNumberSumText,"%d",tNumber);
+
+				std::vector<decorators::BlankNumberCard *> tCards = GetCardsByType(mActiveBlankCards[i]->mType);
+				tHasSum = ((mActiveBlankCards[i] == tCards[0] && tCards[0]->GetLocation().y > tCards[1]->GetLocation().y) || (mActiveBlankCards[i] == tCards[1] && tCards[0]->GetLocation().y < tCards[1]->GetLocation().y));
+
+				if(tHasSum && !IsStackInsideBigRectangles(mActiveBlankCards[i]->mType)){
+					mDecoratorManager.GetDisplay().PushTransformation();
+					mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(mActiveBlankCards[i]->GetMarker()), 19.0f, 19.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+					if(IsStackNearRectangle(mActiveBlankCards[i]->mType) && !tCorrectSolution) mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-2.0f,85.0f,3.0f,scRED_R,scRED_G, scRED_B, 1.0f);
+					else mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-2.0f,85.0f,3.0f,mActiveBlankCards[i]->mR,mActiveBlankCards[i]->mG, mActiveBlankCards[i]->mB, 1.0f);
+
+					mDecoratorManager.GetDisplay().PopTransformation();
+				}
+			}
+		}
+	}
+
+	bool decorators::BlankNumberModel::IsStackInsideBigRectangles(int tType){
+		std::vector<decorators::BlankNumberCard *> tCards = GetCardsByType(tType);
+
+		return (tCards[0]->IsCardInsideBigRectangles() && tCards[1]->IsCardInsideBigRectangles());
 	}
 
 
