@@ -182,10 +182,6 @@ void decorators::BlankActivityCard::DrawNumbersAndLines(){
 
 	mNumberModel->DrawNumbers(mCentsSum, mTensSum, mUnitsSum, mSolutionCent, mSolutionTen, mSolutionUnit);
 
-	/*
-	if(IsStackNearRectangle(mActiveBlankCards[i]->mType)) mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-2.0f,85.0f,3.0f,scRED_R,scRED_G, scRED_B, 1.0f);
-						else mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-2.0f,85.0f,3.0f,mActiveBlankCards[i]->mR,mActiveBlankCards[i]->mG, mActiveBlankCards[i]->mB, 1.0f);
-*/
 }
 void decorators::BlankActivityCard::CheckSolution(){
 
