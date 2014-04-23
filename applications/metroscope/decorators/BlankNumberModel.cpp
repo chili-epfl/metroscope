@@ -198,9 +198,10 @@ void decorators::BlankNumberModel::DrawNumbers(float tCentsSum, float tTensSum, 
 		int tCentsSol, int tTensSol, int tUnitsSol,
 		int tOriginalCentsSum, int tOriginalTensSum,
 		bool tTensChange, bool tCentsChange){
+
 	for(unsigned int i=0; i< mActiveBlankCards.size(); i++){
 		bool tStackedCards = AreCardsSemiStacked(mActiveBlankCards[i]->mType);
-		bool tCorrectSolution = false; //WHY??
+		bool tCorrectSolution = false;
 		bool tCardHasSum = CardHasSum(mActiveBlankCards[i]);
 
 
@@ -235,7 +236,6 @@ void decorators::BlankNumberModel::DrawNumbers(float tCentsSum, float tTensSum, 
 
 			sprintf(tNumberSumText,"%d",tNumber);
 
-			//Ponemos la suma donde corresponda
 			if(tCardHasSum && !IsStackInsideBigRectangles(mActiveBlankCards[i]->mType)){
 				mDecoratorManager.GetDisplay().PushTransformation();
 				mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(mActiveBlankCards[i]->GetMarker()), 19.0f, 19.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
@@ -249,55 +249,6 @@ void decorators::BlankNumberModel::DrawNumbers(float tCentsSum, float tTensSum, 
 			mActiveBlankCards[i]->DisplayNumber(tStackedCards,false,-1);
 		}
 	}
-	/*
-	for(unsigned int i = 0; i < mActiveBlankCards.size(); i++){
-		bool tStackedCards = AreCardsSemiStacked(mActiveBlankCards[i]->mType);
-		bool tCorrectSolution = false;
-		int tChange;
-
-		if(tTensChange && mActiveBlankCards[i]->mType == 1){
-			tChange = tTensSol - tTensSum;
-			mActiveBlankCards[i]->DisplayNumber(tStackedCards,tTensChange,tChange);
-		}
-		else if(tCentsChange && mActiveBlankCards[i]->mType == 2){
-			tChange = tCentsSol - tCentsSum;
-			mActiveBlankCards[i]->DisplayNumber(tStackedCards,tCentsChange,tChange);
-		}
-		else{
-			mActiveBlankCards[i]->DisplayNumber(tStackedCards,false,-1);
-		}
-
-		if (tStackedCards) {
-			int tNumber = 0;
-			bool tHasSum = false;
-			char * tNumberSumText = new char [3];
-
-			switch(mActiveBlankCards[i]->mType){
-			case 0:
-				tNumber = tUnitsSum;
-				tCorrectSolution = (tUnitsSum == tUnitsSol); break;
-			case 1:
-				tNumber = tTensSum;
-				tCorrectSolution = (tTensSum/10 == tTensSol); break;
-			case 2:
-				tNumber = tCentsSum;
-				tCorrectSolution = (tCentsSum/100 == tCentsSol); break;
-			}
-			sprintf(tNumberSumText,"%d",tNumber);
-
-				//std::vector<decorators::BlankNumberCard *> tCards = GetCardsByType(mActiveBlankCards[i]->mType);
-				//tHasSum = ((mActiveBlankCards[i] == tCards[0] && tCards[0]->GetLocation().y > tCards[1]->GetLocation().y) || (mActiveBlankCards[i] == tCards[1] && tCards[0]->GetLocation().y < tCards[1]->GetLocation().y));
-
-			if(CardHasSum(mActiveBlankCards[i]) && !IsStackInsideBigRectangles(mActiveBlankCards[i]->mType)){
-				mDecoratorManager.GetDisplay().PushTransformation();
-				mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*(mActiveBlankCards[i]->GetMarker()), 19.0f, 19.0f, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-				if(IsStackNearRectangle(mActiveBlankCards[i]->mType) && !tCorrectSolution) mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-5.0f,85.0f,3.0f,scRED_R,scRED_G, scRED_B, 1.0f);
-				else mDecoratorManager.GetDisplay().RenderText(tNumberSumText,-5.0f,85.0f,3.0f,mActiveBlankCards[i]->mR,mActiveBlankCards[i]->mG, mActiveBlankCards[i]->mB, 1.0f);
-
-				mDecoratorManager.GetDisplay().PopTransformation();
-			}
-		}
-	}*/
 }
 
 bool decorators::BlankNumberModel::CardHasSum(BlankNumberCard * pCard){

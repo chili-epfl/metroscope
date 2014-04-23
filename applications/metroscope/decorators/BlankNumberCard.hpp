@@ -33,7 +33,6 @@ namespace decorators{
 		BlankNumberCard (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pType); //pType: 0= units, 1=tens and 2= cents
 		~BlankNumberCard (){}
 
-		//void SetNumber (int pNumber) { mNumber = pNumber; }
 		void SetNumber (int pNumber);
 		void SetOperator (int pOperator) { mOperator = pOperator; }
 		int GetNumber () const {return mNumber;}
@@ -44,7 +43,6 @@ namespace decorators{
 			if (mMarker->isPresent())return mMarker->getCenter();
 			else return tLocation;
 		}
-		//void DisplayNumber(const char *pNumber, float pXOffset, float pYOffset);
 
 		const FiducialMarker *GetMarker() const {return mMarker;}
 		bool IsCardInsideRectangle(); //int pType

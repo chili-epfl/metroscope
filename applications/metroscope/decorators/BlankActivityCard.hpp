@@ -83,9 +83,6 @@ namespace decorators {
 		bool mIsTraslationStartedT2C;
 		long mInitialTimeTraslationT2C;
 		bool mIsTraslationDoneT2C;
-		bool mIsTraslationStarted;
-		long mInitialTimeTraslation;
-		bool mIsTraslationDone;
 
 
 	};

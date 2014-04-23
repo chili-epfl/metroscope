@@ -23,13 +23,7 @@ class RegroupDigits : public FiducialDecorator
 		//RegroupDigits (DecoratorManager &pDecoratorManager, Regrouper ** pRegroupers);
 		virtual ~RegroupDigits();
 
-		bool Regroup(int pType, int pDigit,
-				float pOriginPoint_x, float pOriginPoint_y,
-				float pEndPoint_x, float pEndPoint_y,
-				bool pIsNecessary); //0 if the pDigit are units to be regrouped as tens and 1 if its tens to cents
-
 		bool RegroupAnimation(int pType, bool pIsNecessary, bool pAreCardsFromStacked, bool pAreCardsToStacked);
-		bool TranslateNumber(int pType, int pDigit, float pOriginPoint_x, float pOriginPoint_y,  float pEndPoint_x, float pEndPoint_y);
 		void UpdateLastShot(int pType);
 		//void SetTraslationInitialTime() {mTraslationTime = Time::MillisTimestamp();};
 		bool IsGrouperPresent();
@@ -41,16 +35,9 @@ class RegroupDigits : public FiducialDecorator
 	protected:
 
 		void update();
-		//Regrouper ** mRegroupers;
 		Flipper ** mFlippers;
 		int mFlipperNumber;
 		bool mIsAnimationStarted;
-		bool mIsTraslationStarted;
-		long mTraslationTime;
-
-		//int mRegrouperNumber;
-
-
 
 	private:
 		static const std::string scDecoratorName;
