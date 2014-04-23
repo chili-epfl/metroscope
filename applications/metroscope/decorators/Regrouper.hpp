@@ -35,6 +35,7 @@ class Regrouper : public FiducialDecorator
 		~Regrouper();
 
 		bool IsPresent() const {return mMarker->isPresent();}
+		long GetTimeOfLastFlip() const {return mLastPresenceTimestamp;}
 
 	protected:
 		void update();

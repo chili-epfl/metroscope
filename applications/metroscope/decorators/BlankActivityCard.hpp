@@ -51,18 +51,22 @@ namespace decorators {
 		const int mSecondSummand;
 		bool mNumbersAreSet;
 
+
 		int tCent1, tCent2;
 		int tTen1, tTen2;
 		int tUnit1, tUnit2;
 		int mCentsSum, mTensSum, mUnitsSum;
 		int mSolutionUnit, mSolutionTen, mSolutionCent;
 		bool mIsSolutionUnitCorrect, mIsSolutionTenCorrect, mIsSolutionCentCorrect;
+		bool mIsNecessaryU2T, mIsNecessaryT2C;
+		bool mAreUnitsStacked, mAreTensStacked, mAreCentsStacked;
 
 		void ShowInstruction();
 		void ShowActiveCards();
 		void DrawNumbersAndLines();
 		void SetNumbers();
 		void DrawRectangles();
+		void TranslateNumber(int pType);
 		void DrawDigits();
 		void CheckSemiStack();
 		void CheckSolution();
@@ -73,8 +77,16 @@ namespace decorators {
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-		bool mIsNecessaryU2T;
-		bool mIsNecessaryT2C;
+		bool mIsTraslationStartedU2T;
+		long mInitialTimeTraslationU2T;
+		bool mIsTraslationDoneU2T;
+		bool mIsTraslationStartedT2C;
+		long mInitialTimeTraslationT2C;
+		bool mIsTraslationDoneT2C;
+		bool mIsTraslationStarted;
+		long mInitialTimeTraslation;
+		bool mIsTraslationDone;
+
 
 	};
 }

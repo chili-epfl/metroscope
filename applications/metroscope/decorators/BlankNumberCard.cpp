@@ -129,7 +129,7 @@ void decorators::BlankNumberCard::SetNumber (int pNumber){
 	}
 }
 
-void decorators::BlankNumberCard::DisplayNumber(bool tStacked){
+void decorators::BlankNumberCard::DisplayNumber(bool tStacked, bool tHasChange, int tChange){
 	if(!IsCardInsideBigRectangles()){
 		float tX = tStacked ? 30.0f : -2.0f;
 		float tY = tStacked ? 0.0f : 70.0f;
@@ -137,6 +137,14 @@ void decorators::BlankNumberCard::DisplayNumber(bool tStacked){
 
 		mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker,19.0f,19.0f,mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+		if(tHasChange && tStacked){
+			float tYChange = -50.0f;
+			char * tChangeText = new char [3];
+			sprintf(tChangeText,"%d",tChange);
+			mDecoratorManager.GetDisplay().RenderText(tChangeText,tX,tYChange,tFactor,mR,mG,mB,1.0f);
+		}
+
 		mDecoratorManager.GetDisplay().RenderText(mNumberText,tX,tY,tFactor, mR,mG,mB,1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
 	}

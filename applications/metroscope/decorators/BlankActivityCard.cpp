@@ -56,7 +56,16 @@ decorators::BlankActivityCard::BlankActivityCard(DecoratorManager &pDecoratorMan
 			mNumbersAreSet(false),
 			mIsSolutionUnitCorrect(false),
 			mIsSolutionTenCorrect (false),
-			mIsSolutionCentCorrect (false)
+			mIsSolutionCentCorrect (false),
+			mIsTraslationStartedU2T(false),
+			mInitialTimeTraslationU2T(0),
+			mIsTraslationDoneU2T(false),
+			mIsTraslationStartedT2C(false),
+			mInitialTimeTraslationT2C(0),
+			mIsTraslationDoneT2C(false),
+			mIsTraslationStarted(false),
+			mInitialTimeTraslation(0),
+			mIsTraslationDone(false)
 			{
 				tCent1 = mFirstSummand/100;
 				tCent2 = mSecondSummand/100;
@@ -83,29 +92,52 @@ decorators::BlankActivityCard::~BlankActivityCard(){
 
 void decorators::BlankActivityCard::update() {
 
+	//CheckSolution();
+
 	if(mMarker->isPresent()){
 		ShowInstruction();
 		DrawRectangles();
 		ShowActiveCards();
+
 
 		if(mNumberModel->AreCardsInsideRectangles() && !mNumbersAreSet){
 			SetNumbers();
 		}
 
 		if(mNumbersAreSet){
-			DrawDigits();
-			DrawNumbersAndLines();
+			CheckSolution();
+			CheckSemiStack();
 
-			if(mRegroupDigits->IsGrouperPresent())	UpdateDigits();
+			//mRegroupDigits->RegroupAnimation(0, mIsNecessaryU2T, mAreUnitsStacked, mAreTensStacked);
+			//if(!mIsSolutionUnitCorrect){
+				//bool a = mRegroupDigits->RegroupAnimation(0, mIsNecessaryU2T, mAreUnitsStacked, mAreTensStacked);
+
+				//if(a){
+					//UpdateDigits();
+				//}
+			//}
+
+			if(mRegroupDigits->IsGrouperPresent()){
+				UpdateDigits();
+			}
 
 			if(mNumberModel->IsAStackNearRectangle()) CheckSolution(); FillSolutionRectangles();
 
 			if(mNumberModel ->AreCardsInsideSolution()){
-				CheckSolution();
+				//CheckSolution();
 				DrawSolutionDigits();
 			}
+
+			DrawDigits();
+			DrawNumbersAndLines();
 		}
 	}
+}
+
+void decorators::BlankActivityCard::CheckSemiStack(){
+	mAreUnitsStacked = mNumberModel->AreCardsSemiStacked(0);
+	mAreTensStacked = mNumberModel->AreCardsSemiStacked(1);
+	mAreCentsStacked = mNumberModel->AreCardsSemiStacked(2);
 }
 
 void decorators::BlankActivityCard::ShowInstruction(){
@@ -136,26 +168,139 @@ void decorators::BlankActivityCard::DrawRectangles(){
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
+void decorators::BlankActivityCard::TranslateNumber(int pType){
+
+	//bool mIsTraslationStarted = (pType == 0)? mIsTraslationStartedU2T : mIsTraslationStartedT2C;
+
+	switch(pType){
+		case 0:{
+			if(!mIsTraslationStartedU2T){
+				mInitialTimeTraslationU2T = Time::MillisTimestamp();
+				mIsTraslationStartedU2T = true;
+			}
+
+			wykobi::point2d<float> tOriginU2T;
+			tOriginU2T.x = mNumberModel->GetStackXAvg(0);
+			tOriginU2T.y = mNumberModel->GetStackYAvg(0);
+
+			wykobi::point2d<float> tEndU2T;
+			tEndU2T.x = mNumberModel->GetStackXAvg(1);
+			tEndU2T.y = mNumberModel->GetStackYAvg(1);
+
+			mDecoratorManager.GetCam2World().InterpolatedMap(tOriginU2T);
+			mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOriginU2T);
+			mDecoratorManager.GetCam2World().InterpolatedMap(tEndU2T);
+			mDecoratorManager.GetWorld2Proj().InterpolatedMap(tEndU2T);
+
+			long tElapsedTime = Time::MillisTimestamp() - mInitialTimeTraslationU2T;
+			static const long cTraslationTime = 10l*650l;
+
+			if(tElapsedTime <= cTraslationTime && mIsTraslationStartedU2T){
+				float tPartialX = tOriginU2T.x + (tEndU2T.x - tOriginU2T.x)*(tElapsedTime/(float)(cTraslationTime));
+				float tPartialY = tOriginU2T.y + (tEndU2T.y - tOriginU2T.y)*(tElapsedTime/(float)(cTraslationTime));
+				mIsTraslationDoneU2T = false;
+				char * tDigit = new char[3];
+				sprintf(tDigit, "%d", mUnitsSum/10);
+				mDecoratorManager.GetDisplay().RenderText(tDigit, tPartialX,tPartialY,3.0f,0.0f,0.0f,0.0f,1.0f);
+
+			}else if (tElapsedTime > cTraslationTime && mIsTraslationStartedU2T){
+				mIsTraslationDoneU2T = true;
+			}
+		break;
+		}
+		case 1:{
+			int a = 8;
+			int b = a++;
+			break;
+		}
+	}
+
+	/*if(!mIsTraslationStarted){
+		mInitialTimeTraslation = Time::MillisTimestamp();
+		mIsTraslationStarted = true;
+	}
+
+	wykobi::point2d<float> tOrigin;
+	tOrigin.x = mNumberModel->GetStackXAvg(pType);
+	tOrigin.y = mNumberModel->GetStackYAvg(pType);
+	wykobi::point2d<float> tEnd;
+	tEnd.x = mNumberModel->GetStackXAvg(pType+1);
+	tEnd.y = mNumberModel->GetStackYAvg(pType+1);
+
+	mDecoratorManager.GetCam2World().InterpolatedMap(tOrigin);
+	mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+	mDecoratorManager.GetCam2World().InterpolatedMap(tEnd);
+	mDecoratorManager.GetWorld2Proj().InterpolatedMap(tEnd);
+	//mDecoratorManager.GetDisplay().RenderLine(tOrigin.x, tOrigin.y, tEnd.x, tEnd.y, 0.0f, 0.0f, 0.0f);
+
+	long tElapsedTime = Time::MillisTimestamp() - mInitialTimeTraslation;
+	static const long cTraslationTime = 10l*800l;
+
+	if(tElapsedTime <= cTraslationTime && mIsTraslationStarted){
+		float tPartialX = tOrigin.x + (tEnd.x - tOrigin.x)*(tElapsedTime/(float)(cTraslationTime));
+		float tPartialY = tOrigin.y + (tEnd.y - tOrigin.y)*(tElapsedTime/(float)(cTraslationTime));
+		mIsTraslationDone = false;
+		char * tDigit = new char[3];
+		sprintf(tDigit,"%d",mUnitsSum/10);
+		mDecoratorManager.GetDisplay().RenderText(tDigit, tPartialX,tPartialY,3.0f,0.0f,0.0f,0.0f,1.0f);
+
+	}else if (tElapsedTime > cTraslationTime && mIsTraslationStarted){
+		mIsTraslationDone = true;
+	}*/
+
+}
+
 void decorators::BlankActivityCard::UpdateDigits(){
 
-	if (mRegroupDigits->IsGrouperPresent(0)) {
-		bool isAnimationU2TDone = mRegroupDigits->Regroup(0,6,100.0f,300.0f,200.0f,550.0f,(mIsNecessaryU2T && mNumberModel->AreCardsSemiStacked(1) && mNumberModel->AreCardsSemiStacked(0)));
+	if(!mIsSolutionUnitCorrect){
+		if (mRegroupDigits->IsGrouperPresent(0)) {
 
-		if(isAnimationU2TDone && mNumberModel->AreCardsSemiStacked(1) && mNumberModel->AreCardsSemiStacked(0) && mIsNecessaryU2T){
-			mTensSum+=10;
-			mUnitsSum%=10;
-			mIsNecessaryU2T = false;
+			wykobi::point2d<float> tOrigin = mNumberModel->GetCardsByType(0)[0]->GetLocation();
+			wykobi::point2d<float> tEnd = mNumberModel ->GetCardsByType(1)[0]->GetLocation();
+
+			bool a = mNumberModel->AreCardsSemiStacked(0);
+			bool b = mNumberModel->AreCardsSemiStacked(1);
+			bool c = mIsNecessaryU2T && a && b ;
+
+			bool isAnimationU2TDone = mRegroupDigits->RegroupAnimation(0, mIsNecessaryU2T, mAreUnitsStacked, mAreTensStacked);
+
+			if(isAnimationU2TDone && c){
+				//TranslateNumber(int pType, int pDigit, float pOriginPoint_x, float pOriginPoint_y, float pEndPoint_x, float pEndPoint_y){
+				//mUnitsSum%=10;
+				//mNumberModel->DrawNumbers(mCentsSum, mTensSum, mUnitsSum, mSolutionCent, mSolutionTen, mSolutionUnit);
+
+				TranslateNumber(0);
+
+				if(mIsTraslationDoneU2T){
+					mUnitsSum%=10;
+					mTensSum+=10;
+					mIsNecessaryU2T = false;
+				}
+			}
 		}
 	}
-	if (mRegroupDigits->IsGrouperPresent(1) && mNumberModel->AreCardsSemiStacked(2) && mNumberModel->AreCardsSemiStacked(1)) {
-		bool isAnimationT2CDone = mRegroupDigits->Regroup(1,6,100.0f,300.0f,200.0f,550.0f,mIsNecessaryT2C && mNumberModel->AreCardsSemiStacked(2) && mNumberModel->AreCardsSemiStacked(1));
-		if(isAnimationT2CDone){
-			mCentsSum+=100;
-			mTensSum%=100;
-			mIsNecessaryT2C = false;
+
+	if(!mIsSolutionTenCorrect){
+		if (mRegroupDigits->IsGrouperPresent(1) && mNumberModel->AreCardsSemiStacked(2) && mNumberModel->AreCardsSemiStacked(1)) {
+			wykobi::point2d<float> tOrigin = mNumberModel->GetCardsByType(1)[0]->GetLocation();
+			wykobi::point2d<float> tEnd = mNumberModel ->GetCardsByType(2)[0]->GetLocation();
+
+			bool a = mNumberModel->AreCardsSemiStacked(1);
+			bool b = mNumberModel->AreCardsSemiStacked(2);
+			bool c = mIsNecessaryT2C && a && b ;
+
+			bool isAnimationT2CDone = mRegroupDigits->Regroup(1,6,tOrigin.x,tOrigin.y,tEnd.x,tEnd.y,c);
+			//bool isAnimationT2CDone = mRegroupDigits->Regroup(1,6,tOrigin.x,tOrigin.y,tEnd.x,tEnd.y,mIsNecessaryT2C && mNumberModel->AreCardsSemiStacked(2) && mNumberModel->AreCardsSemiStacked(1));
+
+			if(isAnimationT2CDone && mNumberModel->AreCardsSemiStacked(2) && mNumberModel->AreCardsSemiStacked(1) && mIsNecessaryT2C){
+				mCentsSum+=100;
+				mTensSum%=100;
+				mIsNecessaryT2C = false;
+			}
 		}
 	}
 
+	//CheckSolution();
 
 }
 
@@ -204,14 +349,18 @@ void decorators::BlankActivityCard::SetNumbers(){
 
 void decorators::BlankActivityCard::DrawNumbersAndLines(){
 
-	mNumberModel->DrawNumbers(mCentsSum, mTensSum, mUnitsSum, mSolutionCent, mSolutionTen, mSolutionUnit);
+	mNumberModel->DrawNumbers(mCentsSum, mTensSum, mUnitsSum, mSolutionCent, mSolutionTen, mSolutionUnit,(tCent1+tCent2),(tTen1+tTen2),mIsTraslationDoneU2T, mIsTraslationDoneT2C);
 
 }
+
 void decorators::BlankActivityCard::CheckSolution(){
 
 	mIsSolutionUnitCorrect = (mUnitsSum == mSolutionUnit);
 	mIsSolutionTenCorrect = ((mTensSum/10) == mSolutionTen);
 	mIsSolutionCentCorrect = ((mCentsSum/100) == mSolutionCent);
+
+	mIsNecessaryU2T = !mIsSolutionUnitCorrect;
+	mIsNecessaryT2C = !mIsSolutionTenCorrect;
 
 }
 

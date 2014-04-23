@@ -54,7 +54,7 @@ namespace decorators{
 		float mB;
 		int mType;
 
-		void DisplayNumber(bool tStackedCard);
+		void DisplayNumber(bool tStackedCard, bool tHasChange, int tChange);
 
 	protected:
 		void update();
