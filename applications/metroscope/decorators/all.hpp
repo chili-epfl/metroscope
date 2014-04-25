@@ -96,3 +96,6 @@
 #include "BlankActivityCard.hpp"
 #include "RegroupDigits.hpp"
 //#include "Regrouper.hpp"
+
+//proportions
+#include "ProportionView.hpp"

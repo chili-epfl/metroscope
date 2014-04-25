@@ -79,5 +79,6 @@ void decorators::AngleModel::update() {
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldEndPoint);
 
 		mAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, mOrientation);
+
 	}
 }
