@@ -18,16 +18,12 @@ decorators::FiducialDecorator *decorators::RegroupDigits::create(libconfig::Sett
 	try{
 		int tNumFlippers = pSetting["regroupers_number"];
 		libconfig::Setting & tFlippersStrings = pSetting["flippers"];
-		//libconfig::Setting & tRegroupersStrings = pSetting["regroupers"];
 		Flipper **tFlippers = new Flipper *[tNumFlippers];
-		//Regrouper **tFlippers = new Regrouper *[tNumFlippers];
 
 		for (int i = 0; i < tNumFlippers; i++) {
 			tFlippers[i] = (Flipper *)pDecoratorManager.loadDecorator(tFlippersStrings[i]);
-			//tFlippers[i] = (Regrouper *)pDecoratorManager.loadDecorator(tRegroupersStrings[i]);
 		}
 		return new decorators::RegroupDigits(pDecoratorManager,tFlippers,tNumFlippers);
-				//return new decorators::RegroupDigits(pDecoratorManager,tFlippers);
 
 	}catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
@@ -53,7 +49,6 @@ decorators::RegroupDigits::~RegroupDigits(){
 }
 
 void decorators::RegroupDigits::update(){
-	//mLastShotUnits2Tens = Time::MillisTimestamp();
 }
 
 void decorators::RegroupDigits::UpdateLastShot(int pType){
@@ -102,7 +97,6 @@ bool decorators::RegroupDigits::RegroupAnimation(int pType, bool pIsNecessary, b
 		if(mFlipper->IsSecondSideUp() && tElapsedTime <= cShotPreparationTime){
 
 			float tPartialX2 = scX1Bar+(scX2Bar-scX1Bar)*(tElapsedTime/(float)cShotPreparationTime);
-			float tPartialY2 = scY1Bar+(scY2Bar-scY1Bar)*(tElapsedTime/(float)cShotPreparationTime);
 			tFull = false;
 
 			if (tPartialX2 >= scX2Bar){
