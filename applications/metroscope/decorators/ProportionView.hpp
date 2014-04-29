@@ -35,10 +35,10 @@ class ProportionView : public FiducialDecorator
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-		const float mOriginBox1X = 700.0f;
-		const float mOriginBox1Y = 100.0f;
-		const float mBoxWidth = 500.0f;
-		const float mBoxHeight = 600.0f;
+		float mOriginBox1X;
+		float mOriginBox1Y;
+		float mBoxWidth;
+		float mBoxHeight;
 
 		float mOriginBox1Y2;
 		float mOriginBox1X4;
