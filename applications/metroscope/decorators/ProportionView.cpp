@@ -30,11 +30,14 @@ decorators::FiducialDecorator *decorators::ProportionView::create(libconfig::Set
 
 decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager, FiducialMarker * pMarker, AngleModel * pAngleModel, DenominatorsModel * pDenomModel):
 		FiducialDecorator(pDecoratorManager, pMarker),
-		mAngleModel(pAngleModel),
-		mDenomModel(pDenomModel),
-		mOriginBox1Y2(mOriginBox1Y),
-		mOriginBox1X4(mOriginBox1X){
-
+		mAngleModel (pAngleModel),
+		mDenomModel (pDenomModel),
+		mOriginBox1X (700.0f),
+		mOriginBox1Y (100.0f),
+		mBoxWidth (500.0f),
+		mBoxHeight (600.0f){
+			mOriginBox1Y2 = mOriginBox1Y;
+			mOriginBox1X4 = mOriginBox1X;
 			mOriginBox1X2 = mOriginBox1X + mBoxWidth;
 			mOriginBox1X3 = mOriginBox1X + mBoxWidth;
 			mOriginBox1Y3 = mOriginBox1Y + mBoxHeight;

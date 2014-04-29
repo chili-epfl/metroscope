@@ -95,7 +95,9 @@
 #include "BlankNumberModel.hpp"
 #include "BlankActivityCard.hpp"
 #include "RegroupDigits.hpp"
-//#include "Regrouper.hpp"
+#include "Regrouper.hpp"
 
 //proportions
 #include "ProportionView.hpp"
+#include "DenominatorsModel.hpp"
+#include "DenominatorCard.hpp"
