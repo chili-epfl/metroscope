@@ -19,7 +19,10 @@ decorators::FiducialDecorator *decorators::ProportionView::create(libconfig::Set
 		return new decorators::ProportionView(pDecoratorManager,
 				pDecoratorManager.loadMarker(pSetting["marker"]),
 				(AngleModel *) pDecoratorManager.loadDecorator(pSetting["angle"]),
-				(DenominatorsModel *)pDecoratorManager.loadDecorator(pSetting["equalparts"]));
+				(DenominatorsModel *)pDecoratorManager.loadDecorator(pSetting["equalparts"]),
+				(Flipper *)pDecoratorManager.loadDecorator(pSetting["flipper"]),
+				(TokenModel *)pDecoratorManager.loadDecorator(pSetting["tokens"]),
+				(RectangleFractionModel *)pDecoratorManager.loadDecorator(pSetting["rectangle"]));
 	} catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
 	} catch(libconfig::SettingTypeException &e) {
@@ -28,14 +31,19 @@ decorators::FiducialDecorator *decorators::ProportionView::create(libconfig::Set
 	return 0;
 }
 
-decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager, FiducialMarker * pMarker, AngleModel * pAngleModel, DenominatorsModel * pDenomModel):
+decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager, FiducialMarker * pMarker, AngleModel * pAngleModel, DenominatorsModel * pDenomModel, Flipper * pFlipper, TokenModel * pTokenModel, RectangleFractionModel *pRectangleModel):
 		FiducialDecorator(pDecoratorManager, pMarker),
 		mAngleModel (pAngleModel),
 		mDenomModel (pDenomModel),
+		mFlipper(pFlipper),
+		mTokenModel(pTokenModel),
+		mRectangleModel(pRectangleModel),
 		mOriginBox1X (700.0f),
 		mOriginBox1Y (100.0f),
 		mBoxWidth (500.0f),
-		mBoxHeight (600.0f){
+		mBoxHeight (600.0f),
+		mAngle(0.0f),
+		mProportion(0.0f){
 			mOriginBox1Y2 = mOriginBox1Y;
 			mOriginBox1X4 = mOriginBox1X;
 			mOriginBox1X2 = mOriginBox1X + mBoxWidth;
@@ -46,18 +54,107 @@ decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager,
 }
 
 void decorators::ProportionView::update(){
-	if(mMarker->isPresent() && mAngleModel->isPresent()){
-		DrawRectangleProportion();
-		DrawCircunference();
+	if(mMarker->isPresent()) {
+		//DrawSaveRectangles();
+		if(mAngleModel->isPresent()){
 
+			DrawRectangleProportion();
+			DrawCircunference();
+		}
 		if(mDenomModel->isAnyCardActive()){
 			int tParts = mDenomModel->GetActiveCard()->GetDenominator();
 			DivideCircunference(tParts);
 			DivideRectangleProportion(tParts);
+			if(mFlipper->IsPresent()){
+				SaveFraction();
+			}
+		}
+		if(mTokenModel->isPresent()){
+			float tProportion = (mTokenModel->getActiveTokens(0)/mTokenModel->getTotalTokens());
+			ShowProportion(tProportion);
+		}
+
+		if(mRectangleModel->isPresent()){
+			ShowProportion(mRectangleModel->proportion());
 		}
 	}
 }
 
+void decorators::ProportionView::ShowProportion(float pProportion){
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+
+	float mPartialY = mOriginBox1Y + (mOriginBox1Y4 - mOriginBox1Y)*pProportion;
+
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().RenderQuad(mOriginBox1X,mOriginBox1Y,mOriginBox1X2,mOriginBox1Y2,mOriginBox1X3,mOriginBox1Y3,mOriginBox1X4,mOriginBox1Y4,0.0f,0.0f,0.0,1.0f);
+		mDecoratorManager.GetDisplay().RenderQuadFilled(mOriginBox1X,mOriginBox1Y,
+				mOriginBox1X2,mOriginBox1Y2,
+				mOriginBox1X3,mPartialY,
+				mOriginBox1X4,mPartialY,
+				1.0f, 1.0f, 0.392f,1.0f); //blue
+
+		mDecoratorManager.GetDisplay().RenderQuadFilled(mOriginBox1X,mPartialY,
+				mOriginBox1X2,mPartialY,
+				mOriginBox1X3,mOriginBox1Y3,
+				mOriginBox1X4,mOriginBox1Y4,
+				0.341f, 0.459f, 0.937f,1.0f); //yellow
+
+		mDecoratorManager.GetDisplay().PopTransformation();
+}
+
+void decorators::ProportionView::ShowProportion(int pNumerator, int pDenominator){
+	float tProportion = (pNumerator/(float)pDenominator);
+	mDecoratorManager.GetDisplay().PushTransformation();
+
+	float mPartialY = mOriginBox1Y + (mOriginBox1Y4 - mOriginBox1Y)*tProportion;
+
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().RenderQuad(mOriginBox1X,mOriginBox1Y,mOriginBox1X2,mOriginBox1Y2,mOriginBox1X3,mOriginBox1Y3,mOriginBox1X4,mOriginBox1Y4,0.0f,0.0f,0.0,1.0f);
+		mDecoratorManager.GetDisplay().RenderQuadFilled(mOriginBox1X,mOriginBox1Y,
+				mOriginBox1X2,mOriginBox1Y2,
+				mOriginBox1X3,mPartialY,
+				mOriginBox1X4,mPartialY,
+				1.0f, 1.0f, 0.392f,1.0f); //blue
+
+		mDecoratorManager.GetDisplay().RenderQuadFilled(mOriginBox1X,mPartialY,
+				mOriginBox1X2,mPartialY,
+				mOriginBox1X3,mOriginBox1Y3,
+				mOriginBox1X4,mOriginBox1Y4,
+				0.341f, 0.459f, 0.937f,1.0f); //yellow
+
+		mDecoratorManager.GetDisplay().PopTransformation();
+}
+
+void decorators::ProportionView::SaveFraction(){
+	if(mFlipper->IsFlipped()){
+		int tDenominator = mDenomModel->GetActiveCard()->GetDenominator();
+		int tNumerator = (int)tDenominator*mProportion;
+
+	}
+}
+/*
+ * void decorators::FractionHint::drawPieChart(int pNumerator,int pDenominator,
+												float pX, float pY, float pRadius,
+												const color *pFillColor, const color *pOutlineColor){
+
+
+
+	int tNumUnitBlocks = pNumerator/pDenominator + (pNumerator%pDenominator==0?0:1);
+	if(tNumUnitBlocks == 0 && pNumerator == 0) tNumUnitBlocks = 1;
+	float tOffset = .5-((float)tNumUnitBlocks)/2;
+	for (int i= 0; i < tNumUnitBlocks; i++){
+		mDecoratorManager.GetDisplay().RenderEllipse(pX + (tOffset+i)*scHINT_GRAPHICS_ICONS_WIDTH*2, pY, pRadius, pRadius, pOutlineColor->r, pOutlineColor->g, pOutlineColor->b, pOutlineColor->a);
+		if(i == tNumUnitBlocks-1){
+			int tNumerator = pNumerator%pDenominator == 0? pDenominator: pNumerator%pDenominator;
+			mDecoratorManager.GetDisplay().RenderFilledSector(pX + (tOffset+i)*scHINT_GRAPHICS_ICONS_WIDTH*2, pY, pRadius, pRadius, scDEGREES_IN_CIRCLE*((float)tNumerator/pDenominator), 0.0f, pFillColor->r, pFillColor->g, pFillColor->b, pFillColor->a);
+		}
+		else{
+			mDecoratorManager.GetDisplay().RenderFilledSector(pX + (tOffset+i)*scHINT_GRAPHICS_ICONS_WIDTH*2, pY, pRadius, pRadius, scDEGREES_IN_CIRCLE, 0.0f, pFillColor->r, pFillColor->g, pFillColor->b, pFillColor->a);
+		}
+	}
+}
+ */
 void decorators::ProportionView::DrawRectangleProportion(){
 	wykobi::point2d<float> mOriginPoint = mAngleModel->OriginPoint();
 	wykobi::point2d<float> mEndPoint = mAngleModel->EndPoint();
@@ -75,7 +172,7 @@ void decorators::ProportionView::DrawRectangleProportion(){
 
 	mAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
 
-	float mProportion = mAngle/360.0f;
+	mProportion = mAngle/360.0f;
 
 	float mPartialY = mOriginBox1Y + (mOriginBox1Y4 - mOriginBox1Y)*mProportion;
 
@@ -144,3 +241,11 @@ void decorators::ProportionView::DivideRectangleProportion(int pParts){
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
+void decorators::ProportionView::DrawSaveRectangles(){
+	mDecoratorManager.GetDisplay().PushTransformation();
+	mDecoratorManager.GetDisplay().RenderQuad(100.0f,720.0f,1200.0f,720.0f,1200.0f,1000.0f,100.0f,1000.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderLine(650.0f, 720.0f, 650.0f,1000.0f, 0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderLine(375.0f, 720.0f, 375.0f,1000.0f, 0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderLine(925.0f, 720.0f, 925.0f,1000.0f, 0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().PopTransformation();
+}

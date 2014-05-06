@@ -101,3 +101,6 @@
 #include "ProportionView.hpp"
 #include "DenominatorsModel.hpp"
 #include "DenominatorCard.hpp"
+#include "TokenModel.hpp"
+#include "FractionToken.hpp"
+#include "RectangleFractionModel.hpp"

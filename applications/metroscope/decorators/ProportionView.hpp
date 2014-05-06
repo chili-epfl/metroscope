@@ -11,6 +11,9 @@
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "AngleModel.hpp"
 #include "DenominatorsModel.hpp"
+#include "Flipper.hpp"
+#include "TokenModel.hpp"
+#include "RectangleFractionModel.hpp"
 #include <fstream>
 
 namespace decorators {
@@ -19,18 +22,25 @@ class ProportionView : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		ProportionView (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, AngleModel *pAngleModel, DenominatorsModel *pDenomModel);
+		ProportionView (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, AngleModel *pAngleModel, DenominatorsModel *pDenomModel, Flipper *pFlipper, TokenModel *pTokenModel, RectangleFractionModel *pRectangleModel);
 
 	protected:
 		void update();
 
 		AngleModel *mAngleModel;
 		DenominatorsModel *mDenomModel;
+		Flipper *mFlipper;
+		TokenModel *mTokenModel;
+		RectangleFractionModel *mRectangleModel;
 
 		void DrawRectangleProportion();
 		void DrawCircunference();
 		void DivideCircunference(int pParts);
 		void DivideRectangleProportion(int pParts);
+		void DrawSaveRectangles();
+		void SaveFraction();
+		void ShowProportion(int pNumerator, int pDenominator);
+		void ShowProportion(float pProportion);
 
 	private:
 		static const std::string scDecoratorName;
@@ -47,6 +57,7 @@ class ProportionView : public FiducialDecorator
 		float mOriginBox1Y3, mOriginBox1Y4;
 
 		float mAngle;
+		float mProportion;
 };
 }
 
