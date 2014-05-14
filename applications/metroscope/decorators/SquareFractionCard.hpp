@@ -17,8 +17,8 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef SQUAREFRACTIONCARD_HPP_
-#define SQUAREFRACTIONCARD_HPP_
+#ifndef SquareFractionCard_HPP_
+#define SquareFractionCard_HPP_
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 

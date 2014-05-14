@@ -17,8 +17,8 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef SQUAREFRACTIONMODEL_HPP_
-#define SQUAREFRACTIONMODEl_HPP_
+#ifndef SquareFractionModel_HPP_
+#define SquareFractionModel_HPP_
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "SquareFractionCard.hpp"
@@ -63,6 +63,6 @@ namespace decorators{
 	};
 }
 
-#endif /* SQUAREFRACTIONCARD_HPP_ */
+#endif /* SquareFractionModel_HPP_ */
 
 
