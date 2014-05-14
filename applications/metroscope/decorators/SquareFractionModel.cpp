@@ -59,10 +59,10 @@ decorators::SquareFractionModel::SquareFractionModel(DecoratorManager &pDecorato
 				}
 			}
 }
-
+ /*
 decorators::SquareFractionModel::~SquareFractionModel(){
 	delete []mCards;
-}
+}*/
 
 void decorators::SquareFractionModel::update(){
 	mActiveCards.clear();

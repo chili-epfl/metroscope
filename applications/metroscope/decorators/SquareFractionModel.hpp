@@ -27,14 +27,11 @@
 #include <deque>
 
 namespace decorators{
-
-	class SquareFractionModel : public FiducialDecorator
-	{
+	class SquareFractionModel : public FiducialDecorator{
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
 
 		SquareFractionModel (DecoratorManager &pDecoratorManager,FiducialMarker * pMarker, SquareFractionCard ** pCards, int pCardNumber);
-		~SquareFractionModel();
 
 		int getTotalCards(){return mNumberActiveCards;}
 		int getActiveTokens(int pType){
