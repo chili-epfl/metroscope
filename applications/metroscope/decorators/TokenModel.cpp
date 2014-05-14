@@ -80,7 +80,3 @@ void decorators::TokenModel::update(){
 bool decorators::TokenModel::isPresent(){
 	return (mTotalActiveTokens > 0);
 }
-
-
-
-

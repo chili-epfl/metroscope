@@ -26,7 +26,7 @@ const DecoratorManager::Registerer decorators::FractionToken::mRegisterer(decora
 decorators::FiducialDecorator *decorators::FractionToken::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 {
 	try{
-		return new decorators::FractionToken(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]),pSetting["color"]);
+		return new decorators::FractionToken(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]),(int)pSetting["color"]);
 	}catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
 	} catch(libconfig::SettingTypeException &e) {

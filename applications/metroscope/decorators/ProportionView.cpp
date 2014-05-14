@@ -22,7 +22,8 @@ decorators::FiducialDecorator *decorators::ProportionView::create(libconfig::Set
 				(DenominatorsModel *)pDecoratorManager.loadDecorator(pSetting["equalparts"]),
 				(Flipper *)pDecoratorManager.loadDecorator(pSetting["flipper"]),
 				(TokenModel *)pDecoratorManager.loadDecorator(pSetting["tokens"]),
-				(RectangleFractionModel *)pDecoratorManager.loadDecorator(pSetting["rectangle"]));
+				(RectangleFractionModel *)pDecoratorManager.loadDecorator(pSetting["rectangle"]),
+				(SquareFractionModel *)pDecoratorManager.loadDecorator(pSetting["square"]));
 	} catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
 	} catch(libconfig::SettingTypeException &e) {
@@ -31,13 +32,14 @@ decorators::FiducialDecorator *decorators::ProportionView::create(libconfig::Set
 	return 0;
 }
 
-decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager, FiducialMarker * pMarker, AngleModel * pAngleModel, DenominatorsModel * pDenomModel, Flipper * pFlipper, TokenModel * pTokenModel, RectangleFractionModel *pRectangleModel):
+decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager, FiducialMarker * pMarker, AngleModel * pAngleModel, DenominatorsModel * pDenomModel, Flipper * pFlipper, TokenModel * pTokenModel, RectangleFractionModel *pRectangleModel, SquareFractionModel *pSquareModel):
 		FiducialDecorator(pDecoratorManager, pMarker),
 		mAngleModel (pAngleModel),
 		mDenomModel (pDenomModel),
 		mFlipper(pFlipper),
 		mTokenModel(pTokenModel),
 		mRectangleModel(pRectangleModel),
+		mSquareModel(pSquareModel),
 		mOriginBox1X (700.0f),
 		mOriginBox1Y (100.0f),
 		mBoxWidth (500.0f),
@@ -70,19 +72,36 @@ void decorators::ProportionView::update(){
 			}
 		}
 		if(mTokenModel->isPresent()){
-			float tProportion = (mTokenModel->getActiveTokens(0)/mTokenModel->getTotalTokens());
+			float tNum =mTokenModel->getActiveTokens(0);
+			float tDen = mTokenModel->getTotalTokens();
+			float tProportion = (float)(tNum/tDen);
 			ShowProportion(tProportion);
 		}
 
 		if(mRectangleModel->isPresent()){
 			ShowProportion(mRectangleModel->proportion());
 		}
+
+		if (mSquareModel->isPresent()){
+			ShowSquare();
+			ShowProportion(mSquareModel->getProportion((FiducialMarker *)mMarker));
+		}
 	}
+}
+
+void decorators::ProportionView::ShowSquare(){
+	wykobi::point2d<float> tPoint = mMarker->getCenter();
+	mDecoratorManager.GetCam2World().InterpolatedMap(tPoint);
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mMarker,mDecoratorManager.GetCam2World(),mDecoratorManager.GetWorld2Proj());
+	mDecoratorManager.GetDisplay().RenderQuad(10.0f,0.0f, 30.0f,0.0f, 30.0f, 20.0f, 10.0f, 20.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
 void decorators::ProportionView::ShowProportion(float pProportion){
 
-	mDecoratorManager.GetDisplay().PushTransformation();
+	//mDecoratorManager.GetDisplay().PushTransformation();
 
 	float mPartialY = mOriginBox1Y + (mOriginBox1Y4 - mOriginBox1Y)*pProportion;
 
@@ -128,8 +147,8 @@ void decorators::ProportionView::ShowProportion(int pNumerator, int pDenominator
 
 void decorators::ProportionView::SaveFraction(){
 	if(mFlipper->IsFlipped()){
-		int tDenominator = mDenomModel->GetActiveCard()->GetDenominator();
-		int tNumerator = (int)tDenominator*mProportion;
+		//int tDenominator = mDenomModel->GetActiveCard()->GetDenominator();
+		//int tNumerator = (int)tDenominator*mProportion;
 
 	}
 }

@@ -14,6 +14,7 @@
 #include "Flipper.hpp"
 #include "TokenModel.hpp"
 #include "RectangleFractionModel.hpp"
+#include "SquareFractionModel.hpp"
 #include <fstream>
 
 namespace decorators {
@@ -22,7 +23,7 @@ class ProportionView : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		ProportionView (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, AngleModel *pAngleModel, DenominatorsModel *pDenomModel, Flipper *pFlipper, TokenModel *pTokenModel, RectangleFractionModel *pRectangleModel);
+		ProportionView (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, AngleModel *pAngleModel, DenominatorsModel *pDenomModel, Flipper *pFlipper, TokenModel *pTokenModel, RectangleFractionModel *pRectangleModel, SquareFractionModel *pSquareModel);
 
 	protected:
 		void update();
@@ -32,6 +33,7 @@ class ProportionView : public FiducialDecorator
 		Flipper *mFlipper;
 		TokenModel *mTokenModel;
 		RectangleFractionModel *mRectangleModel;
+		SquareFractionModel *mSquareModel;
 
 		void DrawRectangleProportion();
 		void DrawCircunference();
@@ -41,6 +43,7 @@ class ProportionView : public FiducialDecorator
 		void SaveFraction();
 		void ShowProportion(int pNumerator, int pDenominator);
 		void ShowProportion(float pProportion);
+		void ShowSquare();
 
 	private:
 		static const std::string scDecoratorName;
