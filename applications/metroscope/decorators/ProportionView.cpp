@@ -83,8 +83,8 @@ void decorators::ProportionView::update(){
 		}
 
 		if (mSquareModel->isPresent()){
-			ShowSquare();
-			ShowProportion(mSquareModel->getProportion((FiducialMarker *)mMarker));
+			float b = mSquareModel->getProportion();
+			ShowProportion(b);
 		}
 	}
 }
