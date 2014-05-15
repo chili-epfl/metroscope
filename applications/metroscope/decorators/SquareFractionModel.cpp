@@ -86,6 +86,7 @@ float decorators::SquareFractionModel::getProportion(){
 	int tSecondColor = 0;
 	int tDenominator = 0;
 	float tProportion = 0;
+	float tDistance = 0;
 	wykobi::point2d<float> tMarkerLocation = mMarker->getCenter();
 
 	if(mNumberActiveCards > 0){
@@ -95,17 +96,18 @@ float decorators::SquareFractionModel::getProportion(){
 			////
 			wykobi::point2d<float> tCardLocation = mActiveCards[i]->GetLocation();
 
-			mDecoratorManager.GetCam2World().InterpolatedMap(tCardLocation);
 			mDecoratorManager.GetCam2World().InterpolatedMap(tMarkerLocation);
+			mDecoratorManager.GetCam2World().InterpolatedMap(tCardLocation);
 
-			float tDistance = wykobi::distance(tCardLocation.x,tCardLocation.y, tMarkerLocation.x, tMarkerLocation.y);
+			tDistance = wykobi::distance(tCardLocation.x,tCardLocation.y, tMarkerLocation.x, tMarkerLocation.y);
 
+			//To be deleted
 			mDecoratorManager.GetDisplay().PushTransformation();
 			char ptr[10];
 			sprintf(ptr, "%f", tDistance);
 			mDecoratorManager.GetDisplay().RenderText(ptr,100.0f,100.0f + 50*i,1.0f,1.0f,0.0f,0.0f,1.0f);
 			mDecoratorManager.GetDisplay().PopTransformation();
-
+			//To be deleted
 
 			if(isInRange(tDenominator, tDistance)){
 				int tType = mActiveCards[i]->getType();
