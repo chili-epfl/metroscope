@@ -84,6 +84,7 @@ void decorators::ProportionView::update(){
 
 		if (mSquareModel->isPresent()){
 			float b = mSquareModel->getProportion();
+
 			ShowProportion(b);
 		}
 	}

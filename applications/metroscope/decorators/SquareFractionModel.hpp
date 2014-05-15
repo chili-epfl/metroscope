@@ -38,7 +38,7 @@ namespace decorators{
 			return(pType == 0 ? mActiveFirstCard : mActiveSecondCard);
 		}
 
-		bool isPresent();
+		bool isInRange(int pDenominator, float pDistance);
 
 		float getProportion();
 

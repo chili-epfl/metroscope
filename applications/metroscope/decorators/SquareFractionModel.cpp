@@ -99,13 +99,19 @@ float decorators::SquareFractionModel::getProportion(){
 			////
 			wykobi::point2d<float> tCardLocation = mActiveCards[i]->GetLocation();
 
-
 			mDecoratorManager.GetCam2World().InterpolatedMap(tCardLocation);
 			mDecoratorManager.GetCam2World().InterpolatedMap(tMarkerLocation);
 
-			float distance = wykobi::distance(tCardLocation.x,tCardLocation.y, tMarkerLocation.x, tMarkerLocation.y);
+			float tDistance = wykobi::distance(tCardLocation.x,tCardLocation.y, tMarkerLocation.x, tMarkerLocation.y);
 
-			if(distance > 40.0f && distance < 70.0f){
+			mDecoratorManager.GetDisplay().PushTransformation();
+			char ptr[10];
+			sprintf(ptr, "%f", tDistance);
+			mDecoratorManager.GetDisplay().RenderText(ptr,100.0f,100.0f + 50*i,1.0f,1.0f,0.0f,0.0f,1.0f);
+			mDecoratorManager.GetDisplay().PopTransformation();
+
+
+			if(isInRange(tDenominator, tDistance)){
 				int tType = mActiveCards[i]->getType();
 				if(tType == 0) {
 					tFirstColor++;
@@ -114,7 +120,7 @@ float decorators::SquareFractionModel::getProportion(){
 				}
 			}
 		}
-		}
+	}
 
 		tProportion = (float)(tFirstColor/(float)tDenominator);
 
@@ -125,3 +131,18 @@ float decorators::SquareFractionModel::getProportion(){
 	return 0;
 
 }
+
+bool decorators::SquareFractionModel::isInRange(int pDenominator, float pDistance){
+	switch (pDenominator){
+	case 2: return (pDistance > 40.0f && pDistance < 70.0f);
+	case 3: return ((pDistance > 0 && pDistance < 10)||(pDistance > 100 && pDistance < 110));
+	case 4: return false;
+	case 5: return false;
+	case 6: return false;
+	case 8: return false;
+	case 10: return false;
+	}
+	return false;
+}
+
+
