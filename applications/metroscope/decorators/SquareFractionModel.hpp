@@ -39,7 +39,7 @@ namespace decorators{
 		}
 
 		bool isInRange(int pDenominator, float pDistance);
-
+		bool isPresent(){return mMarker->isPresent();}
 		float getProportion();
 
 	protected:

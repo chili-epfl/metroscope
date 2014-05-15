@@ -81,10 +81,6 @@ void decorators::SquareFractionModel::update(){
 }
 
 
-bool decorators::SquareFractionModel::isPresent(){
-	return (mMarker->isPresent());
-}
-
 float decorators::SquareFractionModel::getProportion(){
 	int tFirstColor = 0;
 	int tSecondColor = 0;
