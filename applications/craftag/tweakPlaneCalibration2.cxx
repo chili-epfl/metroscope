@@ -51,6 +51,7 @@ int main(int argc, char *argv[]) {
     from[3].y += atof(argv[9]);
     CvMat *transformation = cvCreateMat(3,3,CV_32F);
     cvGetPerspectiveTransform(from, to, transformation); 
-    cvWarpPerspective(tMap, tMap, transformation);
-    cvSave(argv[1], tMap);
+    auto tNewMap = cvCloneImage(tMap);
+    cvWarpPerspective(tMap, tNewMap, transformation);
+    cvSave(argv[1], tNewMap);
 }
