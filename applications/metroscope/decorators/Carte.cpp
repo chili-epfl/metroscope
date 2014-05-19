@@ -31,7 +31,7 @@ decorators::FiducialDecorator *decorators::Carte::create(libconfig::Setting &pSe
 		int tObstacles = pSetting ["obs_num"];
 
 		std::vector<wykobi::point2d<float>> tEndPoint;
-		std::vector<wykobi::point2d<float>> tObstaclePoint;
+		std::vector<wykobi::point2d<float>> tObstaclesPoint;
 
 		int i = 0;
 		while(i < tEnd*2){
@@ -49,13 +49,13 @@ decorators::FiducialDecorator *decorators::Carte::create(libconfig::Setting &pSe
 				wykobi::point2d<float> tObstaclePoint;
 				tObstaclePoint.x = tObstaclesPoints[j];
 				tObstaclePoint.y = tObstaclesPoints[j+1];
-				tEndPoint.push_back(tObstaclePoint);
+				tObstaclesPoint.push_back(tObstaclePoint);
 				j+=2;
 			}
 		}
 
 		if(tObstacles != 0)	return new decorators::Carte(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]),(int)pSetting ["size"],
-					(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tEndPoint, tObstacles, tObstaclePoint);
+					(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tEndPoint, tObstacles, tObstaclesPoint);
 
 		else	return new decorators::Carte(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]), (int)pSetting ["size"],
 					(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tEndPoint, tObstacles);
