@@ -104,5 +104,4 @@
 #include "TokenModel.hpp"
 #include "FractionToken.hpp"
 #include "RectangleFractionModel.hpp"
-#include "SquareFractionModel.hpp"
-#include "SquareFractionCard.hpp"
+#include "Carte.hpp"
