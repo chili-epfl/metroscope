@@ -14,7 +14,7 @@
 #include "Flipper.hpp"
 #include "TokenModel.hpp"
 #include "RectangleFractionModel.hpp"
-#include "SquareFractionModel.hpp"
+#include "Carte.hpp"
 #include <fstream>
 
 namespace decorators {
@@ -23,7 +23,7 @@ class ProportionView : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		ProportionView (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, AngleModel *pAngleModel, DenominatorsModel *pDenomModel, Flipper *pFlipper, TokenModel *pTokenModel, RectangleFractionModel *pRectangleModel, SquareFractionModel *pSquareModel);
+		ProportionView (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, AngleModel *pAngleModel, DenominatorsModel *pDenomModel, Flipper *pFlipper, TokenModel *pTokenModel, RectangleFractionModel *pRectangleModel, Carte *pCarte);
 
 	protected:
 		void update();
@@ -33,8 +33,9 @@ class ProportionView : public FiducialDecorator
 		Flipper *mFlipper;
 		TokenModel *mTokenModel;
 		RectangleFractionModel *mRectangleModel;
-		SquareFractionModel *mSquareModel;
+		Carte *mCarte;
 
+		void DisplayMap();
 		void DrawRectangleProportion();
 		void DrawCircunference();
 		void DivideCircunference(int pParts);
@@ -43,6 +44,7 @@ class ProportionView : public FiducialDecorator
 		void SaveFraction();
 		void ShowProportion(int pNumerator, int pDenominator);
 		void ShowProportion(float pProportion);
+		void ShowProportion(float pProportion,wykobi::point2d<float>);
 		void ShowSquare();
 
 	private:

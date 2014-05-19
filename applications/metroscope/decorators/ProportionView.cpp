@@ -23,7 +23,7 @@ decorators::FiducialDecorator *decorators::ProportionView::create(libconfig::Set
 				(Flipper *)pDecoratorManager.loadDecorator(pSetting["flipper"]),
 				(TokenModel *)pDecoratorManager.loadDecorator(pSetting["tokens"]),
 				(RectangleFractionModel *)pDecoratorManager.loadDecorator(pSetting["rectangle"]),
-				(SquareFractionModel *)pDecoratorManager.loadDecorator(pSetting["square"]));
+				(Carte *)pDecoratorManager.loadDecorator(pSetting["carte"]));
 	} catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
 	} catch(libconfig::SettingTypeException &e) {
@@ -32,14 +32,14 @@ decorators::FiducialDecorator *decorators::ProportionView::create(libconfig::Set
 	return 0;
 }
 
-decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager, FiducialMarker * pMarker, AngleModel * pAngleModel, DenominatorsModel * pDenomModel, Flipper * pFlipper, TokenModel * pTokenModel, RectangleFractionModel *pRectangleModel, SquareFractionModel *pSquareModel):
+decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager, FiducialMarker * pMarker, AngleModel * pAngleModel, DenominatorsModel * pDenomModel, Flipper * pFlipper, TokenModel * pTokenModel, RectangleFractionModel *pRectangleModel, Carte *pCarte):
 		FiducialDecorator(pDecoratorManager, pMarker),
 		mAngleModel (pAngleModel),
 		mDenomModel (pDenomModel),
 		mFlipper(pFlipper),
 		mTokenModel(pTokenModel),
 		mRectangleModel(pRectangleModel),
-		mSquareModel(pSquareModel),
+		mCarte(pCarte),
 		mOriginBox1X (700.0f),
 		mOriginBox1Y (100.0f),
 		mBoxWidth (500.0f),
@@ -58,36 +58,116 @@ decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager,
 void decorators::ProportionView::update(){
 	if(mMarker->isPresent()) {
 		//DrawSaveRectangles();
-		if(mAngleModel->isPresent()){
 
-			DrawRectangleProportion();
+
+		if(mAngleModel->isPresent()){
+			//DrawRectangleProportion();
 			DrawCircunference();
 		}
-		if(mDenomModel->isAnyCardActive()){
+
+		/*if(mDenomModel->isAnyCardActive()){
 			int tParts = mDenomModel->GetActiveCard()->GetDenominator();
 			DivideCircunference(tParts);
 			DivideRectangleProportion(tParts);
 			if(mFlipper->IsPresent()){
 				SaveFraction();
 			}
-		}
+		}*/
+
 		if(mTokenModel->isPresent()){
 			float tNum =mTokenModel->getActiveTokens(0);
 			float tDen = mTokenModel->getTotalTokens();
 			float tProportion = (float)(tNum/tDen);
-			ShowProportion(tProportion);
+			ShowProportion(tProportion,mTokenModel->getMarker().getCenter());
 		}
 
 		if(mRectangleModel->isPresent()){
-			ShowProportion(mRectangleModel->proportion());
+			ShowProportion(mRectangleModel->proportion(), mRectangleModel->getMarker().getCenter());
 		}
 
-		if (mSquareModel->isPresent()){
-			float b = mSquareModel->getProportion();
-
-			ShowProportion(b);
+		if(mCarte->isPresent()){
+			DisplayMap();
 		}
 	}
+}
+void decorators::ProportionView::ShowProportion(float pProportion,wykobi::point2d<float> pPosition){
+	mDecoratorManager.GetDisplay().PushTransformation();
+	char proportion[10];
+	sprintf(proportion, "%f", pProportion);
+	if(pPosition.x + 20.0f < mDecoratorManager.GetDisplay().GetWidth() && pPosition.y + 20.0f < mDecoratorManager.GetDisplay().GetHeight()){
+		mDecoratorManager.GetDisplay().RenderText(proportion, pPosition.x + 20.0f, pPosition.y + 20.0f, 1.0f,0.0f,0.0f,0.0f,1.0f);
+	}
+	mDecoratorManager.GetDisplay().PopTransformation();
+}
+void decorators::ProportionView::DisplayMap(){
+
+	//DrawGrid
+	//DrawWorkingArea
+	int tDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
+	int tDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
+	float tRadius = tDisplayHeight/4;
+
+
+	float tXCellDimension = (float)((tDisplayWidth-2*(tRadius/sqrt(2)))/mCarte->getSize());
+	float tYCellDimension = (float)((tDisplayHeight-2*(tRadius/sqrt(2)))/mCarte->getSize());
+	float tActualX = tRadius/sqrt(2);
+	float tActualY = tRadius/sqrt(2);
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+	for(int i = 0 ; i < mCarte->getSize() + 1 ; i++){
+		mDecoratorManager.GetDisplay().RenderLine(tRadius/sqrt(2),tActualY,tDisplayWidth - tRadius/sqrt(2),tActualY,0.0f,0.0f,0.0f,1.0f); //horizontalLine
+		mDecoratorManager.GetDisplay().RenderLine(tActualX,tRadius/sqrt(2),tActualX,tDisplayHeight - tRadius/sqrt(2),0.0f,0.0f,0.0f,1.0f); //verticalLine
+		tActualX += tXCellDimension;
+		tActualY += tYCellDimension;
+	}
+	mDecoratorManager.GetDisplay().PopTransformation();
+
+
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+	mDecoratorManager.GetDisplay().RenderFilledEllipse(0.0f,0.0f,tRadius,tRadius,1.0f,1.0f,1.0f,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderFilledEllipse((float)tDisplayWidth,0.0f,tRadius,tRadius,1.0f,1.0f,1.0f,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderFilledEllipse((float)tDisplayWidth-1.0f,(float)tDisplayHeight-1.0f,tRadius,tRadius,1.0f,1.0f,1.0f,1.0f,5);
+	mDecoratorManager.GetDisplay().RenderFilledEllipse(0.0f,(float)tDisplayHeight-1.0f,tRadius,tRadius,1.0f,1.0f,1.0f,1.0f,5);
+	mDecoratorManager.GetDisplay().RenderEllipse(0.0f,0.0f,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderEllipse((float)tDisplayWidth,0.0f,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderEllipse((float)tDisplayWidth-1.0f,(float)tDisplayHeight-1.0f,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderEllipse(0.0f,(float)tDisplayHeight-1.0f,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f,1);
+
+	mDecoratorManager.GetDisplay().PopTransformation();
+
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+	wykobi::point2d<float> tOrigin = mCarte->getOriginPoint();
+	float tBugPositionX = tRadius + (tOrigin.x)*(tXCellDimension)+(tXCellDimension/2);
+	float tBugPositionY = tRadius + (tOrigin.y)*(tYCellDimension)+(tYCellDimension/2);
+	mDecoratorManager.GetDisplay().RenderFilledEllipse(tBugPositionX, tBugPositionY, tXCellDimension/6,tYCellDimension/6,1.0f,0.0f,0.0f,1.0f,1);
+	mDecoratorManager.GetDisplay().PopTransformation();
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+	std::vector<wykobi::point2d<float>> tEnd = mCarte->getEndPoint();
+
+	for(int i = 0 ; i < mCarte->getEndNumber() ; i++){
+		float tEndPositionX =tRadius/sqrt(2)+ tEnd[i].x*(tXCellDimension)+(tXCellDimension/2);
+		float tEndPositionY = tRadius/sqrt(2) + tEnd[i].y*(tYCellDimension)+(tYCellDimension/2);
+		mDecoratorManager.GetDisplay().RenderFilledEllipse(tEndPositionX, tEndPositionY, tXCellDimension/2,tYCellDimension/2,0.0f,0.0f,0.0f,1.0f,1);
+
+	}
+
+	mDecoratorManager.GetDisplay().PopTransformation();
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+	if(mCarte->getObstacleNumber() > 0){
+		std::vector<wykobi::point2d<float>> tObstacle = mCarte->getObstaclesPoint();
+
+			for(int i = 0 ; i < mCarte->getObstacleNumber() ; i++){
+				float tEndPositionX =tRadius/sqrt(2)+ tEnd[i].x*(tXCellDimension);
+				float tEndPositionY = tRadius/sqrt(2) + tEnd[i].y*(tYCellDimension);
+				mDecoratorManager.GetDisplay().RenderFilledEllipse(tEndPositionX, tEndPositionY, tXCellDimension/2,tYCellDimension/2,0.0f,0.0f,0.0f,1.0f,1);
+				mDecoratorManager.GetDisplay().RenderQuadFilled(tEndPositionX,tEndPositionY,tEndPositionX + tXCellDimension,tEndPositionY,tEndPositionX+tXCellDimension, tEndPositionY + tYCellDimension, tEndPositionX, tEndPositionY + tYCellDimension,0.25f,0.25f,0.25f,1.0f);
+			}
+	}
+	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
 void decorators::ProportionView::ShowSquare(){
