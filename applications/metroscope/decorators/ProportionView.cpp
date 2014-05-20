@@ -72,7 +72,7 @@ void decorators::ProportionView::update(){
 						 mHalfImageWidth, -mHalfImageHeight,
 						-mHalfImageWidth, -mHalfImageHeight);
 		*/
-		mDecoratorManager.GetDisplay().PopTransformation();
+		//mDecoratorManager.GetDisplay().PopTransformation();
 		////
 
 		if(mAngleModel->isPresent()){
