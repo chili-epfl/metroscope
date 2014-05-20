@@ -34,16 +34,31 @@ class Pipeable
 
         Pipeable &operator|(Pipeable &pNext){ mNext = &pNext; return *mNext; }
 
+        /// call run(), fetch the next Pipeable, and repeat until next is null
         void start();
+
+        /// removes the next Pipeable, effectively stopping the pipeline
         void stop() {mNext = 0;}
+
+        /// check whether the next Pipeable is null, i.e. the pipeline is stopped
 		bool isStopped() const {return mNext == 0;}
+
+        /// Like start(), but print a sequence number before and after each call to run
+        /// Useful to know which Pipeable crashes
         void startDebug();
+
+        /// Like start(), but prints the time (in ms) spent in run() for each Pipeable
         void startProfile();
+
+        /// Like start(), but asynchronous, i.e. returns immediately and runs the pipeline in another thread
         void startNoWait();
+
+        /// Brings the asynchronous thread back into the main thread
 		void join();
 
     protected:
 
+        /// The mandatory method to implement by Pipeable subclasses
         virtual void run() = 0;
 
         Pipeable *mNext;

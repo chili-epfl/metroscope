@@ -23,7 +23,9 @@
 
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
+#include "../FractionsConstants.hpp"
 
+static const color * const scMESSAGE_COLOR = &scGREEN;
 
 namespace decorators {
 
