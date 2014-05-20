@@ -75,6 +75,7 @@ void decorators::ProportionView::update(){
 		//mDecoratorManager.GetDisplay().PopTransformation();
 		////
 
+
 		if(mAngleModel->isPresent()){
 			//DrawRectangleProportion();
 			DrawCircunference();
