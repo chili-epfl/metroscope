@@ -36,6 +36,9 @@
 
 //#define DEBUG_metroscope_NOMT
 
+NetworkedStateManager* stateManager;
+
+
 int main(int argc, char* argv[])
 {
 	int tScreenWidth = 1280;

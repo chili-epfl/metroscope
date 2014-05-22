@@ -26,23 +26,5 @@
 
 
 
-class NetworkedState
-{
-    public:
-		NetworkedState():mChanged(false){}
-		virtual ~NetworkedState(){}
 
-		bool hasChanged() {return mChanged;}
-
-		void SetHasChanged(bool changed) {mChanged = changed;}
-
-		//A method children classes have to implement, to check for equality/changes in the state data
-		virtual bool equals(NetworkedState other){return(false);}
-
-
-    protected:
-		bool mChanged;
-
-
-};
 #endif

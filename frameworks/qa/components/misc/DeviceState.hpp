@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include <json/json.h>
 #include "NetworkedState.hpp"
 
 
@@ -33,7 +34,7 @@ struct activity_state {
 };
 
 
-class DeviceState : public NetworkedState {
+class DeviceState {
 public:
 	DeviceState();
 	virtual ~DeviceState();
@@ -43,14 +44,17 @@ public:
 	std::string GetName() {return mName;};
 	activity_state GetActivity() {return mActivity;};
 	std::vector<std::string> GetPresentTags() {return mPresentTags;};
+	bool hasChanged() {return mChanged;}
 
 	void SetMeteorId(std::string meteorId) {mMeteorId = meteorId;}
 	void SetId(int id) {mId = id;}
 	void SetName(std::string name) {mName = name;}
 	void SetActivity(activity_state activity) {mActivity = activity;}
 	void SetPresentTags(std::vector<std::string> presentTags) {mPresentTags = presentTags;}
+	void SetHasChanged(bool changed) {mChanged = changed;}
 
-	bool equals(DeviceState other);
+	bool equals(DeviceState* other);
+	std::string getJSON();
 
 private:
 	std::string mMeteorId;
@@ -62,6 +66,9 @@ private:
 	activity_state mActivity;
 
 	std::vector<std::string> mPresentTags;
+
+	bool mChanged;
+
 
 };
 

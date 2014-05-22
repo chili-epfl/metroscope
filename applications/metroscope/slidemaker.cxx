@@ -21,6 +21,10 @@
 #include <libconfig.h++>
 #include <boost/format.hpp>
 #include <fstream>
+#include <qa/pipeables/misc/DecoratorManager.hpp>
+
+NetworkedStateManager* stateManager;
+
 
 int main(int argc, char* argv[])
 {

@@ -25,6 +25,9 @@
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "decorators/all.hpp"
 
+NetworkedStateManager* stateManager;
+
+
 int main(int /*argc*/, char* /*argv*/[])
 {
 	auto tOpenGl2DDisplay = new OpenGl2DDisplay(0, 0, 1280, 768);

@@ -45,8 +45,15 @@ void decorators::SimpleText::update() {
 	if (mMarker->isPresent())
 	{
 		displayMessage();
+		//stateManager->addMarkerToDeviceState("simpletext");
 	}
+//	else{
+//		stateManager->removeMarkerFromDeviceState("simpletext");
+//	}
+
 }
+
+
 
 /*Just displays a text message next to the marker*/
 void decorators::SimpleText::displayMessage(){

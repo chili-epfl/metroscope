@@ -32,9 +32,8 @@
 #include <qa/pipeables/io/CvShower.hpp>
 #include <qa/pipeables/io/CvWaiter.hpp>
 #include <qa/pipeables/misc/Wait.hpp>
-#include <qa/pipeables/networking/DeviceManager.hpp>
-#include <qa/pipeables/networking/PutRemoteJSON.hpp>
-#include <qa/pipeables/networking/DeviceFileReader.hpp>
+#include <qa/components/misc/NetworkedStateManager.hpp>
+#include <qa/pipeables/networking/PutRemoteJSONString.hpp>
 
 #include "decorators/all.hpp"
 
@@ -44,6 +43,22 @@
 #include <iostream>
 
 //#define DEBUG_metroscope_NOMT
+
+
+//We define the global variable for the local states
+NetworkedStateManager* stateManager(new NetworkedStateManager());
+
+std::string extractIdFromURL(std::string pUrl){
+	//Just extracts the last thing after the '/' in an URL, or the same string if there is no /
+	unsigned found = pUrl.rfind("/");
+	  if (found!=std::string::npos){//We found a slash
+		  std::string newString = pUrl.substr(found+1,std::string::npos);//we get until the end of the string
+		  return newString;
+	  }
+	  else return pUrl;
+}
+
+
 
 int main(int argc, char* argv[])
 {
@@ -126,21 +141,26 @@ int main(int argc, char* argv[])
 
 			}
 
+	//We extract the meteor IDs to pass them to the state manager (it is the only part we know in advance)
+    //std::cout << "Extracting meteor ids from command line" << std::endl;
+	std::string deviceMeteorId = extractIdFromURL(tUrlDevice);
+	stateManager->SetDeviceMeteorId(deviceMeteorId);
 
 	//Initializing the networking pipeables...
+    //std::cout << "Initializing networking pipeables" << std::endl;
 	Wait tWaitDevice(tWaitDeviceTime);
 	Wait tWaitClassroom(tWaitClassroomTime);
-	DeviceManager tDeviceManager;
-	PutRemoteJSON tPutRemoteJSON(tUrlDevice,tDeviceManager.GetDevice());
-	//Initialize the fake updater thread to read from file "/home/lprisan/workspace/HTTPWorker/device1.json"
-	DeviceFileReader tDeviceFileReader("/home/lprisan/workspace/HTTPWorker/device1.json",tDeviceManager.GetDevice());
-
+	PutRemoteJSONString tPutRemoteDevice(tUrlDevice);
+	PutRemoteJSONString tPutRemoteClassroom(tUrlClassroom);
+	GetRemoteJSONString tGetRemoteJSONString(tUrlClassroom);
 
 	//Start the file updater and HTTP putter threads...
-	tPutRemoteJSON | tWaitDevice | tPutRemoteJSON;
-	tPutRemoteJSON.startNoWait();
-	tDeviceFileReader | tWaitDevice | tDeviceFileReader;
-	tDeviceFileReader.startNoWait();
+    //std::cout << "Starting networking thread" << std::endl;
+    tPutRemoteDevice | tWaitDevice | tPutRemoteDevice;
+	tPutRemoteDevice.startNoWait();
+
+	tGetRemoteClassroom | tPutRemoteClassroom | tWaitClassroom | tGetRemoteClassroom;
+	tGetRemoteClassroom.startNoWait();
 
 	//Initializing the CV and tag detection pipeables...
 	if (!tGrabber)
