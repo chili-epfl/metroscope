@@ -34,6 +34,7 @@
 #include <qa/pipeables/misc/Wait.hpp>
 #include <qa/components/misc/NetworkedStateManager.hpp>
 #include <qa/pipeables/networking/PutRemoteJSONString.hpp>
+#include <qa/pipeables/networking/GetRemoteJSONString.hpp>
 
 #include "decorators/all.hpp"
 

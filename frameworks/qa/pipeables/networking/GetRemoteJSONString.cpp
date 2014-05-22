@@ -33,7 +33,6 @@ void GetRemoteJSONString::run(){
 
 std::string GetRemoteJSONString::getRemoteString(std::string pUrl){
 
-
 	std::ostringstream oss;
 	std::string jsonstring;
 	if(CURLE_OK == curl_read(pUrl, oss))
@@ -42,9 +41,8 @@ std::string GetRemoteJSONString::getRemoteString(std::string pUrl){
 		jsonstring = oss.str();
 	}
 
-	if(jsonstring.length()>0){
-		return jsonstring;
-	} else return(new std::string(""));
+
+	return jsonstring;
 
 
 }

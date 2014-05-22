@@ -23,7 +23,7 @@ bool ClassroomState::equals(ClassroomState* other){
 	if(this->mName.compare(other->GetName())!=0) return false;
 	if(this->mDevices.size() != other->GetDevices().size()) return false;
 	else{//we check all vector elements for present tags
-		for(int i=0;i<this->mDevices.size();i++){
+		for(unsigned int i=0;i<this->mDevices.size();i++){
 			if(this->mDevices.at(i)!=other->GetDevices().at(i)){
 				return false;
 			}
@@ -38,7 +38,7 @@ bool ClassroomState::equals(ClassroomState* other){
 
 void ClassroomState::setJSON(std::string jsonstring){
 
-	Json::Value json = getJSONObject(jsonstring);
+	Json::Value value = getJSONObject(jsonstring);
 
 	Json::Value meteorId = value[scMeteorIdLabel];
 	mMeteorId = meteorId.asString();
