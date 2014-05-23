@@ -26,10 +26,8 @@ void GetRemoteJSONString::run(){
 		//std::cout << "Received data: " << jsonData << std::endl;
 		if(mEntity==CLASSROOM){//We update the local classroom state
 			stateManager->SetClassroomJSON(jsonData);
-			stateManager->SetHasClassroomChanged(false);
 		}else if(mEntity==DEVICE){//We update the local device state
 			stateManager->SetDeviceJSON(jsonData);
-			stateManager->SetHasDeviceChanged(false);
 		}
 	}
 	else std::cout << "Failure!" << std::endl;

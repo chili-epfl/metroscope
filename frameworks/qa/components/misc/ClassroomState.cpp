@@ -67,7 +67,7 @@ void ClassroomState::setJSON(std::string jsonstring){
 	classVariables.pauserDevice = global[scPauserDevice].asString();
 	mGlobal = classVariables;
 
-	mChanged = false;
+	mChanged = true;
 	//std::cout << "Classroom state set. # devices " << mDevices.size() << std::endl;
 
 }

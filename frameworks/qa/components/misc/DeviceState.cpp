@@ -154,7 +154,7 @@ void DeviceState::setJSON(std::string jsonstring){
 	activity.currentState = st;
 	this->mActivity = activity;
 
-	this->mChanged = false;
+	this->mChanged = true;
 
 
 }
