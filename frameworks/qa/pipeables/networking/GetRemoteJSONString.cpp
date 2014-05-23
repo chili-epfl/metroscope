@@ -19,19 +19,29 @@ mEntity(pEntity)
 
 void GetRemoteJSONString::run(){
 
-	std::cout << "GETting remote JSON from: " << mUrl << "...";
-	std::string jsonData = getRemoteString(mUrl);
-	if(jsonData.length()>0){
-		std::cout << "Success!" << std::endl;
-		//std::cout << "Received data: " << jsonData << std::endl;
-		if(mEntity==CLASSROOM){//We update the local classroom state
-			stateManager->SetClassroomJSON(jsonData);
-		}else if(mEntity==DEVICE){//We update the local device state
-			stateManager->SetDeviceJSON(jsonData);
+	if(mEntity == DEVICE){
+		if(!stateManager->hasDeviceChanged()){//if no other thread changed the local device state, we get it from server
+			std::cout << "GETting remote JSON from: " << mUrl << "...";
+			std::string jsonData = getRemoteString(mUrl);
+			if(jsonData.length()>0){
+				std::cout << "Success!" << std::endl;
+				//std::cout << "Received data: " << jsonData << std::endl;
+				stateManager->SetDeviceJSON(jsonData);
+			}
+			else std::cout << "Failure!" << std::endl;
+		}
+	}else if(mEntity==CLASSROOM){
+		if(!stateManager->hasClassroomChanged()){//if no other thread changed the local classroom state, we get it from server
+			std::cout << "GETting remote JSON from: " << mUrl << "...";
+			std::string jsonData = getRemoteString(mUrl);
+			if(jsonData.length()>0){
+				std::cout << "Success!" << std::endl;
+				//std::cout << "Received data: " << jsonData << std::endl;
+				stateManager->SetClassroomJSON(jsonData);
+			}
+			else std::cout << "Failure!" << std::endl;
 		}
 	}
-	else std::cout << "Failure!" << std::endl;
-
 
 }
 

@@ -20,7 +20,7 @@ mEntity(pEntity)
 void PutRemoteJSONString::run(){
 
 	if(mEntity == DEVICE){
-		if(stateManager->hasDeviceChanged()){//if some other thread changed the device state
+		if(stateManager->hasDeviceChanged()){//if some other thread changed the local device state, we transmit it to server
 
 			std::string jsonState = stateManager->getDeviceJSON();
 
@@ -37,7 +37,7 @@ void PutRemoteJSONString::run(){
 			else std::cout << "Failure!" << std::endl;
 		}
 	} else if(mEntity == CLASSROOM){
-		if(stateManager->hasClassroomChanged()){//if some other thread changed the classroom state
+		if(stateManager->hasClassroomChanged()){//if some other thread changed the local classroom state, we transmit it to server
 
 			std::string jsonState = stateManager->getClassroomJSON();
 
