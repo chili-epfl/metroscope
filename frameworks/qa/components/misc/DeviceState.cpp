@@ -9,7 +9,6 @@
 
 DeviceState::DeviceState() {
 	mChanged = false;
-	mId = 1;
 }
 
 DeviceState::~DeviceState() {
@@ -18,7 +17,7 @@ DeviceState::~DeviceState() {
 
 bool DeviceState::equals(DeviceState* other){
 
-	if(this->mId != other->GetId()) return false;
+	//if(this->mId != other->GetId()) return false;
 	if(this->mMeteorId != other->GetMeteorId()) return false;
 	if(this->mName.compare(other->GetName())!=0) return false;
 	if(this->mPresentTags.size() != other->GetPresentTags().size()) return false;
@@ -82,7 +81,7 @@ std::string DeviceState::getJSON(){
 
 	json[scCurrentLabel] = current;
 
-	json[scIdLabel] = this->mId;
+	//json[scIdLabel] = this->mId;
 	json[scNameLabel] = this->mName;
 
 	Json::FastWriter fastWriter;
@@ -116,8 +115,8 @@ void DeviceState::setJSON(std::string jsonstring){
 	Json::Value meteorId = value[scMeteorIdLabel];
 	this->mMeteorId = meteorId.asString();
 
-	Json::Value id = value[scIdLabel];
-	this->mId = id.asInt();
+	//Json::Value id = value[scIdLabel];
+	//this->mId = id.asInt();
 
 	Json::Value name = value[scNameLabel];
 	this->mName = name.asString();

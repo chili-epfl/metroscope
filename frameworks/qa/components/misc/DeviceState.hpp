@@ -40,14 +40,14 @@ public:
 	virtual ~DeviceState();
 
 	std::string GetMeteorId() {return mMeteorId;}
-    int GetId() {return mId;};
+    //int GetId() {return mId;};
 	std::string GetName() {return mName;};
 	activity_state GetActivity() {return mActivity;};
 	std::vector<std::string> GetPresentTags() {return mPresentTags;};
 	bool hasChanged() {return mChanged;}
 
 	void SetMeteorId(std::string meteorId) {mMeteorId = meteorId;}
-	void SetId(int id) {mId = id;}
+	//void SetId(int id) {mId = id;}
 	void SetName(std::string name) {mName = name;}
 	void SetActivity(activity_state activity) {mActivity = activity;}
 	void SetPresentTags(std::vector<std::string> presentTags) {mPresentTags = presentTags;}
@@ -62,7 +62,7 @@ public:
 private:
 	std::string mMeteorId;
 
-	int mId;
+	//int mId;
 
 	std::string mName;
 

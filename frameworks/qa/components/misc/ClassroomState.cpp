@@ -18,13 +18,13 @@ ClassroomState::~ClassroomState() {
 
 bool ClassroomState::equals(ClassroomState* other){
 
-	if(this->mId != other->GetId()) return false;
+	//if(this->mId != other->GetId()) return false;
 	if(this->mMeteorId != other->GetMeteorId()) return false;
 	if(this->mName.compare(other->GetName())!=0) return false;
 	if(this->mDevices.size() != other->GetDevices().size()) return false;
 	else{//we check all vector elements for present tags
 		for(unsigned int i=0;i<this->mDevices.size();i++){
-			if(this->mDevices.at(i)!=other->GetDevices().at(i)){
+			if(this->mDevices.at(i).compare(other->GetDevices().at(i))!=0){
 				return false;
 			}
 		}
@@ -45,18 +45,18 @@ void ClassroomState::setJSON(std::string jsonstring){
 	Json::Value meteorId = value[scMeteorIdLabel];
 	mMeteorId = meteorId.asString();
 
-	Json::Value id = value[scIdLabel];
-	mId = id.asInt();
+	//Json::Value id = value[scIdLabel];
+	//mId = id.asInt();
 
 	Json::Value name = value[scNameLabel];
 	mName = name.asString();
 
 	Json::Value devices = value[scDevicesLabel];
 	//std::cout << "devices element: is array? " << devices.isArray() << "; elements: " << devices.size() << std::endl;
-	std::vector<int> devs;
+	std::vector<std::string> devs;
 	for (unsigned int i=0;i<devices.size();i++){
 		//std::cout << "Parsing array element " << i << ": " << devices[i].asInt() << std::endl;
-		devs.push_back(devices[i].asInt());
+		devs.push_back(devices[i].asString());
 	}
 	mDevices = devs;
 
@@ -76,7 +76,7 @@ std::string ClassroomState::getJSON(){
 	std::string data;
 
 	Json::Value json;
-	json[scIdLabel] = this->mId;
+	//json[scIdLabel] = this->mId;
 	json[scNameLabel] = this->mName;
 	json[scMeteorIdLabel] = this->mMeteorId;
 
