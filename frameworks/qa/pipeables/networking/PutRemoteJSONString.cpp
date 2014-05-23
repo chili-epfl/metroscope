@@ -8,8 +8,10 @@
 #include "PutRemoteJSONString.hpp"
 
 PutRemoteJSONString::PutRemoteJSONString(
-		std::string pUrl):
-mUrl(pUrl)
+		std::string pUrl,
+		Entity pEntity):
+mUrl(pUrl),
+mEntity(pEntity)
 {
 
 }
@@ -17,22 +19,40 @@ mUrl(pUrl)
 
 void PutRemoteJSONString::run(){
 
-	//TODO: set a flag in the constructor to put the classroom or the device data
-	if(stateManager->hasDeviceChanged()){//if some other thread changed the device state
+	if(mEntity == DEVICE){
+		if(stateManager->hasDeviceChanged()){//if some other thread changed the device state
 
-		std::string jsonState = stateManager->getDeviceJSON();
+			std::string jsonState = stateManager->getDeviceJSON();
 
-		std::cout << "Detected state change: " << jsonState << std::endl;
+			std::cout << "Detected state change: " << jsonState << std::endl;
 
-		//do PUT of the JSON object to the server
-		bool success = false;
-		std::cout << "PUTting remote JSON: " << jsonState << "...";
-		success = putRemoteString(mUrl,jsonState);
-		if(success){
-			std::cout << "Success!" << std::endl;
-			stateManager->SetHasDeviceChanged(false);
+			//do PUT of the JSON object to the server
+			bool success = false;
+			std::cout << "PUTting remote JSON: " << jsonState << "...";
+			success = putRemoteString(mUrl,jsonState);
+			if(success){
+				std::cout << "Success!" << std::endl;
+				stateManager->SetHasDeviceChanged(false);
+			}
+			else std::cout << "Failure!" << std::endl;
 		}
-		else std::cout << "Failure!" << std::endl;
+	} else if(mEntity == CLASSROOM){
+		if(stateManager->hasClassroomChanged()){//if some other thread changed the classroom state
+
+			std::string jsonState = stateManager->getClassroomJSON();
+
+			std::cout << "Detected state change: " << jsonState << std::endl;
+
+			//do PUT of the JSON object to the server
+			bool success = false;
+			std::cout << "PUTting remote JSON: " << jsonState << "...";
+			success = putRemoteString(mUrl,jsonState);
+			if(success){
+				std::cout << "Success!" << std::endl;
+				stateManager->SetHasClassroomChanged(false);
+			}
+			else std::cout << "Failure!" << std::endl;
+		}
 	}
 
 }

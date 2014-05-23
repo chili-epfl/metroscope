@@ -390,26 +390,26 @@ FiducialMarker *DecoratorManager::loadFlipped(libconfig::Setting &pSetting)
  */
 decorators::FiducialDecorator *DecoratorManager::loadDecorator(libconfig::Setting &pDecoratorSettings)
 {
-  // We need a name at some point to store the decorator in the mDecorators
-  // dictionnary. So this variable will have to be set.
+	// We need a name at some point to store the decorator in the mDecorators
+	// dictionnary. So this variable will have to be set.
 	std::string tDecoratorName;
 
-  // We store a reference to the parameter here, but we may have to update it
-  //later to make it point to another Setting from the config file.
+	// We store a reference to the parameter here, but we may have to update it
+	//later to make it point to another Setting from the config file.
 	libconfig::Setting *tDecoratorSettings = &pDecoratorSettings;
-  
-  // First, let's check if the setting is just the name of the decorator.
+
+	// First, let's check if the setting is just the name of the decorator.
 	if (tDecoratorSettings->getType() == libconfig::Setting::TypeString) {
 		std::string tNameSetting = pDecoratorSettings;
 		tDecoratorName = tNameSetting;
-    // We append the name of the decorator to the filename of the path to avoid
-    // collisions between decorators having the same name in different files.
-    decorators::FiducialDecorator *tDecorator = mDecorators[mCurrentConfigFile+tDecoratorName];
-    // If  decorator is already present in the dictionnary, that's easy:
+		// We append the name of the decorator to the filename of the path to avoid
+		// collisions between decorators having the same name in different files.
+		decorators::FiducialDecorator *tDecorator = mDecorators[mCurrentConfigFile+tDecoratorName];
+		// If  decorator is already present in the dictionnary, that's easy:
 		if (tDecorator) return tDecorator;
-    // If the decorator has not been loaded yet, we'll do it now.
-    // To do so, we'll fetch the setting containing the actual definition
-    // and we'll go on as if we had received it as parameter.
+		// If the decorator has not been loaded yet, we'll do it now.
+		// To do so, we'll fetch the setting containing the actual definition
+		// and we'll go on as if we had received it as parameter.
 		try
 		{
 			tDecoratorSettings = &mConfig.lookup("decorators."+tDecoratorName);
@@ -420,47 +420,47 @@ decorators::FiducialDecorator *DecoratorManager::loadDecorator(libconfig::Settin
 			std::cerr << "Named decorator not a setting: " << e.getPath() << std::endl;
 			return 0;
 		}
-  }
-  // We don't have a String, so we assume that we have the definition of the
-  // decorator. Now let's check if this definition is in the list of
-  // decorators of the config file...
+	}
+	// We don't have a String, so we assume that we have the definition of the
+	// decorator. Now let's check if this definition is in the list of
+	// decorators of the config file...
 	else if (!std::strncmp(tDecoratorSettings->getParent().getName(), "decorators", 10+1)) {
-    // In this case, the decorator should have a name already, so we'll use it.
+		// In this case, the decorator should have a name already, so we'll use it.
 		tDecoratorName = tDecoratorSettings->getName();
-    // Let's check if the decorator has not been loaded already:
-    // @Anna: that's what I think was missing, so that's what I added, so
-    // that's what probably needs debuggin.
-    decorators::FiducialDecorator *tDecorator = mDecorators[mCurrentConfigFile+tDecoratorName];
+		// Let's check if the decorator has not been loaded already:
+		// @Anna: that's what I think was missing, so that's what I added, so
+		// that's what probably needs debuggin.
+		decorators::FiducialDecorator *tDecorator = mDecorators[mCurrentConfigFile+tDecoratorName];
 		if (tDecorator) return tDecorator;
 	}
-  // ... or embedded inside the definition of another decorator.
-  else {
-    // In this case there is no name for the decorator, so we generate one.
+	// ... or embedded inside the definition of another decorator.
+	else {
+		// In this case there is no name for the decorator, so we generate one.
 		std::stringstream tAnonymousGUID;
 		tAnonymousGUID << "anonymous decorator #" << sNextAnonymousDecoratorGUID++;
 		tDecoratorName = tAnonymousGUID.str();
 	}
 
-  // By now, we should have a name for the decorator, and the decorator has not
-  // been loaded.
+	// By now, we should have a name for the decorator, and the decorator has not
+	// been loaded.
 	decorators::FiducialDecorator* tDecorator=0;
 	try {
-    // The type will tell us which factory to call to create the object.
+		// The type will tell us which factory to call to create the object.
 		std::string tDecoratorType = (*tDecoratorSettings)["type"];
 		decorators::FiducialDecorator * (*tDecoratorFactory)(libconfig::Setting &, DecoratorManager &) = (*mDecoratorFactories)[tDecoratorType];
-    // Then we call the factory
+		// Then we call the factory
 		if (tDecoratorFactory) tDecorator = tDecoratorFactory(*tDecoratorSettings, *this);
 		else {
 			std::cerr << "No implementation available to load: " << tDecoratorType << std::endl;
 			return 0;
 		}
-    // And we store the newly created object into the dictionnary
+		// And we store the newly created object into the dictionnary
 		mDecorators[mCurrentConfigFile+tDecoratorName] = tDecorator;
 		if (!tDecorator) {
 			std::cerr << "Error loading: " << tDecoratorSettings->getName() << std::endl;
 		}
-    // We also keep track of the order in which decorators have been defined in
-    // the config file; sometimes we need to control who gets updated first.
+		// We also keep track of the order in which decorators have been defined in
+		// the config file; sometimes we need to control who gets updated first.
 		mOrderedDecorators.push_back(tDecorator);
 	} catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Decorator type not found: " << e.getPath() << std::endl;

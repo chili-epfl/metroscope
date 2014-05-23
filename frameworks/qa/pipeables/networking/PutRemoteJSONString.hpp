@@ -15,7 +15,7 @@
 
 class PutRemoteJSONString: public Pipeable {
 	    public:
-			PutRemoteJSONString(std::string pUrl);
+			PutRemoteJSONString(std::string pUrl, Entity pEntity = DEVICE);
 
 	    protected:
 	        void run();
@@ -23,6 +23,8 @@ class PutRemoteJSONString: public Pipeable {
 	        bool putRemoteString(std::string pUrl, std::string data);
 
 	        std::string mUrl;
+
+	        Entity mEntity;//This marks the mode of operation of the pipeable (translate what kind of object into JSON)
 
 };
 

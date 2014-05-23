@@ -151,17 +151,10 @@ int main(int argc, char* argv[])
     //std::cout << "Initializing networking pipeables" << std::endl;
 	Wait tWaitDevice(tWaitDeviceTime);
 	Wait tWaitClassroom(tWaitClassroomTime);
-	PutRemoteJSONString tPutRemoteDevice(tUrlDevice);
-	PutRemoteJSONString tPutRemoteClassroom(tUrlClassroom);
-	GetRemoteJSONString tGetRemoteJSONString(tUrlClassroom);
+	PutRemoteJSONString tPutRemoteDevice(tUrlDevice, DEVICE);
+	PutRemoteJSONString tPutRemoteClassroom(tUrlClassroom, CLASSROOM);
+	GetRemoteJSONString tGetRemoteClassroom(tUrlClassroom, CLASSROOM);
 
-	//Start the file updater and HTTP putter threads...
-    //std::cout << "Starting networking thread" << std::endl;
-    tPutRemoteDevice | tWaitDevice | tPutRemoteDevice;
-	tPutRemoteDevice.startNoWait();
-
-	tGetRemoteClassroom | tPutRemoteClassroom | tWaitClassroom | tGetRemoteClassroom;
-	tGetRemoteClassroom.startNoWait();
 
 	//Initializing the CV and tag detection pipeables...
 	if (!tGrabber)
@@ -207,6 +200,23 @@ int main(int argc, char* argv[])
 	OpenGl2DDisplay::scDefaultOpenGl2DDisplay.startDebug();
 #else
 
+	//Define and start the device HTTP putter thread...
+    //std::cout << "Starting networking thread" << std::endl;
+    tPutRemoteDevice
+    | tWaitDevice
+    | tPutRemoteDevice;
+
+    tPutRemoteDevice.startNoWait();
+
+	//Define and start the classroom HTTP getter/putter thread...
+	tGetRemoteClassroom
+	| tWaitClassroom
+	| tPutRemoteClassroom
+	| tGetRemoteClassroom;
+
+	tGetRemoteClassroom.startNoWait();
+
+
 	*tGrabber
 	| *tPreProcess
 	| *tCraftagUpdate
@@ -224,6 +234,13 @@ int main(int argc, char* argv[])
 	tOpenGl2DDisplay->start();
 	tGrabber->stop();
 	tGrabber->join();
+
+	tPutRemoteDevice.stop();
+	tPutRemoteDevice.join();
+
+	tGetRemoteClassroom.stop();
+	tGetRemoteClassroom.join();
+
 
 #endif
 

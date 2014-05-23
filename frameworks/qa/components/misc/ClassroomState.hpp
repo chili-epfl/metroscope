@@ -43,6 +43,8 @@ public:
 	void SetHasChanged(bool changed) {mChanged = changed;}
 
 	bool equals(ClassroomState* other);
+	std::string getJSON();
+
 	void setJSON(std::string jsonstring);
 	Json::Value getJSONObject(std::string jsonMessage);
 

@@ -15,7 +15,7 @@
 
 class GetRemoteJSONString: public Pipeable {
 	    public:
-			GetRemoteJSONString(std::string pUrl);
+			GetRemoteJSONString(std::string pUrl, Entity pEntity = DEVICE);
 
 	    protected:
 	        void run();
@@ -25,6 +25,8 @@ class GetRemoteJSONString: public Pipeable {
 	        static size_t data_write(void* buf, size_t size, size_t nmemb, void* userp);
 
 	        std::string mUrl;
+
+	        Entity mEntity;//This marks the mode of operation of the pipeable (translate what kind of object into JSON)
 
 };
 

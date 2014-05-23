@@ -80,12 +80,30 @@ std::string NetworkedStateManager::getDeviceJSON(){
 	return json;
 }
 
+std::string NetworkedStateManager::getClassroomJSON(){
+	std::string json;
+	pthread_mutex_lock(&classstate_mutex);
+	json = mClassroomState->getJSON();
+	pthread_mutex_unlock(&classstate_mutex);
+	return json;
+}
+
+
+
 void NetworkedStateManager::SetHasDeviceChanged(bool changed){
 
 	pthread_mutex_lock(&devstate_mutex);
 	mDeviceState->SetHasChanged(changed);
 	pthread_mutex_unlock(&devstate_mutex);
 }
+
+void NetworkedStateManager::SetHasClassroomChanged(bool changed){
+
+	pthread_mutex_lock(&classstate_mutex);
+	mClassroomState->SetHasChanged(changed);
+	pthread_mutex_unlock(&classstate_mutex);
+}
+
 
 void NetworkedStateManager::addMarkerToDeviceState(std::string tagName){
 
@@ -135,4 +153,33 @@ void NetworkedStateManager::SetClassroomJSON(std::string jsonData){
 	pthread_mutex_lock(&classstate_mutex);
 	mClassroomState->setJSON(jsonData);
 	pthread_mutex_unlock(&classstate_mutex);
+}
+
+void NetworkedStateManager::SetDeviceJSON(std::string jsonData){
+
+	pthread_mutex_lock(&devstate_mutex);
+	mDeviceState->setJSON(jsonData);
+	pthread_mutex_unlock(&devstate_mutex);
+}
+
+void NetworkedStateManager::SetClassroomPaused(bool paused){
+
+	pthread_mutex_lock(&classstate_mutex);
+	bool oldPause = mClassroomState->GetGlobal().paused;
+	if(oldPause!=paused){
+		global_class newGlobal;
+		newGlobal.paused = paused;
+		mClassroomState->SetGlobal(newGlobal);
+		mClassroomState->SetHasChanged(true);
+	}
+	pthread_mutex_unlock(&classstate_mutex);
+}
+
+
+bool NetworkedStateManager::isClassroomPaused(){
+	bool paused;
+	pthread_mutex_lock(&classstate_mutex);
+	paused = mClassroomState->GetGlobal().paused;
+	pthread_mutex_unlock(&classstate_mutex);
+	return paused;
 }

@@ -56,6 +56,9 @@ public:
 	bool equals(DeviceState* other);
 	std::string getJSON();
 
+	void setJSON(std::string jsonstring);
+	Json::Value getJSONObject(std::string jsonMessage);
+
 private:
 	std::string mMeteorId;
 

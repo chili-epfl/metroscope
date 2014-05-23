@@ -8,8 +8,10 @@
 #include "GetRemoteJSONString.hpp"
 
 GetRemoteJSONString::GetRemoteJSONString(
-		std::string pUrl):
-mUrl(pUrl)
+		std::string pUrl,
+		Entity pEntity):
+mUrl(pUrl),
+mEntity(pEntity)
 {
 
 }
@@ -17,15 +19,21 @@ mUrl(pUrl)
 
 void GetRemoteJSONString::run(){
 
-	//TODO: there should be a flag to mark if what we'll get has to go to classroom or device (by now, we always suppose it is class, since we do not get devices)
 	std::cout << "GETting remote JSON from: " << mUrl << "...";
 	std::string jsonData = getRemoteString(mUrl);
 	if(jsonData.length()>0){
 		std::cout << "Success!" << std::endl;
-		stateManager->SetClassroomJSON(jsonData);
-		stateManager->SetHasDeviceChanged(false);
+		//std::cout << "Received data: " << jsonData << std::endl;
+		if(mEntity==CLASSROOM){//We update the local classroom state
+			stateManager->SetClassroomJSON(jsonData);
+			stateManager->SetHasClassroomChanged(false);
+		}else if(mEntity==DEVICE){//We update the local device state
+			stateManager->SetDeviceJSON(jsonData);
+			stateManager->SetHasDeviceChanged(false);
+		}
 	}
 	else std::cout << "Failure!" << std::endl;
+
 
 }
 
@@ -50,7 +58,7 @@ std::string GetRemoteJSONString::getRemoteString(std::string pUrl){
 
 
 // callback function writes data to a std::ostream
-static size_t GetRemoteJSONString::data_write(void* buf, size_t size, size_t nmemb, void* userp)
+size_t GetRemoteJSONString::data_write(void* buf, size_t size, size_t nmemb, void* userp)
 {
 	if(userp)
 	{
@@ -66,7 +74,7 @@ static size_t GetRemoteJSONString::data_write(void* buf, size_t size, size_t nme
 /**
  * timeout is in seconds
  **/
-CURLcode GetRemoteJSONString::curl_read(const std::string& url, std::ostream& os, long timeout = 30)
+CURLcode GetRemoteJSONString::curl_read(const std::string& url, std::ostream& os, long timeout)
 {
 	CURLcode code(CURLE_FAILED_INIT);
 	CURL* curl = curl_easy_init();

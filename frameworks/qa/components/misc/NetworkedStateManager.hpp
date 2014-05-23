@@ -12,6 +12,8 @@
 #include <qa/components/misc/ClassroomState.hpp>
 #include <pthread.h>
 
+enum Entity{CLASSROOM, DEVICE};
+
 class NetworkedStateManager {
 public:
 	NetworkedStateManager();
@@ -21,15 +23,23 @@ public:
 	bool hasDeviceChanged();
 	bool hasClassroomChanged();
 
-	std::string getDeviceJSON();
+	std::string getDeviceJSON();//gets a JSON string with the current state of the device
+	std::string getClassroomJSON();//gets a JSON string with the current state of the classroom
 
 	void SetDeviceMeteorId(std::string pId);
 	void SetClassroomMeteorId(std::string pId);
 
 	void SetHasDeviceChanged(bool changed);
+	void SetHasClassroomChanged(bool changed);
+
+	void SetClassroomPaused(bool changed);
+	bool isClassroomPaused();
+
 	void addMarkerToDeviceState(std::string tagName);
 	void removeMarkerFromDeviceState(std::string tagName);
+
 	void SetClassroomJSON(std::string jsonData);
+	void SetDeviceJSON(std::string jsonData);
 
 protected:
 	DeviceState* mDeviceState;

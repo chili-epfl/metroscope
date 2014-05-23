@@ -45,12 +45,28 @@ void decorators::SimpleText::update() {
 	if (mMarker->isPresent())
 	{
 		displayMessage();
-		//stateManager->addMarkerToDeviceState("simpletext");
+		stateManager->addMarkerToDeviceState("simpletext");
+		stateManager->SetClassroomPaused(true);
 	}
-//	else{
-//		stateManager->removeMarkerFromDeviceState("simpletext");
-//	}
+	else{
+		stateManager->removeMarkerFromDeviceState("simpletext");
+		stateManager->SetClassroomPaused(false);
+	}
 
+
+}
+
+// Just draws a big black square on the screen
+void decorators::SimpleText::blackoutScreen(){
+	if(mMarker->isPresent()){
+			mDecoratorManager.GetDisplay().PushTransformation();
+				mDecoratorManager.GetDisplay().RenderQuadFilled(0,0,
+						mDecoratorManager.GetDisplay().GetWidth(),0,
+						mDecoratorManager.GetDisplay().GetWidth(),mDecoratorManager.GetDisplay().GetHeight(),
+						0,mDecoratorManager.GetDisplay().GetHeight(),
+						scBLACK.r, scBLACK.g, scBLACK.b, 1.0f);
+				mDecoratorManager.GetDisplay().PopTransformation();
+	}
 }
 
 

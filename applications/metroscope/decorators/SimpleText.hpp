@@ -38,6 +38,7 @@ class SimpleText : public FiducialDecorator
 	protected:
 		void update();
 		void displayMessage();
+		void blackoutScreen();
 
 	private:
 		static const std::string scDecoratorName;

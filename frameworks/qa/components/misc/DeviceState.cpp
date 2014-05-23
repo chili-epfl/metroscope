@@ -88,7 +88,74 @@ std::string DeviceState::getJSON(){
 	Json::FastWriter fastWriter;
 	data = fastWriter.write(json);
 
-	//cout << "Built JSON object: " << data << endl;
+	//std::cout << "Built JSON object: " << data << std::endl;
 
 	return data;
+}
+
+Json::Value DeviceState::getJSONObject(std::string jsonMessage){
+
+	Json::Value parsedFromString;
+	Json::Reader reader;
+	bool parsingSuccessful = reader.parse(jsonMessage, parsedFromString);
+	if (parsingSuccessful)
+	{
+		//Json::StyledWriter styledWriter;
+		//std::cout << styledWriter.write(parsedFromString) << std::endl;
+		//std::cout << "Parsing successful!" << std::endl;
+		//std::cout << jsonMessage << std::endl;
+		return(parsedFromString);
+	}
+	return(parsedFromString);
+}
+
+void DeviceState::setJSON(std::string jsonstring){
+
+	Json::Value value = getJSONObject(jsonstring);
+
+	Json::Value meteorId = value[scMeteorIdLabel];
+	this->mMeteorId = meteorId.asString();
+
+	Json::Value id = value[scIdLabel];
+	this->mId = id.asInt();
+
+	Json::Value name = value[scNameLabel];
+	this->mName = name.asString();
+
+	activity_state activity;
+	Json::Value currObj = value[scCurrentLabel];
+	Json::Value present = currObj[scPresentTagsLabel];
+	std::vector<std::string> tags;
+	for (unsigned int i=0;i<present.size();i++){
+		//cout << "Parsing array element " << i << ": " << present[i].asString() << endl;
+		if(present[i].asString().length()>0){
+			tags.push_back(present[i].asString());
+		}
+	}
+	this->mPresentTags = tags;
+
+
+	Json::Value actObj = currObj[scActivityLabel];
+	activity.id = actObj[scIdLabel].asInt();
+	activity.name = actObj[scNameLabel].asString();
+	Json::Value stateObj = actObj[scStateLabel];
+	state st;
+	st.denominator = stateObj[scDenominatorLabel].asInt();
+	st.numerator = stateObj[scNumeratorLabel].asInt();
+	st.value = stateObj[scValueLabel].asFloat();
+	if(stateObj[scRepresentationLabel].asString().compare("circular")==0){
+		st.representation = circular;
+	} else if(stateObj[scRepresentationLabel].asString().compare("rectangular")==0){
+		st.representation = rectangular;
+	} else if(stateObj[scRepresentationLabel].asString().compare("tokens")==0){
+		st.representation = tokens;
+	} else if(stateObj[scRepresentationLabel].asString().compare("tangram")==0){
+		st.representation = tangram;
+	}
+	activity.currentState = st;
+	this->mActivity = activity;
+
+	this->mChanged = false;
+
+
 }

@@ -38,6 +38,8 @@ bool ClassroomState::equals(ClassroomState* other){
 
 void ClassroomState::setJSON(std::string jsonstring){
 
+	//std::cout << "Trying to set classroom state with data: " << jsonstring << std::endl;
+
 	Json::Value value = getJSONObject(jsonstring);
 
 	Json::Value meteorId = value[scMeteorIdLabel];
@@ -50,9 +52,10 @@ void ClassroomState::setJSON(std::string jsonstring){
 	mName = name.asString();
 
 	Json::Value devices = value[scDevicesLabel];
+	//std::cout << "devices element: is array? " << devices.isArray() << "; elements: " << devices.size() << std::endl;
 	std::vector<int> devs;
 	for (unsigned int i=0;i<devices.size();i++){
-		//cout << "Parsing array element " << i << ": " << present[i].asString() << endl;
+		//std::cout << "Parsing array element " << i << ": " << devices[i].asInt() << std::endl;
 		devs.push_back(devices[i].asInt());
 	}
 	mDevices = devs;
@@ -64,9 +67,44 @@ void ClassroomState::setJSON(std::string jsonstring){
 	mGlobal = classVariables;
 
 	mChanged = false;
+	//std::cout << "Classroom state set. # devices " << mDevices.size() << std::endl;
 
 }
 
+std::string ClassroomState::getJSON(){
+
+	std::string data;
+
+	Json::Value json;
+	json[scIdLabel] = this->mId;
+	json[scNameLabel] = this->mName;
+	json[scMeteorIdLabel] = this->mMeteorId;
+
+	//devices
+	Json::Value devices;
+	if(this->mDevices.size()==0){
+		json[scDevicesLabel] = Json::Value(Json::arrayValue);
+	}else{
+		for(unsigned int i=0;i<this->mDevices.size();i++){
+			devices.append(this->mDevices.at(i));
+		}
+		json[scDevicesLabel] = devices;
+	}
+
+	//global variables
+	Json::Value global;
+	global[scPaused] = this->mGlobal.paused;
+
+	json[scGlobalClassVariables] = global;
+
+
+	Json::FastWriter fastWriter;
+	data = fastWriter.write(json);
+
+	std::cout << "Built JSON object: " << data << std::endl;
+
+	return data;
+}
 
 
 
