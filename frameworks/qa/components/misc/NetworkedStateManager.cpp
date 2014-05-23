@@ -199,3 +199,18 @@ bool NetworkedStateManager::isClassroomPaused(){
 	pthread_mutex_unlock(&classstate_mutex);
 	return paused;
 }
+
+std::string NetworkedStateManager::getPauserDevice(){
+
+	pthread_mutex_lock(&classstate_mutex);
+	std::string device(mClassroomState->GetGlobal().pauserDevice);
+	pthread_mutex_unlock(&classstate_mutex);
+	return device;
+}
+
+std::string NetworkedStateManager::getDeviceId(){
+	pthread_mutex_lock(&devstate_mutex);
+	std::string device(mDeviceState->GetMeteorId());
+	pthread_mutex_unlock(&devstate_mutex);
+	return device;
+}

@@ -41,23 +41,24 @@ FiducialDecorator(pDecoratorManager, pMarker, true)
 }
 
 void decorators::OrchestrationPause::update() {
+	//std::cout << "Entering orchestration decorator. Classroom pause: " << stateManager->isClassroomPaused() << std::endl;
 	if (mMarker->isPresent())
 	{
 		stateManager->addMarkerToDeviceState("pause");
 		stateManager->SetClassroomPaused(true);
-		blackoutScreen();
 	}
 	else{
 		stateManager->removeMarkerFromDeviceState("pause");
-		stateManager->SetClassroomPaused(false);
+		if(stateManager->getPauserDevice().compare(stateManager->getDeviceId())==0) stateManager->SetClassroomPaused(false);//if this was the device that paused, we unpause
 	}
+	if(stateManager->isClassroomPaused()) blackoutScreen();
 
 
 }
 
 // Just draws a big black square on the screen
 void decorators::OrchestrationPause::blackoutScreen(){
-	if(mMarker->isPresent()){
+//	if(mMarker->isPresent()){
 			mDecoratorManager.GetDisplay().PushTransformation();
 				mDecoratorManager.GetDisplay().RenderQuadFilled(0,0,
 						mDecoratorManager.GetDisplay().GetWidth(),0,
@@ -65,7 +66,7 @@ void decorators::OrchestrationPause::blackoutScreen(){
 						0,mDecoratorManager.GetDisplay().GetHeight(),
 						scBLACK.r, scBLACK.g, scBLACK.b, 1.0f);
 				mDecoratorManager.GetDisplay().PopTransformation();
-	}
+//	}
 }
 
 

@@ -35,12 +35,12 @@ class FiducialDecorator
 	protected:
 		DecoratorManager &mDecoratorManager;
 		const FiducialMarker *mMarker;
-		const bool mOrchestrator;
+		bool mOrchestrator;
 
 		FiducialDecorator(
 				DecoratorManager &pDecoratorManager,
 				const FiducialMarker *pMarker,
-				const bool pOrchestrator = false)
+				bool pOrchestrator = false)
 			: mDecoratorManager(pDecoratorManager)
 			, mMarker(pMarker)
 			, mOrchestrator(pOrchestrator)

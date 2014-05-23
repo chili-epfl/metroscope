@@ -26,6 +26,9 @@ public:
 	std::string getDeviceJSON();//gets a JSON string with the current state of the device
 	std::string getClassroomJSON();//gets a JSON string with the current state of the classroom
 
+	std::string getPauserDevice();
+	std::string getDeviceId();
+
 	void SetDeviceMeteorId(std::string pId);
 	void SetClassroomMeteorId(std::string pId);
 
