@@ -118,11 +118,12 @@ void decorators::KillBugModel::RenderProportion(float pProportion, int pProporti
 
 	switch(pProportionNumber){
 	case 1:
-		tPosition.x = mWorkingTriangle/4;
+		tPosition.x = mWorkingTriangle/10;
 		tPosition.y = (mWorkingTriangle+mMapHeight)/2;
 		tR = 0.0f;
 		tG = 0.0f;
-		tB = 0.0f;
+		tB = 1.0f;
+
 		break;
 	case 2:
 		tPosition.x = (mWorkingTriangle+mMapWidth)/2;
@@ -132,7 +133,7 @@ void decorators::KillBugModel::RenderProportion(float pProportion, int pProporti
 		tB = 0.0f;
 		break;
 	case 3:
-		tPosition.x = mWorkingTriangle+mMapWidth;
+		tPosition.x = mWorkingTriangle/(1.5)+mMapWidth;
 		tPosition.y = (mWorkingTriangle + mMapHeight)/2;
 		tR = 0.0f;
 		tG = 0.0f;
@@ -140,7 +141,7 @@ void decorators::KillBugModel::RenderProportion(float pProportion, int pProporti
 		break;
 	case 4:
 		tPosition.x = (mWorkingTriangle+mMapWidth)/2;
-		tPosition.y = mWorkingTriangle + mMapHeight;
+		tPosition.y = mWorkingTriangle/(1.25) + mMapHeight;
 		tR = 0.0f;
 		tG = 0.0f;
 		tB = 0.0f;
