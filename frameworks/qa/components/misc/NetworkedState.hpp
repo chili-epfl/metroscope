@@ -23,6 +23,7 @@
 		static const std::string scDevicesLabel="devices";
 		static const std::string scGlobalClassVariables="global";
 		static const std::string scPaused="paused";
+		static const std::string scPauserDevice="pauserDevice";
 
 
 

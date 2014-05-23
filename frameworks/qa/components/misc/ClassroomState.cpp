@@ -30,7 +30,7 @@ bool ClassroomState::equals(ClassroomState* other){
 		}
 	}
 	//check the global class variables state
-	if(this->mGlobal.paused!=other->GetGlobal().paused) return false;
+	if(this->mGlobal.paused!=other->GetGlobal().paused || this->mGlobal.pauserDevice.compare(other->GetGlobal().pauserDevice)!=0) return false;
 
 	//If all else failed, they must be equal!
 	return true;
@@ -64,6 +64,7 @@ void ClassroomState::setJSON(std::string jsonstring){
 	Json::Value global = value[scGlobalClassVariables];
 	global_class classVariables;
 	classVariables.paused = global[scPaused].asBool();
+	classVariables.pauserDevice = global[scPauserDevice].asString();
 	mGlobal = classVariables;
 
 	mChanged = false;
@@ -94,6 +95,7 @@ std::string ClassroomState::getJSON(){
 	//global variables
 	Json::Value global;
 	global[scPaused] = this->mGlobal.paused;
+	global[scPauserDevice] = this->mGlobal.pauserDevice;
 
 	json[scGlobalClassVariables] = global;
 

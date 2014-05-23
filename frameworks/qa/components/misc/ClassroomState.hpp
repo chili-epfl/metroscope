@@ -18,6 +18,7 @@
 struct global_class{
 
 	  bool paused;
+	  std::string pauserDevice;
 };
 
 

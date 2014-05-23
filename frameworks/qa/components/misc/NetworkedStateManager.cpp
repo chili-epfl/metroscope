@@ -166,12 +166,28 @@ void NetworkedStateManager::SetClassroomPaused(bool paused){
 
 	pthread_mutex_lock(&classstate_mutex);
 	bool oldPause = mClassroomState->GetGlobal().paused;
-	if(oldPause!=paused){
+	std::string oldPauserDevice = mClassroomState->GetGlobal().pauserDevice;
+
+	//if currently it is unpaused and we want to pause it, we just do it
+	if(!oldPause && paused){
 		global_class newGlobal;
 		newGlobal.paused = paused;
+		std::string newPauser(mDeviceState->GetMeteorId());//TODO: shouldn-t we be getting the device mutex also? this value doesn-t actually change over the execution, but...
+		newGlobal.pauserDevice = newPauser;
 		mClassroomState->SetGlobal(newGlobal);
 		mClassroomState->SetHasChanged(true);
 	}
+	//if currently it is paused and we want to unpause it, We only change pause if the pauserDevice matches the one that paused the class
+	//TODO: shouldn-t we be getting the device mutex also? this value doesn-t actually change over the execution, but...
+	else if(oldPause && !paused && oldPauserDevice.compare(mDeviceState->GetMeteorId())==0){
+		global_class newGlobal;
+		newGlobal.paused = paused;
+		newGlobal.pauserDevice = "";
+		mClassroomState->SetGlobal(newGlobal);
+		mClassroomState->SetHasChanged(true);
+	}
+	//else, we do nothing
+
 	pthread_mutex_unlock(&classstate_mutex);
 }
 
