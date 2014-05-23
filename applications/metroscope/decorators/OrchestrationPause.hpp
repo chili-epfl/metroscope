@@ -17,40 +17,31 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef FiducialDecorator_HPP
-#define FiducialDecorator_HPP
+#ifndef ORCHESTRATIONPAUSE_HPP_
+#define ORCHESTRATIONPAUSE_HPP_
 
-#include <qa/components/vision/FiducialMarker.hpp>
-class DecoratorManager;
+
+
+#include <qa/pipeables/misc/DecoratorManager.hpp>
+#include "../FractionsConstants.hpp"
+
 
 namespace decorators {
 
-class FiducialDecorator
-{	public:
-		virtual void update() = 0;
-		const FiducialMarker& getMarker() const { return *mMarker; }
-		virtual ~FiducialDecorator(){}
-		bool isOrchestrator() { return mOrchestrator; }
+class OrchestrationPause : public FiducialDecorator
+{
+	public:
+		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
+		OrchestrationPause(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker);
 
 	protected:
-		DecoratorManager &mDecoratorManager;
-		const FiducialMarker *mMarker;
-		const bool mOrchestrator;
-
-		FiducialDecorator(
-				DecoratorManager &pDecoratorManager,
-				const FiducialMarker *pMarker,
-				const bool pOrchestrator = false)
-			: mDecoratorManager(pDecoratorManager)
-			, mMarker(pMarker)
-			, mOrchestrator(pOrchestrator)
-		{}
+		void update();
+		void blackoutScreen();
 
 	private:
-		FiducialDecorator();
-		FiducialDecorator(const FiducialDecorator& );
-		FiducialDecorator& operator=(const FiducialDecorator& );
+		static const std::string scDecoratorName;
+		static const DecoratorManager::Registerer mRegisterer;
 };
 
 }
-#endif
+#endif /* ORCHESTRATIONPAUSE_HPP_ */

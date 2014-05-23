@@ -105,3 +105,5 @@
 #include "FractionToken.hpp"
 #include "RectangleFractionModel.hpp"
 #include "Carte.hpp"
+
+#include "OrchestrationPause.hpp"

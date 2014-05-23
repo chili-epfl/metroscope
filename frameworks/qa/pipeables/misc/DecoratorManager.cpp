@@ -103,10 +103,18 @@ mLogId(pLogId)
 void DecoratorManager::run()
 {
 	for (std::list<decorators::FiducialDecorator *>::iterator it = mOrderedDecorators.begin(); it != mOrderedDecorators.end(); ++it) {
-		(*it)->update();
+
+		//we display the decorators IF the classroom has not been paused OR the decorator is an "orchestration decorator" one (e.g. pause the class(
+		if(!stateManager->isClassroomPaused() || (*it)->isOrchestrator()){
+			(*it)->update();
+		}
 	}
+	//This part displays a white square over the tags, so that they are not projected upon
 	for (std::map<int, decorators::FiducialDecorator *>::iterator it = mMarkerMasks.begin(); it != mMarkerMasks.end(); ++it) {
-		(*it).second->update();
+		//we display the decorators IF the classroom has not been paused
+		if(!stateManager->isClassroomPaused()){
+			(*it).second->update();
+		}
 	}
 }
 

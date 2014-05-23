@@ -17,16 +17,16 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#include "SimpleText.hpp"
+#include "OrchestrationPause.hpp"
 #include <iostream>
 
-const std::string decorators::SimpleText::scDecoratorName("SimpleText");
-const  DecoratorManager::Registerer decorators::SimpleText::mRegisterer(decorators::SimpleText::scDecoratorName, &decorators::SimpleText::create);
+const std::string decorators::OrchestrationPause::scDecoratorName("OrchestrationPause");
+const  DecoratorManager::Registerer decorators::OrchestrationPause::mRegisterer(decorators::OrchestrationPause::scDecoratorName, &decorators::OrchestrationPause::create);
 
-decorators::FiducialDecorator *decorators::SimpleText::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
+decorators::FiducialDecorator *decorators::OrchestrationPause::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 {
 	try {
-		return new decorators::SimpleText(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]), pSetting["message"]);
+		return new decorators::OrchestrationPause(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]));
 	} catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
 	} catch(libconfig::SettingTypeException &e) {
@@ -35,37 +35,37 @@ decorators::FiducialDecorator *decorators::SimpleText::create(libconfig::Setting
 	return 0;
 }
 
-decorators::SimpleText::SimpleText(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string pMessage):
-FiducialDecorator(pDecoratorManager, pMarker),
-sMessage(pMessage)
+decorators::OrchestrationPause::OrchestrationPause(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker):
+FiducialDecorator(pDecoratorManager, pMarker, true)
 {
 }
 
-void decorators::SimpleText::update() {
+void decorators::OrchestrationPause::update() {
 	if (mMarker->isPresent())
 	{
-		displayMessage();
-		stateManager->addMarkerToDeviceState("simpletext");
+		stateManager->addMarkerToDeviceState("pause");
+		stateManager->SetClassroomPaused(true);
+		blackoutScreen();
 	}
 	else{
-		stateManager->removeMarkerFromDeviceState("simpletext");
+		stateManager->removeMarkerFromDeviceState("pause");
+		stateManager->SetClassroomPaused(false);
 	}
 
 
 }
 
-
-
-/*Just displays a text message next to the marker*/
-void decorators::SimpleText::displayMessage(){
+// Just draws a big black square on the screen
+void decorators::OrchestrationPause::blackoutScreen(){
 	if(mMarker->isPresent()){
 			mDecoratorManager.GetDisplay().PushTransformation();
-			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-				mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(sMessage.c_str(), scTEXT_DELIMITERS,
-						scHINT_MESSAGE_OFFSET_X, scHINT_MESSAGE_OFFSET_Y, scHINT_MESSAGE_WIDTH,
-						false, scHINT_MESSAGE_SCALE,
-						scMESSAGE_COLOR->r, scMESSAGE_COLOR->g, scMESSAGE_COLOR->b, scMESSAGE_COLOR->a);
+				mDecoratorManager.GetDisplay().RenderQuadFilled(0,0,
+						mDecoratorManager.GetDisplay().GetWidth(),0,
+						mDecoratorManager.GetDisplay().GetWidth(),mDecoratorManager.GetDisplay().GetHeight(),
+						0,mDecoratorManager.GetDisplay().GetHeight(),
+						scBLACK.r, scBLACK.g, scBLACK.b, 1.0f);
 				mDecoratorManager.GetDisplay().PopTransformation();
 	}
 }
+
 
