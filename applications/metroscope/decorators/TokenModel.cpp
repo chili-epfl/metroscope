@@ -50,7 +50,8 @@ decorators::TokenModel::TokenModel (DecoratorManager &pDecoratorManager, Fractio
 		mTokenNumbers(pTokenNumbers),
 		mTotalActiveTokens(0),
 		mActiveFirstToken(0),
-		mActiveSecondToken(0){
+		mActiveSecondToken(0),
+		mActiveTokens(0){
 
 			for(int i = 0 ; i < mTokenNumbers ; i++){
 				switch(mTokens[i]->mType){
@@ -71,6 +72,7 @@ void decorators::TokenModel::update(){
 	for(int i = 0; i < mTokenNumbers; i++){
 		if(mTokens[i]->IsPresent()){
 			mTotalActiveTokens++;
+			mActiveTokens.push_back(mTokens[i]);
 			if(mTokens[i]->getType() == 0) mActiveFirstToken++;
 			else mActiveSecondToken++;
 		}
@@ -79,4 +81,25 @@ void decorators::TokenModel::update(){
 
 bool decorators::TokenModel::isPresent(){
 	return (mTotalActiveTokens > 0);
+}
+
+wykobi::point2d<float> decorators::TokenModel::GetPosition(){
+	wykobi::point2d<float> tLocation;
+	float tX = 0.0f;
+	float tY = 0.0f;
+	float tMeanX = 0.0f;
+	float tMeanY = 0.0f;
+
+	for(std::vector<FractionToken *>::iterator it = mActiveTokens.begin(); it != mActiveTokens.end() ; ++it){
+		tX += (*it)->GetLocation().x;
+		tY += (*it)->GetLocation().y;
+	}
+
+	tMeanX = (mTotalActiveTokens > 0)? (float)(tX/mTotalActiveTokens) : -1.0;
+	tMeanY = (mTotalActiveTokens > 0)? (float)(tY/mTotalActiveTokens) : -1.0;
+
+	tLocation.x = tMeanX;
+	tLocation.y = tMeanY;
+
+	return tLocation;
 }

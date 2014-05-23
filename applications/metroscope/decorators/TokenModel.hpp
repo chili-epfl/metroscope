@@ -40,7 +40,9 @@ namespace decorators {
 		int getActiveTokens(int pType){
 			return (pType == 0 ? mActiveFirstToken : mActiveSecondToken);
 		}
+		float GetProportion(){return (float)(mActiveFirstToken/mTotalActiveTokens);}
 		bool isPresent();
+		wykobi::point2d<float> GetPosition();
 
 
 	protected:
@@ -59,6 +61,7 @@ namespace decorators {
 		FractionToken **mTokens;
 		std::vector<FractionToken *>mFirstTokens;
 		std::vector<FractionToken *>mSecondTokens;
+		std::vector<FractionToken *>mActiveTokens;
 	};
 }
 
