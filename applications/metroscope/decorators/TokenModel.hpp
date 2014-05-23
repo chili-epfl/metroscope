@@ -40,7 +40,7 @@ namespace decorators {
 		int getActiveTokens(int pType){
 			return (pType == 0 ? mActiveFirstToken : mActiveSecondToken);
 		}
-		float GetProportion(){return (float)(mActiveFirstToken/mTotalActiveTokens);}
+		float GetProportion(){return (float)(mActiveFirstToken/(float)mTotalActiveTokens);}
 		bool isPresent();
 		wykobi::point2d<float> GetPosition();
 

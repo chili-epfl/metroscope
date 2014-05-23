@@ -103,3 +103,4 @@ wykobi::point2d<float> decorators::TokenModel::GetPosition(){
 
 	return tLocation;
 }
+
