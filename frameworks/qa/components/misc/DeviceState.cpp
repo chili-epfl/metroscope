@@ -110,6 +110,8 @@ Json::Value DeviceState::getJSONObject(std::string jsonMessage){
 
 void DeviceState::setJSON(std::string jsonstring){
 
+	DeviceState oldState(*this);
+
 	Json::Value value = getJSONObject(jsonstring);
 
 	Json::Value meteorId = value[scMeteorIdLabel];
@@ -154,7 +156,7 @@ void DeviceState::setJSON(std::string jsonstring){
 	activity.currentState = st;
 	this->mActivity = activity;
 
-	this->mChanged = true;
-
+	bool changed = oldState.equals(this);
+	this->mChanged = changed;
 
 }

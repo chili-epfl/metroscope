@@ -39,6 +39,7 @@ bool ClassroomState::equals(ClassroomState* other){
 void ClassroomState::setJSON(std::string jsonstring){
 
 	//std::cout << "Trying to set classroom state with data: " << jsonstring << std::endl;
+	ClassroomState oldState(*this);
 
 	Json::Value value = getJSONObject(jsonstring);
 
@@ -67,7 +68,9 @@ void ClassroomState::setJSON(std::string jsonstring){
 	classVariables.pauserDevice = global[scPauserDevice].asString();
 	mGlobal = classVariables;
 
-	mChanged = true;
+	bool changed = oldState.equals(this);
+	this->mChanged = changed;
+
 	//std::cout << "Classroom state set. # devices " << mDevices.size() << std::endl;
 
 }
