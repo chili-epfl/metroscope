@@ -365,15 +365,16 @@ int decorators::KillBugModel::GetProportionNumber(wykobi::point2d<float> pPositi
 }
 
 void decorators::KillBugModel::SetProportionNumber(wykobi::point2d<float> pPosition, float pProportion){
-	int tProportionNumber;
+	int tProportionNumber = GetProportionNumber(pPosition);
 
-	if(pPosition.x < mMapWidth/2 + mWorkingTriangle/4){ //1 or 4
-		if(pPosition.y < mMapHeight/2 + mWorkingTriangle/4)	tProportionNumber = 1;
-		else tProportionNumber = 4;
-	}else{ //2 or 3
-		if(pPosition.y < mMapHeight/2 + mWorkingTriangle/4)	tProportionNumber = 2;
+
+	/*if(pPosition.x < mMapWidth/2){ //1 or 4
+		if(pPosition.y < mMapHeight)	tProportionNumber = 2;
 		else tProportionNumber = 3;
-	}
+	}else{ //2 or 3
+		if(pPosition.y < mMapHeight)	tProportionNumber = 1;
+		else tProportionNumber = 4;
+	}*/
 
 	switch(tProportionNumber){
 	case 1: mProportion1 = pProportion; break;
