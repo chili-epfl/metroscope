@@ -7,9 +7,11 @@
 
 #include "ClassroomState.hpp"
 
-ClassroomState::ClassroomState() {
-	// TODO Auto-generated constructor stub
-
+ClassroomState::ClassroomState() {//The initialization always sets paused to false, so that by default the behavior is as usual
+	struct global_class global;
+	global.paused=false;
+	global.pauserDevice="";
+	mGlobal = global;
 }
 
 ClassroomState::~ClassroomState() {
@@ -41,6 +43,10 @@ void ClassroomState::setJSON(std::string jsonstring){
 	std::cout << "Trying to set classroom state with data: " << jsonstring << std::endl;
 
 	Json::Value value = getJSONObject(jsonstring);
+
+	//The JSON object can be a one-element array with the object, or only the object (depending on the Meteor API used).
+	//We ensure that we have the object
+	if(value.isArray()) value = value[0];
 
 	Json::Value meteorId = value[scMeteorIdLabel];
 	mMeteorId = meteorId.asString();

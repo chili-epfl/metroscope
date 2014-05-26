@@ -112,6 +112,11 @@ void DeviceState::setJSON(std::string jsonstring){
 
 	Json::Value value = getJSONObject(jsonstring);
 
+	//The JSON object can be a one-element array with the object, or only the object (depending on the Meteor API used).
+	//We ensure that we have the object
+	if(value.isArray()) value = value[0];
+
+
 	Json::Value meteorId = value[scMeteorIdLabel];
 	this->mMeteorId = meteorId.asString();
 
