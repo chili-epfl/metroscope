@@ -38,11 +38,22 @@ decorators::FiducialDecorator *decorators::FractionToken::create(libconfig::Sett
 
 decorators::FractionToken::FractionToken(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pType):
 		FiducialDecorator(pDecoratorManager,pMarker),
-		mType(pType){
+		mType(pType),
+		mCuadrant(0){
 
 }
 
 void decorators::FractionToken::update(){
+	wykobi::point2d<float> tLocation = mMarker->getCenter();
+	float tWidth = mDecoratorManager.GetDisplay().GetWidth();
+	float tHeight = mDecoratorManager.GetDisplay().GetHeight();
 
+	if(tLocation.x < tWidth/2){ // II or III cuadrant
+		if (tLocation.y < tHeight/2) mCuadrant = 2;
+		else mCuadrant = 3;
+	}else{
+		if (tLocation.y < tHeight/2) mCuadrant = 1;
+		else mCuadrant = 4;
+	}
 }
 

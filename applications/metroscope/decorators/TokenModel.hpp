@@ -42,6 +42,7 @@ namespace decorators {
 		}
 		float GetProportion(){return (float)(mActiveFirstToken/(float)mTotalActiveTokens);}
 		bool isPresent();
+		bool AreTokensSpread();
 		wykobi::point2d<float> GetPosition();
 
 
@@ -62,6 +63,7 @@ namespace decorators {
 		std::vector<FractionToken *>mFirstTokens;
 		std::vector<FractionToken *>mSecondTokens;
 		std::vector<FractionToken *>mActiveTokens;
+		int mTokenFirstCuadrant, mTokenSecondCuadrant, mTokenThirdCuadrant, mTokenFourthCuadrant;
 	};
 }
 

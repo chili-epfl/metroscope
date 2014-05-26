@@ -51,7 +51,11 @@ decorators::TokenModel::TokenModel (DecoratorManager &pDecoratorManager, Fractio
 		mTotalActiveTokens(0),
 		mActiveFirstToken(0),
 		mActiveSecondToken(0),
-		mActiveTokens(0){
+		mActiveTokens(0),
+		mTokenFirstCuadrant(0),
+		mTokenSecondCuadrant(0),
+		mTokenThirdCuadrant(0),
+		mTokenFourthCuadrant(0){
 
 			for(int i = 0 ; i < mTokenNumbers ; i++){
 				switch(mTokens[i]->mType){
@@ -69,12 +73,26 @@ void decorators::TokenModel::update(){
 	mTotalActiveTokens = 0;
 	mActiveFirstToken = 0;
 	mActiveSecondToken = 0;
+	mTokenFirstCuadrant = 0;
+	mTokenSecondCuadrant = 0;
+	mTokenThirdCuadrant = 0;
+	mTokenFourthCuadrant = 0;
+
 	for(int i = 0; i < mTokenNumbers; i++){
 		if(mTokens[i]->IsPresent()){
 			mTotalActiveTokens++;
 			mActiveTokens.push_back(mTokens[i]);
 			if(mTokens[i]->getType() == 0) mActiveFirstToken++;
 			else mActiveSecondToken++;
+		}
+	}
+
+	for(std::vector<FractionToken *>::iterator it = mActiveTokens.begin() ; it != mActiveTokens.end() ; ++it){
+		switch((*it)->mCuadrant){
+			case 1: mTokenFirstCuadrant++; break;
+			case 2: mTokenSecondCuadrant++; break;
+			case 3: mTokenThirdCuadrant++; break;
+			case 4: mTokenFourthCuadrant++; break;
 		}
 	}
 }
@@ -102,5 +120,15 @@ wykobi::point2d<float> decorators::TokenModel::GetPosition(){
 	tLocation.y = tMeanY;
 
 	return tLocation;
+}
+
+bool decorators::TokenModel::AreTokensSpread(){
+	int tCuadrants = 0;
+	if(mTokenFirstCuadrant != 0) tCuadrants++;
+	if(mTokenSecondCuadrant != 0) tCuadrants++;
+	if(mTokenThirdCuadrant != 0) tCuadrants++;
+	if(mTokenFourthCuadrant != 0) tCuadrants++;
+
+	return (tCuadrants > 1);
 }
 
