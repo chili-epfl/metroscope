@@ -41,7 +41,7 @@ class KillBugModel : public FiducialDecorator
 		KillBugModel (DecoratorManager &pDecoratorManager,
 				AngleModel *pAngleModel1, AngleModel *pAngleModel2,
 				RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2,
-				TokenModel *pTokenModel1, TokenModel *pTokenModel2,
+				TokenModel *pTokenModel1,
 				Flipper *pGoFlipper, FractionBugHint ** pFractionHints,
 				FractionCard ** pFractionCards,
 				Carte ** pCartes);
@@ -70,7 +70,6 @@ class KillBugModel : public FiducialDecorator
 		RectangleFractionModel *mRectangleModel1;
 		RectangleFractionModel *mRectangleModel2;
 		TokenModel *mTokenModel1;
-		TokenModel *mTokenModel2;
 		Flipper *mFlipper;
 		FractionBugHint **mHints;
 		FractionCard ** mFractionCards;
@@ -88,6 +87,10 @@ class KillBugModel : public FiducialDecorator
 		int mSteps;
 		bool mGameStarted;
 		int mActiveManipulatives;
+		wykobi::point2d<int> mMapPoint1;
+		wykobi::point2d<int> mMapPoint2;
+		wykobi::point2d<int> mMapPoint3;
+		wykobi::point2d<int> mMapPoint4;
 
 };
 }
