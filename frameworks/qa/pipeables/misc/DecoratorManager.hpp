@@ -34,7 +34,6 @@
 #include <map>
 
 
-extern NetworkedStateManager* stateManager;
 
 
 class DecoratorManager : public Pipeable

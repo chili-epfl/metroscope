@@ -21,8 +21,9 @@
 #define SIMPLETEXT_HPP_
 
 
-
+#include <qa/components/misc/NetworkedStateManager.hpp>
 #include <qa/pipeables/misc/DecoratorManager.hpp>
+
 #include "../FractionsConstants.hpp"
 
 static const color * const scMESSAGE_COLOR = &scGREEN;

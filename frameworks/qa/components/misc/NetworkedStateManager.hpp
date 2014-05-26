@@ -14,6 +14,7 @@
 
 enum Entity{CLASSROOM, DEVICE};
 
+
 class NetworkedStateManager {
 public:
 	NetworkedStateManager();
@@ -52,6 +53,8 @@ protected:
 	pthread_mutex_t classstate_mutex;
 
 };
+
+extern NetworkedStateManager* stateManager;
 
 
 
