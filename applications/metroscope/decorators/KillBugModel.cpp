@@ -128,32 +128,32 @@ void decorators::KillBugModel::RenderProportion(float pProportion, int pProporti
 
 	switch(pProportionNumber){
 	case 1:
-		tPosition.x = mWorkingTriangle/10;
-		tPosition.y = (mWorkingTriangle+mMapHeight)/2;
+		tPosition.x = mDisplayWidth/2;
+		tPosition.y = mMapPoint1.y - (mDisplayHeight-mMapHeight)/4;
 		tR = 0.0f;
 		tG = 0.0f;
 		tB = 1.0f;
 
 		break;
 	case 2:
-		tPosition.x = (mWorkingTriangle+mMapWidth)/2;
-		tPosition.y = mWorkingTriangle/4;
-		tR = 0.0f;
+		tPosition.x = mMapPoint1.x - (mDisplayWidth-mMapWidth)/4;
+		tPosition.y = mDisplayHeight/2;
+		tR = 1.0f;
 		tG = 0.0f;
-		tB = 0.0f;
+		tB = 1.0f;
 		break;
 	case 3:
-		tPosition.x = mWorkingTriangle/(1.5)+mMapWidth;
-		tPosition.y = (mWorkingTriangle + mMapHeight)/2;
-		tR = 0.0f;
+		tPosition.x = mDisplayWidth/2;
+		tPosition.y = mMapPoint3.y + (mDisplayHeight-mMapHeight)/4;
+		tR = 1.0f;
 		tG = 0.0f;
 		tB = 0.0f;
 		break;
 	case 4:
-		tPosition.x = (mWorkingTriangle+mMapWidth)/2;
-		tPosition.y = mWorkingTriangle/(1.25) + mMapHeight;
+		tPosition.x = mMapPoint3.x + (mDisplayWidth-mMapWidth)/4;
+		tPosition.y = mDisplayHeight/2;
 		tR = 0.0f;
-		tG = 0.0f;
+		tG = 1.0f;
 		tB = 0.0f;
 		break;
 	}
@@ -223,6 +223,7 @@ void decorators::KillBugModel::DisplayMap(){
 	//Obstacles points
 	if(mActualCarte->getObstacleNumber() > 0){
 			std::vector<wykobi::point2d<float>> tObstacle = mActualCarte->getObstaclesPoint();
+
 		for(std::vector<wykobi::point2d<float>>::iterator it = tObstacle.begin(); it != tObstacle.end() ; ++it){
 			float tEndPositionX = mMapPoint1.x + (*it).x*(mCellDimensionX);
 			float tEndPositionY = mMapPoint1.y + (*it).y*(mCellDimensionY);
@@ -287,6 +288,11 @@ void decorators::KillBugModel::DisplayBug(){
 void decorators::KillBugModel::FetchProportions(){
 	int tProportionNumber = 0;
 	mActiveManipulatives = 0;
+	mProportion1 = 0.0f;
+	mProportion2 = 0.0f;
+	mProportion3 = 0.0f;
+	mProportion4 = 0.0f;
+
 	//Checking the circular manipulative
 	/*
 	if (mCircularModel1->isPresent() && tProportionNumber < 5){
@@ -328,9 +334,14 @@ void decorators::KillBugModel::FetchProportions(){
 */
 	//Checking the token manipulative
 	if(mTokenModel1->isPresent() && tProportionNumber < 4){
-		tProportionNumber++;
 		mActiveManipulatives++;
-		SetProportionNumber(mTokenModel1->GetPosition(), mTokenModel1->GetProportion());
+		if(!mTokenModel1->AreTokensSpread()){
+			tProportionNumber++;
+			SetProportionNumber(mTokenModel1->GetPosition(), mTokenModel1->GetProportion());
+		}else{
+
+		}
+
 	}
 
 	//Checking the cards
@@ -344,12 +355,12 @@ void decorators::KillBugModel::FetchProportions(){
 }
 
 int decorators::KillBugModel::GetProportionNumber(wykobi::point2d<float> pPosition){
-	if(pPosition.x < mMapWidth/2 + mWorkingTriangle/4){ //1 or 4
-		if(pPosition.y < mMapHeight/2 + mWorkingTriangle/4)	return 1;
-		else return 4;
-	}else{ //2 or 3
-		if(pPosition.y < mMapHeight/2 + mWorkingTriangle/4)	return 2;
+	if(pPosition.x < mMapWidth/2){
+		if(pPosition.y < mMapHeight/2)	return 2;
 		else return 3;
+	}else{
+		if(pPosition.y < mMapHeight/2)	return 1;
+		else return 4;
 	}
 }
 
