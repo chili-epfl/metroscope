@@ -315,26 +315,18 @@ void decorators::KillBugModel::FetchProportions(){
 			case 4: mProportion4 = 4.0f; break;
 		}
 	}
-
+*/
 	//Checking the rectangular manipulative
 	if (mRectangleModel1->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
-		switch(GetProportionNumber(mRectangleModel1->getMarker().getCenter())){
-			case 1: mProportion1 = 1.0; break;
-			case 2: mProportion2 = 2.0f; break;
-			case 3: mProportion3 = 3.0f; break;
-			case 4: mProportion4 = 4.0f; break;
-		}
+		mActiveManipulatives++;
+		SetProportionNumber(mRectangleModel1->getMarker().getCenter(),mRectangleModel1->proportion());
 	}if (mRectangleModel2->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
-		switch(GetProportionNumber(mRectangleModel2->getMarker().getCenter())){
-			case 1: mProportion1 = 1.0; break;
-			case 2: mProportion2 = 2.0f; break;
-			case 3: mProportion3 = 3.0f; break;
-			case 4: mProportion4 = 4.0f; break;
-		}
+		mActiveManipulatives++;
+		SetProportionNumber(mRectangleModel2->getMarker().getCenter(),mRectangleModel2->proportion());
 	}
-*/
+
 	//Checking the token manipulative
 	if(mTokenModel->isPresent() && tProportionNumber < 4){
 		if(!mTokenModel->AreTokensSpread()){
