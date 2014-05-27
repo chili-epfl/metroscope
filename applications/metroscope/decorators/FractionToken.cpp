@@ -47,6 +47,7 @@ void decorators::FractionToken::update(){
 	wykobi::point2d<float> tLocation = mMarker->getCenter();
 	float tWidth = mDecoratorManager.GetDisplay().GetWidth();
 	float tHeight = mDecoratorManager.GetDisplay().GetHeight();
+	mCuadrant = 0;
 
 	if(tLocation.x < tWidth/2){ // II or III cuadrant
 		if (tLocation.y < tHeight/2) mCuadrant = 2;

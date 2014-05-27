@@ -250,6 +250,7 @@ void decorators::KillBugModel::MakeMove(){
 	int tNewPositionX;
 	int tNewPositionY;
 
+	//TODO: Is this the game logic that we want? --> check
 	if(mActiveManipulatives == 4){
 		if(mProportion2 < mProportion4) tNewPositionX = (mBugPosition.x +1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x;
 		else if(mProportion2 > mProportion4) tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x;
@@ -265,21 +266,6 @@ void decorators::KillBugModel::MakeMove(){
 		}
 		mSteps++;
 	}
-
-	/*
-	if(mActiveManipulatives == 4){
-		if(mProportion2 < mProportion4 && mBugPosition.x +1 < mActualCarte->getSize())	tNewPositionX = mBugPosition.x + 1;
-		else if(mProportion2 > mProportion4 && mBugPosition.x > 0) tNewPositionX = mBugPosition.x - 1;
-
-		if(mProportion1 < mProportion3 && mBugPosition.y +1 < mActualCarte->getSize())	tNewPositionY = mBugPosition.y + 1;
-		else if(mProportion1 > mProportion3 && mBugPosition.y > 0) tNewPositionY = mBugPosition.y - 1;
-
-		if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY)){
-			mBugPosition.x = tNewPositionX;
-			mBugPosition.y = tNewPositionY;
-		}
-		mSteps++;
-	}*/
 }
 
 void decorators::KillBugModel::Start(){
@@ -351,25 +337,29 @@ void decorators::KillBugModel::FetchProportions(){
 */
 	//Checking the token manipulative
 	if(mTokenModel->isPresent() && tProportionNumber < 4){
-		mActiveManipulatives++;
 		if(!mTokenModel->AreTokensSpread()){
 			tProportionNumber++;
+			mActiveManipulatives++;
 			SetProportionNumber(mTokenModel->GetPosition(), mTokenModel->GetProportion());
 		}else{
 			if(mTokenModel->GetProportion(1) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
+				mActiveManipulatives++;
 				SetProportionNumber(1,mTokenModel->GetProportion(1));
 			}
 			if(mTokenModel->GetProportion(2) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
+				mActiveManipulatives++;
 				SetProportionNumber(2,mTokenModel->GetProportion(2));
 			}
 			if(mTokenModel->GetProportion(3) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
+				mActiveManipulatives++;
 				SetProportionNumber(3,mTokenModel->GetProportion(3));
 			}
 			if(mTokenModel->GetProportion(4) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
+				mActiveManipulatives++;
 				SetProportionNumber(4,mTokenModel->GetProportion(4));
 			}
 		}
