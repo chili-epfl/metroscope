@@ -53,6 +53,7 @@ class Carte : public FiducialDecorator
 		bool IsFinished() {return mFinished;}
 		void FinishMap() {mFinished = true;}
 		bool IsEmptyCell(int pPositionX, int pPositionY);
+		bool IsEndCell(int pPositionX, int pPositionY);
 
 	protected:
 		void update();

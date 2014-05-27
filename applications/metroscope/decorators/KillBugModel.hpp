@@ -61,6 +61,14 @@ class KillBugModel : public FiducialDecorator
 		int GetProportionNumber(wykobi::point2d<float> pPosition);
 		void SetProportionNumber(wykobi::point2d<float> pPosition, float pProportion);
 		void SetProportionNumber(int pCuadrant, float pProportion);
+		bool IsHintPresent();
+		void DisplayProportions(int pHintType);
+		void DisplayCircularHint();
+		void DisplayRectangularHint();
+		void DisplayDiscreteHint();
+		void DisplayDecimalHint();
+		void DisplayFractionHint();
+		void DisplayIntegerHint();
 
 	private:
 		static const std::string scDecoratorName;
@@ -77,6 +85,7 @@ class KillBugModel : public FiducialDecorator
 		Carte ** mCartes;
 
 		Carte *mActualCarte;
+		FractionBugHint *mActualHint;
 		float mProportion1,mProportion2,mProportion3,mProportion4;
 
 		int mDisplayWidth, mDisplayHeight;

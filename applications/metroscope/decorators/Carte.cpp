@@ -129,3 +129,13 @@ bool decorators::Carte::IsEmptyCell(int pPositionX, int pPositionY){
 	}
 	return true;
 }
+
+bool decorators::Carte::IsEndCell(int pPositionX, int pPositionY){
+	if (mObstaclesNumber > 0){
+		for(std::vector<wykobi::point2d<float>>::iterator it = mEndPoint.begin(); it != mEndPoint.end() ; ++it){
+			if((*it).x == (float)pPositionX && (*it).y == (float)pPositionY) return true;
+		}
+		return false;
+	}
+	return false;
+}

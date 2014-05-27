@@ -31,7 +31,9 @@ public:
 	FractionBugHint(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pHintType);
 	~FractionBugHint();
 
+
 	int GetHintType(){return mHintType;}
+	bool IsPresent(){return mMarker->isPresent();}
 
 protected:
 	void update();
@@ -40,6 +42,7 @@ private:
 	static const std::string scDecoratorName;
 	static const DecoratorManager::Registerer mRegisterer;
 	int mHintType;
+	FiducialMarker *mMarker;
 };
 }
 

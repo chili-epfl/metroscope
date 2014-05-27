@@ -72,7 +72,7 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 			mCircularModel1(pAngleModel1), mCircularModel2(pAngleModel2),
 			mRectangleModel1(pRectangleModel1), mRectangleModel2(pRectangleModel2),
 			mTokenModel(pTokenModel1), mFlipper(pGoFlipper), mHints(pFractionHints), mFractionCards(pFractionCards), mCartes(pCartes),
-			mActualCarte(0), mProportion1(0.0), mProportion2(0.0), mProportion3(0.0), mProportion4(0.0),
+			mActualCarte(0),mActualHint(0), mProportion1(0.0), mProportion2(0.0), mProportion3(0.0), mProportion4(0.0),
 			mMapSize(0), mCellDimensionX(0), mCellDimensionY(0), mSteps(0),mGameStarted(false), mActiveManipulatives(0)
 {
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
@@ -92,8 +92,6 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 				mMapPoint4.x = 0;
 				mMapPoint4.y = 0;
 
-
-
 }
 
 decorators::KillBugModel::~KillBugModel(){ /*Empty*/}
@@ -107,9 +105,11 @@ void decorators::KillBugModel::update(){
 			DisplayBug();
 
 		}
-		if(mActiveManipulatives > 0) DisplayProportions();
+		//if(mActiveManipulatives > 0) DisplayProportions();
 
 		if(mFlipper->IsFlipped())	MakeMove();
+
+		if(IsHintPresent())	DisplayProportions(mActualHint->GetHintType());
 	}
 }
 
@@ -118,6 +118,18 @@ void decorators::KillBugModel::DisplayProportions(){
 	RenderProportion(mProportion2, 2);
 	RenderProportion(mProportion3, 3);
 	RenderProportion(mProportion4, 4);
+}
+
+void decorators::KillBugModel::DisplayProportions(int pType){
+
+	switch(pType){
+		case 0: DisplayDiscreteHint(); break;
+		case 1: DisplayFractionHint(); break;
+		case 2: DisplayDecimalHint();break;
+		case 3: DisplayRectangularHint(); break;
+		case 4: DisplayCircularHint(); break;
+		case 5: DisplayIntegerHint(); break;
+	}
 }
 
 void decorators::KillBugModel::RenderProportion(float pProportion, int pProportionNumber){
@@ -246,6 +258,16 @@ bool decorators::KillBugModel::IsCartePresent(){
 	return false;
 }
 
+bool decorators::KillBugModel::IsHintPresent(){
+	for(int i = 0 ; i < scHintCards ; i++){
+		if(mHints[i]->IsPresent()){
+			mActualHint = mHints[i];
+			return true;
+		}
+	}
+	return false;
+}
+
 void decorators::KillBugModel::MakeMove(){
 	int tNewPositionX;
 	int tNewPositionY;
@@ -263,6 +285,10 @@ void decorators::KillBugModel::MakeMove(){
 		if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY)){
 			mBugPosition.x = tNewPositionX;
 			mBugPosition.y = tNewPositionY;
+		}
+		if(mActualCarte->IsEndCell(mBugPosition.x,mBugPosition.y)){
+			mActualCarte->FinishMap();
+			//TODO: Something with the feedback
 		}
 		mSteps++;
 	}
@@ -383,4 +409,37 @@ void decorators::KillBugModel:: SetProportionNumber(int pCuadrant, float pPropor
 		case 3: mProportion3 = pProportion; break;
 		case 4: mProportion4 = pProportion; break;
 	}
+}
+
+void decorators::KillBugModel::DisplayCircularHint(){
+
+	//TODO: Change color
+	mDecoratorManager.GetDisplay().RenderEllipse(mDisplayWidth/2,mMapPoint1.y - (mDisplayHeight-mMapHeight)/4,mWorkingTriangle/4,mWorkingTriangle/4,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth/2,mMapPoint1.y - (mDisplayHeight-mMapHeight)/4,mWorkingTriangle/4,mWorkingTriangle/4,mProportion1*360,90.0f - mProportion1*360,0.0f,0.0f,0.0f,1.0f,1);
+
+	mDecoratorManager.GetDisplay().RenderEllipse(mMapPoint1.x - (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,mWorkingTriangle/4,mWorkingTriangle/4,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderFilledSector(mMapPoint1.x - (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,mWorkingTriangle/4,mWorkingTriangle/4,mProportion2*360,90.0f - mProportion2*360,0.0f,0.0f,0.0f,1.0f,1);
+
+	mDecoratorManager.GetDisplay().RenderEllipse(mDisplayWidth/2,mMapPoint3.y + (mDisplayHeight-mMapHeight)/4,mWorkingTriangle/4,mWorkingTriangle/4,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth/2,mMapPoint3.y + (mDisplayHeight-mMapHeight)/4,mWorkingTriangle/4,mWorkingTriangle/4,mProportion3*360,90.0f - mProportion3*360,0.0f,0.0f,0.0f,1.0f,1);
+
+	mDecoratorManager.GetDisplay().RenderEllipse(mMapPoint3.x + (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,mWorkingTriangle/4,mWorkingTriangle/4,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderFilledSector(mMapPoint3.x + (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,mWorkingTriangle/4,mWorkingTriangle/4,mProportion4*360,90.0f - mProportion4*360,0.0f,0.0f,0.0f,1.0f,1);
+
+
+}
+void decorators::KillBugModel::DisplayRectangularHint(){
+
+}
+void decorators::KillBugModel::DisplayDiscreteHint(){
+
+}
+void decorators::KillBugModel::DisplayDecimalHint(){
+
+}
+void decorators::KillBugModel::DisplayFractionHint(){
+
+}
+void decorators::KillBugModel::DisplayIntegerHint(){
+
 }
