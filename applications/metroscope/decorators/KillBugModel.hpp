@@ -21,7 +21,7 @@
 #define KILLBUGMODEL_HPP_
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
-#include "AngleModel.hpp"
+#include "CircularFractionModel.hpp"
 #include "RectangleFractionModel.hpp"
 #include "TokenModel.hpp"
 #include "FractionCard.hpp"
@@ -39,7 +39,7 @@ class KillBugModel : public FiducialDecorator
 		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
 
 		KillBugModel (DecoratorManager &pDecoratorManager,
-				AngleModel *pAngleModel1, AngleModel *pAngleModel2,
+				CircularFractionModel *pAngleModel1, CircularFractionModel *pAngleModel2,
 				RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2,
 				TokenModel *pTokenModel1,
 				Flipper *pGoFlipper, FractionBugHint ** pFractionHints,
@@ -66,8 +66,8 @@ class KillBugModel : public FiducialDecorator
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
 
-		AngleModel *mCircularModel1;
-		AngleModel *mCircularModel2;
+		CircularFractionModel *mCircularModel1;
+		CircularFractionModel *mCircularModel2;
 		RectangleFractionModel *mRectangleModel1;
 		RectangleFractionModel *mRectangleModel2;
 		TokenModel *mTokenModel;

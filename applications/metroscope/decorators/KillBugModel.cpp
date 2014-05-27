@@ -48,8 +48,8 @@ decorators::FiducialDecorator *decorators::KillBugModel::create(libconfig::Setti
 		}
 
 		return new decorators::KillBugModel (pDecoratorManager,
-				(AngleModel *) pDecoratorManager.loadDecorator(pSetting["circular_1"]),
-				(AngleModel *) pDecoratorManager.loadDecorator(pSetting["circular_2"]),
+				(CircularFractionModel *) pDecoratorManager.loadDecorator(pSetting["circular_1"]),
+				(CircularFractionModel *) pDecoratorManager.loadDecorator(pSetting["circular_2"]),
 				(RectangleFractionModel *) pDecoratorManager.loadDecorator(pSetting["rectangle_1"]),
 				(RectangleFractionModel *) pDecoratorManager.loadDecorator(pSetting["rectangle_2"]),
 				(TokenModel *) pDecoratorManager.loadDecorator(pSetting["token_1"]),
@@ -64,8 +64,8 @@ decorators::FiducialDecorator *decorators::KillBugModel::create(libconfig::Setti
 	return 0;
 }
 
-decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, AngleModel *pAngleModel1,
-		AngleModel *pAngleModel2, RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2,
+decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, CircularFractionModel *pAngleModel1,
+		CircularFractionModel *pAngleModel2, RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2,
 		TokenModel *pTokenModel1, Flipper *pGoFlipper, FractionBugHint ** pFractionHints,
 		FractionCard ** pFractionCards, Carte ** pCartes):
 			FiducialDecorator(pDecoratorManager, 0),
@@ -297,25 +297,17 @@ void decorators::KillBugModel::FetchProportions(){
 	mProportion4 = 0.0f;
 
 	//Checking the circular manipulative
-	/*
-	if (mCircularModel1->isPresent() && tProportionNumber < 5){
+
+	if (mCircularModel1->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
-		switch(GetProportionNumber(mCircularModel1->getMarker().getCenter())){
-			case 1: mProportion1 = 1.0; break;
-			case 2: mProportion2 = 2.0f; break;
-			case 3: mProportion3 = 3.0f; break;
-			case 4: mProportion4 = 4.0f; break;
-		}
+		mActiveManipulatives++;
+		SetProportionNumber(mCircularModel1->GetCenter(), mCircularModel1->Proportion());
 	}if (mCircularModel2->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
-		switch(GetProportionNumber(mCircularModel2->getMarker().getCenter())){
-			case 1: mProportion1 = 1.0; break;
-			case 2: mProportion2 = 2.0f; break;
-			case 3: mProportion3 = 3.0f; break;
-			case 4: mProportion4 = 4.0f; break;
-		}
+		mActiveManipulatives++;
+		SetProportionNumber(mCircularModel2->GetCenter(), mCircularModel2->Proportion());
 	}
-*/
+
 	//Checking the rectangular manipulative
 	if (mRectangleModel1->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
