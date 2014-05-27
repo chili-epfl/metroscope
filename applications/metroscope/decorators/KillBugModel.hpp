@@ -60,6 +60,7 @@ class KillBugModel : public FiducialDecorator
 		void FetchProportions();
 		int GetProportionNumber(wykobi::point2d<float> pPosition);
 		void SetProportionNumber(wykobi::point2d<float> pPosition, float pProportion);
+		void SetProportionNumber(int pCuadrant, float pProportion);
 
 	private:
 		static const std::string scDecoratorName;
@@ -69,7 +70,7 @@ class KillBugModel : public FiducialDecorator
 		AngleModel *mCircularModel2;
 		RectangleFractionModel *mRectangleModel1;
 		RectangleFractionModel *mRectangleModel2;
-		TokenModel *mTokenModel1;
+		TokenModel *mTokenModel;
 		Flipper *mFlipper;
 		FractionBugHint **mHints;
 		FractionCard ** mFractionCards;

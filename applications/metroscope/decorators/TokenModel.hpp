@@ -44,6 +44,7 @@ namespace decorators {
 		bool isPresent();
 		bool AreTokensSpread();
 		wykobi::point2d<float> GetPosition();
+		float GetProportion(int pCuadrant);
 
 
 	protected:

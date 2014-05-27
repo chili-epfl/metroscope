@@ -71,7 +71,7 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Angl
 			FiducialDecorator(pDecoratorManager, 0),
 			mCircularModel1(pAngleModel1), mCircularModel2(pAngleModel2),
 			mRectangleModel1(pRectangleModel1), mRectangleModel2(pRectangleModel2),
-			mTokenModel1(pTokenModel1), mFlipper(pGoFlipper), mHints(pFractionHints), mFractionCards(pFractionCards), mCartes(pCartes),
+			mTokenModel(pTokenModel1), mFlipper(pGoFlipper), mHints(pFractionHints), mFractionCards(pFractionCards), mCartes(pCartes),
 			mActualCarte(0), mProportion1(0.0), mProportion2(0.0), mProportion3(0.0), mProportion4(0.0),
 			mMapSize(0), mCellDimensionX(0), mCellDimensionY(0), mSteps(0),mGameStarted(false), mActiveManipulatives(0)
 {
@@ -251,11 +251,11 @@ void decorators::KillBugModel::MakeMove(){
 	int tNewPositionY;
 
 	if(mActiveManipulatives == 4){
-		if(mProportion1 < mProportion3 && mBugPosition.x +1 < mActualCarte->getSize())	tNewPositionX = mBugPosition.x + 1;
-		else if(mProportion1 > mProportion3 && mBugPosition.x > 0) tNewPositionX = mBugPosition.x - 1;
+		if(mProportion2 < mProportion4 && mBugPosition.x +1 < mActualCarte->getSize())	tNewPositionX = mBugPosition.x + 1;
+		else if(mProportion2 > mProportion4 && mBugPosition.x > 0) tNewPositionX = mBugPosition.x - 1;
 
-		if(mProportion2 < mProportion4 && mBugPosition.y +1 < mActualCarte->getSize())	tNewPositionY = mBugPosition.y + 1;
-		else if(mProportion2 > mProportion4 && mBugPosition.y > 0) tNewPositionY = mBugPosition.y - 1;
+		if(mProportion1 < mProportion3 && mBugPosition.y +1 < mActualCarte->getSize())	tNewPositionY = mBugPosition.y + 1;
+		else if(mProportion1 > mProportion3 && mBugPosition.y > 0) tNewPositionY = mBugPosition.y - 1;
 
 		if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY)){
 			mBugPosition.x = tNewPositionX;
@@ -333,13 +333,28 @@ void decorators::KillBugModel::FetchProportions(){
 	}
 */
 	//Checking the token manipulative
-	if(mTokenModel1->isPresent() && tProportionNumber < 4){
+	if(mTokenModel->isPresent() && tProportionNumber < 4){
 		mActiveManipulatives++;
-		if(!mTokenModel1->AreTokensSpread()){
+		if(!mTokenModel->AreTokensSpread()){
 			tProportionNumber++;
-			SetProportionNumber(mTokenModel1->GetPosition(), mTokenModel1->GetProportion());
+			SetProportionNumber(mTokenModel->GetPosition(), mTokenModel->GetProportion());
 		}else{
-
+			if(mTokenModel->GetProportion(1) != 0.0f && tProportionNumber < 4){
+				tProportionNumber++;
+				SetProportionNumber(1,mTokenModel->GetProportion(1));
+			}
+			if(mTokenModel->GetProportion(2) != 0.0f && tProportionNumber < 4){
+				tProportionNumber++;
+				SetProportionNumber(2,mTokenModel->GetProportion(2));
+			}
+			if(mTokenModel->GetProportion(3) != 0.0f && tProportionNumber < 4){
+				tProportionNumber++;
+				SetProportionNumber(3,mTokenModel->GetProportion(3));
+			}
+			if(mTokenModel->GetProportion(4) != 0.0f && tProportionNumber < 4){
+				tProportionNumber++;
+				SetProportionNumber(4,mTokenModel->GetProportion(4));
+			}
 		}
 
 	}
@@ -367,19 +382,18 @@ int decorators::KillBugModel::GetProportionNumber(wykobi::point2d<float> pPositi
 void decorators::KillBugModel::SetProportionNumber(wykobi::point2d<float> pPosition, float pProportion){
 	int tProportionNumber = GetProportionNumber(pPosition);
 
-
-	/*if(pPosition.x < mMapWidth/2){ //1 or 4
-		if(pPosition.y < mMapHeight)	tProportionNumber = 2;
-		else tProportionNumber = 3;
-	}else{ //2 or 3
-		if(pPosition.y < mMapHeight)	tProportionNumber = 1;
-		else tProportionNumber = 4;
-	}*/
-
 	switch(tProportionNumber){
-	case 1: mProportion1 = pProportion; break;
-	case 2: mProportion2 = pProportion; break;
-	case 3: mProportion3 = pProportion; break;
-	case 4: mProportion4 = pProportion; break;
+		case 1: mProportion1 = pProportion; break;
+		case 2: mProportion2 = pProportion; break;
+		case 3: mProportion3 = pProportion; break;
+		case 4: mProportion4 = pProportion; break;
+	}
+}
+void decorators::KillBugModel:: SetProportionNumber(int pCuadrant, float pProportion){
+	switch(pCuadrant){
+		case 1: mProportion1 = pProportion; break;
+		case 2: mProportion2 = pProportion; break;
+		case 3: mProportion3 = pProportion; break;
+		case 4: mProportion4 = pProportion; break;
 	}
 }
