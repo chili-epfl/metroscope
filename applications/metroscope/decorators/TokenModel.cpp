@@ -77,6 +77,7 @@ void decorators::TokenModel::update(){
 	mTokenSecondCuadrant = 0;
 	mTokenThirdCuadrant = 0;
 	mTokenFourthCuadrant = 0;
+	mActiveTokens.clear();
 
 	for(int i = 0; i < mTokenNumbers; i++){
 		if(mTokens[i]->IsPresent()){
