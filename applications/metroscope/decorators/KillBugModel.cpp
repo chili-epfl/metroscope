@@ -251,6 +251,23 @@ void decorators::KillBugModel::MakeMove(){
 	int tNewPositionY;
 
 	if(mActiveManipulatives == 4){
+		if(mProportion2 < mProportion4) tNewPositionX = (mBugPosition.x +1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x;
+		else if(mProportion2 > mProportion4) tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x;
+		else if (mProportion2 == mProportion4) tNewPositionX = mBugPosition.x;
+
+		if(mProportion1 < mProportion3) tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y;
+		else if(mProportion1 > mProportion3) tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y;
+		else if(mProportion1 == mProportion3) tNewPositionY = mBugPosition.y;
+
+		if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY)){
+			mBugPosition.x = tNewPositionX;
+			mBugPosition.y = tNewPositionY;
+		}
+		mSteps++;
+	}
+
+	/*
+	if(mActiveManipulatives == 4){
 		if(mProportion2 < mProportion4 && mBugPosition.x +1 < mActualCarte->getSize())	tNewPositionX = mBugPosition.x + 1;
 		else if(mProportion2 > mProportion4 && mBugPosition.x > 0) tNewPositionX = mBugPosition.x - 1;
 
@@ -262,7 +279,7 @@ void decorators::KillBugModel::MakeMove(){
 			mBugPosition.y = tNewPositionY;
 		}
 		mSteps++;
-	}
+	}*/
 }
 
 void decorators::KillBugModel::Start(){
