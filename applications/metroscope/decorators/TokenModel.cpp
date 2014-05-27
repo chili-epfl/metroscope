@@ -136,13 +136,12 @@ bool decorators::TokenModel::AreTokensSpread(){
 float decorators::TokenModel::GetProportion(int pCuadrant){
 	int tFirstToken = 0;
 	int tTotalToken = 0;
-	float tProportion = 0.0f;
 
 	switch(pCuadrant){
-	case 1: if(mTokenFirstCuadrant == 0) return (0.0f); break;
-	case 2:	if(mTokenSecondCuadrant == 0) return (0.0f); break;
-	case 3: if(mTokenThirdCuadrant == 0) return (0.0f); break;
-	case 4: if(mTokenFourthCuadrant == 0) return (0.0f); break;
+		case 1: if(mTokenFirstCuadrant == 0) return (0.0f); break;
+		case 2:	if(mTokenSecondCuadrant == 0) return (0.0f); break;
+		case 3: if(mTokenThirdCuadrant == 0) return (0.0f); break;
+		case 4: if(mTokenFourthCuadrant == 0) return (0.0f); break;
 	}
 
 	for(std::vector<FractionToken *>::iterator it = mActiveTokens.begin(); it != mActiveTokens.end() ; ++it){

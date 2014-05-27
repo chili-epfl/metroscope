@@ -346,24 +346,20 @@ void decorators::KillBugModel::FetchProportions(){
 				tProportionNumber++;
 				mActiveManipulatives++;
 				SetProportionNumber(1,mTokenModel->GetProportion(1));
-			}
-			if(mTokenModel->GetProportion(2) != 0.0f && tProportionNumber < 4){
+			}if(mTokenModel->GetProportion(2) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
 				mActiveManipulatives++;
 				SetProportionNumber(2,mTokenModel->GetProportion(2));
-			}
-			if(mTokenModel->GetProportion(3) != 0.0f && tProportionNumber < 4){
+			}if(mTokenModel->GetProportion(3) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
 				mActiveManipulatives++;
 				SetProportionNumber(3,mTokenModel->GetProportion(3));
-			}
-			if(mTokenModel->GetProportion(4) != 0.0f && tProportionNumber < 4){
+			}if(mTokenModel->GetProportion(4) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
 				mActiveManipulatives++;
 				SetProportionNumber(4,mTokenModel->GetProportion(4));
 			}
 		}
-
 	}
 
 	//Checking the cards
