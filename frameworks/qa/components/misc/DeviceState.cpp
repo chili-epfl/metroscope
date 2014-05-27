@@ -42,12 +42,15 @@ bool DeviceState::equals(DeviceState* other){
 	return true;
 }
 
-std::string DeviceState::getJSON(){
+std::string DeviceState::getJSON(bool pAlternate){
 
 	std::string data;
 
 	Json::Value json;
-	json[scMeteorIdLabel] = this->mMeteorId;
+
+	if(!pAlternate)	json[scMeteorIdLabel] = this->mMeteorId;//The normal encoding sets the meteor _id
+	else json[scDeviceIdLabel] = this->mMeteorId;//The alternate encoding sets the deviceid
+
 
 	//current state
 	Json::Value current;

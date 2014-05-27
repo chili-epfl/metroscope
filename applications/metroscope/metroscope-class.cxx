@@ -33,7 +33,7 @@
 #include <qa/pipeables/io/CvWaiter.hpp>
 #include <qa/pipeables/misc/Wait.hpp>
 #include <qa/components/misc/NetworkedStateManager.hpp>
-#include <qa/pipeables/networking/PutRemoteJSONString.hpp>
+#include <qa/pipeables/networking/PutPostRemoteJSONString.hpp>
 #include <qa/pipeables/networking/GetRemoteJSONString.hpp>
 
 #include "decorators/all.hpp"
@@ -72,6 +72,8 @@ int main(int argc, char* argv[])
 	int tWaitClassroomTime = 1000;
 	std::string tUrlDevice = "";
 	std::string tUrlClassroom = "";
+	std::string tUrlDeviceHistory = "";
+	std::string tUrlClassroomHistory = "";
 
 	//Parsing the arguments from the command line:
 	//metroscope-class [-opencv] [-log] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://...
@@ -98,7 +100,7 @@ int main(int argc, char* argv[])
 				  catch (std::exception& e)
 				  {
 				    std::cout << "Incorrect syntax in -waitdevice: " << std::endl;
-				    std::cout << "metroscope-class [-opencv] [-log] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://..." << std::endl;
+				    std::cout << "metroscope-class [-opencv] [-nolog] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://... -urldevicehistory=http://... -urlclassroomhistory=http://..." << std::endl;
 				    return(0);
 				  }
 
@@ -114,7 +116,7 @@ int main(int argc, char* argv[])
 				  catch (std::exception& e)
 				  {
 					  std::cout << "Incorrect syntax in -waitclassroom: " << std::endl;
-					  std::cout << "metroscope-class [-opencv] [-log] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://..." << std::endl;
+					  std::cout << "metroscope-class [-opencv] [-nolog] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://... -urldevicehistory=http://... -urlclassroomhistory=http://..." << std::endl;
 				    return(0);
 				  }
 
@@ -132,12 +134,24 @@ int main(int argc, char* argv[])
 			  tUrlClassroom = tArgument.substr(14,tArgument.length());
 			}
 		}
+		else if (tArgument.substr(0,18) == "-urldevicehistory=")
+		{
+			if(tArgument.length()>18){
+			  tUrlDeviceHistory = tArgument.substr(18,tArgument.length());
+			}
+		}
+		else if (tArgument.substr(0,21) == "-urlclassroomhistory=")
+		{
+			if(tArgument.length()>21){
+			  tUrlClassroomHistory = tArgument.substr(21,tArgument.length());
+			}
+		}
 	}
 
 	//If we do not have URLs, we just quit
-	if(tUrlClassroom.length()==0 || tUrlDevice.length()==0){
+	if(tUrlClassroom.length()==0 || tUrlDevice.length()==0 || tUrlClassroomHistory.length()==0 || tUrlDeviceHistory.length()==0 ){
 			  std::cout << "Missing parameters: " << std::endl;
-			  std::cout << "metroscope-class [-opencv] [-log] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://..." << std::endl;
+			  std::cout << "metroscope-class [-opencv] [-nolog] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://... -urldevicehistory=http://... -urlclassroomhistory=http://..." << std::endl;
 		      return(0);
 
 			}
@@ -151,8 +165,8 @@ int main(int argc, char* argv[])
     //std::cout << "Initializing networking pipeables" << std::endl;
 	Wait tWaitDevice(tWaitDeviceTime);
 	Wait tWaitClassroom(tWaitClassroomTime);
-	PutRemoteJSONString tPutRemoteDevice(tUrlDevice, DEVICE);
-	PutRemoteJSONString tPutRemoteClassroom(tUrlClassroom, CLASSROOM);
+	PutPostRemoteJSONString tPutRemoteDevice(tUrlDevice, tUrlDeviceHistory, DEVICE);
+	PutPostRemoteJSONString tPutRemoteClassroom(tUrlClassroom, tUrlClassroomHistory, CLASSROOM);
 	GetRemoteJSONString tGetRemoteClassroom(tUrlClassroom, CLASSROOM);
 
 

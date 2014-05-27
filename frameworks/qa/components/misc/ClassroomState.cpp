@@ -79,14 +79,16 @@ void ClassroomState::setJSON(std::string jsonstring){
 
 }
 
-std::string ClassroomState::getJSON(){
+std::string ClassroomState::getJSON(bool pAlternate){
 
 	std::string data;
 
 	Json::Value json;
 	//json[scIdLabel] = this->mId;
 	json[scNameLabel] = this->mName;
-	json[scMeteorIdLabel] = this->mMeteorId;
+
+	if(!pAlternate)	json[scMeteorIdLabel] = this->mMeteorId;//The normal encoding sets the meteor _id
+	else json[scClassroomIdLabel] = this->mMeteorId;//The alternate encoding sets the classroomid
 
 	//devices
 	Json::Value devices;

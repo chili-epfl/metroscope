@@ -26,6 +26,8 @@ public:
 
 	std::string getDeviceJSON();//gets a JSON string with the current state of the device
 	std::string getClassroomJSON();//gets a JSON string with the current state of the classroom
+	std::string getAlternateDeviceJSON();//In this case, instead of setting the meteor _id, we set the field deviceid
+	std::string getAlternateClassroomJSON();//In this case, instead of setting the meteor _id, we set the field classroomid
 
 	std::string getPauserDevice();
 	std::string getDeviceId();

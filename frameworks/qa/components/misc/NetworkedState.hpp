@@ -24,7 +24,8 @@
 		static const std::string scGlobalClassVariables="global";
 		static const std::string scPaused="paused";
 		static const std::string scPauserDevice="pauserDevice";
-
+		static const std::string scClassroomIdLabel="classroomid";
+		static const std::string scDeviceIdLabel="deviceid";
 
 
 

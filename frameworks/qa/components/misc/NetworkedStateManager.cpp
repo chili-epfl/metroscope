@@ -88,6 +88,24 @@ std::string NetworkedStateManager::getClassroomJSON(){
 	return json;
 }
 
+std::string NetworkedStateManager::getAlternateDeviceJSON(){
+
+	std::string json;
+	pthread_mutex_lock(&devstate_mutex);
+	json = mDeviceState->getJSON(true);
+	pthread_mutex_unlock(&devstate_mutex);
+	return json;
+}
+
+std::string NetworkedStateManager::getAlternateClassroomJSON(){
+	std::string json;
+	pthread_mutex_lock(&classstate_mutex);
+	json = mClassroomState->getJSON(true);
+	pthread_mutex_unlock(&classstate_mutex);
+	return json;
+}
+
+
 
 
 void NetworkedStateManager::SetHasDeviceChanged(bool changed){

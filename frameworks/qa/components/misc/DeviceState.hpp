@@ -54,7 +54,7 @@ public:
 	void SetHasChanged(bool changed) {mChanged = changed;}
 
 	bool equals(DeviceState* other);
-	std::string getJSON();
+	std::string getJSON(bool pAlternate=false);
 
 	void setJSON(std::string jsonstring);
 	Json::Value getJSONObject(std::string jsonMessage);
