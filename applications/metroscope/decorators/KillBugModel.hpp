@@ -69,6 +69,9 @@ class KillBugModel : public FiducialDecorator
 		void DisplayDecimalHint();
 		void DisplayFractionHint();
 		void DisplayIntegerHint();
+		void DisplayFlipperFeedback();
+
+		long mLastShot;
 
 	private:
 		static const std::string scDecoratorName;
@@ -101,6 +104,10 @@ class KillBugModel : public FiducialDecorator
 		wykobi::point2d<int> mMapPoint2;
 		wykobi::point2d<int> mMapPoint3;
 		wykobi::point2d<int> mMapPoint4;
+		wykobi::point2d<int> mProportion1Point;
+		wykobi::point2d<int> mProportion2Point;
+		wykobi::point2d<int> mProportion3Point;
+		wykobi::point2d<int> mProportion4Point;
 
 };
 }
