@@ -80,7 +80,6 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 				mWorkingTriangle = (float)(mDisplayHeight/scTriangleProp);
 				mMapHeight = mDisplayHeight - (mWorkingTriangle);
 				mMapWidth = mMapHeight; //square
-				//mMapWidth = mMapHeight*(mDisplayWidth/(float)mDisplayHeight); //not square
 				mBugPosition.x = 0;
 				mBugPosition.y = 0;
 
@@ -114,9 +113,7 @@ void decorators::KillBugModel::update(){
 			DisplayBug();
 
 		}
-		//if(mActiveManipulatives > 0) DisplayProportions();
 
-		//if(mFlipper->IsFlipped())	MakeMove();
 		if(mFlipper->IsPresent()) DisplayFlipperFeedback();
 
 		if(IsHintPresent())	DisplayProportions(mActualHint->GetHintType());
