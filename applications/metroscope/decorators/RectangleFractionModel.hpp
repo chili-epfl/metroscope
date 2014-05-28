@@ -34,6 +34,8 @@ class RectangleFractionModel : public FiducialDecorator{
 		const wykobi::point2d<float> &StartPoint() const {return mStartPoint;}
 		const wykobi::point2d<float> &EndPoint() const {return mEndPoint;}
 		float proportion() const {return mProportion;}
+		int Numerator() const {return mNumerator;}
+		int Denominator() const {return mDenominator;}
 
 	protected:
 		void update();
@@ -44,6 +46,8 @@ class RectangleFractionModel : public FiducialDecorator{
 		wykobi::point2d<float> mStartPoint;
 		wykobi::point2d<float> mEndPoint;
 		float mProportion;
+		int mDenominator;
+		int mNumerator;
 
 	private:
 		static const std::string scDecoratorName;

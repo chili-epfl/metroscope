@@ -20,7 +20,7 @@
 #ifndef KILLBUGCONSTANT_HPP_
 #define KILLBUGCONSTANT_HPP_
 
-static const int scFractionCards = 24;
+static const int scFractionCards = 40;
 static const int scCarteCards = 10;
 static const int scHintCards = 5;
 static const int scTriangleProp = 4;

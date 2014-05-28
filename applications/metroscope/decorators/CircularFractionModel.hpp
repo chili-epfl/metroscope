@@ -34,13 +34,18 @@ class CircularFractionModel : public FiducialDecorator{
 		//const wykobi::point2d<float> &StartPoint() const {return mStartPoint;}
 		//const wykobi::point2d<float> &EndPoint() const {return mEndPoint;}
 		float Proportion() const {return mProportion;}
+		int Numerator() const {return mNumerator;}
+		int Denominator() const {return mDenominator;}
 		wykobi::point2d<float> GetCenter() {return mAngleModel->getMarker().getCenter();}
+		const FiducialMarker& getMarker() const { return mAngleModel->getMarker(); }
 
 	protected:
 		void update();
 		//wykobi::point2d<float> mStartPoint;
 		//wykobi::point2d<float> mEndPoint;
 		float mProportion;
+		int mNumerator;
+		int mDenominator;
 
 	private:
 		static const std::string scDecoratorName;
