@@ -17,58 +17,34 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef TOKENMODEL_HPP_
-#define TOKENMODEL_HPP_
+#ifndef FRACTIONBUGHINT_HPP_
+#define FRACTIONBUGHINT_HPP_
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
-#include "FractionToken.hpp"
-#include <list>
-#include <queue>
-#include <deque>
+
 
 namespace decorators {
 
-	class TokenModel : public FiducialDecorator
-	{
-	public:
-		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-
-		TokenModel (DecoratorManager &pDecoratormanager, FractionToken **pTokens, int pTokenNumbers);
-		~TokenModel();
-
-		int getTotalTokens() {return mTotalActiveTokens;};
-		int getActiveTokens(int pType){
-			return (pType == 0 ? mActiveFirstToken : mActiveSecondToken);
-		}
-		float GetProportion(){return (float)(mActiveFirstToken/(float)mTotalActiveTokens);}
-		bool isPresent();
-		bool AreTokensSpread();
-		wykobi::point2d<float> GetPosition();
-		float GetProportion(int pCuadrant);
+class FractionBugHint : public FiducialDecorator{
+public:
+	static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
+	FractionBugHint(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pHintType);
+	~FractionBugHint();
 
 
-	protected:
-		void update();
-		int mTotalActiveTokens;
-		int mActiveFirstToken;
-		int mActiveSecondToken;
+	int GetHintType(){return mHintType;}
+	bool IsPresent(){return mMarker->isPresent();}
 
+protected:
+	void update();
 
-	private:
-
-		static const std::string scDecoratorName;
-		static const DecoratorManager::Registerer mRegisterer;
-
-		const int mTokenNumbers;
-		FractionToken **mTokens;
-		std::vector<FractionToken *>mFirstTokens;
-		std::vector<FractionToken *>mSecondTokens;
-		std::vector<FractionToken *>mActiveTokens;
-		int mTokenFirstCuadrant, mTokenSecondCuadrant, mTokenThirdCuadrant, mTokenFourthCuadrant;
-	};
+private:
+	static const std::string scDecoratorName;
+	static const DecoratorManager::Registerer mRegisterer;
+	int mHintType;
+	FiducialMarker *mMarker;
+};
 }
 
+#endif /* FRACTIONBUGHINT_HPP_ */
 
-
-
-#endif /* TOKENMODEL_HPP_ */

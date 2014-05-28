@@ -16,8 +16,7 @@ const DecoratorManager::Registerer decorators::ProportionView::mRegisterer(decor
 decorators::FiducialDecorator *decorators::ProportionView::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 {
 	try{
-		return new decorators::ProportionView(pDecoratorManager,
-				pDecoratorManager.loadMarker(pSetting["marker"]),
+		return new decorators::ProportionView(pDecoratorManager,pDecoratorManager.loadMarker(pSetting["marker"]),
 				(AngleModel *) pDecoratorManager.loadDecorator(pSetting["angle"]),
 				(DenominatorsModel *)pDecoratorManager.loadDecorator(pSetting["equalparts"]),
 				(Flipper *)pDecoratorManager.loadDecorator(pSetting["flipper"]),
@@ -32,7 +31,7 @@ decorators::FiducialDecorator *decorators::ProportionView::create(libconfig::Set
 	return 0;
 }
 
-decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager, FiducialMarker * pMarker, AngleModel * pAngleModel, DenominatorsModel * pDenomModel, Flipper * pFlipper, TokenModel * pTokenModel, RectangleFractionModel *pRectangleModel, Carte *pCarte):
+decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager,FiducialMarker * pMarker, AngleModel * pAngleModel, DenominatorsModel * pDenomModel, Flipper * pFlipper, TokenModel * pTokenModel, RectangleFractionModel *pRectangleModel, Carte *pCarte):
 		FiducialDecorator(pDecoratorManager, pMarker),
 		mAngleModel (pAngleModel),
 		mDenomModel (pDenomModel),
@@ -58,6 +57,23 @@ decorators::ProportionView::ProportionView(DecoratorManager & pDecoratorManager,
 void decorators::ProportionView::update(){
 	if(mMarker->isPresent()) {
 		//DrawSaveRectangles();
+
+		////
+		//int mTextureId = mDecoratorManager.GetDisplay().LoadTexture("/home/daniela/Downloads/Bug.jpg");
+		//float mHalfImageWidth = (float)(256/2);
+		//float mHalfImageHeight = mHalfImageWidth;
+		//mDecoratorManager.GetDisplay().PushTransformation();
+		//mDecoratorManager.GetDisplay().RenderTexture(mTextureId,
+		//		100.0f,200.0f,200.0f,200.0f,200.0f,400.0f,100.0f,400.0f);
+		/*
+		mDecoratorManager.GetDisplay().RenderTexture(mTextureId,
+						-mHalfImageWidth,  mHalfImageHeight,
+						 mHalfImageWidth,  mHalfImageHeight,
+						 mHalfImageWidth, -mHalfImageHeight,
+						-mHalfImageWidth, -mHalfImageHeight);
+		*/
+		//mDecoratorManager.GetDisplay().PopTransformation();
+		////
 
 
 		if(mAngleModel->isPresent()){
@@ -107,6 +123,11 @@ void decorators::ProportionView::DisplayMap(){
 	int tDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
 	float tRadius = tDisplayHeight/4;
 
+	if(tDisplayWidth > tDisplayHeight){
+		tDisplayWidth = tDisplayHeight;
+	}else{
+		tDisplayHeight = tDisplayWidth;
+	}
 
 	float tXCellDimension = (float)((tDisplayWidth-2*(tRadius/sqrt(2)))/mCarte->getSize());
 	float tYCellDimension = (float)((tDisplayHeight-2*(tRadius/sqrt(2)))/mCarte->getSize());
@@ -139,8 +160,8 @@ void decorators::ProportionView::DisplayMap(){
 
 	mDecoratorManager.GetDisplay().PushTransformation();
 	wykobi::point2d<float> tOrigin = mCarte->getOriginPoint();
-	float tBugPositionX = tRadius + (tOrigin.x)*(tXCellDimension)+(tXCellDimension/2);
-	float tBugPositionY = tRadius + (tOrigin.y)*(tYCellDimension)+(tYCellDimension/2);
+	float tBugPositionX = tRadius/sqrt(2) + (tOrigin.x)*(tXCellDimension)+(tXCellDimension/2);
+	float tBugPositionY = tRadius/sqrt(2) + (tOrigin.y)*(tYCellDimension)+(tYCellDimension/2);
 	mDecoratorManager.GetDisplay().RenderFilledEllipse(tBugPositionX, tBugPositionY, tXCellDimension/6,tYCellDimension/6,1.0f,0.0f,0.0f,1.0f,1);
 	mDecoratorManager.GetDisplay().PopTransformation();
 
@@ -161,9 +182,8 @@ void decorators::ProportionView::DisplayMap(){
 		std::vector<wykobi::point2d<float>> tObstacle = mCarte->getObstaclesPoint();
 
 			for(int i = 0 ; i < mCarte->getObstacleNumber() ; i++){
-				float tEndPositionX =tRadius/sqrt(2)+ tEnd[i].x*(tXCellDimension);
-				float tEndPositionY = tRadius/sqrt(2) + tEnd[i].y*(tYCellDimension);
-				mDecoratorManager.GetDisplay().RenderFilledEllipse(tEndPositionX, tEndPositionY, tXCellDimension/2,tYCellDimension/2,0.0f,0.0f,0.0f,1.0f,1);
+				float tEndPositionX =tRadius/sqrt(2)+ tObstacle[i].x*(tXCellDimension);
+				float tEndPositionY = tRadius/sqrt(2) + tObstacle[i].y*(tYCellDimension);
 				mDecoratorManager.GetDisplay().RenderQuadFilled(tEndPositionX,tEndPositionY,tEndPositionX + tXCellDimension,tEndPositionY,tEndPositionX+tXCellDimension, tEndPositionY + tYCellDimension, tEndPositionX, tEndPositionY + tYCellDimension,0.25f,0.25f,0.25f,1.0f);
 			}
 	}

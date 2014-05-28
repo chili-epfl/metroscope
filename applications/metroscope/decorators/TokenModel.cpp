@@ -50,7 +50,12 @@ decorators::TokenModel::TokenModel (DecoratorManager &pDecoratorManager, Fractio
 		mTokenNumbers(pTokenNumbers),
 		mTotalActiveTokens(0),
 		mActiveFirstToken(0),
-		mActiveSecondToken(0){
+		mActiveSecondToken(0),
+		mActiveTokens(0),
+		mTokenFirstCuadrant(0),
+		mTokenSecondCuadrant(0),
+		mTokenThirdCuadrant(0),
+		mTokenFourthCuadrant(0){
 
 			for(int i = 0 ; i < mTokenNumbers ; i++){
 				switch(mTokens[i]->mType){
@@ -68,11 +73,27 @@ void decorators::TokenModel::update(){
 	mTotalActiveTokens = 0;
 	mActiveFirstToken = 0;
 	mActiveSecondToken = 0;
+	mTokenFirstCuadrant = 0;
+	mTokenSecondCuadrant = 0;
+	mTokenThirdCuadrant = 0;
+	mTokenFourthCuadrant = 0;
+	mActiveTokens.clear();
+
 	for(int i = 0; i < mTokenNumbers; i++){
 		if(mTokens[i]->IsPresent()){
 			mTotalActiveTokens++;
+			mActiveTokens.push_back(mTokens[i]);
 			if(mTokens[i]->getType() == 0) mActiveFirstToken++;
 			else mActiveSecondToken++;
+		}
+	}
+
+	for(std::vector<FractionToken *>::iterator it = mActiveTokens.begin() ; it != mActiveTokens.end() ; ++it){
+		switch((*it)->mCuadrant){
+			case 1: mTokenFirstCuadrant++; break;
+			case 2: mTokenSecondCuadrant++; break;
+			case 3: mTokenThirdCuadrant++; break;
+			case 4: mTokenFourthCuadrant++; break;
 		}
 	}
 }
@@ -80,3 +101,57 @@ void decorators::TokenModel::update(){
 bool decorators::TokenModel::isPresent(){
 	return (mTotalActiveTokens > 0);
 }
+
+wykobi::point2d<float> decorators::TokenModel::GetPosition(){
+	wykobi::point2d<float> tLocation;
+	float tX = 0.0f;
+	float tY = 0.0f;
+	float tMeanX = 0.0f;
+	float tMeanY = 0.0f;
+
+	for(std::vector<FractionToken *>::iterator it = mActiveTokens.begin(); it != mActiveTokens.end() ; ++it){
+		tX += (*it)->GetLocation().x;
+		tY += (*it)->GetLocation().y;
+	}
+
+	tMeanX = (mTotalActiveTokens > 0)? (float)(tX/mTotalActiveTokens) : -1.0;
+	tMeanY = (mTotalActiveTokens > 0)? (float)(tY/mTotalActiveTokens) : -1.0;
+
+	tLocation.x = tMeanX;
+	tLocation.y = tMeanY;
+
+	return tLocation;
+}
+
+bool decorators::TokenModel::AreTokensSpread(){
+	int tCuadrants = 0;
+	if(mTokenFirstCuadrant != 0) tCuadrants++;
+	if(mTokenSecondCuadrant != 0) tCuadrants++;
+	if(mTokenThirdCuadrant != 0) tCuadrants++;
+	if(mTokenFourthCuadrant != 0) tCuadrants++;
+
+	return (tCuadrants > 1);
+}
+
+float decorators::TokenModel::GetProportion(int pCuadrant){
+	int tFirstToken = 0;
+	int tTotalToken = 0;
+
+	switch(pCuadrant){
+		case 1: if(mTokenFirstCuadrant == 0) return (0.0f); break;
+		case 2:	if(mTokenSecondCuadrant == 0) return (0.0f); break;
+		case 3: if(mTokenThirdCuadrant == 0) return (0.0f); break;
+		case 4: if(mTokenFourthCuadrant == 0) return (0.0f); break;
+	}
+
+	for(std::vector<FractionToken *>::iterator it = mActiveTokens.begin(); it != mActiveTokens.end() ; ++it){
+		if((*it)->mCuadrant == pCuadrant){
+			tTotalToken++;
+			if((*it)->mType == 0) tFirstToken++;
+		}
+	}
+
+	if(tTotalToken !=0) return (float)(tFirstToken/(float)tTotalToken);
+	else return 0.0f;
+}
+

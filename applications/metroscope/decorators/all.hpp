@@ -69,7 +69,7 @@
 
 
 //fractions
-#include "FractionCard.hpp"
+/*#include "FractionCard.hpp"
 #include "FractionModel.hpp"
 #include "FractionSortingModel.hpp"
 #include "FractionArithmeticModel.hpp"
@@ -82,9 +82,6 @@
 #include "FractionHint.hpp"
 #include "FractionSimplifier.hpp"
 
-//silly examples
-#include "SimpleText.hpp"
-
 //arithmetics
 #include "SumClassificationModel.hpp"
 //#include "SumClassification.hpp"
@@ -96,14 +93,20 @@
 #include "BlankActivityCard.hpp"
 #include "RegroupDigits.hpp"
 #include "Regrouper.hpp"
+*/
+//silly examples
+#include "SimpleText.hpp"
 
 //proportions
-#include "ProportionView.hpp"
+//#include "ProportionView.hpp"
 #include "DenominatorsModel.hpp"
 #include "DenominatorCard.hpp"
 #include "TokenModel.hpp"
 #include "FractionToken.hpp"
 #include "RectangleFractionModel.hpp"
 #include "Carte.hpp"
-
 #include "OrchestrationPause.hpp"
+#include "KillBugModel.hpp"
+#include "FractionCard.hpp"
+#include "CircularFractionModel.hpp"
+#include "FractionBugHint.hpp"
