@@ -26,7 +26,7 @@ const  DecoratorManager::Registerer decorators::FractionCard::mRegisterer(decora
 decorators::FiducialDecorator *decorators::FractionCard::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 {
 	try {
-		return new decorators::FractionCard(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]), pSetting["numerator"], pSetting ["denominator"], pSetting["fraction_str"]);
+		return new decorators::FractionCard(pDecoratorManager, (FiducialMarker *)pDecoratorManager.loadMarker(pSetting["marker"]), (int)pSetting["numerator"], (int)pSetting ["denominator"], pSetting["fraction_str"]);
 
 	} catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;

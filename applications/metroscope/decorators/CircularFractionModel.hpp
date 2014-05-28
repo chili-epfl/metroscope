@@ -17,58 +17,39 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef TOKENMODEL_HPP_
-#define TOKENMODEL_HPP_
+#ifndef CIRCULARFRACTIONMODEL_HPP_
+#define CIRCULARFRACTIONMODEL_HPP_
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
-#include "FractionToken.hpp"
-#include <list>
-#include <queue>
-#include <deque>
+#include "AngleModel.hpp"
 
-namespace decorators {
+namespace decorators{
 
-	class TokenModel : public FiducialDecorator
-	{
+class CircularFractionModel : public FiducialDecorator{
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
+		CircularFractionModel (DecoratorManager &pDecoratorManager, AngleModel * pAngleModel);
 
-		TokenModel (DecoratorManager &pDecoratormanager, FractionToken **pTokens, int pTokenNumbers);
-		~TokenModel();
-
-		int getTotalTokens() {return mTotalActiveTokens;};
-		int getActiveTokens(int pType){
-			return (pType == 0 ? mActiveFirstToken : mActiveSecondToken);
-		}
-		float GetProportion(){return (float)(mActiveFirstToken/(float)mTotalActiveTokens);}
 		bool isPresent();
-		bool AreTokensSpread();
-		wykobi::point2d<float> GetPosition();
-		float GetProportion(int pCuadrant);
-
+		//const wykobi::point2d<float> &StartPoint() const {return mStartPoint;}
+		//const wykobi::point2d<float> &EndPoint() const {return mEndPoint;}
+		float Proportion() const {return mProportion;}
+		wykobi::point2d<float> GetCenter() {return mAngleModel->getMarker().getCenter();}
 
 	protected:
 		void update();
-		int mTotalActiveTokens;
-		int mActiveFirstToken;
-		int mActiveSecondToken;
-
+		//wykobi::point2d<float> mStartPoint;
+		//wykobi::point2d<float> mEndPoint;
+		float mProportion;
 
 	private:
-
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
+		AngleModel * mAngleModel;
 
-		const int mTokenNumbers;
-		FractionToken **mTokens;
-		std::vector<FractionToken *>mFirstTokens;
-		std::vector<FractionToken *>mSecondTokens;
-		std::vector<FractionToken *>mActiveTokens;
-		int mTokenFirstCuadrant, mTokenSecondCuadrant, mTokenThirdCuadrant, mTokenFourthCuadrant;
-	};
+};
 }
 
 
 
-
-#endif /* TOKENMODEL_HPP_ */
+#endif /* CIRCULARFRACTIONMODEL_HPP_ */

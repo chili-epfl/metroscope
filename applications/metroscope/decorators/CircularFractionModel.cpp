@@ -17,44 +17,55 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#include "FractionToken.hpp"
+#include "CircularFractionModel.hpp"
 #include <iostream>
+#include <cmath>
 
-const std::string decorators::FractionToken::scDecoratorName("FractionToken");
-const DecoratorManager::Registerer decorators::FractionToken::mRegisterer(decorators::FractionToken::scDecoratorName, &decorators::FractionToken::create);
+const std::string decorators::CircularFractionModel::scDecoratorName("CircularFractionModel");
+const DecoratorManager::Registerer decorators::CircularFractionModel::mRegisterer(decorators::CircularFractionModel::scDecoratorName, &decorators::CircularFractionModel::create);
 
-decorators::FiducialDecorator *decorators::FractionToken::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
+decorators::FiducialDecorator *decorators::CircularFractionModel::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 {
 	try{
-		return new decorators::FractionToken(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]),(int)pSetting["color"]);
+		return new decorators::CircularFractionModel(pDecoratorManager, (AngleModel *) pDecoratorManager.loadDecorator(pSetting["angle_model"]));
 	}catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
 	} catch(libconfig::SettingTypeException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Wrong type for marker parameter: " << e.getPath() << std::endl;
 	}
 	return 0;
+}
+
+decorators::CircularFractionModel::CircularFractionModel(DecoratorManager &pDecoratorManager, AngleModel *pAngleModel):
+		FiducialDecorator(pDecoratorManager,0),
+		mProportion(0.0f),
+		mAngleModel(pAngleModel){
 
 }
 
-decorators::FractionToken::FractionToken(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pType):
-		FiducialDecorator(pDecoratorManager,pMarker),
-		mType(pType),
-		mCuadrant(0){
-
+bool decorators::CircularFractionModel::isPresent(){
+	return (mAngleModel->isPresent());
 }
 
-void decorators::FractionToken::update(){
-	wykobi::point2d<float> tLocation = mMarker->getCenter();
-	float tWidth = mDecoratorManager.GetDisplay().GetWidth();
-	float tHeight = mDecoratorManager.GetDisplay().GetHeight();
-	mCuadrant = 0;
+void decorators::CircularFractionModel::update(){
+	if(isPresent()){
+		wykobi::point2d<float> mOriginPoint = mAngleModel->OriginPoint();
+		wykobi::point2d<float> mEndPoint = mAngleModel->EndPoint();
 
-	if(tLocation.x < tWidth/2){ // II or III cuadrant
-		if (tLocation.y < tHeight/2) mCuadrant = 2;
-		else mCuadrant = 3;
-	}else{
-		if (tLocation.y < tHeight/2) mCuadrant = 1;
-		else mCuadrant = 4;
+		wykobi::quadix<float ,2> tMarkerCorners = mAngleModel->getMarker().getCorners();
+		wykobi::point2d<float> mStartPoint = wykobi::centroid(tMarkerCorners[0],tMarkerCorners[1]);
+
+		wykobi::point2d<float> tWorldOriginPoint = mOriginPoint;
+		wykobi::point2d<float> tWorldStartPoint = mStartPoint;
+		wykobi::point2d<float> tWorldEndPoint = mEndPoint;
+
+		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldOriginPoint);
+		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldStartPoint);
+		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldEndPoint);
+
+		float tAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
+
+		mProportion = tAngle/360.0f;
 	}
 }
 

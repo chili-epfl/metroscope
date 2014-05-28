@@ -28,23 +28,21 @@ class Carte : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		Carte (DecoratorManager &pDecoratorManager,
-				FiducialMarker *pMarker,
-				const int pSize,
-				float pOriginX, float pOriginY,
-				const int pEndNumber,
-				const std::vector<wykobi::point2d<float>> &pEndPoint,
-				const int pObstaclesNumber,
-				const std::vector<wykobi::point2d<float>> &pObstacles);
 
-		Carte (DecoratorManager &pDecoratorManager,
-						FiducialMarker *pMarker,
-						const int pSize,
-						float pOriginX, float pOriginY,
-						const int pEndNumber,
-						const std::vector<wykobi::point2d<float>> &pEndPoint,
+		Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker,
+				const int pSize, float pOriginX, float pOriginY,
+				const int pEndNumber, const std::vector<wykobi::point2d<float>> &pEndPoint,
+				const int pObstaclesNumber, const std::vector<wykobi::point2d<float>> &pObstacles);
+
+		Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker,
+						const int pSize, float pOriginX, float pOriginY,
+						const int pEndNumber, const std::vector<wykobi::point2d<float>> &pEndPoint,
 						const int pObstaclesNumber);
 
+		Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker,
+				const int pSize, float pOriginX, float pOriginY, const int pEndNumber,const int pObstaclesNumber);
+
+		~Carte();
 		int getSize() {return mSize;}
 		int getEndNumber() {return mEndNumber;}
 		int getObstacleNumber() {return mObstaclesNumber;}
@@ -52,6 +50,10 @@ class Carte : public FiducialDecorator
 		std::vector<wykobi::point2d<float>> & getObstaclesPoint() {return mObstacles;}
 		bool isPresent() {return mMarker->isPresent();}
 		wykobi::point2d<float> & getOriginPoint(){return mOriginPoint;}
+		bool IsFinished() {return mFinished;}
+		void FinishMap() {mFinished = true;}
+		bool IsEmptyCell(int pPositionX, int pPositionY);
+		bool IsEndCell(int pPositionX, int pPositionY);
 
 	protected:
 		void update();
@@ -66,6 +68,7 @@ class Carte : public FiducialDecorator
 		std::vector<wykobi::point2d<float>> mEndPoint;
 		std::vector<wykobi::point2d<float>> mObstacles;
 		wykobi::point2d<float> mOriginPoint;
+		bool mFinished;
 	};
 }
 

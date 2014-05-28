@@ -17,58 +17,46 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef TOKENMODEL_HPP_
-#define TOKENMODEL_HPP_
+#include <qa/pipeables/grabbers/OpenCVGrabber.hpp>
+#include <qa/pipeables/vision/Flip.hpp>
+#include <qa/pipeables/vision/Color2Gray.hpp>
+#include <qa/pipeables/misc/Noop.hpp>
+#include <qa/pipeables/vision/CraftagUpdate.hpp>
+#include <qa/pipeables/misc/FPSPrinter.hpp>
+#include "CraftagIdentifier.hpp"
 
-#include <qa/pipeables/misc/DecoratorManager.hpp>
-#include "FractionToken.hpp"
-#include <list>
-#include <queue>
-#include <deque>
+/**
+ * Once it detects tags, it decorates them with their IDs
+ *
+ * Ignore the warnings: "VIDIOC_QUERYMENU: Invalid argument" and "HIGHGUI ERROR"
+ */
+int main(int , char* [])
+{
+	Pipeable *tGrabber = 0;
+	Pipeable *tPreProcess = 0;
+	const IplImage* const *tGrabbedImage = 0;
+			tGrabber = new OpenCVGrabber(640, 480, 30, 1);
+			tPreProcess = new Color2Gray(((OpenCVGrabber *) tGrabber)->Image());
+			tGrabbedImage = ((Color2Gray *)tPreProcess)->GetOutputImage();
 
-namespace decorators {
+	CraftagUpdate *tCraftagUpdate = new CraftagUpdate(tGrabbedImage);
+	FPSPrinter *tFPSPrinter = new FPSPrinter();
+	CraftagIdentifier *tCraftagIdentifier = new CraftagIdentifier(tGrabbedImage);
 
-	class TokenModel : public FiducialDecorator
-	{
-	public:
-		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
+	*tGrabber
+	| *tPreProcess
+	| *tCraftagUpdate
+	| *tFPSPrinter
+	| *tCraftagIdentifier
+	| *tGrabber;
 
-		TokenModel (DecoratorManager &pDecoratormanager, FractionToken **pTokens, int pTokenNumbers);
-		~TokenModel();
+	tGrabber->start();
 
-		int getTotalTokens() {return mTotalActiveTokens;};
-		int getActiveTokens(int pType){
-			return (pType == 0 ? mActiveFirstToken : mActiveSecondToken);
-		}
-		float GetProportion(){return (float)(mActiveFirstToken/(float)mTotalActiveTokens);}
-		bool isPresent();
-		bool AreTokensSpread();
-		wykobi::point2d<float> GetPosition();
-		float GetProportion(int pCuadrant);
+	delete tCraftagIdentifier;
+	delete tFPSPrinter;
+	delete tCraftagUpdate;
+	delete tPreProcess;
+	delete tGrabber;
 
-
-	protected:
-		void update();
-		int mTotalActiveTokens;
-		int mActiveFirstToken;
-		int mActiveSecondToken;
-
-
-	private:
-
-		static const std::string scDecoratorName;
-		static const DecoratorManager::Registerer mRegisterer;
-
-		const int mTokenNumbers;
-		FractionToken **mTokens;
-		std::vector<FractionToken *>mFirstTokens;
-		std::vector<FractionToken *>mSecondTokens;
-		std::vector<FractionToken *>mActiveTokens;
-		int mTokenFirstCuadrant, mTokenSecondCuadrant, mTokenThirdCuadrant, mTokenFourthCuadrant;
-	};
+	return 0;
 }
-
-
-
-
-#endif /* TOKENMODEL_HPP_ */
