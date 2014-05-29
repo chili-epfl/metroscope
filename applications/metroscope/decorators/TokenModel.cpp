@@ -155,3 +155,47 @@ float decorators::TokenModel::GetProportion(int pCuadrant){
 	else return 0.0f;
 }
 
+int decorators::TokenModel::GetNumerator(int pCuadrant){
+	int tFirstToken = 0;
+	int tTotalToken = 0;
+
+	switch(pCuadrant){
+		case 1: if(mTokenFirstCuadrant == 0) return (0); break;
+		case 2:	if(mTokenSecondCuadrant == 0) return (0); break;
+		case 3: if(mTokenThirdCuadrant == 0) return (0); break;
+		case 4: if(mTokenFourthCuadrant == 0) return (0); break;
+	}
+
+	for(std::vector<FractionToken *>::iterator it = mActiveTokens.begin(); it != mActiveTokens.end() ; ++it){
+		if((*it)->mCuadrant == pCuadrant){
+			tTotalToken++;
+			if((*it)->mType == 0) tFirstToken++;
+		}
+	}
+
+	if(tTotalToken !=0) return tFirstToken;
+	else return 0;
+}
+
+int decorators::TokenModel::GetDenominator(int pCuadrant){
+	int tFirstToken = 0;
+	int tTotalToken = 0;
+
+	switch(pCuadrant){
+		case 1: if(mTokenFirstCuadrant == 0) return (0); break;
+		case 2:	if(mTokenSecondCuadrant == 0) return (0); break;
+		case 3: if(mTokenThirdCuadrant == 0) return (0); break;
+		case 4: if(mTokenFourthCuadrant == 0) return (0); break;
+	}
+
+	for(std::vector<FractionToken *>::iterator it = mActiveTokens.begin(); it != mActiveTokens.end() ; ++it){
+		if((*it)->mCuadrant == pCuadrant){
+			tTotalToken++;
+			if((*it)->mType == 0) tFirstToken++;
+		}
+	}
+
+	if(tTotalToken !=0) return tTotalToken;
+	else return 0;
+}
+

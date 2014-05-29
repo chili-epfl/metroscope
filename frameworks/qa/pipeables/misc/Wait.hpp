@@ -8,6 +8,8 @@
 #ifndef WAIT_HPP_
 #define WAIT_HPP_
 
+#include <unistd.h>
+
 class Wait: public Pipeable {
     public:
         Wait(const int millis):mMillis(millis) {}

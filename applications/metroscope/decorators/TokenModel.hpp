@@ -41,10 +41,13 @@ namespace decorators {
 			return (pType == 0 ? mActiveFirstToken : mActiveSecondToken);
 		}
 		float GetProportion(){return (float)(mActiveFirstToken/(float)mTotalActiveTokens);}
+
 		bool isPresent();
 		bool AreTokensSpread();
 		wykobi::point2d<float> GetPosition();
 		float GetProportion(int pCuadrant);
+		int GetNumerator(int pCuadrant);
+		int GetDenominator(int pCuadrant);
 
 
 	protected:
