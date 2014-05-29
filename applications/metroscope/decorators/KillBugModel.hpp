@@ -68,7 +68,13 @@ class KillBugModel : public FiducialDecorator
 		void DisplayDiscreteHint();
 		void DisplayDecimalHint();
 		void DisplayFractionHint();
-		void DisplayIntegerHint();
+		void DisplayFlipperFeedback();
+		void SetProportionNumber(int pCuadrant, int pNumerator, int pDenominator);
+		void SetProportionNumber(wykobi::point2d<float> pPosition, int pNumerator, int pDenominator);
+		void DivideCircunferenceManipulatives(int pParts);
+		void DivideRectangleManipulatives(int pParts);
+
+		long mLastShot;
 
 	private:
 		static const std::string scDecoratorName;
@@ -101,6 +107,18 @@ class KillBugModel : public FiducialDecorator
 		wykobi::point2d<int> mMapPoint2;
 		wykobi::point2d<int> mMapPoint3;
 		wykobi::point2d<int> mMapPoint4;
+		wykobi::point2d<int> mProportion1Point;
+		wykobi::point2d<int> mProportion2Point;
+		wykobi::point2d<int> mProportion3Point;
+		wykobi::point2d<int> mProportion4Point;
+		int mProportion1Numerator;
+		int mProportion1Denominator;
+		int mProportion2Numerator;
+		int mProportion2Denominator;
+		int mProportion3Numerator;
+		int mProportion3Denominator;
+		int mProportion4Numerator;
+		int mProportion4Denominator;
 
 };
 }

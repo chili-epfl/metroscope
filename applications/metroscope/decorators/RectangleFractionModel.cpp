@@ -40,7 +40,9 @@ decorators::RectangleFractionModel::RectangleFractionModel(DecoratorManager &pDe
 		FiducialDecorator(pDecoratorManager,pStartRectangle),
 		mStart(pStartRectangle),
 		mEnd(pEndRectangle),
-		mProportion(0)
+		mProportion(0),
+		mDenominator(1),
+		mNumerator(0)
 		{
 		}
 
@@ -66,6 +68,9 @@ void decorators::RectangleFractionModel::update(){
 
 		mProportion = (float)tDistance/tTotalDistance;
 		if(mProportion > 1) mProportion = 1;
+
+		mDenominator = 10;
+		mNumerator = ((int)(mProportion*100)%10 >= 5) ? ceil((mProportion*100)/10) : floor((mProportion*100)/10);
 	}
 }
 
