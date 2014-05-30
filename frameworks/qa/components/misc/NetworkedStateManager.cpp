@@ -185,6 +185,7 @@ void NetworkedStateManager::SetClassroomPaused(bool paused){
 	pthread_mutex_lock(&classstate_mutex);
 	bool oldPause = mClassroomState->GetGlobal().paused;
 	std::string oldPauserDevice = mClassroomState->GetGlobal().pauserDevice;
+	std::string oldMasterHint = mClassroomState->GetGlobal().masterHint;
 
 	//if currently it is unpaused and we want to pause it, we just do it
 	if(!oldPause && paused){
@@ -192,6 +193,7 @@ void NetworkedStateManager::SetClassroomPaused(bool paused){
 		newGlobal.paused = paused;
 		std::string newPauser(mDeviceState->GetMeteorId());//TODO: shouldn-t we be getting the device mutex also? this value doesn-t actually change over the execution, but...
 		newGlobal.pauserDevice = newPauser;
+		newGlobal.masterHint = oldMasterHint;
 		mClassroomState->SetGlobal(newGlobal);
 		mClassroomState->SetHasChanged(true);
 	}
@@ -201,6 +203,7 @@ void NetworkedStateManager::SetClassroomPaused(bool paused){
 		global_class newGlobal;
 		newGlobal.paused = paused;
 		newGlobal.pauserDevice = "";
+		newGlobal.masterHint = oldMasterHint;
 		mClassroomState->SetGlobal(newGlobal);
 		mClassroomState->SetHasChanged(true);
 	}
@@ -208,6 +211,127 @@ void NetworkedStateManager::SetClassroomPaused(bool paused){
 
 	pthread_mutex_unlock(&classstate_mutex);
 }
+
+
+void NetworkedStateManager::SetMasterHint(std::string pHint){
+
+	pthread_mutex_lock(&classstate_mutex);
+	std::string oldHint = mClassroomState->GetGlobal().masterHint;
+	bool oldPaused = mClassroomState->GetGlobal().paused;
+	std::string oldPauserDevice = mClassroomState->GetGlobal().pauserDevice;
+
+	//if the current hint is different from the one passed, we change it
+	if(oldHint.compare(pHint)!=0){
+		global_class newGlobal;
+		newGlobal.paused = oldPaused;
+		newGlobal.pauserDevice = oldPauserDevice;
+		newGlobal.masterHint = pHint;
+		mClassroomState->SetGlobal(newGlobal);
+		mClassroomState->SetHasChanged(true);
+	}
+
+	//else, we do nothing
+
+	pthread_mutex_unlock(&classstate_mutex);
+}
+
+
+void NetworkedStateManager::SetActivityCompletedMaps(int pCompleted){
+	pthread_mutex_lock(&devstate_mutex);
+
+	int oldCompleted = mDeviceState->GetActivity().currentState.completedMaps;
+	if(pCompleted != oldCompleted){
+		state newState = mDeviceState->GetActivity().currentState;
+		newState.completedMaps=pCompleted;
+		activity_state newActivityState = mDeviceState->GetActivity();
+		newActivityState.currentState = newState;
+		mDeviceState->SetActivity(newActivityState);
+		mDeviceState->SetHasChanged(true);
+	}
+
+	pthread_mutex_unlock(&devstate_mutex);
+}
+
+
+void NetworkedStateManager::SetActivityHintPresent(std::string pHint){
+	pthread_mutex_lock(&devstate_mutex);
+
+	std::string oldHint = mDeviceState->GetActivity().currentState.hintPresent;
+	if(pHint.compare(oldHint) != 0){
+		state newState = mDeviceState->GetActivity().currentState;
+		newState.hintPresent=pHint;
+		activity_state newActivityState = mDeviceState->GetActivity();
+		newActivityState.currentState = newState;
+		mDeviceState->SetActivity(newActivityState);
+		mDeviceState->SetHasChanged(true);
+	}
+	pthread_mutex_unlock(&devstate_mutex);
+}
+
+void NetworkedStateManager::UnsetActivityHintPresent(std::string pHint){
+	pthread_mutex_lock(&devstate_mutex);
+
+	std::string oldHint = mDeviceState->GetActivity().currentState.hintPresent;
+	if(pHint.compare(oldHint) == 0){//It eliminates this hint, if it was the one present before
+		state newState = mDeviceState->GetActivity().currentState;
+		newState.hintPresent="";
+		activity_state newActivityState = mDeviceState->GetActivity();
+		newActivityState.currentState = newState;
+		mDeviceState->SetActivity(newActivityState);
+		mDeviceState->SetHasChanged(true);
+	}
+	pthread_mutex_unlock(&devstate_mutex);
+}
+
+void NetworkedStateManager::SetActivityStepsDone(int pSteps){
+	pthread_mutex_lock(&devstate_mutex);
+
+	int oldSteps = mDeviceState->GetActivity().currentState.stepsDone;
+	if(pSteps != oldSteps){
+		state newState = mDeviceState->GetActivity().currentState;
+		newState.stepsDone=pSteps;
+		activity_state newActivityState = mDeviceState->GetActivity();
+		newActivityState.currentState = newState;
+		mDeviceState->SetActivity(newActivityState);
+		mDeviceState->SetHasChanged(true);
+	}
+
+	pthread_mutex_unlock(&devstate_mutex);
+}
+
+void NetworkedStateManager::SetActivityStepsToGo(int pSteps){
+	pthread_mutex_lock(&devstate_mutex);
+
+	int oldSteps = mDeviceState->GetActivity().currentState.stepsToGo;
+	if(pSteps != oldSteps){
+		state newState = mDeviceState->GetActivity().currentState;
+		newState.stepsToGo=pSteps;
+		activity_state newActivityState = mDeviceState->GetActivity();
+		newActivityState.currentState = newState;
+		mDeviceState->SetActivity(newActivityState);
+		mDeviceState->SetHasChanged(true);
+	}
+
+	pthread_mutex_unlock(&devstate_mutex);
+}
+
+void NetworkedStateManager::SetActivityWrongMoves(int pWrong){
+	pthread_mutex_lock(&devstate_mutex);
+
+	int oldWrong = mDeviceState->GetActivity().currentState.stepsDone;
+	if(pWrong != oldWrong){
+		state newState = mDeviceState->GetActivity().currentState;
+		newState.wrongMoves=pWrong;
+		activity_state newActivityState = mDeviceState->GetActivity();
+		newActivityState.currentState = newState;
+		mDeviceState->SetActivity(newActivityState);
+		mDeviceState->SetHasChanged(true);
+	}
+
+	pthread_mutex_unlock(&devstate_mutex);
+}
+
+
 
 
 bool NetworkedStateManager::isClassroomPaused(){
@@ -224,6 +348,13 @@ std::string NetworkedStateManager::getPauserDevice(){
 	std::string device(mClassroomState->GetGlobal().pauserDevice);
 	pthread_mutex_unlock(&classstate_mutex);
 	return device;
+}
+
+std::string NetworkedStateManager::getMasterHint(){
+	pthread_mutex_lock(&classstate_mutex);
+	std::string hint(mClassroomState->GetGlobal().masterHint);
+	pthread_mutex_unlock(&classstate_mutex);
+	return hint;
 }
 
 std::string NetworkedStateManager::getDeviceId(){

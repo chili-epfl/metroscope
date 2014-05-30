@@ -19,11 +19,18 @@ enum Representations {circular, rectangular, tokens, tangram};
 
 struct state{
 
+	  //Initial implementation of activity state
+	  //int numerator;
+	  //int denominator;
+	  //float value;
+	  //Representations representation;
+	//'kill the bug' implementation of activity state
+	int completedMaps;
+	int stepsDone;
+	int stepsToGo;
+	std::string hintPresent;
+	int wrongMoves;
 
-	  int numerator;
-	  int denominator;
-	  float value;
-	  Representations representation;
 
   };
 

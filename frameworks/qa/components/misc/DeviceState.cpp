@@ -31,11 +31,19 @@ bool DeviceState::equals(DeviceState* other){
 	//check the activity state
 	if(this->mActivity.id!=other->GetActivity().id || this->mActivity.name.compare(other->GetActivity().name)!=0) return false;
 	else{//we check the activity state
-		if(this->mActivity.currentState.denominator != other->GetActivity().currentState.denominator ||
-				this->mActivity.currentState.numerator != other->GetActivity().currentState.numerator ||
-				this->mActivity.currentState.value != other->GetActivity().currentState.value ||
-				this->mActivity.currentState.representation != other->GetActivity().currentState.representation) return false;
+//		if(this->mActivity.currentState.denominator != other->GetActivity().currentState.denominator ||
+//				this->mActivity.currentState.numerator != other->GetActivity().currentState.numerator ||
+//				this->mActivity.currentState.value != other->GetActivity().currentState.value ||
+//				this->mActivity.currentState.representation != other->GetActivity().currentState.representation) return false;
 		//TODO: Maybe add a tolerance margin in value, since it is a float?
+
+		if(this->mActivity.currentState.completedMaps != other->GetActivity().currentState.completedMaps ||
+				this->mActivity.currentState.hintPresent.compare(other->GetActivity().currentState.hintPresent)!=0 ||
+				this->mActivity.currentState.stepsDone != other->GetActivity().currentState.stepsDone ||
+				this->mActivity.currentState.stepsToGo != other->GetActivity().currentState.stepsToGo ||
+				this->mActivity.currentState.wrongMoves != other->GetActivity().currentState.wrongMoves) return false;
+
+
 	}
 
 	//If all else failed, they must be equal!
@@ -58,13 +66,19 @@ std::string DeviceState::getJSON(bool pAlternate){
 	//activity state
 	Json::Value activity;
 	Json::Value act_state;
-	act_state[scNumeratorLabel] = this->mActivity.currentState.numerator;
-	act_state[scDenominatorLabel] = this->mActivity.currentState.denominator;
-	act_state[scValueLabel] = this->mActivity.currentState.value;
-	if(this->mActivity.currentState.representation == circular)	act_state[scRepresentationLabel] = "circular";
-	else if(this->mActivity.currentState.representation == rectangular)	act_state[scRepresentationLabel] = "rectangular";
-	else if(this->mActivity.currentState.representation == tokens)	act_state[scRepresentationLabel] = "tokens";
-	else if(this->mActivity.currentState.representation == tangram)	act_state[scRepresentationLabel] = "tangram";
+//	act_state[scNumeratorLabel] = this->mActivity.currentState.numerator;
+//	act_state[scDenominatorLabel] = this->mActivity.currentState.denominator;
+//	act_state[scValueLabel] = this->mActivity.currentState.value;
+//	if(this->mActivity.currentState.representation == circular)	act_state[scRepresentationLabel] = "circular";
+//	else if(this->mActivity.currentState.representation == rectangular)	act_state[scRepresentationLabel] = "rectangular";
+//	else if(this->mActivity.currentState.representation == tokens)	act_state[scRepresentationLabel] = "tokens";
+//	else if(this->mActivity.currentState.representation == tangram)	act_state[scRepresentationLabel] = "tangram";
+	act_state[scCompletedMaps] = this->mActivity.currentState.completedMaps;
+	act_state[scHintPresent] = this->mActivity.currentState.hintPresent;
+	act_state[scStepsDone] = this->mActivity.currentState.stepsDone;
+	act_state[scStepsToGo] = this->mActivity.currentState.stepsToGo;
+	act_state[scWrongMoves] = this->mActivity.currentState.wrongMoves;
+
 
 	activity[scStateLabel] = act_state;
 	activity[scIdLabel] = this->mActivity.id;
@@ -147,18 +161,25 @@ void DeviceState::setJSON(std::string jsonstring){
 	activity.name = actObj[scNameLabel].asString();
 	Json::Value stateObj = actObj[scStateLabel];
 	state st;
-	st.denominator = stateObj[scDenominatorLabel].asInt();
-	st.numerator = stateObj[scNumeratorLabel].asInt();
-	st.value = stateObj[scValueLabel].asFloat();
-	if(stateObj[scRepresentationLabel].asString().compare("circular")==0){
-		st.representation = circular;
-	} else if(stateObj[scRepresentationLabel].asString().compare("rectangular")==0){
-		st.representation = rectangular;
-	} else if(stateObj[scRepresentationLabel].asString().compare("tokens")==0){
-		st.representation = tokens;
-	} else if(stateObj[scRepresentationLabel].asString().compare("tangram")==0){
-		st.representation = tangram;
-	}
+//	st.denominator = stateObj[scDenominatorLabel].asInt();
+//	st.numerator = stateObj[scNumeratorLabel].asInt();
+//	st.value = stateObj[scValueLabel].asFloat();
+//	if(stateObj[scRepresentationLabel].asString().compare("circular")==0){
+//		st.representation = circular;
+//	} else if(stateObj[scRepresentationLabel].asString().compare("rectangular")==0){
+//		st.representation = rectangular;
+//	} else if(stateObj[scRepresentationLabel].asString().compare("tokens")==0){
+//		st.representation = tokens;
+//	} else if(stateObj[scRepresentationLabel].asString().compare("tangram")==0){
+//		st.representation = tangram;
+//	}
+	st.completedMaps = stateObj[scCompletedMaps].asInt();
+	st.hintPresent = stateObj[scHintPresent].asString();
+	st.stepsDone = stateObj[scStepsDone].asInt();
+	st.stepsToGo = stateObj[scStepsToGo].asInt();
+	st.wrongMoves = stateObj[scWrongMoves].asInt();
+
+
 	activity.currentState = st;
 	this->mActivity = activity;
 

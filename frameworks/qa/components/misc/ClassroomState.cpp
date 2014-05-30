@@ -11,6 +11,7 @@ ClassroomState::ClassroomState() {//The initialization always sets paused to fal
 	struct global_class global;
 	global.paused=false;
 	global.pauserDevice="";
+	global.masterHint="";
 	mGlobal = global;
 }
 
@@ -33,6 +34,7 @@ bool ClassroomState::equals(ClassroomState* other){
 	}
 	//check the global class variables state
 	if(this->mGlobal.paused!=other->GetGlobal().paused || this->mGlobal.pauserDevice.compare(other->GetGlobal().pauserDevice)!=0) return false;
+	if(this->mGlobal.masterHint.compare(other->GetGlobal().masterHint)!=0) return false;
 
 	//If all else failed, they must be equal!
 	return true;
@@ -71,6 +73,7 @@ void ClassroomState::setJSON(std::string jsonstring){
 	global_class classVariables;
 	classVariables.paused = global[scPaused].asBool();
 	classVariables.pauserDevice = global[scPauserDevice].asString();
+	classVariables.masterHint = global[scMasterHint].asString();
 	mGlobal = classVariables;
 
 	this->mChanged = false;
@@ -105,7 +108,7 @@ std::string ClassroomState::getJSON(bool pAlternate){
 	Json::Value global;
 	global[scPaused] = this->mGlobal.paused;
 	global[scPauserDevice] = this->mGlobal.pauserDevice;
-
+	global[scMasterHint] = this->mGlobal.masterHint;
 	json[scGlobalClassVariables] = global;
 
 

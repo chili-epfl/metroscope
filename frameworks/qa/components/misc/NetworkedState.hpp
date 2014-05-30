@@ -26,7 +26,12 @@
 		static const std::string scPauserDevice="pauserDevice";
 		static const std::string scClassroomIdLabel="classroomid";
 		static const std::string scDeviceIdLabel="deviceid";
-
+		static const std::string scMasterHint="masterHint";
+		static const std::string scCompletedMaps="completedMaps";
+		static const std::string scStepsDone="stepsDone";
+		static const std::string scStepsToGo="stepsToGo";
+		static const std::string scHintPresent="hintPresent";
+		static const std::string scWrongMoves="wrongMoves";
 
 
 #endif
