@@ -57,10 +57,16 @@ class KillBugModel : public FiducialDecorator
 		void UpdateDeviceStatus();
 
 		void DisplayMap();
+		void DisplayGrid();
+		void DisplayWorkingArea();
+		void DisplayEndingPoints();
+		void DisplayObstacles();
+		void DisplayTexture();
 		void DisplayBug();
 		void DisplayProportions();
 		void RenderProportion(float pProportion, int pProportionNumber);
 		bool IsCartePresent();
+		bool IsBugPosition(int pPositionX, int pPositionY);
 		void FetchProportions();
 		int GetProportionNumber(wykobi::point2d<float> pPosition);
 		void SetProportionNumber(wykobi::point2d<float> pPosition, float pProportion);

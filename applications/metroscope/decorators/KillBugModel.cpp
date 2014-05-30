@@ -79,9 +79,9 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 {
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
-				mWorkingTriangle = (float)(mDisplayHeight/scTriangleProp);
+				mWorkingTriangle = mDisplayHeight/(float)2;
 				mMapHeight = mDisplayHeight - (mWorkingTriangle);
-				mMapWidth = mMapHeight; //square
+				mMapWidth = mMapHeight; //square maps
 				mBugPosition.x = 0;
 				mBugPosition.y = 0;
 
@@ -125,7 +125,6 @@ void decorators::KillBugModel::update(){
 }
 
 void decorators::KillBugModel::UpdateDeviceStatus(){
-
 	//We update the device's networked state
 	int distance = CalculateDistanceToTarget(mMapSize, mBugPosition, mActualCarte->getEndPoint(), mActualCarte->getObstaclesPoint());
 	stateManager->SetActivityStepsToGo(distance);
@@ -138,7 +137,6 @@ void decorators::KillBugModel::UpdateDeviceStatus(){
 	}else stateManager->SetActivityHintPresent("");
 
 	stateManager->SetActivityStepsDone(mSteps);
-
 }
 
 void decorators::KillBugModel::DisplayProportions(){
@@ -199,11 +197,6 @@ void decorators::KillBugModel::DisplayMap(){
 	mCellDimensionX = (float)(mMapWidth/mMapSize);
 	mCellDimensionY = (float)(mMapHeight/mMapSize);
 
-
-
-	float tActualX = mMapPoint1.x;
-	float tActualY = mMapPoint1.y;
-
 	wykobi::point2d<float> tBugOrigin = mActualCarte->getOriginPoint();
 
 	if(!mGameStarted){
@@ -211,50 +204,117 @@ void decorators::KillBugModel::DisplayMap(){
 		mBugPosition.y = (int)tBugOrigin.y;
 	}
 
+	DisplayGrid();
+	DisplayWorkingArea();
 
+	//Bug Origin Point
 	float tBugPositionX = mMapPoint1.x + (tBugOrigin.x)*(mCellDimensionX)+(mCellDimensionX/2);
 	float tBugPositionY = mMapPoint1.y + (tBugOrigin.y)*(mCellDimensionY)+(mCellDimensionY/2);
 
-	//Grid
+	DisplayTexture();
+
 	mDecoratorManager.GetDisplay().PushTransformation();
-	for(int i = 0 ; i < mMapSize + 1 ; i++){
-		mDecoratorManager.GetDisplay().RenderLine(mMapPoint1.x,tActualY,mMapPoint2.x,tActualY,0.0f,0.0f,0.0f,1.0f);
-		mDecoratorManager.GetDisplay().RenderLine(tActualX,mMapPoint1.y,tActualX,mMapPoint4.y, 0.0f,0.0f,0.0f,1.0f);
-		tActualX += mCellDimensionX;
-		tActualY += mCellDimensionY;
-	}
-
-	//TODO Make the diagonals
-
-	//Bug Origin Point
-	mDecoratorManager.GetDisplay().RenderFilledEllipse(tBugPositionX, tBugPositionY, mCellDimensionX/6,mCellDimensionY/6,1.0f,0.0f,0.0f,1.0f,1);
-
-	//Ending points
-	if(mActualCarte->getEndNumber() > 0){
-		std::vector<wykobi::point2d<float>> tEnd = mActualCarte->getEndPoint();
-
-		for(std::vector<wykobi::point2d<float>>::iterator it = tEnd.begin(); it != tEnd.end() ; ++it){
-			float tEndPositionX = mMapPoint1.x+ (*it).x*(mCellDimensionX)+(mCellDimensionX/2);
-			float tEndPositionY = mMapPoint1.y + (*it).y*(mCellDimensionY)+(mCellDimensionY/2);
-			mDecoratorManager.GetDisplay().RenderFilledEllipse(tEndPositionX, tEndPositionY, mCellDimensionX/2,mCellDimensionY/2,0.0f,0.0f,0.0f,1.0f,1);
-
-		}
-	}
-
-	//Obstacles points
-	if(mActualCarte->getObstacleNumber() > 0){
-			std::vector<wykobi::point2d<float>> tObstacle = mActualCarte->getObstaclesPoint();
-
-		for(std::vector<wykobi::point2d<float>>::iterator it = tObstacle.begin(); it != tObstacle.end() ; ++it){
-			float tEndPositionX = mMapPoint1.x + (*it).x*(mCellDimensionX);
-			float tEndPositionY = mMapPoint1.y + (*it).y*(mCellDimensionY);
-			mDecoratorManager.GetDisplay().RenderQuadFilled(tEndPositionX,tEndPositionY,tEndPositionX + mCellDimensionX,tEndPositionY,tEndPositionX+mCellDimensionX, tEndPositionY + mCellDimensionY, tEndPositionX, tEndPositionY + mCellDimensionY,0.25f,0.25f,0.25f,1.0f);
-		}
-	}
+	mDecoratorManager.GetDisplay().RenderFilledEllipse(tBugPositionX, tBugPositionY, mCellDimensionX/6,mCellDimensionY/6,1.0f,0.0f,0.0f,1.0f,3);
 	mDecoratorManager.GetDisplay().PopTransformation();
+
+
+
 	mGameStarted = true;
 }
 
+void decorators::KillBugModel::DisplayGrid(){
+	float tActualX = mMapPoint1.x;
+	float tActualY = mMapPoint1.y;
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+	for(int i = 0 ; i < mMapSize + 1 ; i++){
+			mDecoratorManager.GetDisplay().RenderLine(mMapPoint1.x,tActualY,mMapPoint2.x,tActualY,0.0f,0.0f,0.0f,1.0f);
+			mDecoratorManager.GetDisplay().RenderLine(tActualX,mMapPoint1.y,tActualX,mMapPoint4.y, 0.0f,0.0f,0.0f,1.0f);
+			tActualX += mCellDimensionX;
+			tActualY += mCellDimensionY;
+	}
+	mDecoratorManager.GetDisplay().PopTransformation();
+}
+
+void decorators::KillBugModel::DisplayWorkingArea(){
+	mDecoratorManager.GetDisplay().PushTransformation();
+
+	mDecoratorManager.GetDisplay().RenderLine(0.0f,mDisplayHeight/2,mMapPoint1.x-mWorkingTriangle/2,mDisplayHeight/2,
+			0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderLine(mMapPoint1.x - mWorkingTriangle/2, mDisplayHeight/2,
+			mMapPoint1.x + mWorkingTriangle/2, mMapPoint1.y - mWorkingTriangle/2, scProp2R,scProp2G,scProp2B,1.0f); //Proportion 2
+	mDecoratorManager.GetDisplay().RenderLine(mMapPoint1.x - mWorkingTriangle/2, mDisplayHeight/2,
+			mMapPoint1.x + mWorkingTriangle/2, mMapPoint3.y + mWorkingTriangle/2, scProp3R,scProp3G,scProp3B,1.0f); //Proportion 3
+	mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + mWorkingTriangle/2, mDisplayHeight/2,
+			mMapPoint2.x - mWorkingTriangle/2, mMapPoint1.y - mWorkingTriangle/2, scProp1R,scProp1G,scProp1B,1.0f); //Proportion 1
+	mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + mWorkingTriangle/2, mDisplayHeight/2,
+			mMapPoint2.x - mWorkingTriangle/2, mMapPoint3.y + mWorkingTriangle/2, scProp4R,scProp4G,scProp4B,1.0f); //Proportion 4
+	mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + mWorkingTriangle/2,mDisplayHeight/2,mDisplayWidth,mDisplayHeight/2,
+			0.0f,0.0f,0.0f,1.0f);
+
+	mDecoratorManager.GetDisplay().PopTransformation();
+}
+
+void decorators::KillBugModel::DisplayEndingPoints(){
+	int tEndTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/end.jpg");
+	std::vector<wykobi::point2d<float>> tEnd = mActualCarte->getEndPoint();
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+
+	for(std::vector<wykobi::point2d<float>>::iterator it = tEnd.begin(); it != tEnd.end() ; ++it){
+		mDecoratorManager.GetDisplay().RenderTexture(tEndTextureId,
+					mMapPoint1.x + (*it).x*mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY,
+					mMapPoint1.x + (*it).x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY,
+					mMapPoint1.x + (*it).x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY + mCellDimensionY,
+					mMapPoint1.x + (*it).x*mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY + mCellDimensionY);
+	}
+
+	mDecoratorManager.GetDisplay().PopTransformation();
+}
+
+void decorators::KillBugModel::DisplayObstacles(){
+	int tObstacleTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/obstacle.jpg");
+	std::vector<wykobi::point2d<float>> tObstacle = mActualCarte->getObstaclesPoint();
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+
+	for(std::vector<wykobi::point2d<float>>::iterator it = tObstacle.begin(); it != tObstacle.end() ; ++it){
+		mDecoratorManager.GetDisplay().RenderTexture(tObstacleTextureId,
+			mMapPoint1.x + (*it).x*mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY,
+			mMapPoint1.x + (*it).x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY,
+			mMapPoint1.x + (*it).x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY + mCellDimensionY,
+			mMapPoint1.x + (*it).x*mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY + mCellDimensionY);
+	}
+
+	mDecoratorManager.GetDisplay().PopTransformation();
+}
+
+void decorators::KillBugModel::DisplayTexture(){
+
+	DisplayObstacles();
+	DisplayEndingPoints();
+
+	int tTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/grass.jpg");
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+
+	for (int i = 0 ; i < mMapSize ; i++){
+		for (int j = 0 ; j < mMapSize ; j++){
+			wykobi::point2d<int> tCell;
+			tCell.x = i;
+			tCell.y = j;
+			if(mActualCarte->IsEmptyCell(i,j) && !mActualCarte->IsEndCell(i,j) && !IsBugPosition(i,j)) {
+				mDecoratorManager.GetDisplay().RenderTexture(tTextureId,
+						mMapPoint1.x + i*mCellDimensionX,mMapPoint1.y + j*mCellDimensionY,
+						mMapPoint1.x + i*mCellDimensionX + mCellDimensionX,mMapPoint1.y + j*mCellDimensionY,
+						mMapPoint1.x + i*mCellDimensionX + mCellDimensionX,mMapPoint1.y + j*mCellDimensionY + mCellDimensionY,
+						mMapPoint1.x + i*mCellDimensionX,mMapPoint1.y + j*mCellDimensionY + mCellDimensionY);
+			}
+		}
+	}
+
+	mDecoratorManager.GetDisplay().PopTransformation();
+}
 bool decorators::KillBugModel::IsCartePresent(){
 	Carte * tPreviusCarte = mActualCarte;
 	for(int i = 0 ; i < scCarteCards ; i++){
@@ -265,6 +325,10 @@ bool decorators::KillBugModel::IsCartePresent(){
 		}
 	}
 	return false;
+}
+
+bool decorators::KillBugModel::IsBugPosition(int pPositionX, int pPositionY){
+	return (mBugPosition.x == pPositionX && mBugPosition.y == pPositionY);
 }
 
 bool decorators::KillBugModel::IsHintPresent(){
@@ -318,9 +382,16 @@ void decorators::KillBugModel::DisplayBug(){
 	float tBugPositionX = mMapPoint1.x + (mBugPosition.x)*(mCellDimensionX)+(mCellDimensionX/2);
 	float tBugPositionY = mMapPoint1.y + (mBugPosition.y)*(mCellDimensionY)+(mCellDimensionY/2);
 
+	int tTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/ladybug.jpg");
+
 	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().RenderFilledEllipse(tBugPositionX, tBugPositionY, mCellDimensionX/6,mCellDimensionY/6,0.0f,1.0f,0.0f,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderTexture(tTextureId,
+							mMapPoint1.x + mBugPosition.x*mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY,
+							mMapPoint1.x + mBugPosition.x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY,
+							mMapPoint1.x + mBugPosition.x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY + mCellDimensionY,
+							mMapPoint1.x + mBugPosition.x*mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY + mCellDimensionY);
 	mDecoratorManager.GetDisplay().PopTransformation();
+
 }
 
 void decorators::KillBugModel::FetchProportions(){
@@ -336,24 +407,20 @@ void decorators::KillBugModel::FetchProportions(){
 		tProportionNumber++;
 		mActiveManipulatives++;
 		SetProportionNumber(mCircularModel1->GetCenter(),mCircularModel1->Numerator(), mCircularModel1->Denominator());
-		//SetProportionNumber(mCircularModel1->GetCenter(), mCircularModel1->Proportion());
 	}if (mCircularModel2->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
 		mActiveManipulatives++;
-		//SetProportionNumber(mCircularModel2->GetCenter(), mCircularModel2->Proportion());
-		//SetProportionNumber(mCircularModel2->GetCenter(),mCircularModel2->Numerator(), mCircularModel2->Denominator());
+		SetProportionNumber(mCircularModel2->GetCenter(),mCircularModel2->Numerator(), mCircularModel2->Denominator());
 	}
 
 	//Checking the rectangular manipulative
 	if (mRectangleModel1->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
 		mActiveManipulatives++;
-		//SetProportionNumber(mRectangleModel1->getMarker().getCenter(),mRectangleModel1->proportion());
 		SetProportionNumber(mRectangleModel1->getMarker().getCenter(),mRectangleModel1->Numerator(), mRectangleModel1->Denominator());
 	}if (mRectangleModel2->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
 		mActiveManipulatives++;
-		//SetProportionNumber(mRectangleModel2->getMarker().getCenter(),mRectangleModel2->proportion());
 		SetProportionNumber(mRectangleModel2->getMarker().getCenter(),mRectangleModel2->Numerator(), mRectangleModel2->Denominator());
 	}
 
@@ -367,22 +434,18 @@ void decorators::KillBugModel::FetchProportions(){
 			if(mTokenModel->GetProportion(1) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
 				mActiveManipulatives++;
-				//SetProportionNumber(1,mTokenModel->GetProportion(1));
 				SetProportionNumber(1,mTokenModel->GetNumerator(1), mTokenModel->GetDenominator(1));
 			}if(mTokenModel->GetProportion(2) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
 				mActiveManipulatives++;
-				//SetProportionNumber(2,mTokenModel->GetProportion(2));
 				SetProportionNumber(2,mTokenModel->GetNumerator(2), mTokenModel->GetDenominator(2));
 			}if(mTokenModel->GetProportion(3) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
 				mActiveManipulatives++;
-				//SetProportionNumber(3,mTokenModel->GetProportion(3));
 				SetProportionNumber(3,mTokenModel->GetNumerator(3), mTokenModel->GetDenominator(3));
 			}if(mTokenModel->GetProportion(4) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
 				mActiveManipulatives++;
-				//SetProportionNumber(4,mTokenModel->GetProportion(4));
 				SetProportionNumber(4,mTokenModel->GetNumerator(4), mTokenModel->GetDenominator(4));
 			}
 		}
@@ -393,7 +456,6 @@ void decorators::KillBugModel::FetchProportions(){
 		if(mFractionCards[i]->IsPresent() && tProportionNumber < 4){
 			tProportionNumber++;
 			mActiveManipulatives++;
-			//SetProportionNumber(mFractionCards[i]->GetLocation(), mFractionCards[i]->GetValue());
 			SetProportionNumber(mFractionCards[i]->GetLocation(), mFractionCards[i]->GetNumerator(),mFractionCards[i]->GetDenominator());
 		}
 	}
@@ -484,12 +546,17 @@ void decorators::KillBugModel::SetProportionNumber(wykobi::point2d<float> pPosit
 void decorators::KillBugModel::DisplayCircularHint(){
 
 	//TODO: Change color and size if needed
+	//TODO: Referenciate the points with mProportionXPoint
 	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().RenderEllipse(mDisplayWidth/2,mMapPoint1.y - (mDisplayHeight-mMapHeight)/4,mWorkingTriangle/4,mWorkingTriangle/4,0.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth/2,mMapPoint1.y - (mDisplayHeight-mMapHeight)/4,mWorkingTriangle/4,mWorkingTriangle/4,mProportion1*360,90.0f - mProportion1*360,0.0f,0.0f,0.0f,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderEllipse(mProportion1Point.x,mProportion1Point.y,mWorkingTriangle/8,mWorkingTriangle/8,0.0f,0.0f,0.0f,1.0f);
+	//mDecoratorManager.GetDisplay().RenderEllipse(mDisplayWidth/2,mMapPoint1.y - (mDisplayHeight-mMapHeight)/4,mWorkingTriangle/4,mWorkingTriangle/4,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderFilledSector(mProportion1Point.x,mProportion1Point.y,mWorkingTriangle/8,mWorkingTriangle/8,mProportion1*360,90.0f - mProportion1*360,scProp1R,scProp1G,scProp1B,1.0f,1);
+	//mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth/2,mMapPoint1.y - (mDisplayHeight-mMapHeight)/4,mWorkingTriangle/4,mWorkingTriangle/4,mProportion1*360,90.0f - mProportion1*360,0.0f,0.0f,0.0f,1.0f,1);
 
-	mDecoratorManager.GetDisplay().RenderEllipse(mMapPoint1.x - (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,mWorkingTriangle/4,mWorkingTriangle/4,0.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().RenderFilledSector(mMapPoint1.x - (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,mWorkingTriangle/4,mWorkingTriangle/4,mProportion2*360,90.0f - mProportion2*360,0.0f,0.0f,0.0f,1.0f,1);
+	//mDecoratorManager.GetDisplay().RenderEllipse(mMapPoint1.x - (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,mWorkingTriangle/4,mWorkingTriangle/4,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderEllipse(mProportion2Point.x,mProportion2Point.y,mWorkingTriangle/8,mWorkingTriangle/8,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderFilledSector(mProportion2Point.x,mProportion2Point.y,mWorkingTriangle/8,mWorkingTriangle/8,mProportion2*360,90.0f - mProportion2*360,scProp2R,scProp2G,scProp2B,1.0f,1);
+	//mDecoratorManager.GetDisplay().RenderFilledSector(mMapPoint1.x - (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,mWorkingTriangle/4,mWorkingTriangle/4,mProportion2*360,90.0f - mProportion2*360,0.0f,0.0f,0.0f,1.0f,1);
 
 	mDecoratorManager.GetDisplay().RenderEllipse(mDisplayWidth/2,mMapPoint3.y + (mDisplayHeight-mMapHeight)/4,mWorkingTriangle/4,mWorkingTriangle/4,0.0f,0.0f,0.0f,1.0f);
 	mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth/2,mMapPoint3.y + (mDisplayHeight-mMapHeight)/4,mWorkingTriangle/4,mWorkingTriangle/4,mProportion3*360,90.0f - mProportion3*360,0.0f,0.0f,0.0f,1.0f,1);
@@ -506,6 +573,7 @@ void decorators::KillBugModel::DisplayRectangularHint(){
 
 	mDecoratorManager.GetDisplay().PushTransformation();
 
+	//TODO: Referenciate the points with mProportionXPoint
 	mDecoratorManager.GetDisplay().RenderQuad(mProportion1Point.x-tRecWidth/2, mProportion1Point.y - tRecHeight/2,
 			mProportion1Point.x + tRecWidth/2 , mProportion1Point.y - tRecHeight/2,
 			mProportion1Point.x + tRecWidth/2, mProportion1Point.y + tRecHeight/2,
@@ -557,6 +625,7 @@ void decorators::KillBugModel::DisplayDiscreteHint(){
 
 	mDecoratorManager.GetDisplay().PushTransformation();
 
+	//TODO: Do it in a proper way --> void decorators::KillBugModel::DisplayDiscreteHint(int pProportionNumber)
 	float tPartialX = mProportion1Point.x - tBoxWidth/2;
 	float tPartialY = mProportion1Point.y - tBoxHeight/2;
 	int tDenom = mProportion1Denominator;
@@ -647,6 +716,7 @@ void decorators::KillBugModel::DisplayDecimalHint(){
 	char tProportion3[3];
 	char tProportion4[3];
 
+	//TODO: Do it in a proper way, like void decorators::KillBugModel::DisplayDecimalHint(int pProportionNumber)
 	sprintf(tProportion1, "%3.2f", mProportion1);
 	sprintf(tProportion2, "%3.2f", mProportion2);
 	sprintf(tProportion3, "%3.2f", mProportion3);
@@ -654,14 +724,11 @@ void decorators::KillBugModel::DisplayDecimalHint(){
 
 	mDecoratorManager.GetDisplay().PushTransformation();
 
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion1,
-			mDisplayWidth/2,mMapPoint1.y - (mDisplayHeight-mMapHeight)/4,true,1.0f,0.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion2,
-			mMapPoint1.x - (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,true,1.0f,0.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion3,
-			mDisplayWidth/2,mMapPoint3.y + (mDisplayHeight-mMapHeight)/4,true,1.0f,0.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion4,
-			mMapPoint3.x + (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	//TODO: Referenciate them in terms of mProportionXPoint...
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion1,mDisplayWidth/2,mMapPoint1.y - (mDisplayHeight-mMapHeight)/4,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion2,mMapPoint1.x - (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion3,mDisplayWidth/2,mMapPoint3.y + (mDisplayHeight-mMapHeight)/4,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion4,mMapPoint3.x + (mDisplayWidth-mMapWidth)/4,mDisplayHeight/2,true,1.0f,0.0f,0.0f,0.0f,1.0f);
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
@@ -675,6 +742,7 @@ void decorators::KillBugModel::DisplayFractionHint(){
 	char tProportion3Denominator[3];
 	char tProportion4Denominator[3];
 
+	//TODO: Do it in a proper way, like void decorators::KillBugModel::DisplayFractionHint(int pProportionNumber)
 	sprintf(tProportion1Numerator, "%d", mProportion1Numerator);
 	sprintf(tProportion2Numerator, "%d", mProportion2Numerator);
 	sprintf(tProportion3Numerator, "%d", mProportion3Numerator);
@@ -719,9 +787,7 @@ void decorators::KillBugModel::DivideRectangleManipulatives(int pParts){
 
 			tPartialX += tRectangleLength;
 
-			mDecoratorManager.GetDisplay().RenderQuad(-tDistanceX/2,-tDistanceY/2,tDistanceX/2,-tDistanceY/2,
-					tDistanceX/2,tDistanceY/2,-tDistanceX/2,tDistanceY/2,0.0f,0.0f,0.0f,1.0f);
-
+			mDecoratorManager.GetDisplay().RenderQuad(-tDistanceX/2,-tDistanceY/2,tDistanceX/2,-tDistanceY/2, tDistanceX/2,tDistanceY/2,-tDistanceX/2,tDistanceY/2,0.0f,0.0f,0.0f,1.0f);
 			mDecoratorManager.GetDisplay().RenderLine(tPartialX,-tDistanceY/2,tPartialX,tDistanceY/2,0.0f,0.0f,0.0f,1.0f);
 
 			mDecoratorManager.GetDisplay().PopTransformation();
