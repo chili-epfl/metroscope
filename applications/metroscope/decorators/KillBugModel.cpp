@@ -119,7 +119,26 @@ void decorators::KillBugModel::update(){
 		if(mFlipper->IsPresent()) DisplayFlipperFeedback();
 
 		if(IsHintPresent())	DisplayProportions(mActualHint->GetHintType());
+
+		UpdateDeviceStatus();
 	}
+}
+
+void decorators::KillBugModel::UpdateDeviceStatus(){
+
+	//We update the device's networked state
+	int distance = CalculateDistanceToTarget(mMapSize, mBugPosition, mActualCarte->getEndPoint(), mActualCarte->getObstaclesPoint());
+	stateManager->SetActivityStepsToGo(distance);
+
+	if(IsHintPresent()){
+		std::ostringstream convert;   // stream used for the conversion
+		convert << mActualHint->GetHintType();      // insert the textual representation of 'Number' in the characters in the stream
+		std::string hint = convert.str(); // set 'Result' to the contents of the stream
+		stateManager->SetActivityHintPresent(hint);
+	}else stateManager->SetActivityHintPresent("");
+
+	stateManager->SetActivityStepsDone(mSteps);
+
 }
 
 void decorators::KillBugModel::DisplayProportions(){
@@ -828,4 +847,111 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 		mDecoratorManager.GetDisplay().RenderCenteredText(tFull?"Prêt!" :"En charge...", -1.0f, 1.8f,true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
 		}
+}
+
+
+int decorators::KillBugModel::CalculateDistanceToTarget(int mapsize, wykobi::point2d<int> bugPosition, std::vector<wykobi::point2d<float>> endPoints, std::vector<wykobi::point2d<float>> obstacles){
+
+	static const int scORIGIN = -1;
+	static const int scEND = -2;
+	static const int scOBSTACLE = -3;
+
+	int distance = 0;
+	if(endPoints.size()==0) return distance;//If we have no endpoint, we just return 0
+
+
+	int map[mapsize][mapsize];//we create and initialize the map
+
+	for(int i=0;i<mapsize;i++){
+		for(int j=0;j<mapsize;j++) map[i][j] = 0;
+	}
+
+	map[bugPosition.x][bugPosition.y]=scORIGIN;//we set the bug position to be the origin
+
+	for(int i=0;i<endPoints.size();i++){//we set the targets
+		map[int(endPoints.at(i).x)][int(endPoints.at(i).y)] = scEND;
+	}
+
+	for(int i=0;i<obstacles.size();i++){//we set the obstacles
+		map[int(obstacles.at(i).x)][int(obstacles.at(i).y)] = scOBSTACLE;
+	}
+
+	//We start the algorithm, from the current position
+	int stepCount = 1;
+	bool end=false;
+	//initialize the flood area to be covered, to the current position
+	int initX = bugPosition.x;
+	int initY = bugPosition.y;
+	int endX = bugPosition.x;
+	int endY = bugPosition.y;
+	do{
+		//calculate the flood area to be covered
+		if(initX>0) initX = initX-1;//either one column less, or remain at zero
+		if(initY>0) initY = initY-1;//either one row less, or remain at zero
+		if(endX<(mapsize-1)) endX = endX+1;//either one column more, or remain at n-1
+		if(endY<(mapsize-1)) endY = endY+1;//either one row more, or remain at n-1
+
+		//std::cout << stepCount << ": flooding from " << initX << "," << initY << " to " << endX << "," << endY << std::endl;
+
+		//fill the zeros in the area with stepCount's
+		for(int i=initX;i<=endX;i++){
+			for(int j=initY;j<=endY;j++){
+				int oldCell = map[i][j];//we store the cell, to check at the end
+				if(map[i][j]==0 || map[i][j]==scEND){//if this was an unflooded cell (or the goal), we check for its neighbours, and set this cell to the smallest neighbour's+1 (or to 1, if a neighbour is the origin
+					int minNeighbour = 100;
+					//TODO: implement this decently in a function!
+					if(i-1 >= 0 && j-1 >= 0){//i-1,j-1
+						if(map[i-1][j-1] == scORIGIN) map[i][j]=1;
+						else if(map[i-1][j-1]>0 && map[i-1][j-1]<minNeighbour) minNeighbour = map[i-1][j-1];
+					}
+					if( j-1 >= 0){//i,j-1
+						if(map[i][j-1] == scORIGIN) map[i][j]=1;
+						else if(map[i][j-1]>0 && map[i][j-1]<minNeighbour) minNeighbour = map[i][j-1];
+					}
+					if(i+1 <= mapsize-1 && j-1 >= 0){//i+1,j-1
+						if(map[i+1][j-1] == scORIGIN) map[i][j]=1;
+						else if(map[i+1][j-1]>0 && map[i+1][j-1]<minNeighbour) minNeighbour = map[i+1][j-1];
+					}
+					if( i-1 >= 0){//i-1,j
+						if(map[i-1][j] == scORIGIN) map[i][j]=1;
+						else if(map[i-1][j]>0 && map[i-1][j]<minNeighbour) minNeighbour = map[i-1][j];
+					}
+					if( i+1 <= mapsize-1){//i+1,j
+						if(map[i+1][j] == scORIGIN) map[i][j]=1;
+						else if(map[i+1][j]>0 && map[i+1][j]<minNeighbour) minNeighbour = map[i+1][j];
+					}
+					if(i-1 >=0 && j+1 <= mapsize-1){//i-1,j+1
+						if(map[i-1][j+1] == scORIGIN) map[i][j]=1;
+						else if(map[i-1][j+1]>0 && map[i-1][j+1]<minNeighbour) minNeighbour = map[i-1][j+1];
+					}
+					if( j+1 <= mapsize-1){//i,j+1
+						if(map[i][j+1] == scORIGIN) map[i][j]=1;
+						else if(map[i][j+1]>0 && map[i][j+1]<minNeighbour) minNeighbour = map[i][j+1];
+					}
+					if(i+1 <= mapsize-1 && j+1 <= mapsize-1){//i+1,j+1
+						if(map[i+1][j+1] == scORIGIN) map[i][j]=1;
+						else if(map[i+1][j+1]>0 && map[i+1][j+1]<minNeighbour) minNeighbour = map[i+1][j+1];
+					}
+
+
+					if((map[i][j]==0 || map[i][j]==scEND) && minNeighbour!=100) map[i][j]=minNeighbour+1;//if we did not set the cell already, we set it now
+					//std::cout << "minimal neighbour " << minNeighbour << ". map cell set to " << map[i][j] << std::endl;
+				}
+				if(oldCell==scEND){
+					if(map[i][j]>0){//we found an end!
+						distance = map[i][j];
+						end=true;
+					}
+					else map[i][j] = oldCell;//we put the goal back again
+				}
+			}
+		}
+
+		if(initX==0 && initY==0 && endX==(mapsize-1) && endY==(mapsize-1)) end=true;// We flooded the map! if we did not find anything, there is no goal or the goal is unreachable (we return zero)
+
+		stepCount++;
+	}while(!end);
+
+
+	return distance;
 }
