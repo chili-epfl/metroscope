@@ -66,8 +66,7 @@ decorators::FiducialDecorator *decorators::KillBugModel::create(libconfig::Setti
 
 decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, CircularFractionModel *pAngleModel1,
 		CircularFractionModel *pAngleModel2, RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2,
-		TokenModel *pTokenModel1, Flipper *pGoFlipper, FractionBugHint ** pFractionHints,
-		FractionCard ** pFractionCards, Carte ** pCartes):
+		TokenModel *pTokenModel1, Flipper *pGoFlipper, FractionBugHint ** pFractionHints, FractionCard ** pFractionCards, Carte ** pCartes):
 			FiducialDecorator(pDecoratorManager, 0),
 			mCircularModel1(pAngleModel1), mCircularModel2(pAngleModel2),
 			mRectangleModel1(pRectangleModel1), mRectangleModel2(pRectangleModel2),
@@ -116,7 +115,10 @@ void decorators::KillBugModel::update(){
 
 		}
 
-		if(mFlipper->IsPresent()) DisplayFlipperFeedback();
+		if(mFlipper->GetCurrentSide() != NULL && mFlipper->IsPresent()){
+
+			DisplayFlipperFeedback();
+		}
 
 		if(IsHintPresent())	DisplayProportions(mActualHint->GetHintType());
 
@@ -940,14 +942,15 @@ void decorators::KillBugModel::DivideCircunferenceManipulatives(int pParts){
 
 void decorators::KillBugModel::DisplayFlipperFeedback(){
 
+
 	static const long cShotPreparationTime = 6l*1000l;
 	long tElapsedTime = Time::MillisTimestamp() - mLastShot;
 
-	if (mFlipper->IsFlipped() && tElapsedTime > cShotPreparationTime) {
+	if (mFlipper->GetCurrentSide() != NULL && mFlipper->IsFlipped() && tElapsedTime > cShotPreparationTime) {
 		MakeMove();
 		mLastShot = Time::MillisTimestamp();
 	}
-	if (mFlipper->IsPresent()){
+	if (mFlipper->GetCurrentSide() != NULL && mFlipper->IsPresent()){
 		float tPartialDegree = 360*(tElapsedTime/(float)cShotPreparationTime);
 		bool tFull = false;
 		if(tPartialDegree >= 360)
@@ -958,13 +961,13 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 		mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mFlipper->GetCurrentSide(), mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 
-		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f,-0.5f,1.5f,1.5f,tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
+		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f,2.0f,1.5f,1.5f,tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
 
 		mDecoratorManager.GetDisplay().RenderCenteredText(tFull?"Prêt!" :"En charge...", -1.0f, 1.8f,true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
 		}
-}
 
+}
 
 int decorators::KillBugModel::CalculateDistanceToTarget(int mapsize, wykobi::point2d<int> bugPosition, std::vector<wykobi::point2d<float>> endPoints, std::vector<wykobi::point2d<float>> obstacles){
 
