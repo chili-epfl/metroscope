@@ -226,6 +226,7 @@ void decorators::KillBugModel::DisplayMap(){
 		mDecoratorManager.GetDisplay().PopTransformation();
 	}
 
+	DisplayBug();
 	mGameStarted = true;
 }
 
