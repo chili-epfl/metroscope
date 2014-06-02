@@ -48,11 +48,13 @@ public:
 	void removeMarkerFromDeviceState(std::string tagName);
 
 	void SetActivityCompletedMaps(int pCompleted);
+	void IncrementCompletedMaps();
 	void SetActivityHintPresent(std::string pHint);
 	void UnsetActivityHintPresent(std::string pHint);//It eliminates this hint, if it was present before
 	void SetActivityStepsDone(int pSteps);
 	void SetActivityStepsToGo(int pSteps);
 	void SetActivityWrongMoves(int pWrong);
+	void IncrementWrongMoves();
 
 	void SetClassroomJSON(std::string jsonData);
 	void SetDeviceJSON(std::string jsonData);

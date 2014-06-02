@@ -252,6 +252,20 @@ void NetworkedStateManager::SetActivityCompletedMaps(int pCompleted){
 	pthread_mutex_unlock(&devstate_mutex);
 }
 
+void NetworkedStateManager::IncrementCompletedMaps(){
+	pthread_mutex_lock(&devstate_mutex);
+
+	int oldCompleted = mDeviceState->GetActivity().currentState.completedMaps;
+	state newState = mDeviceState->GetActivity().currentState;
+	newState.completedMaps=(oldCompleted+1);
+	activity_state newActivityState = mDeviceState->GetActivity();
+	newActivityState.currentState = newState;
+	mDeviceState->SetActivity(newActivityState);
+	mDeviceState->SetHasChanged(true);
+
+	pthread_mutex_unlock(&devstate_mutex);
+}
+
 
 void NetworkedStateManager::SetActivityHintPresent(std::string pHint){
 	pthread_mutex_lock(&devstate_mutex);
@@ -331,7 +345,19 @@ void NetworkedStateManager::SetActivityWrongMoves(int pWrong){
 	pthread_mutex_unlock(&devstate_mutex);
 }
 
+void NetworkedStateManager::IncrementWrongMoves(){
+	pthread_mutex_lock(&devstate_mutex);
 
+	int oldWrong = mDeviceState->GetActivity().currentState.stepsDone;
+	state newState = mDeviceState->GetActivity().currentState;
+	newState.wrongMoves=oldWrong+1;
+	activity_state newActivityState = mDeviceState->GetActivity();
+	newActivityState.currentState = newState;
+	mDeviceState->SetActivity(newActivityState);
+	mDeviceState->SetHasChanged(true);
+
+	pthread_mutex_unlock(&devstate_mutex);
+}
 
 
 bool NetworkedStateManager::isClassroomPaused(){

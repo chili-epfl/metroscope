@@ -396,12 +396,23 @@ void decorators::KillBugModel::MakeMove(){
 		else if(mProportion1 > mProportion3) tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y;
 		else if(mProportion1 == mProportion3) tNewPositionY = mBugPosition.y;
 
+		bool wrongMove = false;
+		if(tNewPositionX == mBugPosition.x && tNewPositionY == mBugPosition.y) wrongMove = true;
+
 		if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY)){
 			mBugPosition.x = tNewPositionX;
 			mBugPosition.y = tNewPositionY;
+		} else {//The cell is an obstacle, it is a wrong move!
+			wrongMove = true;
 		}
+
+		if(wrongMove){
+			stateManager->IncrementWrongMoves();
+		}
+
 		if(mActualCarte->IsEndCell(mBugPosition.x,mBugPosition.y)){
 			mActualCarte->FinishMap();
+			stateManager->IncrementCompletedMaps();
 			//TODO: Something with the feedback
 		}
 		mSteps++;
@@ -411,6 +422,9 @@ void decorators::KillBugModel::MakeMove(){
 void decorators::KillBugModel::Start(){
 	mGameStarted = false;
 	mSteps = 0;
+
+	//We reset the wrong moves counter
+	stateManager->SetActivityWrongMoves(0);
 
 	//Debug :) (To be eliminated)
 	mDecoratorManager.GetDisplay().PushTransformation();
@@ -950,9 +964,9 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 		mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mFlipper->GetCurrentSide(), mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 
-		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f,2.0f,1.5f,1.5f,tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
+		mDecoratorManager.GetDisplay().RenderFilledSector(2.0f,3.5f,1.5f,1.5f,tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
 
-		mDecoratorManager.GetDisplay().RenderCenteredText(tFull?"Prêt!" :"En charge...", -1.0f, 1.8f,true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
+		mDecoratorManager.GetDisplay().RenderCenteredText(tFull?"Prêt!" :"En repos ...", 2.0f, 5.5f,true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
 		}
 
