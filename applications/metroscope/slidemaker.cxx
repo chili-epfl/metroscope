@@ -23,7 +23,7 @@
 #include <fstream>
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 
-NetworkedStateManager* stateManager;
+//NetworkedStateManager* stateManager;
 
 
 int main(int argc, char* argv[])

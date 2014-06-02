@@ -19,41 +19,41 @@ mEntity(pEntity)
 
 void PutRemoteJSONString::run(){
 
-	if(mEntity == DEVICE){
-		if(stateManager->hasDeviceChanged()){//if some other thread changed the local device state, we transmit it to server
-
-			std::string jsonState = stateManager->getDeviceJSON();
-
-			std::cout << "Detected state change: " << jsonState << std::endl;
-
-			//do PUT of the JSON object to the server
-			bool success = false;
-			std::cout << "PUTting remote JSON: " << jsonState << "...";
-			success = putRemoteString(mUrl,jsonState);
-			if(success){
-				std::cout << "Success!" << std::endl;
-				stateManager->SetHasDeviceChanged(false);
-			}
-			else std::cout << "Failure!" << std::endl;
-		}
-	} else if(mEntity == CLASSROOM){
-		if(stateManager->hasClassroomChanged()){//if some other thread changed the local classroom state, we transmit it to server
-
-			std::string jsonState = stateManager->getClassroomJSON();
-
-			std::cout << "Detected state change: " << jsonState << std::endl;
-
-			//do PUT of the JSON object to the server
-			bool success = false;
-			std::cout << "PUTting remote JSON: " << jsonState << "...";
-			success = putRemoteString(mUrl,jsonState);
-			if(success){
-				std::cout << "Success!" << std::endl;
-				stateManager->SetHasClassroomChanged(false);
-			}
-			else std::cout << "Failure!" << std::endl;
-		}
-	}
+//	if(mEntity == DEVICE){
+//		if(stateManager->hasDeviceChanged()){//if some other thread changed the local device state, we transmit it to server
+//
+//			std::string jsonState = stateManager->getDeviceJSON();
+//
+//			std::cout << "Detected state change: " << jsonState << std::endl;
+//
+//			//do PUT of the JSON object to the server
+//			bool success = false;
+//			std::cout << "PUTting remote JSON: " << jsonState << "...";
+//			success = putRemoteString(mUrl,jsonState);
+//			if(success){
+//				std::cout << "Success!" << std::endl;
+//				stateManager->SetHasDeviceChanged(false);
+//			}
+//			else std::cout << "Failure!" << std::endl;
+//		}
+//	} else if(mEntity == CLASSROOM){
+//		if(stateManager->hasClassroomChanged()){//if some other thread changed the local classroom state, we transmit it to server
+//
+//			std::string jsonState = stateManager->getClassroomJSON();
+//
+//			std::cout << "Detected state change: " << jsonState << std::endl;
+//
+//			//do PUT of the JSON object to the server
+//			bool success = false;
+//			std::cout << "PUTting remote JSON: " << jsonState << "...";
+//			success = putRemoteString(mUrl,jsonState);
+//			if(success){
+//				std::cout << "Success!" << std::endl;
+//				stateManager->SetHasClassroomChanged(false);
+//			}
+//			else std::cout << "Failure!" << std::endl;
+//		}
+//	}
 
 }
 

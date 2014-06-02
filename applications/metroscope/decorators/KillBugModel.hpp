@@ -21,7 +21,7 @@
 #define KILLBUGMODEL_HPP_
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
-#include <qa/components/misc/NetworkedStateManager.hpp>
+//#include <qa/components/misc/NetworkedStateManager.hpp>
 
 #include "CircularFractionModel.hpp"
 #include "RectangleFractionModel.hpp"

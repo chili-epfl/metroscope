@@ -37,7 +37,7 @@
 
 //#define DEBUG_metroscope_NOMT
 
-NetworkedStateManager* stateManager;
+//NetworkedStateManager* stateManager;
 
 
 int main(int argc, char* argv[])

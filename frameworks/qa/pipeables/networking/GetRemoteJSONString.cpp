@@ -19,29 +19,29 @@ mEntity(pEntity)
 
 void GetRemoteJSONString::run(){
 
-	if(mEntity == DEVICE){
-		if(!stateManager->hasDeviceChanged()){//if no other thread changed the local device state, we get it from server
-			std::cout << "GETting remote DEVICE JSON from: " << mUrl << "...";
-			std::string jsonData = getRemoteString(mUrl);
-			if(jsonData.length()>0){
-				std::cout << "Success!" << std::endl;
-				//std::cout << "Received data: " << jsonData << std::endl;
-				stateManager->SetDeviceJSON(jsonData);
-			}
-			else std::cout << "Failure!" << std::endl;
-		}
-	}else if(mEntity==CLASSROOM){
-		if(!stateManager->hasClassroomChanged()){//if no other thread changed the local classroom state, we get it from server
-			std::cout << "GETting remote CLASSROOM JSON from: " << mUrl << "...";
-			std::string jsonData = getRemoteString(mUrl);
-			if(jsonData.length()>0){
-				std::cout << "Success!" << std::endl;
-				//std::cout << "Received data: " << jsonData << std::endl;
-				stateManager->SetClassroomJSON(jsonData);
-			}
-			else std::cout << "Failure!" << std::endl;
-		}
-	}
+//	if(mEntity == DEVICE){
+//		if(!stateManager->hasDeviceChanged()){//if no other thread changed the local device state, we get it from server
+//			std::cout << "GETting remote DEVICE JSON from: " << mUrl << "...";
+//			std::string jsonData = getRemoteString(mUrl);
+//			if(jsonData.length()>0){
+//				std::cout << "Success!" << std::endl;
+//				//std::cout << "Received data: " << jsonData << std::endl;
+//				stateManager->SetDeviceJSON(jsonData);
+//			}
+//			else std::cout << "Failure!" << std::endl;
+//		}
+//	}else if(mEntity==CLASSROOM){
+//		if(!stateManager->hasClassroomChanged()){//if no other thread changed the local classroom state, we get it from server
+//			std::cout << "GETting remote CLASSROOM JSON from: " << mUrl << "...";
+//			std::string jsonData = getRemoteString(mUrl);
+//			if(jsonData.length()>0){
+//				std::cout << "Success!" << std::endl;
+//				//std::cout << "Received data: " << jsonData << std::endl;
+//				stateManager->SetClassroomJSON(jsonData);
+//			}
+//			else std::cout << "Failure!" << std::endl;
+//		}
+//	}
 
 }
 

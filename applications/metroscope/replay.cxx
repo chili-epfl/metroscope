@@ -30,7 +30,7 @@
 
 #include "TimeStampRenderer.hpp"
 
-NetworkedStateManager* stateManager;
+//NetworkedStateManager* stateManager;
 
 
 int main(int argc, char* argv[])

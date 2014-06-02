@@ -11,7 +11,8 @@
 #include <string>
 #include <iostream>
 #include <curl/curl.h>
-#include <qa/pipeables/misc/DecoratorManager.hpp>
+#include <qa/pipeables/Pipeable.hpp>
+#include <qa/components/misc/NetworkedStateManager.hpp>
 
 class PutRemoteJSONString: public Pipeable {
 	    public:

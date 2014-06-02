@@ -25,7 +25,7 @@
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "decorators/all.hpp"
 
-NetworkedStateManager* stateManager;
+//NetworkedStateManager* stateManager;
 
 
 int main(int /*argc*/, char* /*argv*/[])

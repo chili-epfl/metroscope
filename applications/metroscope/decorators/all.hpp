@@ -95,7 +95,7 @@
 #include "Regrouper.hpp"
 */
 //silly examples
-#include "SimpleText.hpp"
+//#include "SimpleText.hpp"
 
 //proportions
 //#include "ProportionView.hpp"
@@ -106,7 +106,7 @@
 #include "RectangleFractionModel.hpp"
 #include "Carte.hpp"
 //#include "OrchestrationPause.hpp"
-#include "OrchestrationPauseFlipper.hpp"
+//#include "OrchestrationPauseFlipper.hpp"
 #include "KillBugModel.hpp"
 #include "FractionCard.hpp"
 #include "CircularFractionModel.hpp"

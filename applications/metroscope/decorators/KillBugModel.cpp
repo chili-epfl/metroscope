@@ -129,16 +129,16 @@ void decorators::KillBugModel::update(){
 void decorators::KillBugModel::UpdateDeviceStatus(){
 	//We update the device's networked state
 	int distance = CalculateDistanceToTarget(mMapSize, mBugPosition, mActualCarte->getEndPoint(), mActualCarte->getObstaclesPoint());
-	stateManager->SetActivityStepsToGo(distance);
+	//stateManager->SetActivityStepsToGo(distance);
 
 	if(IsHintPresent()){
 		std::ostringstream convert;   // stream used for the conversion
 		convert << mActualHint->GetHintType();      // insert the textual representation of 'Number' in the characters in the stream
 		std::string hint = convert.str(); // set 'Result' to the contents of the stream
-		stateManager->SetActivityHintPresent(hint);
-	}else stateManager->SetActivityHintPresent("");
+		//stateManager->SetActivityHintPresent(hint);
+	}//else stateManager->SetActivityHintPresent("");
 
-	stateManager->SetActivityStepsDone(mSteps);
+	//stateManager->SetActivityStepsDone(mSteps);
 }
 
 void decorators::KillBugModel::DisplayProportions(){
@@ -408,12 +408,12 @@ void decorators::KillBugModel::MakeMove(){
 		}
 
 		if(wrongMove){
-			stateManager->IncrementWrongMoves();
+			//stateManager->IncrementWrongMoves();
 		}
 
 		if(mActualCarte->IsEndCell(mBugPosition.x,mBugPosition.y)){
 			mActualCarte->FinishMap();
-			stateManager->IncrementCompletedMaps();
+			//stateManager->IncrementCompletedMaps();
 			//TODO: Something with the feedback
 		}
 		mSteps++;
@@ -425,7 +425,7 @@ void decorators::KillBugModel::Start(){
 	mSteps = 0;
 
 	//We reset the wrong moves counter
-	stateManager->SetActivityWrongMoves(0);
+	//stateManager->SetActivityWrongMoves(0);
 
 	//Debug :) (To be eliminated)
 	mDecoratorManager.GetDisplay().PushTransformation();
