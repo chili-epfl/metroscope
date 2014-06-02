@@ -116,9 +116,6 @@ void decorators::KillBugModel::update(){
 		}
 
 		if(mFlipper->GetCurrentSide() != NULL && mFlipper->IsPresent()){
-			mDecoratorManager.GetDisplay().PushTransformation();
-			mDecoratorManager.GetDisplay().RenderText("Entro mFlipper IS PRESENT", mDisplayWidth/2, mDisplayHeight/2, 2.0f, 1.0f,0.0f,0.0f,1.0f);
-			mDecoratorManager.GetDisplay().PopTransformation();
 
 			DisplayFlipperFeedback();
 		}
@@ -943,14 +940,8 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 	if (mFlipper->GetCurrentSide() != NULL && mFlipper->IsFlipped() && tElapsedTime > cShotPreparationTime) {
 		MakeMove();
 		mLastShot = Time::MillisTimestamp();
-		mDecoratorManager.GetDisplay().PushTransformation();
-			mDecoratorManager.GetDisplay().RenderText("Entro 1er IF", mDisplayWidth/2, mDisplayHeight/2 + 200.0f, 2.0f, 1.0f,0.0f,0.0f,1.0f);
-			mDecoratorManager.GetDisplay().PopTransformation();
 	}
 	if (mFlipper->GetCurrentSide() != NULL && mFlipper->IsPresent()){
-		mDecoratorManager.GetDisplay().PushTransformation();
-			mDecoratorManager.GetDisplay().RenderText("Entro 2do IF", mDisplayWidth/2, mDisplayHeight/2 + 300.0f, 2.0f, 1.0f,0.0f,0.0f,1.0f);
-			mDecoratorManager.GetDisplay().PopTransformation();
 		float tPartialDegree = 360*(tElapsedTime/(float)cShotPreparationTime);
 		bool tFull = false;
 		if(tPartialDegree >= 360)
