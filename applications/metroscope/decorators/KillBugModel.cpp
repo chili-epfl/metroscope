@@ -950,7 +950,7 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 		mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mFlipper->GetCurrentSide(), mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 
-		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f,-0.5f,1.5f,1.5f,tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
+		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f,2.0f,1.5f,1.5f,tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
 
 		mDecoratorManager.GetDisplay().RenderCenteredText(tFull?"Prêt!" :"En charge...", -1.0f, 1.8f,true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
