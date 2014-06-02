@@ -115,6 +115,7 @@ class KillBugModel : public FiducialDecorator
 		wykobi::point2d<int> mBugPosition;
 		int mSteps;
 		bool mGameStarted;
+		bool mMapFinished;
 		int mActiveManipulatives;
 		wykobi::point2d<int> mMapPoint1;
 		wykobi::point2d<int> mMapPoint2;
