@@ -423,6 +423,9 @@ void decorators::KillBugModel::Start(){
 	mGameStarted = false;
 	mSteps = 0;
 
+	//We reset the wrong moves counter
+	stateManager->SetActivityWrongMoves(0);
+
 	//Debug :) (To be eliminated)
 	mDecoratorManager.GetDisplay().PushTransformation();
 	mDecoratorManager.GetDisplay().RenderText("NEW MAP",100.0f, mDisplayHeight/2, 5.0f,1.0f,0.0f,0.0f,1.0f);
