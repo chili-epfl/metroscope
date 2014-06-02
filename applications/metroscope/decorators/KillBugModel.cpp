@@ -394,12 +394,23 @@ void decorators::KillBugModel::MakeMove(){
 		else if(mProportion1 > mProportion3) tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y;
 		else if(mProportion1 == mProportion3) tNewPositionY = mBugPosition.y;
 
+		bool wrongMove = false;
+		if(tNewPositionX == mBugPosition.x && tNewPositionY == mBugPosition.y) wrongMove = true;
+
 		if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY)){
 			mBugPosition.x = tNewPositionX;
 			mBugPosition.y = tNewPositionY;
+		} else {//The cell is an obstacle, it is a wrong move!
+			wrongMove = true;
 		}
+
+		if(wrongMove){
+			stateManager->IncrementWrongMoves();
+		}
+
 		if(mActualCarte->IsEndCell(mBugPosition.x,mBugPosition.y)){
 			mActualCarte->FinishMap();
+			stateManager->IncrementCompletedMaps();
 			//TODO: Something with the feedback
 		}
 		mSteps++;
