@@ -219,7 +219,7 @@ void decorators::KillBugModel::DisplayMap(){
 	mDecoratorManager.GetDisplay().RenderFilledEllipse(tBugPositionX, tBugPositionY, mCellDimensionX/6,mCellDimensionY/6,1.0f,0.0f,0.0f,1.0f,3);
 	mDecoratorManager.GetDisplay().PopTransformation();
 
-	if(mActualCarte->IsFinished()){
+	if(mMapFinished){
 		mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().RenderQuadFilled(0.0f, mDisplayHeight/2 - 20, mDisplayWidth, mDisplayHeight/2 - 20.0f, mDisplayWidth, mDisplayHeight + 20.0f, 0.0f , mDisplayHeight + 20.0f , 1.0f,1.0f,1.0f,1.0f);
 		mDecoratorManager.GetDisplay().RenderCenteredText("Carte Fini!", mDisplayWidth/2, mDisplayHeight/2, true, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f);
@@ -358,7 +358,8 @@ void decorators::KillBugModel::DisplayTexture(){
 bool decorators::KillBugModel::IsCartePresent(){
 	Carte * tPreviusCarte = mActualCarte;
 	for(int i = 0 ; i < scCarteCards ; i++){
-		if(mCartes[i]->isPresent() && !mCartes[i]->IsFinished()){
+		if(mCartes[i]->isPresent()){
+		//if(mCartes[i]->isPresent() && !mCartes[i]->IsFinished()){
 			mActualCarte = mCartes[i];
 			mMapFinished = mActualCarte->IsFinished();
 			if(tPreviusCarte != mActualCarte)	Start();
