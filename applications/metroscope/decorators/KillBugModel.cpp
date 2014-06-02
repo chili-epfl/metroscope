@@ -930,9 +930,7 @@ void decorators::KillBugModel::DivideCircunferenceManipulatives(int pParts){
 }
 
 void decorators::KillBugModel::DisplayFlipperFeedback(){
-	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().RenderText("Entro DisplayFlipperFeedback", mDisplayWidth/2, mDisplayHeight/2 + 100.0f, 2.0f, 1.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().PopTransformation();
+
 
 	static const long cShotPreparationTime = 6l*1000l;
 	long tElapsedTime = Time::MillisTimestamp() - mLastShot;
