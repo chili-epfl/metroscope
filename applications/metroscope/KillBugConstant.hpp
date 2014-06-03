@@ -25,6 +25,26 @@ static const int scCarteCards = 10;
 static const int scHintCards = 5;
 static const int scTriangleProp = 4;
 
+//Colors
+//Proportion 1: Blue
+static const float scProp1R = 0.0f;
+static const float scProp1G = 0.0f;
+static const float scProp1B = 1.0f;
+
+//Proportion 2: Green
+static const float scProp2R = 0.0f;
+static const float scProp2G = 1.0f;
+static const float scProp2B = 0.0f;
+
+//Proportion 3: Red
+static const float scProp3R = 1.0f;
+static const float scProp3G = 0.0f;
+static const float scProp3B = 0.0f;
+
+//Proportion 4: Dark Yellow
+static const float scProp4R = 1.0f;
+static const float scProp4G = 0.5f;
+static const float scProp4B = 0.0f;
 
 
 #endif /* KILLBUGCONSTANT_HPP_ */
