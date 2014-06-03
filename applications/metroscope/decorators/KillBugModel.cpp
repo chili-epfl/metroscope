@@ -79,7 +79,7 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 {
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
-				mWorkingTriangle = (float)(mDisplayHeight/scTriangleProp);
+				mWorkingTriangle = (mDisplayHeight/(float)2);
 				mMapHeight = mDisplayHeight - (mWorkingTriangle);
 				mMapWidth = mMapHeight; //square
 				mBugPosition.x = 0;
@@ -321,6 +321,7 @@ void decorators::KillBugModel::FetchProportions(){
 	}if (mCircularModel2->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
 		mActiveManipulatives++;
+		SetProportionNumber(mCircularModel2->GetCenter(),mCircularModel2->Numerator(), mCircularModel2->Denominator());
 		//SetProportionNumber(mCircularModel2->GetCenter(), mCircularModel2->Proportion());
 		//SetProportionNumber(mCircularModel2->GetCenter(),mCircularModel2->Numerator(), mCircularModel2->Denominator());
 	}

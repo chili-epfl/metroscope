@@ -31,6 +31,9 @@
 #include "../KillBugConstant.hpp"
 #include <fstream>
 
+
+
+
 namespace decorators{
 
 class KillBugModel : public FiducialDecorator
@@ -47,16 +50,23 @@ class KillBugModel : public FiducialDecorator
 				Carte ** pCartes);
 		~KillBugModel();
 
+
 	protected:
 		void update();
 		void MakeMove();
 		void Start();
 
 		void DisplayMap();
+		//void DisplayGrid();
+		//void DisplayWorkingArea();
+		//void DisplayEndingPoints();
+		//void DisplayObstacles();
+		//void DisplayTexture();
 		void DisplayBug();
 		void DisplayProportions();
 		void RenderProportion(float pProportion, int pProportionNumber);
 		bool IsCartePresent();
+		//bool IsBugPosition(int pPositionX, int pPositionY);
 		void FetchProportions();
 		int GetProportionNumber(wykobi::point2d<float> pPosition);
 		void SetProportionNumber(wykobi::point2d<float> pPosition, float pProportion);
@@ -102,6 +112,7 @@ class KillBugModel : public FiducialDecorator
 		wykobi::point2d<int> mBugPosition;
 		int mSteps;
 		bool mGameStarted;
+		//bool mMapFinished;
 		int mActiveManipulatives;
 		wykobi::point2d<int> mMapPoint1;
 		wykobi::point2d<int> mMapPoint2;
@@ -119,8 +130,10 @@ class KillBugModel : public FiducialDecorator
 		int mProportion3Denominator;
 		int mProportion4Numerator;
 		int mProportion4Denominator;
+		//std::vector<wykobi::point2d<int>> mBugTrayectory;
 
 };
 }
 
 #endif /* KILLBUGMODEL_HPP_ */
+
