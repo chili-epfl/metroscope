@@ -52,7 +52,7 @@ bool decorators::RectangleFractionModel::isPresent(){
 
 void decorators::RectangleFractionModel::update(){
 	if(isPresent()){
-		wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
+		/*wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
 		wykobi::point2d<float> tWorldEndRectangle = centroid(tMarkerCorners[1],tMarkerCorners[2]);
 		wykobi::point2d<float> tWorldStartPoint =tMarkerCorners[0];
 		wykobi::quadix<float ,2> tMarkerCorners2 = mEnd->getCorners();
@@ -61,16 +61,55 @@ void decorators::RectangleFractionModel::update(){
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldStartPoint);
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldEndRectangle);
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldEndPoint);
+		*/
+
+		wykobi::point2d<float> mOriginPoint = mMarker->getCorners()[0];
+		wykobi::point2d<float> mEndPoint = mEnd->getCorners()[0];
+		wykobi::point2d<float> mStartPoint = mMarker->getCorners()[1];
+
+		wykobi::point2d<float> tWorldOriginPoint = mOriginPoint;
+		wykobi::point2d<float> tWorldStartPoint = mStartPoint;
+		wykobi::point2d<float> tWorldEndPoint = mEndPoint;
+
+		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldOriginPoint);
+		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldStartPoint);
+		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldEndPoint);
+
+		float tAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
+		float tTotalDistance = wykobi::distance(tWorldOriginPoint,tWorldStartPoint);
+		float tProjectedDistance = wykobi::distance(tWorldOriginPoint,tWorldEndPoint)*(wykobi::cos(tAngle*wykobi::PI/180));
+		mProportion = (float)tProjectedDistance/tTotalDistance;
 
 
-		float tTotalDistance = wykobi::distance(tWorldStartPoint,tWorldEndRectangle);
-		float tDistance = wykobi::distance(tWorldStartPoint,tWorldEndPoint);
+		/*
+		 * wykobi::point2d<float> mOriginPoint = mAngleModel->OriginPoint();
+		wykobi::point2d<float> mEndPoint = mAngleModel->EndPoint();
+
+		wykobi::quadix<float ,2> tMarkerCorners = mAngleModel->getMarker().getCorners();
+		wykobi::point2d<float> mStartPoint = wykobi::centroid(tMarkerCorners[0],tMarkerCorners[1]);
+
+		wykobi::point2d<float> tWorldOriginPoint = mOriginPoint;
+		wykobi::point2d<float> tWorldStartPoint = mStartPoint;
+		wykobi::point2d<float> tWorldEndPoint = mEndPoint;
+
+
+
+		float tAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
+
+		mProportion = (1 - tAngle/360.0f);
+		mDenominator = 10;
+		mNumerator = ((int)(mProportion*100)%10 >= 5) ? ceil((mProportion*100)/10) : floor((mProportion*100)/10);
+		 */
+		//wykobi::project_onto_axis()
+		//float tTotalDistance = wykobi::distance(tWorldStartPoint,tWorldEndRectangle);
+		//float tDistance = wykobi::distance(tWorldStartPoint,tWorldEndPoint);
 
 		//int tTotalDistance = (int)abs(tWorldStartPoint.x - tWorldEndRectangle.x);
 		//int tDistance = (int)abs(tWorldStartPoint.x - tWorldEndPoint.x);
 
-		mProportion = (float)tDistance/tTotalDistance;
+
 		if(mProportion > 1) mProportion = 1;
+		if(mProportion < 0) mProportion = 0;
 
 		mDenominator = 10;
 		mNumerator = ((int)(mProportion*100)%10 >= 5) ? ceil((mProportion*100)/10) : floor((mProportion*100)/10);
