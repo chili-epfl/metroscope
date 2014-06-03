@@ -67,7 +67,7 @@ void decorators::CircularFractionModel::update(){
 
 		float tAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
 
-		mProportion = tAngle/360.0f;
+		mProportion = (1 - tAngle/360.0f);
 		mDenominator = 10;
 		mNumerator = ((int)(mProportion*100)%10 >= 5) ? ceil((mProportion*100)/10) : floor((mProportion*100)/10);
 	}
