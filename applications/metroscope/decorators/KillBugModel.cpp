@@ -916,7 +916,7 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 		MakeMove();
 		mLastShot = Time::MillisTimestamp();
 	}
-	if (mFlipper->IsPresent()){
+	if (mFlipper->IsPresent() && mFlipper->GetCurrentSide() != NULL){
 		float tPartialDegree = 360*(tElapsedTime/(float)cShotPreparationTime);
 		bool tFull = false;
 		if(tPartialDegree >= 360)
