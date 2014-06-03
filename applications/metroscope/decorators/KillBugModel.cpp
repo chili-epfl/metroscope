@@ -382,11 +382,11 @@ void decorators::KillBugModel::FetchProportions(){
 }
 
 int decorators::KillBugModel::GetProportionNumber(wykobi::point2d<float> pPosition){
-	if(pPosition.x < mMapWidth/2){
-		if(pPosition.y < mMapHeight/2)	return 2;
+	if(pPosition.x < mDisplayWidth/2){
+		if(pPosition.y < mDisplayHeight/2)	return 2;
 		else return 3;
 	}else{
-		if(pPosition.y < mMapHeight/2)	return 1;
+		if(pPosition.y < mDisplayHeight/2)	return 1;
 		else return 4;
 	}
 }
