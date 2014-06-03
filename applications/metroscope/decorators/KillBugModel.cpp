@@ -342,7 +342,10 @@ void decorators::KillBugModel::MakeMove(){
 		} else if(mProportion2 > mProportion4){
 			tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x;
 			mWrongMove = !(mBugPosition.x > 0); //Try to go out the map
-		} else if (mProportion2 == mProportion4) tNewPositionX = mBugPosition.x;
+		} else if (mProportion2 == mProportion4){
+			tNewPositionX = mBugPosition.x;
+			mWrongMove = false;
+		}
 
 		if(mProportion1 < mProportion3 && !mWrongMove){
 			tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y;
@@ -350,7 +353,10 @@ void decorators::KillBugModel::MakeMove(){
 		} else if(mProportion1 > mProportion3 && !mWrongMove){
 			tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y;
 			mWrongMove = !(mBugPosition.y > 0);
-		} else if(mProportion1 == mProportion3 && !mWrongMove) tNewPositionY = mBugPosition.y;
+		} else if(mProportion1 == mProportion3 && !mWrongMove){
+			tNewPositionY = mBugPosition.y;
+			mWrongMove = false;
+		}
 
 		if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY) ){
 			if(!mWrongMove){
