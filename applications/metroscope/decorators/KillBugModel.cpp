@@ -257,20 +257,20 @@ void decorators::KillBugModel::DisplayMap(){
 	if(mMapFinished){
 		mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mDisplayHeight/2 - mWorkingTriangle/4,
 				mMapPoint2.x, mDisplayHeight/2 - mWorkingTriangle/4, mMapPoint2.x, mDisplayHeight/2 + mWorkingTriangle/4,
-				mMapPoint1.x, mDisplayHeight/2 + mWorkingTriangle/4, 1.0f,1.0f,1.0f,0.5f);
-		mDecoratorManager.GetDisplay().RenderText("Carte finie!", mDisplayWidth/2, mDisplayHeight/2, 5.0f,0.0f,0.0f,0.0f,1.0f);
+				mMapPoint1.x, mDisplayHeight/2 + mWorkingTriangle/4, 0.8f,0.8f,0.8f,0.5f);
+		mDecoratorManager.GetDisplay().RenderText("Carte finie!", mMapPoint1.x + 100.0f,  mDisplayHeight/2, 2.0f,0.0f,0.0f,0.0f,1.0f);
 	}
 
 	if(mWrongMovementFrames>0){
-		mDecoratorManager.GetDisplay().RenderText("Carte nouvelle!", mBugPosition.x*mCellDimensionX + mMapPoint1.x + 10.0f,
-				mBugPosition.y*mCellDimensionY + mMapPoint1.y - 10.0f, 0.5f,0.0f,0.0f,0.0f,1.0f);
+		mDecoratorManager.GetDisplay().RenderText("Je ne peux pas y aller...", mBugPosition.x*mCellDimensionX + mMapPoint1.x + 10.0f,
+				mBugPosition.y*mCellDimensionY + mMapPoint1.y - 10.0f, 2.0f,0.0f,0.0f,0.0f,1.0f);
 		mWrongMovementFrames--;
 	}
 	if(mNewMapFrames>0){
 		mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mDisplayHeight/2 - mWorkingTriangle/4,
 						mMapPoint2.x, mDisplayHeight/2 - mWorkingTriangle/4, mMapPoint2.x, mDisplayHeight/2 + mWorkingTriangle/4,
-						mMapPoint1.x, mDisplayHeight/2 + mWorkingTriangle/4, 1.0f,1.0f,1.0f,0.5f);
-		mDecoratorManager.GetDisplay().RenderText("Carte nouvelle!", mDisplayWidth/2, mDisplayHeight/2, 5.0f,0.0f,0.0f,0.0f,1.0f);
+						mMapPoint1.x, mDisplayHeight/2 + mWorkingTriangle/4, 0.8f,0.8f,0.8f,0.5f);
+		mDecoratorManager.GetDisplay().RenderText("Carte nouvelle!", mMapPoint1.x + 100.0f, mDisplayHeight/2, 5.0f,0.0f,0.0f,0.0f,1.0f);
 		mNewMapFrames--;
 	}
 
@@ -281,7 +281,8 @@ void decorators::KillBugModel::DisplayMap(){
 bool decorators::KillBugModel::IsCartePresent(){
 	Carte * tPreviusCarte = mActualCarte;
 	for(int i = 0 ; i < scCarteCards ; i++){
-		if(mCartes[i]->isPresent() && !mCartes[i]->IsFinished()){
+		//if(mCartes[i]->isPresent() && !mCartes[i]->IsFinished()){
+		if(mCartes[i]->isPresent()){
 			mActualCarte = mCartes[i];
 			mMapFinished = mActualCarte->IsFinished();
 			if(tPreviusCarte != mActualCarte)	Start();
@@ -338,7 +339,7 @@ void decorators::KillBugModel::MakeMove(){
 			//TODO: Something with the feedback
 		}
 
-		if(mWrongMove) mWrongMovementFrames = 10;
+		if(mWrongMove) mWrongMovementFrames = 30;
 		mSteps++;
 	}
 }
@@ -346,7 +347,7 @@ void decorators::KillBugModel::MakeMove(){
 void decorators::KillBugModel::Start(){
 	mGameStarted = false;
 	mSteps = 0;
-	mNewMapFrames = 10;
+	mNewMapFrames = 30;
 }
 
 void decorators::KillBugModel::DisplayBug(){
