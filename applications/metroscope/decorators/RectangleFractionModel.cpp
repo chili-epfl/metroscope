@@ -63,8 +63,11 @@ void decorators::RectangleFractionModel::update(){
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldEndPoint);
 
 
-		int tTotalDistance = (int)abs(tWorldStartPoint.x - tWorldEndRectangle.x);
-		int tDistance = (int)abs(tWorldStartPoint.x - tWorldEndPoint.x);
+		float tTotalDistance = wykobi::distance(tWorldStartPoint,tWorldEndRectangle);
+		float tDistance = wykobi::distance(tWorldStartPoint,tWorldEndPoint);
+
+		//int tTotalDistance = (int)abs(tWorldStartPoint.x - tWorldEndRectangle.x);
+		//int tDistance = (int)abs(tWorldStartPoint.x - tWorldEndPoint.x);
 
 		mProportion = (float)tDistance/tTotalDistance;
 		if(mProportion > 1) mProportion = 1;
