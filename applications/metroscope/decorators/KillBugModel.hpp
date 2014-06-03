@@ -112,7 +112,8 @@ class KillBugModel : public FiducialDecorator
 		wykobi::point2d<int> mBugPosition;
 		int mSteps;
 		bool mGameStarted;
-		//bool mMapFinished;
+		bool mMapFinished;
+		bool mMapNew;
 		int mActiveManipulatives;
 		wykobi::point2d<int> mMapPoint1;
 		wykobi::point2d<int> mMapPoint2;
@@ -131,6 +132,8 @@ class KillBugModel : public FiducialDecorator
 		int mProportion4Numerator;
 		int mProportion4Denominator;
 		bool mWrongMove;
+		int mWrongMovementFrames;
+		int mNewMapFrames;
 		//std::vector<wykobi::point2d<int>> mBugTrayectory;
 
 };

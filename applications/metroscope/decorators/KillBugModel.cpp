@@ -73,9 +73,10 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 			mRectangleModel1(pRectangleModel1), mRectangleModel2(pRectangleModel2),
 			mTokenModel(pTokenModel1), mFlipper(pGoFlipper), mHints(pFractionHints), mFractionCards(pFractionCards), mCartes(pCartes),
 			mActualCarte(0),mActualHint(0), mProportion1(0.0), mProportion2(0.0), mProportion3(0.0), mProportion4(0.0),
-			mMapSize(0), mCellDimensionX(0), mCellDimensionY(0), mSteps(0),mGameStarted(false), mActiveManipulatives(0),mLastShot(Time::MillisTimestamp()),
+			mMapSize(0), mCellDimensionX(0), mCellDimensionY(0), mSteps(0),mGameStarted(false), mMapFinished(false),mMapNew(false),  mActiveManipulatives(0),mLastShot(Time::MillisTimestamp()),
 			mProportion1Numerator(0), mProportion1Denominator(1), mProportion2Numerator(0), mProportion2Denominator(1), mProportion3Numerator(0),
-			mProportion3Denominator(1),mProportion4Numerator(0),mProportion4Denominator(1),mWrongMove(false)
+			mProportion3Denominator(1),mProportion4Numerator(0),mProportion4Denominator(1),mWrongMove(false), mWrongMovementFrames(0),
+			mNewMapFrames(0)
 {
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
@@ -94,14 +95,14 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 				mMapPoint4.x = mMapPoint1.x;
 				mMapPoint4.y = mMapPoint3.y;
 
-				mProportion1Point.x = mDisplayWidth/2 + mWorkingTriangle/4 ;
+				mProportion1Point.x = mDisplayWidth/2 + mWorkingTriangle/10 ;
 				mProportion1Point.y = mMapPoint1.y - (mDisplayHeight-mMapHeight)/4;
 				mProportion2Point.x = mMapPoint1.x - (mDisplayWidth-mMapWidth)/4;
-				mProportion2Point.y = mDisplayHeight/2 - mWorkingTriangle/4 ;
-				mProportion3Point.x = mDisplayWidth/2 - mWorkingTriangle/4;
+				mProportion2Point.y = mDisplayHeight/2 - mWorkingTriangle/10 ;
+				mProportion3Point.x = mDisplayWidth/2 - mWorkingTriangle/10;
 				mProportion3Point.y = mMapPoint3.y + (mDisplayHeight-mMapHeight)/4;
 				mProportion4Point.x = mMapPoint3.x + (mDisplayWidth-mMapWidth)/4;
-				mProportion4Point.y = mDisplayHeight/2 + mWorkingTriangle/4;
+				mProportion4Point.y = mDisplayHeight/2 + mWorkingTriangle/10;
 }
 
 decorators::KillBugModel::~KillBugModel(){ /*Empty*/}
@@ -253,6 +254,26 @@ void decorators::KillBugModel::DisplayMap(){
 		}
 	}
 
+	if(mMapFinished){
+		mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mDisplayHeight/2 - mWorkingTriangle/4,
+				mMapPoint2.x, mDisplayHeight/2 - mWorkingTriangle/4, mMapPoint2.x, mDisplayHeight/2 + mWorkingTriangle/4,
+				mMapPoint1.x, mDisplayHeight/2 + mWorkingTriangle/4, 1.0f,1.0f,1.0f,0.5f);
+		mDecoratorManager.GetDisplay().RenderText("Carte finie!", mDisplayWidth/2, mDisplayHeight/2, 5.0f,0.0f,0.0f,0.0f,1.0f);
+	}
+
+	if(mWrongMovementFrames>0){
+		mDecoratorManager.GetDisplay().RenderText("Carte nouvelle!", mBugPosition.x*mCellDimensionX + mMapPoint1.x + 10.0f,
+				mBugPosition.y*mCellDimensionY + mMapPoint1.y - 10.0f, 0.5f,0.0f,0.0f,0.0f,1.0f);
+		mWrongMovementFrames--;
+	}
+	if(mNewMapFrames>0){
+		mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mDisplayHeight/2 - mWorkingTriangle/4,
+						mMapPoint2.x, mDisplayHeight/2 - mWorkingTriangle/4, mMapPoint2.x, mDisplayHeight/2 + mWorkingTriangle/4,
+						mMapPoint1.x, mDisplayHeight/2 + mWorkingTriangle/4, 1.0f,1.0f,1.0f,0.5f);
+		mDecoratorManager.GetDisplay().RenderText("Carte nouvelle!", mDisplayWidth/2, mDisplayHeight/2, 5.0f,0.0f,0.0f,0.0f,1.0f);
+		mNewMapFrames--;
+	}
+
 	mDecoratorManager.GetDisplay().PopTransformation();
 	mGameStarted = true;
 }
@@ -262,6 +283,7 @@ bool decorators::KillBugModel::IsCartePresent(){
 	for(int i = 0 ; i < scCarteCards ; i++){
 		if(mCartes[i]->isPresent() && !mCartes[i]->IsFinished()){
 			mActualCarte = mCartes[i];
+			mMapFinished = mActualCarte->IsFinished();
 			if(tPreviusCarte != mActualCarte)	Start();
 			return true;
 		}
@@ -312,67 +334,19 @@ void decorators::KillBugModel::MakeMove(){
 
 		if(mActualCarte->IsEndCell(mBugPosition.x,mBugPosition.y)){
 			mActualCarte->FinishMap();
+			//mMapFinished;
 			//TODO: Something with the feedback
 		}
+
+		if(mWrongMove) mWrongMovementFrames = 10;
 		mSteps++;
 	}
 }
-/*
- * int tNewPositionX;
-int tNewPositionY;
 
-
-if(mActiveManipulatives == 4){
-bool wrongMove = false;
-if(mProportion2 < mProportion4){
-tNewPositionX = (mBugPosition.x +1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x;
-wrongMove = !(mBugPosition.x +1 < mActualCarte->getSize());
-}
-else if(mProportion2 > mProportion4){
-tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x;
-wrongMove = !(mBugPosition.x > 0);
-}
-else if (mProportion2 == mProportion4) tNewPositionX = mBugPosition.x;
-
-if(mProportion1 < mProportion3){
-tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y;
-wrongMove = !(mBugPosition.y +1 < mActualCarte->getSize());
-}
-else if(mProportion1 > mProportion3){
-tNewPositionY = (mBugPosition.y > 0) ? mBugPosition.y - 1 : mBugPosition.y;
-wrongMove = !(mBugPosition.y > 0);
-}
-else if(mProportion1 == mProportion3) tNewPositionY = mBugPosition.y;
-
-if(tNewPositionX == mBugPosition.x && tNewPositionY == mBugPosition.y) wrongMove = true;
-
-if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY)){
-mBugPosition.x = tNewPositionX;
-mBugPosition.y = tNewPositionY;
-//mBugTrayectory.push_back(mBugPosition);
-} else {//The cell is an obstacle, it is a wrong move!
-wrongMove = true;
-}
-
-
-
-if(mActualCarte->IsEndCell(mBugPosition.x,mBugPosition.y)){
-mActualCarte->FinishMap();
-//stateManager->IncrementCompletedMaps();
-}
-mSteps++;
-}
-}
- */
 void decorators::KillBugModel::Start(){
 	mGameStarted = false;
 	mSteps = 0;
-
-	//Debug :) (To be eliminated)
-	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().RenderText("NEW MAP",100.0f, mDisplayHeight/2, 5.0f,1.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().PushTransformation();
-
+	mNewMapFrames = 10;
 }
 
 void decorators::KillBugModel::DisplayBug(){
