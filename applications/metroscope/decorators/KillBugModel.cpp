@@ -128,7 +128,7 @@ void decorators::KillBugModel::update(){
 
 void decorators::KillBugModel::UpdateDeviceStatus(){
 	//We update the device's networked state
-	int distance = CalculateDistanceToTarget(mMapSize, mBugPosition, mActualCarte->getEndPoint(), mActualCarte->getObstaclesPoint());
+	//int distance = CalculateDistanceToTarget(mMapSize, mBugPosition, mActualCarte->getEndPoint(), mActualCarte->getObstaclesPoint());
 	//stateManager->SetActivityStepsToGo(distance);
 
 	if(IsHintPresent()){
