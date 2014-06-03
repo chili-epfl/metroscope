@@ -130,6 +130,7 @@ class KillBugModel : public FiducialDecorator
 		int mProportion3Denominator;
 		int mProportion4Numerator;
 		int mProportion4Denominator;
+		bool mWrongMove;
 		//std::vector<wykobi::point2d<int>> mBugTrayectory;
 
 };

@@ -75,7 +75,7 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 			mActualCarte(0),mActualHint(0), mProportion1(0.0), mProportion2(0.0), mProportion3(0.0), mProportion4(0.0),
 			mMapSize(0), mCellDimensionX(0), mCellDimensionY(0), mSteps(0),mGameStarted(false), mActiveManipulatives(0),mLastShot(Time::MillisTimestamp()),
 			mProportion1Numerator(0), mProportion1Denominator(1), mProportion2Numerator(0), mProportion2Denominator(1), mProportion3Numerator(0),
-			mProportion3Denominator(1),mProportion4Numerator(0),mProportion4Denominator(1)
+			mProportion3Denominator(1),mProportion4Numerator(0),mProportion4Denominator(1),mWrongMove(false)
 {
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
@@ -262,20 +262,33 @@ void decorators::KillBugModel::MakeMove(){
 	int tNewPositionX;
 	int tNewPositionY;
 
-	//TODO: Is this the game logic that we want? --> check
+	//bool wrongMove is: 1) try to go to an obstacle 2) try to go out the map
 	if(mActiveManipulatives == 4){
-		if(mProportion2 < mProportion4) tNewPositionX = (mBugPosition.x +1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x;
-		else if(mProportion2 > mProportion4) tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x;
-		else if (mProportion2 == mProportion4) tNewPositionX = mBugPosition.x;
+		if(mProportion2 < mProportion4){
+			tNewPositionX = (mBugPosition.x +1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x;
+			mWrongMove = !(mBugPosition.x +1 < mActualCarte->getSize()); //Try to go out the map
+		} else if(mProportion2 > mProportion4){
+			tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x;
+			mWrongMove = !(mBugPosition.x > 0); //Try to go out the map
+		} else if (mProportion2 == mProportion4) tNewPositionX = mBugPosition.x;
 
-		if(mProportion1 < mProportion3) tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y;
-		else if(mProportion1 > mProportion3) tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y;
-		else if(mProportion1 == mProportion3) tNewPositionY = mBugPosition.y;
+		if(mProportion1 < mProportion3 && !mWrongMove){
+			tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y;
+			mWrongMove = !(mBugPosition.y +1 < mActualCarte->getSize()); //Try to go out the map
+		} else if(mProportion1 > mProportion3 && !mWrongMove){
+			tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y;
+			mWrongMove = !(mBugPosition.y > 0);
+		} else if(mProportion1 == mProportion3 && !mWrongMove) tNewPositionY = mBugPosition.y;
 
-		if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY)){
-			mBugPosition.x = tNewPositionX;
-			mBugPosition.y = tNewPositionY;
+		if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY) ){
+			if(!mWrongMove){
+				mBugPosition.x = tNewPositionX;
+				mBugPosition.y = tNewPositionY;
+			}
+		}else{ //Wrong Move
+			mWrongMove = true;
 		}
+
 		if(mActualCarte->IsEndCell(mBugPosition.x,mBugPosition.y)){
 			mActualCarte->FinishMap();
 			//TODO: Something with the feedback
@@ -283,7 +296,53 @@ void decorators::KillBugModel::MakeMove(){
 		mSteps++;
 	}
 }
+/*
+ * int tNewPositionX;
+int tNewPositionY;
 
+
+if(mActiveManipulatives == 4){
+bool wrongMove = false;
+if(mProportion2 < mProportion4){
+tNewPositionX = (mBugPosition.x +1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x;
+wrongMove = !(mBugPosition.x +1 < mActualCarte->getSize());
+}
+else if(mProportion2 > mProportion4){
+tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x;
+wrongMove = !(mBugPosition.x > 0);
+}
+else if (mProportion2 == mProportion4) tNewPositionX = mBugPosition.x;
+
+if(mProportion1 < mProportion3){
+tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y;
+wrongMove = !(mBugPosition.y +1 < mActualCarte->getSize());
+}
+else if(mProportion1 > mProportion3){
+tNewPositionY = (mBugPosition.y > 0) ? mBugPosition.y - 1 : mBugPosition.y;
+wrongMove = !(mBugPosition.y > 0);
+}
+else if(mProportion1 == mProportion3) tNewPositionY = mBugPosition.y;
+
+if(tNewPositionX == mBugPosition.x && tNewPositionY == mBugPosition.y) wrongMove = true;
+
+if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY)){
+mBugPosition.x = tNewPositionX;
+mBugPosition.y = tNewPositionY;
+//mBugTrayectory.push_back(mBugPosition);
+} else {//The cell is an obstacle, it is a wrong move!
+wrongMove = true;
+}
+
+
+
+if(mActualCarte->IsEndCell(mBugPosition.x,mBugPosition.y)){
+mActualCarte->FinishMap();
+//stateManager->IncrementCompletedMaps();
+}
+mSteps++;
+}
+}
+ */
 void decorators::KillBugModel::Start(){
 	mGameStarted = false;
 	mSteps = 0;
