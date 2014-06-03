@@ -1017,6 +1017,7 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 
 }
 
+/*
 int decorators::KillBugModel::CalculateDistanceToTarget(int mapsize, wykobi::point2d<int> bugPosition, std::vector<wykobi::point2d<float>> endPoints, std::vector<wykobi::point2d<float>> obstacles){
 
 	static const int scORIGIN = -1;
@@ -1121,4 +1122,4 @@ int decorators::KillBugModel::CalculateDistanceToTarget(int mapsize, wykobi::poi
 
 
 	return distance;
-}
+}*/
