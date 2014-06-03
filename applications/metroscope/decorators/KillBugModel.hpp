@@ -84,7 +84,7 @@ class KillBugModel : public FiducialDecorator
 		void DivideCircunferenceManipulatives(int pParts);
 		void DivideRectangleManipulatives(int pParts);
 
-		int CalculateDistanceToTarget(int mapsize, wykobi::point2d<int> bugPosition, std::vector<wykobi::point2d<float>> endPoints, std::vector<wykobi::point2d<float>> obstacles);
+		//int CalculateDistanceToTarget(int mapsize, wykobi::point2d<int> bugPosition, std::vector<wykobi::point2d<float>> endPoints, std::vector<wykobi::point2d<float>> obstacles);
 
 
 		long mLastShot;
