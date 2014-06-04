@@ -80,9 +80,12 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 {
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
-				mWorkingTriangle = (mDisplayHeight/(float)2);
-				mMapHeight = mDisplayHeight - (mWorkingTriangle);
-				mMapWidth = mMapHeight; //square
+				mWorkingTriangle = (mDisplayWidth/(float)1.66);
+				mMapWidth = mDisplayWidth - mWorkingTriangle;
+				mMapHeight = mMapWidth;
+				//mWorkingTriangle = (mDisplayHeight/(float)1.143);
+				//mMapHeight = mDisplayHeight - (mWorkingTriangle);
+				//mMapWidth = mMapHeight; //square
 				mBugPosition.x = 0;
 				mBugPosition.y = 0;
 
@@ -222,7 +225,7 @@ void decorators::KillBugModel::DisplayMap(){
 	}*/
 
 	//TODO Make the diagonals
-	mDecoratorManager.GetDisplay().RenderQuadFilled(0.0f,0.0f,mDisplayWidth/2,0.0f,
+	/*mDecoratorManager.GetDisplay().RenderQuadFilled(0.0f,0.0f,mDisplayWidth/2,0.0f,
 			mDisplayWidth/2,mWorkingTriangle/2, 0.0f,mWorkingTriangle/2, scProp2R, scProp2G, scProp2B, 0.2);//Prop2, box1
 	mDecoratorManager.GetDisplay().RenderQuadFilled(0.0f,mWorkingTriangle/2,mMapPoint1.x,mWorkingTriangle/2,
 			mMapPoint1.x,mDisplayHeight/2, 0.0f,mDisplayHeight/2, scProp2R, scProp2G, scProp2B, 0.2);//Prop2, box2
@@ -241,7 +244,9 @@ void decorators::KillBugModel::DisplayMap(){
 			mDisplayWidth, mDisplayHeight/2, mMapPoint2.x, mDisplayHeight/2,scProp1R, scProp1G, scProp1B, 0.2);
 	mDecoratorManager.GetDisplay().RenderQuadFilled(mDisplayWidth/2, 0.0f, mDisplayWidth, 0.0f,
 			mDisplayWidth, mWorkingTriangle/2,mDisplayWidth/2, mWorkingTriangle/2, scProp1R, scProp1G, scProp1B, 0.2);
+*/
 
+	mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, 0.0f, mWorkingTriangle,mWorkingTriangle,90.0f,270.0f,scProp2R,scProp2G,scProp2B,0.2f,1);
 
 	//Bug Origin Point
 	mDecoratorManager.GetDisplay().RenderFilledEllipse(tBugPositionX, tBugPositionY, mCellDimensionX/6,mCellDimensionY/6,1.0f,0.0f,0.0f,1.0f,1);
