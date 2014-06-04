@@ -76,7 +76,7 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 			mMapSize(0), mCellDimensionX(0), mCellDimensionY(0), mSteps(0),mGameStarted(false), mMapFinished(false),mMapNew(false),  mActiveManipulatives(0),mLastShot(Time::MillisTimestamp()),
 			mProportion1Numerator(0), mProportion1Denominator(1), mProportion2Numerator(0), mProportion2Denominator(1), mProportion3Numerator(0),
 			mProportion3Denominator(1),mProportion4Numerator(0),mProportion4Denominator(1),mWrongMove(false), mWrongMovementFrames(0),
-			mNewMapFrames(0)
+			mNewMapFrames(0),mProportionFeedbackFrames13(0),mProportionFeedbackFrames24(0),mProportion1Greater(false),mProportion2Greater(false),mProportion3Greater(false),mProportion4Greater(false)
 {
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
@@ -299,25 +299,61 @@ void decorators::KillBugModel::DisplayMap(){
 			mProportion4Point.x - tArea/2, mProportion4Point.y + tArea/2, scProp4R, scProp4G, scProp4B, 0.2f);
 
 	for(int i = 0 ; i < 7 ; i++){
-		mDecoratorManager.GetDisplay().RenderQuad(mProportion1Point.x - tArea/2 + i , mProportion1Point.y - tArea/2 + i,
-					mProportion1Point.x + tArea/2 + i, mProportion1Point.y - tArea/2 + i,
+		mDecoratorManager.GetDisplay().RenderQuad(mProportion1Point.x - tArea/2 - i , mProportion1Point.y - tArea/2 - i,
+					mProportion1Point.x + tArea/2 + i, mProportion1Point.y - tArea/2 - i,
 					mProportion1Point.x + tArea/2 + i, mProportion1Point.y + tArea/2 + i,
-					mProportion1Point.x - tArea/2 + i, mProportion1Point.y + tArea/2 + i, 0.1f, 0.1f, 0.1f, 0.5f);
+					mProportion1Point.x - tArea/2 - i, mProportion1Point.y + tArea/2 + i, 0.1f, 0.1f, 0.1f, 0.5f);
 
-		mDecoratorManager.GetDisplay().RenderQuad(mProportion2Point.x - tArea/2 + i, mProportion2Point.y - tArea/2 + i,
-					mProportion2Point.x + tArea/2 + i, mProportion2Point.y - tArea/2 + i,
+		mDecoratorManager.GetDisplay().RenderQuad(mProportion2Point.x - tArea/2 - i, mProportion2Point.y - tArea/2 - i,
+					mProportion2Point.x + tArea/2 + i, mProportion2Point.y - tArea/2 - i,
 					mProportion2Point.x + tArea/2 + i, mProportion2Point.y + tArea/2 + i,
-					mProportion2Point.x - tArea/2 + i, mProportion2Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 0.5f);
+					mProportion2Point.x - tArea/2 - i, mProportion2Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 0.5f);
 
-		mDecoratorManager.GetDisplay().RenderQuad(mProportion3Point.x - tArea/2 + i, mProportion3Point.y - tArea/2 + i,
-					mProportion3Point.x + tArea/2 + i, mProportion3Point.y - tArea/2 + i,
+		mDecoratorManager.GetDisplay().RenderQuad(mProportion3Point.x - tArea/2 - i, mProportion3Point.y - tArea/2 - i,
+					mProportion3Point.x + tArea/2 + i, mProportion3Point.y - tArea/2 - i,
 					mProportion3Point.x + tArea/2 + i, mProportion3Point.y + tArea/2 + i,
-					mProportion3Point.x - tArea/2 + i, mProportion3Point.y + tArea/2 + i, 0.1f, 0.1f, 0.1f, 0.5f);
+					mProportion3Point.x - tArea/2 - i, mProportion3Point.y + tArea/2 + i, 0.1f, 0.1f, 0.1f, 0.5f);
 
-		mDecoratorManager.GetDisplay().RenderQuad(mProportion4Point.x - tArea/2 + i, mProportion4Point.y - tArea/2 + i,
-					mProportion4Point.x + tArea/2 + i, mProportion4Point.y - tArea/2 + i,
+		mDecoratorManager.GetDisplay().RenderQuad(mProportion4Point.x - tArea/2 - i, mProportion4Point.y - tArea/2 - i,
+					mProportion4Point.x + tArea/2 + i, mProportion4Point.y - tArea/2 - i,
 					mProportion4Point.x + tArea/2 + i, mProportion4Point.y + tArea/2 + i,
-					mProportion4Point.x - tArea/2 + i, mProportion4Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 0.5f);
+					mProportion4Point.x - tArea/2 - i, mProportion4Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 0.5f);
+	}
+
+	if(mProportion1Greater && mProportionFeedbackFrames13>0){
+		for(int i = 7 ; i < 14 ; i++){
+				mDecoratorManager.GetDisplay().RenderQuad(mProportion1Point.x - tArea/2 - i , mProportion1Point.y - tArea/2 - i,
+							mProportion1Point.x + tArea/2 + i, mProportion1Point.y - tArea/2 - i,
+							mProportion1Point.x + tArea/2 + i, mProportion1Point.y + tArea/2 + i,
+							mProportion1Point.x - tArea/2 - i, mProportion1Point.y + tArea/2 + i, 0.1f, 0.1f, 0.1f, 0.5f);
+		}
+		mProportionFeedbackFrames13--;
+	} else if(mProportion3Greater && mProportionFeedbackFrames13>0){
+		for(int i = 7 ; i < 14 ; i++){
+				mDecoratorManager.GetDisplay().RenderQuad(mProportion3Point.x - tArea/2 - i, mProportion3Point.y - tArea/2 - i,
+									mProportion3Point.x + tArea/2 + i, mProportion3Point.y - tArea/2 - i,
+									mProportion3Point.x + tArea/2 + i, mProportion3Point.y + tArea/2 + i,
+									mProportion3Point.x - tArea/2 - i, mProportion3Point.y + tArea/2 + i, 0.1f, 0.1f, 0.1f, 0.5f);
+				}
+		mProportionFeedbackFrames13--;
+	}
+
+	if(mProportion2Greater && mProportionFeedbackFrames24>0){
+		for(int i = 7 ; i < 14 ; i++){
+				mDecoratorManager.GetDisplay().RenderQuad(mProportion2Point.x - tArea/2 - i, mProportion2Point.y - tArea/2 - i,
+									mProportion2Point.x + tArea/2 + i, mProportion2Point.y - tArea/2 - i,
+									mProportion2Point.x + tArea/2 + i, mProportion2Point.y + tArea/2 + i,
+									mProportion2Point.x - tArea/2 - i, mProportion2Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 0.5f);
+				}
+		mProportionFeedbackFrames24--;
+	} else if(mProportion4Greater && mProportionFeedbackFrames24>0){
+		for(int i = 7 ; i < 14 ; i++){
+			mDecoratorManager.GetDisplay().RenderQuad(mProportion4Point.x - tArea/2 + i, mProportion4Point.y - tArea/2 - i,
+									mProportion4Point.x + tArea/2 + i, mProportion4Point.y - tArea/2 - i,
+									mProportion4Point.x + tArea/2 + i, mProportion4Point.y + tArea/2 + i,
+									mProportion4Point.x - tArea/2 - i, mProportion4Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 0.5f);
+			}
+		mProportionFeedbackFrames24--;
 	}
 
 	mDecoratorManager.GetDisplay().PopTransformation();
@@ -352,28 +388,45 @@ void decorators::KillBugModel::MakeMove(){
 	int tNewPositionX;
 	int tNewPositionY;
 
+	mProportion1Greater = false;
+	mProportion3Greater = false;
+	mProportion2Greater = false;
+	mProportion4Greater = false;
+
 	//bool wrongMove is: 1) try to go to an obstacle 2) try to go out the map
 	//if(mActiveManipulatives == 4){
 		if(mProportion2 < mProportion4){
 			tNewPositionX = (mBugPosition.x +1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x;
 			mWrongMove = !(mBugPosition.x +1 < mActualCarte->getSize()); //Try to go out the map
+			mProportion2Greater = false;
+			mProportion4Greater = true;
 		} else if(mProportion2 > mProportion4){
 			tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x;
 			mWrongMove = !(mBugPosition.x > 0); //Try to go out the map
+			mProportion2Greater = true;
+			mProportion4Greater = false;
 		} else if (mProportion2 == mProportion4){
 			tNewPositionX = mBugPosition.x;
 			mWrongMove = false;
+			mProportion2Greater = false;
+			mProportion4Greater = false;
 		}
 
 		if(mProportion1 < mProportion3 && !mWrongMove){
 			tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y;
 			mWrongMove = !(mBugPosition.y +1 < mActualCarte->getSize()); //Try to go out the map
+			mProportion1Greater = false;
+			mProportion3Greater = true;
 		} else if(mProportion1 > mProportion3 && !mWrongMove){
 			tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y;
 			mWrongMove = !(mBugPosition.y > 0);
+			mProportion1Greater = true;
+			mProportion3Greater = false;
 		} else if(mProportion1 == mProportion3 && !mWrongMove){
 			tNewPositionY = mBugPosition.y;
 			mWrongMove = false;
+			mProportion1Greater = false;
+			mProportion3Greater = false;
 		}
 
 		if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY) ){
@@ -392,6 +445,8 @@ void decorators::KillBugModel::MakeMove(){
 		}
 
 		if(mWrongMove) mWrongMovementFrames = 30;
+		if(mProportion2Greater || mProportion4Greater)	mProportionFeedbackFrames24 = 30;
+		if(mProportion1Greater || mProportion3Greater)	mProportionFeedbackFrames13 = 30;
 		mSteps++;
 	//}
 }

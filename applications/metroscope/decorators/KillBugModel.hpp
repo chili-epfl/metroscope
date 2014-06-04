@@ -134,6 +134,12 @@ class KillBugModel : public FiducialDecorator
 		bool mWrongMove;
 		int mWrongMovementFrames;
 		int mNewMapFrames;
+		int mProportionFeedbackFrames13;
+		int mProportionFeedbackFrames24;
+		bool mProportion1Greater;
+		bool mProportion2Greater;
+		bool mProportion3Greater;
+		bool mProportion4Greater;
 		//std::vector<wykobi::point2d<int>> mBugTrayectory;
 
 };
