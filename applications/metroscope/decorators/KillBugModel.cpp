@@ -348,7 +348,7 @@ void decorators::KillBugModel::DisplayMap(){
 		mProportionFeedbackFrames24--;
 	} else if(mProportion4Greater && mProportionFeedbackFrames24>0){
 		for(int i = 7 ; i < 14 ; i++){
-			mDecoratorManager.GetDisplay().RenderQuad(mProportion4Point.x - tArea/2 + i, mProportion4Point.y - tArea/2 - i,
+			mDecoratorManager.GetDisplay().RenderQuad(mProportion4Point.x - tArea/2 - i, mProportion4Point.y - tArea/2 - i,
 									mProportion4Point.x + tArea/2 + i, mProportion4Point.y - tArea/2 - i,
 									mProportion4Point.x + tArea/2 + i, mProportion4Point.y + tArea/2 + i,
 									mProportion4Point.x - tArea/2 - i, mProportion4Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 0.5f);
@@ -412,19 +412,25 @@ void decorators::KillBugModel::MakeMove(){
 			mProportion4Greater = false;
 		}
 
-		if(mProportion1 < mProportion3 && !mWrongMove){
-			tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y;
-			mWrongMove = !(mBugPosition.y +1 < mActualCarte->getSize()); //Try to go out the map
+		if(mProportion1 < mProportion3){
+			if(!mWrongMove){
+				tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y;
+				mWrongMove = !(mBugPosition.y +1 < mActualCarte->getSize()); //Try to go out the map
+			}
 			mProportion1Greater = false;
 			mProportion3Greater = true;
-		} else if(mProportion1 > mProportion3 && !mWrongMove){
-			tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y;
-			mWrongMove = !(mBugPosition.y > 0);
+		} else if(mProportion1 > mProportion3 ){
+			if(!mWrongMove){
+				tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y;
+				mWrongMove = !(mBugPosition.y > 0);
+			}
 			mProportion1Greater = true;
 			mProportion3Greater = false;
-		} else if(mProportion1 == mProportion3 && !mWrongMove){
-			tNewPositionY = mBugPosition.y;
-			mWrongMove = false;
+		} else if(mProportion1 == mProportion3){
+			if(!mWrongMove){
+				tNewPositionY = mBugPosition.y;
+				mWrongMove = false;
+			}
 			mProportion1Greater = false;
 			mProportion3Greater = false;
 		}
