@@ -27,7 +27,7 @@ decorators::FiducialDecorator *decorators::Carte::create(libconfig::Setting &pSe
 	try{
 		libconfig::Setting & tOriginPoint = pSetting ["origin"];
 		int tEnd = pSetting ["end_num"];
-		libconfig::Setting & tEndPoints = pSetting ["end"];
+
 		int tObstacles = pSetting ["obs_num"];
 
 		std::vector<wykobi::point2d<float>> tEndPoint;
@@ -35,6 +35,7 @@ decorators::FiducialDecorator *decorators::Carte::create(libconfig::Setting &pSe
 
 		if(tEnd > 0){
 			int i = 0;
+			libconfig::Setting & tEndPoints = pSetting ["end"];
 			while(i < tEnd*2){
 				wykobi::point2d<float> tPoint;
 				tPoint.x = tEndPoints[i];
