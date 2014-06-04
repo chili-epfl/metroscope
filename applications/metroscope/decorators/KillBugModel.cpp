@@ -80,12 +80,11 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 {
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
-				mWorkingTriangle = (mDisplayWidth/(float)1.66);
-				mMapWidth = mDisplayWidth - mWorkingTriangle;
-				mMapHeight = mMapWidth;
-				//mWorkingTriangle = (mDisplayHeight/(float)1.143);
+				mWorkingTriangle = (mDisplayHeight);
 				//mMapHeight = mDisplayHeight - (mWorkingTriangle);
 				//mMapWidth = mMapHeight; //square
+				mMapWidth = mDisplayWidth - mWorkingTriangle;
+				mMapHeight = mMapWidth;
 				mBugPosition.x = 0;
 				mBugPosition.y = 0;
 
@@ -98,14 +97,22 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 				mMapPoint4.x = mMapPoint1.x;
 				mMapPoint4.y = mMapPoint3.y;
 
-				mProportion1Point.x = mDisplayWidth/2 + mWorkingTriangle/6 ;
-				mProportion1Point.y = mMapPoint1.y - mWorkingTriangle/6;
-				mProportion2Point.x = mMapPoint1.x - mWorkingTriangle/6;
-				mProportion2Point.y = mDisplayHeight/2 - mWorkingTriangle/6 ;
-				mProportion3Point.x = mDisplayWidth/2 - mWorkingTriangle/6;
-				mProportion3Point.y = mMapPoint3.y + mWorkingTriangle/6;
-				mProportion4Point.x = mMapPoint3.x + mWorkingTriangle/6;
-				mProportion4Point.y = mDisplayHeight/2 + mWorkingTriangle/6;
+				mProportion1Point.x = mDisplayWidth/2 ;
+				mProportion1Point.y = mMapPoint1.y - mWorkingTriangle/12;
+				mProportion2Point.x = mMapPoint1.x - mWorkingTriangle/12;
+				mProportion2Point.y = mDisplayHeight/2;
+				mProportion3Point.x = mDisplayWidth/2;
+				mProportion3Point.y = mMapPoint3.y + mWorkingTriangle/12;
+				mProportion4Point.x = mMapPoint3.x + mWorkingTriangle/12;
+				mProportion4Point.y = mDisplayHeight/2;
+				//mProportion1Point.x = mDisplayWidth/2 + mWorkingTriangle/6 ;
+				//mProportion1Point.y = mMapPoint1.y - mWorkingTriangle/6;
+				//mProportion2Point.x = mMapPoint1.x - mWorkingTriangle/6;
+				//mProportion2Point.y = mDisplayHeight/2 - mWorkingTriangle/6 ;
+				//mProportion3Point.x = mDisplayWidth/2 - mWorkingTriangle/6;
+				//mProportion3Point.y = mMapPoint3.y + mWorkingTriangle/6;
+				//mProportion4Point.x = mMapPoint3.x + mWorkingTriangle/6;
+				//mProportion4Point.y = mDisplayHeight/2 + mWorkingTriangle/6;
 }
 
 decorators::KillBugModel::~KillBugModel(){ /*Empty*/}
@@ -185,7 +192,7 @@ void decorators::KillBugModel::RenderProportion(float pProportion, int pProporti
 	}
 
 	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().RenderText(tProportion,tPosition.x,tPosition.y,2.0f,tR,tG,tB,1.0f);
+	mDecoratorManager.GetDisplay().RenderText(tProportion,tPosition.x,tPosition.y,1.0f,tR,tG,tB,1.0f);
 	mDecoratorManager.GetDisplay().PopTransformation();
 
 }
@@ -246,7 +253,11 @@ void decorators::KillBugModel::DisplayMap(){
 			mDisplayWidth, mWorkingTriangle/2,mDisplayWidth/2, mWorkingTriangle/2, scProp1R, scProp1G, scProp1B, 0.2);
 */
 
-	mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, 0.0f, mWorkingTriangle,mWorkingTriangle,90.0f,270.0f,scProp2R,scProp2G,scProp2B,0.2f,1);
+	mDecoratorManager.GetDisplay().RenderQuad(mMapPoint1.x, mMapPoint1.y, mMapPoint2.x, mMapPoint2.y, mMapPoint3.x, mMapPoint3.y, mMapPoint4.x, mMapPoint4.y, 0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,90.0f,270.0f,scProp2R,scProp2G,scProp2B,0.2f,1); //Prop 2
+	mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,90.0f,360.0f,scProp3R,scProp3G,scProp3B,0.2f,1); //Prop3
+	mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,90.0f,180.0f,scProp1R,scProp1G,scProp1B,0.2f,1); //Prop1
+	mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,90.0f,90.0f,scProp4R,scProp4G,scProp4B,0.2f,1); //Prop4
 
 	//Bug Origin Point
 	mDecoratorManager.GetDisplay().RenderFilledEllipse(tBugPositionX, tBugPositionY, mCellDimensionX/6,mCellDimensionY/6,1.0f,0.0f,0.0f,1.0f,1);
@@ -289,10 +300,10 @@ void decorators::KillBugModel::DisplayMap(){
 
 
 	if(mMapFinished){
-		mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mDisplayHeight/2 - mWorkingTriangle/4,
-				mMapPoint2.x, mDisplayHeight/2 - mWorkingTriangle/4, mMapPoint2.x, mDisplayHeight/2 + mWorkingTriangle/4,
-				mMapPoint1.x, mDisplayHeight/2 + mWorkingTriangle/4, 0.8f,0.8f,0.8f,0.5f);
-		mDecoratorManager.GetDisplay().RenderText("Carte finie!", mMapPoint1.x + 60.0f,  mDisplayHeight/2, 2.0f,0.0f,0.0f,0.0f,1.0f);
+		mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mDisplayHeight/2 - mMapHeight/4,
+				mMapPoint2.x, mDisplayHeight/2 - mMapHeight/4, mMapPoint2.x, mDisplayHeight/2 + mMapHeight/4,
+				mMapPoint1.x, mDisplayHeight/2 + mMapHeight/4, 0.8f,0.8f,0.8f,0.5f);
+		mDecoratorManager.GetDisplay().RenderText("Carte finie!", mMapPoint1.x,  mDisplayHeight/2, 1.2f,0.0f,0.0f,0.0f,1.0f);
 	}
 
 	if(mWrongMovementFrames>0){
@@ -301,11 +312,55 @@ void decorators::KillBugModel::DisplayMap(){
 		mWrongMovementFrames--;
 	}
 	if(mNewMapFrames>0){
-		mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mDisplayHeight/2 - mWorkingTriangle/4,
-						mMapPoint2.x, mDisplayHeight/2 - mWorkingTriangle/4, mMapPoint2.x, mDisplayHeight/2 + mWorkingTriangle/4,
-						mMapPoint1.x, mDisplayHeight/2 + mWorkingTriangle/4, 0.8f,0.8f,0.8f,0.5f);
-		mDecoratorManager.GetDisplay().RenderText("Carte nouvelle!", mMapPoint1.x + 50.0f, mDisplayHeight/2, 2.0f,0.0f,0.0f,0.0f,1.0f);
+		mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mDisplayHeight/2 - mMapHeight/4,
+						mMapPoint2.x, mDisplayHeight/2 - mMapHeight/4, mMapPoint2.x, mDisplayHeight/2 + mMapHeight/4,
+						mMapPoint1.x, mDisplayHeight/2 + mMapHeight/4, 0.8f,0.8f,0.8f,0.5f);
+		mDecoratorManager.GetDisplay().RenderText("Carte nouvelle!", mMapPoint1.x, mDisplayHeight/2, 1.2f,0.0f,0.0f,0.0f,1.0f);
 		mNewMapFrames--;
+	}
+
+	float tArea = mWorkingTriangle/7;
+
+	mDecoratorManager.GetDisplay().RenderQuadFilled(mProportion1Point.x - tArea/2, mProportion1Point.y - tArea/2,
+			mProportion1Point.x + tArea/2, mProportion1Point.y - tArea/2,
+			mProportion1Point.x + tArea/2, mProportion1Point.y + tArea/2,
+			mProportion1Point.x - tArea/2, mProportion1Point.y + tArea/2, scProp1R, scProp1G, scProp1B, 0.2f);
+
+	mDecoratorManager.GetDisplay().RenderQuadFilled(mProportion2Point.x - tArea/2, mProportion2Point.y - tArea/2,
+			mProportion2Point.x + tArea/2, mProportion2Point.y - tArea/2,
+			mProportion2Point.x + tArea/2, mProportion2Point.y + tArea/2,
+			mProportion2Point.x - tArea/2, mProportion2Point.y + tArea/2, scProp2R, scProp2G, scProp2B, 0.2f);
+
+	mDecoratorManager.GetDisplay().RenderQuadFilled(mProportion3Point.x - tArea/2, mProportion3Point.y - tArea/2,
+			mProportion3Point.x + tArea/2, mProportion3Point.y - tArea/2,
+			mProportion3Point.x + tArea/2, mProportion3Point.y + tArea/2,
+			mProportion3Point.x - tArea/2, mProportion3Point.y + tArea/2, scProp3R, scProp3G, scProp3B, 0.2f);
+
+	mDecoratorManager.GetDisplay().RenderQuadFilled(mProportion4Point.x - tArea/2, mProportion4Point.y - tArea/2,
+			mProportion4Point.x + tArea/2, mProportion4Point.y - tArea/2,
+			mProportion4Point.x + tArea/2, mProportion4Point.y + tArea/2,
+			mProportion4Point.x - tArea/2, mProportion4Point.y + tArea/2, scProp4R, scProp4G, scProp4B, 0.2f);
+
+	for(int i = 0 ; i < 3 ; i++){
+		mDecoratorManager.GetDisplay().RenderQuad(mProportion1Point.x - tArea/2 + i , mProportion1Point.y - tArea/2 + i,
+					mProportion1Point.x + tArea/2 + i, mProportion1Point.y - tArea/2 + i,
+					mProportion1Point.x + tArea/2 + i, mProportion1Point.y + tArea/2 + i,
+					mProportion1Point.x - tArea/2 + i, mProportion1Point.y + tArea/2 + i, 0.0f, 0.0f, 0.0, 1.0f);
+
+			mDecoratorManager.GetDisplay().RenderQuad(mProportion2Point.x - tArea/2 + i, mProportion2Point.y - tArea/2 + i,
+					mProportion2Point.x + tArea/2 + i, mProportion2Point.y - tArea/2 + i,
+					mProportion2Point.x + tArea/2 + i, mProportion2Point.y + tArea/2 + i,
+					mProportion2Point.x - tArea/2 + i, mProportion2Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 1.0f);
+
+			mDecoratorManager.GetDisplay().RenderQuad(mProportion3Point.x - tArea/2 + i, mProportion3Point.y - tArea/2 + i,
+					mProportion3Point.x + tArea/2 + i, mProportion3Point.y - tArea/2 + i,
+					mProportion3Point.x + tArea/2 + i, mProportion3Point.y + tArea/2 + i,
+					mProportion3Point.x - tArea/2 + i, mProportion3Point.y + tArea/2 + i, 0.0f, 0.0f, 0.0, 1.0f);
+
+			mDecoratorManager.GetDisplay().RenderQuad(mProportion4Point.x - tArea/2 + i, mProportion4Point.y - tArea/2 + i,
+					mProportion4Point.x + tArea/2 + i, mProportion4Point.y - tArea/2 + i,
+					mProportion4Point.x + tArea/2 + i, mProportion4Point.y + tArea/2 + i,
+					mProportion4Point.x - tArea/2 + i, mProportion4Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 1.0f);
 	}
 
 	mDecoratorManager.GetDisplay().PopTransformation();
@@ -571,27 +626,28 @@ void decorators::KillBugModel::SetProportionNumber(wykobi::point2d<float> pPosit
 
 void decorators::KillBugModel::DisplayCircularHint(){
 
+	float tRadius = mWorkingTriangle/18;
 	//TODO: Change color and size if needed
 	mDecoratorManager.GetDisplay().PushTransformation();
 
-	mDecoratorManager.GetDisplay().RenderEllipse(mProportion1Point.x,mProportion1Point.y,mWorkingTriangle/8,mWorkingTriangle/8,0.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().RenderFilledSector(mProportion1Point.x,mProportion1Point.y,mWorkingTriangle/8,mWorkingTriangle/8,mProportion1*360,90.0f - mProportion1*360,scProp1R,scProp1G,scProp1B,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderEllipse(mProportion1Point.x,mProportion1Point.y,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderFilledSector(mProportion1Point.x,mProportion1Point.y,tRadius,tRadius,mProportion1*360,90.0f - mProportion1*360,scProp1R,scProp1G,scProp1B,1.0f,1);
 
-	mDecoratorManager.GetDisplay().RenderEllipse(mProportion2Point.x,mProportion2Point.y,mWorkingTriangle/8,mWorkingTriangle/8,0.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().RenderFilledSector(mProportion2Point.x,mProportion2Point.y,mWorkingTriangle/8,mWorkingTriangle/8,mProportion2*360,90.0f - mProportion2*360,scProp2R,scProp2G,scProp2B,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderEllipse(mProportion2Point.x,mProportion2Point.y,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderFilledSector(mProportion2Point.x,mProportion2Point.y,tRadius,tRadius,mProportion2*360,90.0f - mProportion2*360,scProp2R,scProp2G,scProp2B,1.0f,1);
 
-	mDecoratorManager.GetDisplay().RenderEllipse(mProportion3Point.x,mProportion3Point.y,mWorkingTriangle/8,mWorkingTriangle/8,0.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().RenderFilledSector(mProportion3Point.x,mProportion3Point.y,mWorkingTriangle/8,mWorkingTriangle/8,mProportion3*360,90.0f - mProportion3*360,scProp3R,scProp3G,scProp3B,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderEllipse(mProportion3Point.x,mProportion3Point.y,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderFilledSector(mProportion3Point.x,mProportion3Point.y,tRadius,tRadius,mProportion3*360,90.0f - mProportion3*360,scProp3R,scProp3G,scProp3B,1.0f,1);
 
-	mDecoratorManager.GetDisplay().RenderEllipse(mProportion4Point.x,mProportion4Point.y,mWorkingTriangle/8,mWorkingTriangle/8,0.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().RenderFilledSector(mProportion4Point.x,mProportion4Point.y,mWorkingTriangle/8,mWorkingTriangle/8,mProportion4*360,90.0f - mProportion4*360,scProp4R,scProp4G,scProp4B,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderEllipse(mProportion4Point.x,mProportion4Point.y,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderFilledSector(mProportion4Point.x,mProportion4Point.y,tRadius,tRadius,mProportion4*360,90.0f - mProportion4*360,scProp4R,scProp4G,scProp4B,1.0f,1);
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 
 }
 void decorators::KillBugModel::DisplayRectangularHint(){
 	//TODO: Change color and size if needed
-	float tRecWidth = mWorkingTriangle*0.25;
+	float tRecWidth = mWorkingTriangle/12;
 	float tRecHeight = tRecWidth/2;
 
 	mDecoratorManager.GetDisplay().PushTransformation();
@@ -599,22 +655,22 @@ void decorators::KillBugModel::DisplayRectangularHint(){
 	mDecoratorManager.GetDisplay().RenderQuad(mProportion1Point.x-tRecWidth/2, mProportion1Point.y - tRecHeight/2,
 			mProportion1Point.x + tRecWidth/2 , mProportion1Point.y - tRecHeight/2,
 			mProportion1Point.x + tRecWidth/2, mProportion1Point.y + tRecHeight/2,
-			mProportion1Point.x - tRecWidth/2 , mProportion1Point.y + tRecHeight/2, scProp1R,scProp1G,scProp1B,1.0f);
+			mProportion1Point.x - tRecWidth/2 , mProportion1Point.y + tRecHeight/2, 0.0f,0.0f,0.0f,1.0f);
 
 	mDecoratorManager.GetDisplay().RenderQuad(mProportion2Point.x-tRecWidth/2, mProportion2Point.y - tRecHeight/2,
 				mProportion2Point.x + tRecWidth/2 , mProportion2Point.y - tRecHeight/2,
 				mProportion2Point.x + tRecWidth/2, mProportion2Point.y + tRecHeight/2,
-				mProportion2Point.x - tRecWidth/2 , mProportion2Point.y + tRecHeight/2, scProp2R,scProp2G,scProp2B,1.0f);
+				mProportion2Point.x - tRecWidth/2 , mProportion2Point.y + tRecHeight/2, 0.0f,0.0f,0.0f,1.0f);
 
 	mDecoratorManager.GetDisplay().RenderQuad(mProportion3Point.x-tRecWidth/2, mProportion3Point.y - tRecHeight/2,
 				mProportion3Point.x + tRecWidth/2 , mProportion3Point.y - tRecHeight/2,
 				mProportion3Point.x + tRecWidth/2, mProportion3Point.y + tRecHeight/2,
-				mProportion3Point.x - tRecWidth/2 , mProportion3Point.y + tRecHeight/2, scProp3R,scProp3G,scProp3B,1.0f);
+				mProportion3Point.x - tRecWidth/2 , mProportion3Point.y + tRecHeight/2, 0.0f,0.0f,0.0f,1.0f);
 
 	mDecoratorManager.GetDisplay().RenderQuad(mProportion4Point.x-tRecWidth/2, mProportion4Point.y - tRecHeight/2,
 				mProportion4Point.x + tRecWidth/2 , mProportion4Point.y - tRecHeight/2,
 				mProportion4Point.x + tRecWidth/2, mProportion4Point.y + tRecHeight/2,
-				mProportion4Point.x - tRecWidth/2 , mProportion4Point.y + tRecHeight/2, scProp4R,scProp4G,scProp4B,1.0f);
+				mProportion4Point.x - tRecWidth/2 , mProportion4Point.y + tRecHeight/2, 0.0f,0.0f,0.0f,1.0f);
 
 	mDecoratorManager.GetDisplay().RenderQuadFilled(mProportion1Point.x-tRecWidth/2, mProportion1Point.y - tRecHeight/2,
 				mProportion1*tRecWidth +  mProportion1Point.x-tRecWidth/2, mProportion1Point.y - tRecHeight/2,
@@ -639,7 +695,7 @@ void decorators::KillBugModel::DisplayRectangularHint(){
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 void decorators::KillBugModel::DisplayDiscreteHint(){
-	float tBoxWidth = mWorkingTriangle*0.25;
+	float tBoxWidth = mWorkingTriangle/12;
 	float tBoxHeight = tBoxWidth/2;
 
 	float tCellWidth = tBoxWidth/9;
@@ -745,13 +801,13 @@ void decorators::KillBugModel::DisplayDecimalHint(){
 	mDecoratorManager.GetDisplay().PushTransformation();
 
 	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion1,
-			mProportion1Point.x,mProportion1Point.y,true,2.0f,scProp1R,scProp1G,scProp1B,1.0f);
+			mProportion1Point.x,mProportion1Point.y,true,1.0f,0.0f,0.0f,0.0f,1.0f);
 	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion2,
-			mProportion2Point.x,mProportion2Point.y,true,2.0f,scProp2R,scProp2G,scProp2B,1.0f);
+			mProportion2Point.x,mProportion2Point.y,true,1.0f,0.0f,0.0f,0.0f,1.0f);
 	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion3,
-			mProportion3Point.x,mProportion3Point.y,true,2.0f,scProp3R,scProp3G,scProp3B,1.0f);
+			mProportion3Point.x,mProportion3Point.y,true,1.0f,0.0f,0.0f,0.0f,1.0f);
 	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion4,
-			mProportion4Point.x,mProportion4Point.y,true,2.0f,scProp4R,scProp4G,scProp4B,1.0f);
+			mProportion4Point.x,mProportion4Point.y,true,1.0f,0.0f,0.0f,0.0f,1.0f);
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
@@ -775,20 +831,20 @@ void decorators::KillBugModel::DisplayFractionHint(){
 	sprintf(tProportion4Denominator, "%d", mProportion4Denominator);
 
 	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion1Numerator,mProportion1Point.x,mProportion1Point.y - 15.0f,true,1.0f,scProp1R,scProp1G,scProp1B,1.0f);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion1Denominator,mProportion1Point.x,mProportion1Point.y + 15.0f,true,1.0f,scProp1R,scProp1G,scProp1B,1.0f);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion2Numerator,mProportion2Point.x,mProportion2Point.y - 15.0f,true,1.0f,scProp2R,scProp2G,scProp2B,1.0f);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion2Denominator,mProportion2Point.x,mProportion2Point.y + 15.0f,true,1.0f,scProp2R,scProp2G,scProp2B,1.0f);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion3Numerator,mProportion3Point.x,mProportion3Point.y - 15.0f,true,1.0f,scProp3R,scProp3G,scProp3B,1.0f);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion3Denominator,mProportion3Point.x,mProportion3Point.y + 15.0f,true,1.0f,scProp3R,scProp3G,scProp3B,1.0f);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion4Numerator,mProportion4Point.x,mProportion4Point.y - 15.0f,true,1.0f,scProp4R,scProp4G,scProp4B,1.0f);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion4Denominator,mProportion4Point.x,mProportion4Point.y + 15.0f,true,1.0f,scProp4R,scProp4G,scProp4B,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion1Numerator,mProportion1Point.x,mProportion1Point.y - 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion1Denominator,mProportion1Point.x,mProportion1Point.y + 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion2Numerator,mProportion2Point.x,mProportion2Point.y - 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion2Denominator,mProportion2Point.x,mProportion2Point.y + 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion3Numerator,mProportion3Point.x,mProportion3Point.y - 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion3Denominator,mProportion3Point.x,mProportion3Point.y + 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion4Numerator,mProportion4Point.x,mProportion4Point.y - 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportion4Denominator,mProportion4Point.x,mProportion4Point.y + 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f);
 
 
-	mDecoratorManager.GetDisplay().RenderLine(mProportion1Point.x-15,mProportion1Point.y,mProportion1Point.x+15,mProportion1Point.y,scProp1R,scProp1G,scProp1B,1.0f);
-	mDecoratorManager.GetDisplay().RenderLine(mProportion2Point.x-15,mProportion2Point.y,mProportion2Point.x+15,mProportion2Point.y,scProp2R,scProp2G,scProp2B,1.0f);
-	mDecoratorManager.GetDisplay().RenderLine(mProportion3Point.x-15,mProportion3Point.y,mProportion3Point.x+15,mProportion3Point.y,scProp3R,scProp3G,scProp3B,1.0f);
-	mDecoratorManager.GetDisplay().RenderLine(mProportion4Point.x-15,mProportion4Point.y,mProportion4Point.x+15,mProportion4Point.y,scProp4R,scProp4G,scProp4B,1.0f);
+	mDecoratorManager.GetDisplay().RenderLine(mProportion1Point.x-15,mProportion1Point.y,mProportion1Point.x+15,mProportion1Point.y,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderLine(mProportion2Point.x-15,mProportion2Point.y,mProportion2Point.x+15,mProportion2Point.y,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderLine(mProportion3Point.x-15,mProportion3Point.y,mProportion3Point.x+15,mProportion3Point.y,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderLine(mProportion4Point.x-15,mProportion4Point.y,mProportion4Point.x+15,mProportion4Point.y,0.0f,0.0f,0.0f,1.0f);
 	mDecoratorManager.GetDisplay().PopTransformation();
 
 	//if(mCircularModel1->isPresent() || mCircularModel2->isPresent())	DivideCircunferenceManipulatives(10);

@@ -26,8 +26,8 @@ static const int scHintCards = 5;
 static const int scTriangleProp = 4;
 
 //Colors
-//Proportion 1: Blue
-static const float scProp1R = 0.0f;
+//Proportion 1: Magenta
+static const float scProp1R = 1.0f;
 static const float scProp1G = 0.0f;
 static const float scProp1B = 1.0f;
 
