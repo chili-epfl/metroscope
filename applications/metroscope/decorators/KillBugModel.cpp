@@ -526,19 +526,23 @@ void decorators::KillBugModel::FetchProportions(){
 			int tProportionNumber = GetProportionNumber(mTokenModel->GetPosition());
 			SetProportionNumber(tProportionNumber,mTokenModel->GetNumerator(tProportionNumber), mTokenModel->GetDenominator(tProportionNumber));
 		}else{
-			if(mTokenModel->GetProportion(1) != 0.0f && tProportionNumber < 4){
+			//if(mTokenModel->GetProportion(1) != 0.0f && tProportionNumber < 4){
+			if(tProportionNumber < 4){
 				tProportionNumber++;
 				//mActiveManipulatives++;
 				SetProportionNumber(1,mTokenModel->GetNumerator(1), mTokenModel->GetDenominator(1));
-			}if(mTokenModel->GetProportion(2) != 0.0f && tProportionNumber < 4){
+			//}if(mTokenModel->GetProportion(2) != 0.0f && tProportionNumber < 4){
+			}if(tProportionNumber < 4){
 				tProportionNumber++;
 				//mActiveManipulatives++;
 				SetProportionNumber(2,mTokenModel->GetNumerator(2), mTokenModel->GetDenominator(2));
-			}if(mTokenModel->GetProportion(3) != 0.0f && tProportionNumber < 4){
+			//}if(mTokenModel->GetProportion(3) != 0.0f && tProportionNumber < 4){
+			}if(tProportionNumber < 4){
 				tProportionNumber++;
 				//mActiveManipulatives++;
 				SetProportionNumber(3,mTokenModel->GetNumerator(3), mTokenModel->GetDenominator(3));
-			}if(mTokenModel->GetProportion(4) != 0.0f && tProportionNumber < 4){
+			//}if(mTokenModel->GetProportion(4) != 0.0f && tProportionNumber < 4){
+			}if(tProportionNumber < 4){
 				tProportionNumber++;
 				//mActiveManipulatives++;
 				SetProportionNumber(4,mTokenModel->GetNumerator(4), mTokenModel->GetDenominator(4));
