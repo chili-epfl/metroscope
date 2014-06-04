@@ -81,8 +81,6 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
 				mWorkingTriangle = (mDisplayHeight);
-				//mMapHeight = mDisplayHeight - (mWorkingTriangle);
-				//mMapWidth = mMapHeight; //square
 				mMapWidth = mDisplayWidth - mWorkingTriangle;
 				mMapHeight = mMapWidth;
 				mBugPosition.x = 0;
@@ -105,14 +103,6 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 				mProportion3Point.y = mMapPoint3.y + mWorkingTriangle/12;
 				mProportion4Point.x = mMapPoint3.x + mWorkingTriangle/12;
 				mProportion4Point.y = mDisplayHeight/2;
-				//mProportion1Point.x = mDisplayWidth/2 + mWorkingTriangle/6 ;
-				//mProportion1Point.y = mMapPoint1.y - mWorkingTriangle/6;
-				//mProportion2Point.x = mMapPoint1.x - mWorkingTriangle/6;
-				//mProportion2Point.y = mDisplayHeight/2 - mWorkingTriangle/6 ;
-				//mProportion3Point.x = mDisplayWidth/2 - mWorkingTriangle/6;
-				//mProportion3Point.y = mMapPoint3.y + mWorkingTriangle/6;
-				//mProportion4Point.x = mMapPoint3.x + mWorkingTriangle/6;
-				//mProportion4Point.y = mDisplayHeight/2 + mWorkingTriangle/6;
 }
 
 decorators::KillBugModel::~KillBugModel(){ /*Empty*/}
@@ -124,7 +114,6 @@ void decorators::KillBugModel::update(){
 		if(mGameStarted){
 			FetchProportions();
 			DisplayBug();
-
 		}
 
 		if(mFlipper->IsPresent()) DisplayFlipperFeedback();
@@ -349,7 +338,7 @@ void decorators::KillBugModel::MakeMove(){
 	int tNewPositionY;
 
 	//bool wrongMove is: 1) try to go to an obstacle 2) try to go out the map
-	if(mActiveManipulatives == 4){
+	//if(mActiveManipulatives == 4){
 		if(mProportion2 < mProportion4){
 			tNewPositionX = (mBugPosition.x +1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x;
 			mWrongMove = !(mBugPosition.x +1 < mActualCarte->getSize()); //Try to go out the map
@@ -389,7 +378,7 @@ void decorators::KillBugModel::MakeMove(){
 
 		if(mWrongMove) mWrongMovementFrames = 30;
 		mSteps++;
-	}
+	//}
 }
 
 void decorators::KillBugModel::Start(){
@@ -402,7 +391,7 @@ void decorators::KillBugModel::DisplayBug(){
 	float tBugPositionX = mMapPoint1.x + (mBugPosition.x)*(mCellDimensionX)+(mCellDimensionX/2);
 	float tBugPositionY = mMapPoint1.y + (mBugPosition.y)*(mCellDimensionY)+(mCellDimensionY/2);
 
-	int tTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/ladybug-smallwhite.jpg");
+	//int tTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/ladybug-smallwhite.jpg");
 
 	//Display the image
 	/*mDecoratorManager.GetDisplay().PushTransformation();
@@ -420,7 +409,7 @@ void decorators::KillBugModel::DisplayBug(){
 
 void decorators::KillBugModel::FetchProportions(){
 	int tProportionNumber = 0;
-	mActiveManipulatives = 0;
+	//mActiveManipulatives = 0;
 	mProportion1 = 0.0f;
 	mProportion2 = 0.0f;
 	mProportion3 = 0.0f;
@@ -429,22 +418,22 @@ void decorators::KillBugModel::FetchProportions(){
 	//Checking the circular manipulative
 	if (mCircularModel1->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
-		mActiveManipulatives++;
+		//mActiveManipulatives++;
 		SetProportionNumber(mCircularModel1->GetCenter(),mCircularModel1->Numerator(), mCircularModel1->Denominator());
 	}if (mCircularModel2->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
-		mActiveManipulatives++;
+		//mActiveManipulatives++;
 		SetProportionNumber(mCircularModel2->GetCenter(),mCircularModel2->Numerator(), mCircularModel2->Denominator());
 	}
 
 	//Checking the rectangular manipulative
 	if (mRectangleModel1->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
-		mActiveManipulatives++;
+		//mActiveManipulatives++;
 		SetProportionNumber(mRectangleModel1->getMarker().getCenter(),mRectangleModel1->Numerator(), mRectangleModel1->Denominator());
 	}if (mRectangleModel2->isPresent() && tProportionNumber < 4){
 		tProportionNumber++;
-		mActiveManipulatives++;
+		//mActiveManipulatives++;
 		SetProportionNumber(mRectangleModel2->getMarker().getCenter(),mRectangleModel2->Numerator(), mRectangleModel2->Denominator());
 	}
 
@@ -452,24 +441,26 @@ void decorators::KillBugModel::FetchProportions(){
 	if(mTokenModel->isPresent() && tProportionNumber < 4){
 		if(!mTokenModel->AreTokensSpread()){
 			tProportionNumber++;
-			mActiveManipulatives++;
-			SetProportionNumber(mTokenModel->GetPosition(), mTokenModel->GetProportion());
+			//mActiveManipulatives++;
+			//SetProportionNumber(mTokenModel->GetPosition(), mTokenModel->GetProportion());
+			int tProportionNumber = GetProportionNumber(mTokenModel->GetPosition());
+			SetProportionNumber(tProportionNumber,mTokenModel->GetNumerator(tProportionNumber), mTokenModel->GetDenominator(tProportionNumber));
 		}else{
 			if(mTokenModel->GetProportion(1) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
-				mActiveManipulatives++;
+				//mActiveManipulatives++;
 				SetProportionNumber(1,mTokenModel->GetNumerator(1), mTokenModel->GetDenominator(1));
 			}if(mTokenModel->GetProportion(2) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
-				mActiveManipulatives++;
+				//mActiveManipulatives++;
 				SetProportionNumber(2,mTokenModel->GetNumerator(2), mTokenModel->GetDenominator(2));
 			}if(mTokenModel->GetProportion(3) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
-				mActiveManipulatives++;
+				//mActiveManipulatives++;
 				SetProportionNumber(3,mTokenModel->GetNumerator(3), mTokenModel->GetDenominator(3));
 			}if(mTokenModel->GetProportion(4) != 0.0f && tProportionNumber < 4){
 				tProportionNumber++;
-				mActiveManipulatives++;
+				//mActiveManipulatives++;
 				SetProportionNumber(4,mTokenModel->GetNumerator(4), mTokenModel->GetDenominator(4));
 			}
 		}
@@ -479,7 +470,7 @@ void decorators::KillBugModel::FetchProportions(){
 	for(int i = 0 ; i < scFractionCards ; i++){
 		if(mFractionCards[i]->IsPresent() && tProportionNumber < 4){
 			tProportionNumber++;
-			mActiveManipulatives++;
+			//mActiveManipulatives++;
 			SetProportionNumber(mFractionCards[i]->GetLocation(), mFractionCards[i]->GetNumerator(),mFractionCards[i]->GetDenominator());
 		}
 	}
@@ -505,6 +496,7 @@ void decorators::KillBugModel::SetProportionNumber(wykobi::point2d<float> pPosit
 		case 4: mProportion4 = pProportion; break;
 	}
 }
+
 void decorators::KillBugModel:: SetProportionNumber(int pCuadrant, float pProportion){
 	switch(pCuadrant){
 		case 1: mProportion1 = pProportion; break;
@@ -588,6 +580,7 @@ void decorators::KillBugModel::DisplayCircularHint(){
 	mDecoratorManager.GetDisplay().PopTransformation();
 
 }
+
 void decorators::KillBugModel::DisplayRectangularHint(){
 	//TODO: Change color and size if needed
 	float tRecWidth = mWorkingTriangle/12;
@@ -637,6 +630,7 @@ void decorators::KillBugModel::DisplayRectangularHint(){
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
+
 void decorators::KillBugModel::DisplayDiscreteHint(){
 	float tBoxWidth = mWorkingTriangle/12;
 	float tBoxHeight = tBoxWidth/1.5;
@@ -729,6 +723,7 @@ void decorators::KillBugModel::DisplayDiscreteHint(){
 	mDecoratorManager.GetDisplay().PopTransformation();
 
 }
+
 void decorators::KillBugModel::DisplayDecimalHint(){
 	//TODO: Change color and size if needed
 	char tProportion1[3];
@@ -754,6 +749,7 @@ void decorators::KillBugModel::DisplayDecimalHint(){
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
+
 void decorators::KillBugModel::DisplayFractionHint(){
 	char tProportion1Numerator[3];
 	char tProportion2Numerator[3];
