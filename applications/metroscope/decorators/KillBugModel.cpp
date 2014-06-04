@@ -231,6 +231,21 @@ void decorators::KillBugModel::DisplayMap(){
 	}
 
 	//Obstacles points
+
+	if(mActualCarte->getObstacleNumber() > 0){
+	int tObstacleTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/obstacle-small.jpg");
+		std::vector<wykobi::point2d<float>> tObstacle = mActualCarte->getObstaclesPoint();
+
+
+		for(std::vector<wykobi::point2d<float>>::iterator it = tObstacle.begin(); it != tObstacle.end() ; ++it){
+			mDecoratorManager.GetDisplay().RenderTexture(tObstacleTextureId,
+					mMapPoint1.x + (*it).x*mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY,
+					mMapPoint1.x + (*it).x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY,
+					mMapPoint1.x + (*it).x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY + mCellDimensionY,
+					mMapPoint1.x + (*it).x*mCellDimensionX,mMapPoint1.y + (*it).y*mCellDimensionY + mCellDimensionY);
+		}
+	}
+		/*
 	if(mActualCarte->getObstacleNumber() > 0){
 			std::vector<wykobi::point2d<float>> tObstacle = mActualCarte->getObstaclesPoint();
 
@@ -239,7 +254,7 @@ void decorators::KillBugModel::DisplayMap(){
 			float tEndPositionY = mMapPoint1.y + (*it).y*(mCellDimensionY);
 			mDecoratorManager.GetDisplay().RenderQuadFilled(tEndPositionX,tEndPositionY,tEndPositionX + mCellDimensionX,tEndPositionY,tEndPositionX+mCellDimensionX, tEndPositionY + mCellDimensionY, tEndPositionX, tEndPositionY + mCellDimensionY,0.25f,0.25f,0.25f,1.0f);
 		}
-	}
+	}*/
 
 	if(mMapFinished){
 		mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mDisplayHeight/2 - mMapHeight/4,
@@ -385,26 +400,30 @@ void decorators::KillBugModel::Start(){
 	mGameStarted = false;
 	mSteps = 0;
 	mNewMapFrames = 30;
+	mProportion1 = 0.0f;
+	mProportion2 = 0.0f;
+	mProportion3 = 0.0f;
+	mProportion4 = 0.0f;
 }
 
 void decorators::KillBugModel::DisplayBug(){
 	float tBugPositionX = mMapPoint1.x + (mBugPosition.x)*(mCellDimensionX)+(mCellDimensionX/2);
 	float tBugPositionY = mMapPoint1.y + (mBugPosition.y)*(mCellDimensionY)+(mCellDimensionY/2);
 
-	//int tTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/ladybug-smallwhite.jpg");
+	int tTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/ladybug-smallwhite.jpg");
 
 	//Display the image
-	/*mDecoratorManager.GetDisplay().PushTransformation();
+	mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().RenderTexture(tTextureId,
 				mMapPoint1.x + mBugPosition.x*mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY,
 				mMapPoint1.x + mBugPosition.x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY,
 				mMapPoint1.x + mBugPosition.x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY + mCellDimensionY,
 				mMapPoint1.x + mBugPosition.x*mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY + mCellDimensionY);
-	mDecoratorManager.GetDisplay().PopTransformation();*/
-
-	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().RenderFilledEllipse(tBugPositionX, tBugPositionY, mCellDimensionX/6,mCellDimensionY/6,0.0f,1.0f,0.0f,1.0f,1);
 	mDecoratorManager.GetDisplay().PopTransformation();
+
+	/*mDecoratorManager.GetDisplay().PushTransformation();
+	mDecoratorManager.GetDisplay().RenderFilledEllipse(tBugPositionX, tBugPositionY, mCellDimensionX/6,mCellDimensionY/6,0.0f,1.0f,0.0f,1.0f,1);
+	mDecoratorManager.GetDisplay().PopTransformation();*/
 }
 
 void decorators::KillBugModel::FetchProportions(){
