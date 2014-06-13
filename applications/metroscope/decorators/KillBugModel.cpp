@@ -207,11 +207,12 @@ void decorators::KillBugModel::DisplayMap(){
 		mBugPosition.y = (int)tBugOrigin.y;
 	}
 
-	float tBugPositionX = mMapPoint2.x + (tBugOrigin.y - tBugOrigin.x)*mCellDimensionX;
+	float tBugPositionX = mMapPoint2.x + (tBugOrigin.x - tBugOrigin.y)*mCellDimensionX;
 	float tBugPositionY = mMapPoint2.y + (tBugOrigin.x + tBugOrigin.y + 1)*mCellDimensionY;
 
 	//Grid
 	mDecoratorManager.GetDisplay().PushTransformation();
+
 
 	mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mMapPoint1.y, mMapPoint2.x, mMapPoint2.y,
 		mMapPoint3.x, mMapPoint3.y, mMapPoint4.x, mMapPoint4.y, 1.0f,1.0f,1.0f,1.0f);
@@ -231,7 +232,7 @@ void decorators::KillBugModel::DisplayMap(){
 		std::vector<wykobi::point2d<float>> tEnd = mActualCarte->getEndPoint();
 
 		for(std::vector<wykobi::point2d<float>>::iterator it = tEnd.begin(); it != tEnd.end() ; ++it){
-			float tEndPositionX = mMapPoint2.x + ((*it).y - (*it).x)*mCellDimensionX;
+			float tEndPositionX = mMapPoint2.x + ((*it).x - (*it).y)*mCellDimensionX;
 			float tEndPositionY = mMapPoint2.y + ((*it).x + (*it).y + 1)*mCellDimensionY;
 			mDecoratorManager.GetDisplay().RenderFilledEllipse(tEndPositionX, tEndPositionY, mCellDimensionX/2,mCellDimensionY/2,0.0f,0.0f,0.0f,1.0f,1);
 
@@ -242,17 +243,15 @@ void decorators::KillBugModel::DisplayMap(){
 	if(mActualCarte->getObstacleNumber() > 0){
 	int tObstacleTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/obstacle-small.jpg");
 		std::vector<wykobi::point2d<float>> tObstacle = mActualCarte->getObstaclesPoint();
-
-
 		for(std::vector<wykobi::point2d<float>>::iterator it = tObstacle.begin(); it != tObstacle.end() ; ++it){
 
-			float tPoint1X = mMapPoint2.x + ((*it).y - (*it).x)*mCellDimensionX;
+			float tPoint1X = mMapPoint2.x + ((*it).x - (*it).y)*mCellDimensionX;
 			float tPoint1Y = mMapPoint2.y + ((*it).y + (*it).x)*mCellDimensionY;
-			float tPoint2X = mMapPoint2.x + ((*it).y - (*it).x + 1)*mCellDimensionX;
+			float tPoint2X = mMapPoint2.x + ((*it).x - (*it).y + 1)*mCellDimensionX;
 			float tPoint2Y = mMapPoint2.y + ((*it).y + (*it).x + 1)*mCellDimensionY;
-			float tPoint3X = mMapPoint2.x + ((*it).y - (*it).x )*mCellDimensionX;
+			float tPoint3X = mMapPoint2.x + ((*it).x - (*it).y )*mCellDimensionX;
 			float tPoint3Y = mMapPoint2.y + ((*it).y + (*it).x + 2)*mCellDimensionY;
-			float tPoint4X = mMapPoint2.x + ((*it).y - (*it).x - 1)*mCellDimensionX;
+			float tPoint4X = mMapPoint2.x + ((*it).x - (*it).y - 1)*mCellDimensionX;
 			float tPoint4Y = mMapPoint2.y + ((*it).y + (*it).x + 1)*mCellDimensionY;
 
 			mDecoratorManager.GetDisplay().RenderTexture(tObstacleTextureId,
@@ -281,86 +280,27 @@ void decorators::KillBugModel::DisplayMap(){
 	}
 
 
-	float tArea = mWorkingTriangle/6.5;
-	/*
-	mDecoratorManager.GetDisplay().RenderQuadFilled(mProportion1Point.x - tArea/2, mProportion1Point.y - tArea/2,
-			mProportion1Point.x + tArea/2, mProportion1Point.y - tArea/2,
-			mProportion1Point.x + tArea/2, mProportion1Point.y + tArea/2,
-			mProportion1Point.x - tArea/2, mProportion1Point.y + tArea/2, scProp1R, scProp1G, scProp1B, 0.2f);
-
-	mDecoratorManager.GetDisplay().RenderQuadFilled(mProportion2Point.x - tArea/2, mProportion2Point.y - tArea/2,
-			mProportion2Point.x + tArea/2, mProportion2Point.y - tArea/2,
-			mProportion2Point.x + tArea/2, mProportion2Point.y + tArea/2,
-			mProportion2Point.x - tArea/2, mProportion2Point.y + tArea/2, scProp2R, scProp2G, scProp2B, 0.2f);
-
-	mDecoratorManager.GetDisplay().RenderQuadFilled(mProportion3Point.x - tArea/2, mProportion3Point.y - tArea/2,
-			mProportion3Point.x + tArea/2, mProportion3Point.y - tArea/2,
-			mProportion3Point.x + tArea/2, mProportion3Point.y + tArea/2,
-			mProportion3Point.x - tArea/2, mProportion3Point.y + tArea/2, scProp3R, scProp3G, scProp3B, 0.2f);
-
-	mDecoratorManager.GetDisplay().RenderQuadFilled(mProportion4Point.x - tArea/2, mProportion4Point.y - tArea/2,
-			mProportion4Point.x + tArea/2, mProportion4Point.y - tArea/2,
-			mProportion4Point.x + tArea/2, mProportion4Point.y + tArea/2,
-			mProportion4Point.x - tArea/2, mProportion4Point.y + tArea/2, scProp4R, scProp4G, scProp4B, 0.2f);
-
-	for(int i = 0 ; i < 7 ; i++){
-		mDecoratorManager.GetDisplay().RenderQuad(mProportion1Point.x - tArea/2 - i , mProportion1Point.y - tArea/2 - i,
-					mProportion1Point.x + tArea/2 + i, mProportion1Point.y - tArea/2 - i,
-					mProportion1Point.x + tArea/2 + i, mProportion1Point.y + tArea/2 + i,
-					mProportion1Point.x - tArea/2 - i, mProportion1Point.y + tArea/2 + i, 0.1f, 0.1f, 0.1f, 0.5f);
-
-		mDecoratorManager.GetDisplay().RenderQuad(mProportion2Point.x - tArea/2 - i, mProportion2Point.y - tArea/2 - i,
-					mProportion2Point.x + tArea/2 + i, mProportion2Point.y - tArea/2 - i,
-					mProportion2Point.x + tArea/2 + i, mProportion2Point.y + tArea/2 + i,
-					mProportion2Point.x - tArea/2 - i, mProportion2Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 0.5f);
-
-		mDecoratorManager.GetDisplay().RenderQuad(mProportion3Point.x - tArea/2 - i, mProportion3Point.y - tArea/2 - i,
-					mProportion3Point.x + tArea/2 + i, mProportion3Point.y - tArea/2 - i,
-					mProportion3Point.x + tArea/2 + i, mProportion3Point.y + tArea/2 + i,
-					mProportion3Point.x - tArea/2 - i, mProportion3Point.y + tArea/2 + i, 0.1f, 0.1f, 0.1f, 0.5f);
-
-		mDecoratorManager.GetDisplay().RenderQuad(mProportion4Point.x - tArea/2 - i, mProportion4Point.y - tArea/2 - i,
-					mProportion4Point.x + tArea/2 + i, mProportion4Point.y - tArea/2 - i,
-					mProportion4Point.x + tArea/2 + i, mProportion4Point.y + tArea/2 + i,
-					mProportion4Point.x - tArea/2 - i, mProportion4Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 0.5f);
-	}
 
 	if(mProportion1Greater && mProportionFeedbackFrames13>0){
-		for(int i = 7 ; i < 14 ; i++){
-				mDecoratorManager.GetDisplay().RenderQuad(mProportion1Point.x - tArea/2 - i , mProportion1Point.y - tArea/2 - i,
-							mProportion1Point.x + tArea/2 + i, mProportion1Point.y - tArea/2 - i,
-							mProportion1Point.x + tArea/2 + i, mProportion1Point.y + tArea/2 + i,
-							mProportion1Point.x - tArea/2 - i, mProportion1Point.y + tArea/2 + i, 0.1f, 0.1f, 0.1f, 0.5f);
-		}
+		bool tEven = (mProportionFeedbackFrames13%2 == 0);
+		mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,90.0f,180.0f,scProp1R,scProp1G,scProp1B,tEven? 0.2:0.09f,1); //Prop1
 		mProportionFeedbackFrames13--;
 	} else if(mProportion3Greater && mProportionFeedbackFrames13>0){
-		for(int i = 7 ; i < 14 ; i++){
-				mDecoratorManager.GetDisplay().RenderQuad(mProportion3Point.x - tArea/2 - i, mProportion3Point.y - tArea/2 - i,
-									mProportion3Point.x + tArea/2 + i, mProportion3Point.y - tArea/2 - i,
-									mProportion3Point.x + tArea/2 + i, mProportion3Point.y + tArea/2 + i,
-									mProportion3Point.x - tArea/2 - i, mProportion3Point.y + tArea/2 + i, 0.1f, 0.1f, 0.1f, 0.5f);
-				}
+		bool tEven = (mProportionFeedbackFrames13%2 == 0);
+		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,90.0f,360.0f,scProp3R,scProp3G,scProp3B,tEven? 0.2:0.09f,1); //Prop3
 		mProportionFeedbackFrames13--;
 	}
 
 	if(mProportion2Greater && mProportionFeedbackFrames24>0){
-		for(int i = 7 ; i < 14 ; i++){
-				mDecoratorManager.GetDisplay().RenderQuad(mProportion2Point.x - tArea/2 - i, mProportion2Point.y - tArea/2 - i,
-									mProportion2Point.x + tArea/2 + i, mProportion2Point.y - tArea/2 - i,
-									mProportion2Point.x + tArea/2 + i, mProportion2Point.y + tArea/2 + i,
-									mProportion2Point.x - tArea/2 - i, mProportion2Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 0.5f);
-				}
+		bool tEven = (mProportionFeedbackFrames24%2 == 0);
+		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,90.0f,270.0f,scProp2R,scProp2G,scProp2B,tEven? 0.2:0.09f,1); //Prop 2
 		mProportionFeedbackFrames24--;
 	} else if(mProportion4Greater && mProportionFeedbackFrames24>0){
-		for(int i = 7 ; i < 14 ; i++){
-			mDecoratorManager.GetDisplay().RenderQuad(mProportion4Point.x - tArea/2 - i, mProportion4Point.y - tArea/2 - i,
-									mProportion4Point.x + tArea/2 + i, mProportion4Point.y - tArea/2 - i,
-									mProportion4Point.x + tArea/2 + i, mProportion4Point.y + tArea/2 + i,
-									mProportion4Point.x - tArea/2 - i, mProportion4Point.y + tArea/2 + i, 0.0f, 0.0f, 1.0f, 0.5f);
-			}
+		bool tEven = (mProportionFeedbackFrames24%2 == 0);
+		mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,90.0f,90.0f,scProp4R,scProp4G,scProp4B,tEven? 0.2:0.09f,1); //Prop4
 		mProportionFeedbackFrames24--;
 	}
-*/
+
 	mDecoratorManager.GetDisplay().PopTransformation();
 	mGameStarted = true;
 }
@@ -472,25 +412,14 @@ void decorators::KillBugModel::DisplayBug(){
 
 	int tTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/ladybug-smallwhite.jpg");
 
-	float tPoint1X = mMapPoint2.x + (mBugPosition.y - mBugPosition.x)*mCellDimensionX;
-	float tPoint1Y = mMapPoint2.y + (mBugPosition.y + mBugPosition.x)*mCellDimensionY;
-	float tPoint2X = mMapPoint2.x + (mBugPosition.y - mBugPosition.x + 1)*mCellDimensionX;
-	float tPoint2Y = mMapPoint2.y + (mBugPosition.y + mBugPosition.x + 1)*mCellDimensionY;
-	float tPoint3X = mMapPoint2.x + (mBugPosition.y - mBugPosition.x )*mCellDimensionX;
-	float tPoint3Y = mMapPoint2.y + (mBugPosition.y + mBugPosition.x + 2)*mCellDimensionY;
-	float tPoint4X = mMapPoint2.x + (mBugPosition.y - mBugPosition.x - 1)*mCellDimensionX;
-	float tPoint4Y = mMapPoint2.y + (mBugPosition.y + mBugPosition.x + 1)*mCellDimensionY;
 	//Display the image
 	mDecoratorManager.GetDisplay().PushTransformation();
 
 	mDecoratorManager.GetDisplay().RenderTexture(tTextureId,
-						tPoint1X, tPoint1Y,tPoint2X, tPoint2Y,tPoint3X, tPoint3Y,tPoint4X, tPoint4Y);
-	/*mDecoratorManager.GetDisplay().RenderTexture(tTextureId,
-				mMapPoint1.x + mBugPosition.x*mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY,
-				mMapPoint1.x + mBugPosition.x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY,
-				mMapPoint1.x + mBugPosition.x*mCellDimensionX + mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY + mCellDimensionY,
-				mMapPoint1.x + mBugPosition.x*mCellDimensionX,mMapPoint1.y + mBugPosition.y*mCellDimensionY + mCellDimensionY);
-				*/
+			mMapPoint2.x + (mBugPosition.x - mBugPosition.y)*mCellDimensionX,mMapPoint2.y + (mBugPosition.y + mBugPosition.x)*mCellDimensionY,
+				mMapPoint2.x + (mBugPosition.x - mBugPosition.y + 1)*mCellDimensionX,mMapPoint2.y + (mBugPosition.y + mBugPosition.x + 1)*mCellDimensionY,
+				mMapPoint2.x + (mBugPosition.x - mBugPosition.y )*mCellDimensionX,mMapPoint2.y + (mBugPosition.y + mBugPosition.x + 2)*mCellDimensionY,
+				mMapPoint2.x + (mBugPosition.x - mBugPosition.y - 1)*mCellDimensionX,mMapPoint2.y + (mBugPosition.y + mBugPosition.x + 1)*mCellDimensionY);
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 
