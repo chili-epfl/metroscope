@@ -43,6 +43,7 @@ namespace decorators {
 		float GetProportion(){return (float)(mActiveFirstToken/(float)mTotalActiveTokens);}
 
 		bool isPresent();
+		bool isPresent(int pCuadrant);
 		bool AreTokensSpread();
 		wykobi::point2d<float> GetPosition();
 		float GetProportion(int pCuadrant);

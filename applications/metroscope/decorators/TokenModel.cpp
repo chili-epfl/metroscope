@@ -102,6 +102,17 @@ bool decorators::TokenModel::isPresent(){
 	return (mTotalActiveTokens > 0);
 }
 
+bool decorators::TokenModel::isPresent(int pCuadrant){
+	switch(pCuadrant){
+		case 1: return (mTokenFirstCuadrant > 0);
+		case 2: return (mTokenSecondCuadrant > 0);
+		case 3: return (mTokenThirdCuadrant > 0);
+		case 4: return (mTokenFourthCuadrant > 0);
+		default: return false;
+	}
+}
+
+
 wykobi::point2d<float> decorators::TokenModel::GetPosition(){
 	wykobi::point2d<float> tLocation;
 	float tX = 0.0f;

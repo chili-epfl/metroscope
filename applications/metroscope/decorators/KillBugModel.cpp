@@ -457,16 +457,16 @@ void decorators::KillBugModel::FetchProportions(){
 			int tProportionNumber = GetProportionNumber(mTokenModel->GetPosition());
 			SetProportionNumber(tProportionNumber,mTokenModel->GetNumerator(tProportionNumber), mTokenModel->GetDenominator(tProportionNumber));
 		}else{
-			if(tProportionNumber < 4){
+			if(tProportionNumber < 4 && mTokenModel->isPresent(1)){
 				tProportionNumber++;
 				SetProportionNumber(1,mTokenModel->GetNumerator(1), mTokenModel->GetDenominator(1));
-			}if(tProportionNumber < 4){
+			}if(tProportionNumber < 4 && mTokenModel->isPresent(2)){
 				tProportionNumber++;
 				SetProportionNumber(2,mTokenModel->GetNumerator(2), mTokenModel->GetDenominator(2));
-			}if(tProportionNumber < 4){
+			}if(tProportionNumber < 4 && mTokenModel->isPresent(3)){
 				tProportionNumber++;
 				SetProportionNumber(3,mTokenModel->GetNumerator(3), mTokenModel->GetDenominator(3));
-			}if(tProportionNumber < 4){
+			}if(tProportionNumber < 4 && mTokenModel->isPresent(4)){
 				tProportionNumber++;
 				SetProportionNumber(4,mTokenModel->GetNumerator(4), mTokenModel->GetDenominator(4));
 			}
