@@ -33,6 +33,7 @@ class RectangleFractionModel : public FiducialDecorator{
 		bool isPresent();
 		const wykobi::point2d<float> &StartPoint() const {return mStartPoint;}
 		const wykobi::point2d<float> &EndPoint() const {return mEndPoint;}
+		void CalculateFractionFromDecimal();
 		float proportion() const {return mProportion;}
 		int Numerator() const {return mNumerator;}
 		int Denominator() const {return mDenominator;}
