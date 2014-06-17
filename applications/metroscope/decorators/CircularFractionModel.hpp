@@ -38,6 +38,8 @@ class CircularFractionModel : public FiducialDecorator{
 		int Denominator() const {return mDenominator;}
 		wykobi::point2d<float> GetCenter() {return mAngleModel->getMarker().getCenter();}
 		const FiducialMarker& getMarker() const { return mAngleModel->getMarker(); }
+		void CalculateFractionFromDecimal();
+		float SimplifyDecimal();
 
 	protected:
 		void update();

@@ -68,8 +68,47 @@ void decorators::CircularFractionModel::update(){
 		float tAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
 
 		mProportion = (1 - tAngle/360.0f);
-		mDenominator = 10;
-		mNumerator = ((int)(mProportion*100)%10 >= 5) ? ceil((mProportion*100)/10) : floor((mProportion*100)/10);
+
+		CalculateFractionFromDecimal();
+
 	}
+}
+
+void decorators::CircularFractionModel::CalculateFractionFromDecimal(){
+
+	//We'll use at max 8 iterations (less than checking each fraction that has denominator 2,3,4,5,6,7,8,9 or 10)
+	int tMaxIterations = 8;
+
+	std::vector<double> tZ(tMaxIterations+1);
+	std::vector<double> tD(tMaxIterations+1);
+
+	//We'll simplify the proportion so it'll have 2 numbers after the comma (0.25555454843213541 ~ 0.26)
+	double tX;
+	int tModule = (int)(mProportion*100)%10;
+	if(tModule >= 7 && tModule <= 9) tX = floor(mProportion*10 + 0.5)/10;
+	else if(tModule >= 3 && tModule <= 6) tX= (floor(mProportion*10)+0.5)/10;
+	else tX = floor(mProportion*10)/10;
+
+	//Initialize the variables
+	int tIterations = 1;
+	tZ[0] = 0.0;
+	tZ[1] = tX;
+	tD[0] = 0.0;
+	tD[1] = 1.0;
+
+	double tN;
+
+	//We put an epsilon of 0.001 to stop
+	while(tIterations < 8 && tZ[tIterations] - (int)tZ[tIterations] > 0.001){
+
+		tZ[tIterations + 1] = 1/(tZ[tIterations] - (int)tZ[tIterations]);
+		tD[tIterations + 1] = tD[tIterations]*(int)tZ[tIterations+1] + tD[tIterations-1];
+		tN = (tX*tD[tIterations + 1] + 0.5 >= (int)(tX*tD[tIterations + 1]) + 1) ? int(tX*tD[tIterations + 1])+1 : (int)(tX*tD[tIterations + 1]);
+
+		tIterations++;
+	}
+
+	mNumerator = tN;
+	mDenominator = tD[tIterations];
 }
 
