@@ -86,17 +86,6 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 				mBugPosition.x = 0;
 				mBugPosition.y = 0;
 
-				/*
-				mMapPoint1.x = (mDisplayWidth/(float)2) - mMapWidth/(float)2;
-				mMapPoint1.y = (mDisplayHeight/(float)2) - mMapHeight/(float)2;
-				mMapPoint2.x = mMapPoint1.x + mMapWidth;
-				mMapPoint2.y = mMapPoint1.y;
-				mMapPoint3.x = mMapPoint2.x;
-				mMapPoint3.y = mMapPoint2.y + mMapHeight;
-				mMapPoint4.x = mMapPoint1.x;
-				mMapPoint4.y = mMapPoint3.y;
-	*/
-
 				mMapPoint1.x = mWorkingTriangle/4;
 				mMapPoint1.y = mDisplayHeight/2;
 				mMapPoint2.x = mDisplayWidth/2;
@@ -191,14 +180,9 @@ void decorators::KillBugModel::RenderProportion(float pProportion, int pProporti
 
 void decorators::KillBugModel::DisplayMap(){
 	mMapSize = mActualCarte->getSize();
-	//mCellDimensionX = (float)(mMapWidth/mMapSize);
-	//mCellDimensionY = (float)(mMapHeight/mMapSize);
 
 	mCellDimensionX = (mMapPoint3.x - mMapPoint1.x)/(2*mMapSize);
 	mCellDimensionY = (mMapPoint4.y - mMapPoint2.y)/(2*mMapSize);
-
-
-
 
 	wykobi::point2d<float> tBugOrigin = mActualCarte->getOriginPoint();
 
@@ -212,7 +196,6 @@ void decorators::KillBugModel::DisplayMap(){
 
 	//Grid
 	mDecoratorManager.GetDisplay().PushTransformation();
-
 
 	mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mMapPoint1.y, mMapPoint2.x, mMapPoint2.y,
 		mMapPoint3.x, mMapPoint3.y, mMapPoint4.x, mMapPoint4.y, 1.0f,1.0f,1.0f,1.0f);
@@ -280,7 +263,6 @@ void decorators::KillBugModel::DisplayMap(){
 	}
 
 
-
 	if(mProportion1Greater && mProportionFeedbackFrames13>0){
 		bool tEven = (mProportionFeedbackFrames13%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,90.0f,180.0f,scProp1R,scProp1G,scProp1B,tEven? 0.2:0.09f,1); //Prop1
@@ -305,8 +287,21 @@ void decorators::KillBugModel::DisplayMap(){
 	mGameStarted = true;
 }
 
+/*
+ * Returns true if one maps has been showed, it doesn't need to persist (just to have less cards in the table)
+ */
 bool decorators::KillBugModel::IsCartePresent(){
 	Carte * tPreviusCarte = mActualCarte;
+	for(int i = 0 ; i < scCarteCards ; i++){
+		if(mCartes[i]->isPresent()){
+			mActualCarte = mCartes[i];
+			mMapFinished = mActualCarte->IsFinished();
+			if(tPreviusCarte != mActualCarte)	Start();
+		}
+	}
+	return (mActualCarte!=NULL);
+	/*TODO: eliminate if passes the lamp testing
+	 * Carte * tPreviusCarte = mActualCarte;
 	for(int i = 0 ; i < scCarteCards ; i++){
 		if(mCartes[i]->isPresent()){
 			mActualCarte = mCartes[i];
@@ -316,16 +311,25 @@ bool decorators::KillBugModel::IsCartePresent(){
 		}
 	}
 	return false;
+	*/
 }
 
 bool decorators::KillBugModel::IsHintPresent(){
 	for(int i = 0 ; i < scHintCards ; i++){
 		if(mHints[i]->IsPresent()){
 			mActualHint = mHints[i];
+		}
+	}
+	return (mActualHint!=NULL);
+	/* TODO: eliminate if passes the lamp testing
+	 * 	 for(int i = 0 ; i < scHintCards ; i++){
+		if(mHints[i]->IsPresent()){
+			mActualHint = mHints[i];
 			return true;
 		}
 	}
 	return false;
+	*/
 }
 
 void decorators::KillBugModel::MakeMove(){
@@ -920,7 +924,6 @@ void decorators::KillBugModel::DivideCircunferenceManipulatives(int pParts){
 }
 
 void decorators::KillBugModel::DisplayFlipperFeedback(){
-
 	static const long cShotPreparationTime = 6l*1000l;
 	long tElapsedTime = Time::MillisTimestamp() - mLastShot;
 
@@ -938,10 +941,8 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 		}
 		mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mFlipper->GetCurrentSide(), mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-
 		mDecoratorManager.GetDisplay().RenderFilledSector(1.0f,3.3f,1.5f,1.5f,tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
-
 		mDecoratorManager.GetDisplay().RenderCenteredText(tFull?"Prêt!" :"En repos ...", 0.0f,5.5f,true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
-		}
+	}
 }
