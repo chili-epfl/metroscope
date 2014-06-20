@@ -27,7 +27,6 @@ decorators::FiducialDecorator *decorators::Carte::create(libconfig::Setting &pSe
 	try{
 		libconfig::Setting & tOriginPoint = pSetting ["origin"];
 		int tEnd = pSetting ["end_num"];
-
 		int tObstacles = pSetting ["obs_num"];
 
 		std::vector<wykobi::point2d<float>> tEndPoint;
@@ -57,14 +56,18 @@ decorators::FiducialDecorator *decorators::Carte::create(libconfig::Setting &pSe
 			}
 		}
 
+		//Obstacles and end
 		if(tObstacles != 0 && tEnd!= 0)	return new decorators::Carte(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]),(int)pSetting ["size"],
 					(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tEndPoint, tObstacles, tObstaclesPoint);
 
+		//No obstacles but with end
 		else if(tObstacles == 0 && tEnd!= 0)	return new decorators::Carte(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]), (int)pSetting ["size"],
 					(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tEndPoint, tObstacles);
 
+		//No obstacles and no end
 		else if (tObstacles == 0 && tEnd == 0) return new decorators::Carte(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]), (int)pSetting ["size"],
 				(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tObstacles);
+
 	}catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
 	} catch(libconfig::SettingTypeException &e) {
@@ -116,10 +119,9 @@ decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *p
 			mOriginPoint.x = pOriginX;
 			mOriginPoint.y = pOriginY;
 	}
-decorators::Carte::~Carte(){}
-void decorators::Carte::update(){
+decorators::Carte::~Carte(){ }
 
-}
+void decorators::Carte::update(){ }
 
 bool decorators::Carte::IsEmptyCell(int pPositionX, int pPositionY){
 	if (mObstaclesNumber > 0){
