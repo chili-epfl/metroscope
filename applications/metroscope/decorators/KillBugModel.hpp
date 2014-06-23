@@ -28,6 +28,7 @@
 #include "Flipper.hpp"
 #include "FractionBugHint.hpp"
 #include "Carte.hpp"
+#include "KillBugView.hpp"
 #include "../KillBugConstant.hpp"
 #include <fstream>
 
@@ -99,6 +100,8 @@ class KillBugModel : public FiducialDecorator
 		FractionBugHint **mHints;
 		FractionCard ** mFractionCards;
 		Carte ** mCartes;
+
+		//KillBugView *mKillBugView;
 
 		Carte *mActualCarte;
 		FractionBugHint *mActualHint;

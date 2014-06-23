@@ -78,9 +78,12 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 			mProportion3Denominator(1),mProportion4Numerator(0),mProportion4Denominator(1),mWrongMove(false), mWrongMovementFrames(0),
 			mNewMapFrames(0),mProportionFeedbackFrames13(0),mProportionFeedbackFrames24(0),mProportion1Greater(false),mProportion2Greater(false),mProportion3Greater(false),mProportion4Greater(false)
 {
+				//TODO: Put all this in the class KillBugView
+
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
-				mWorkingTriangle = (mDisplayHeight);
+
+				mWorkingTriangle = (0.95*mDisplayHeight);
 				mMapWidth = mDisplayWidth - mWorkingTriangle;
 				mMapHeight = mMapWidth;
 				mBugPosition.x = 0;
@@ -109,19 +112,22 @@ decorators::KillBugModel::~KillBugModel(){ /*Empty*/}
 
 void decorators::KillBugModel::update(){
 	if(IsCartePresent()){
-		DisplayMap();
+		DisplayMap(); //TODO: Put this as KillBugView.DisplayMap()
 
 		if(mGameStarted){
 			FetchProportions();
-			DisplayBug();
+			DisplayBug(); //TODO: Put this as KillBugView.DisplayBug()
 		}
 
-		if(mFlipper->IsPresent()) DisplayFlipperFeedback();
+		if(mFlipper->IsPresent()) DisplayFlipperFeedback(); //TODO: Put this as KillBugView.DisplayFlipperFeedback()
 
-		if(IsHintPresent())	DisplayProportions(mActualHint->GetHintType());
+		if(IsHintPresent())	DisplayProportions(mActualHint->GetHintType()); //TODO: Put this as KillBugView.DisplayProportions()
 	}
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DisplayProportions(){
 	RenderProportion(mProportion1, 1);
 	RenderProportion(mProportion2, 2);
@@ -129,6 +135,9 @@ void decorators::KillBugModel::DisplayProportions(){
 	RenderProportion(mProportion4, 4);
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DisplayProportions(int pType){
 	switch(pType){
 		case 0: DisplayDiscreteHint(); break;
@@ -139,6 +148,9 @@ void decorators::KillBugModel::DisplayProportions(int pType){
 	}
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::RenderProportion(float pProportion, int pProportionNumber){
 	char tProportion[3];
 	sprintf(tProportion, "%3.2f", pProportion);
@@ -178,7 +190,12 @@ void decorators::KillBugModel::RenderProportion(float pProportion, int pProporti
 
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DisplayMap(){
+
+
 	mMapSize = mActualCarte->getSize();
 
 	mCellDimensionX = (mMapPoint3.x - mMapPoint1.x)/(2*mMapSize);
@@ -195,6 +212,7 @@ void decorators::KillBugModel::DisplayMap(){
 	float tBugPositionY = mMapPoint2.y + (tBugOrigin.x + tBugOrigin.y + 1)*mCellDimensionY;
 
 	//Grid
+	//TODO: Make a method
 	mDecoratorManager.GetDisplay().PushTransformation();
 
 	mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mMapPoint1.y, mMapPoint2.x, mMapPoint2.y,
@@ -208,9 +226,11 @@ void decorators::KillBugModel::DisplayMap(){
 
 
 	//Bug Origin Point
+	//TODO: Make a method
 	mDecoratorManager.GetDisplay().RenderFilledEllipse(tBugPositionX, tBugPositionY, mCellDimensionX/6,mCellDimensionY/6,1.0f,0.0f,0.0f,1.0f,1);
 
 	//Ending points
+	//TODO: Make a method
 	if(mActualCarte->getEndNumber() > 0){
 		std::vector<wykobi::point2d<float>> tEnd = mActualCarte->getEndPoint();
 
@@ -223,6 +243,7 @@ void decorators::KillBugModel::DisplayMap(){
 	}
 
 	//Obstacles points
+	//TODO: make a method
 	if(mActualCarte->getObstacleNumber() > 0){
 	int tObstacleTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/obstacle-small.jpg");
 		std::vector<wykobi::point2d<float>> tObstacle = mActualCarte->getObstaclesPoint();
@@ -263,6 +284,7 @@ void decorators::KillBugModel::DisplayMap(){
 	}
 
 
+	//TODO: make a method
 	if(mProportion1Greater && mProportionFeedbackFrames13>0){
 		bool tEven = (mProportionFeedbackFrames13%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,90.0f,180.0f,scProp1R,scProp1G,scProp1B,tEven? 0.2:0.09f,1); //Prop1
@@ -285,10 +307,11 @@ void decorators::KillBugModel::DisplayMap(){
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 	mGameStarted = true;
+
 }
 
 /*
- * Returns true if one maps has been showed, it doesn't need to persist (just to have less cards in the table)
+ * Returns true if one of the maps has been showed, it doesn't need to persist (just to have less cards in the table)
  */
 bool decorators::KillBugModel::IsCartePresent(){
 	Carte * tPreviusCarte = mActualCarte;
@@ -300,20 +323,11 @@ bool decorators::KillBugModel::IsCartePresent(){
 		}
 	}
 	return (mActualCarte!=NULL);
-	/*TODO: eliminate if passes the lamp testing
-	 * Carte * tPreviusCarte = mActualCarte;
-	for(int i = 0 ; i < scCarteCards ; i++){
-		if(mCartes[i]->isPresent()){
-			mActualCarte = mCartes[i];
-			mMapFinished = mActualCarte->IsFinished();
-			if(tPreviusCarte != mActualCarte)	Start();
-			return true;
-		}
-	}
-	return false;
-	*/
 }
 
+/*
+ * Returns true if one of the hints has been showed, it doesn't need to persist (just to have less cards in the table)
+ */
 bool decorators::KillBugModel::IsHintPresent(){
 	for(int i = 0 ; i < scHintCards ; i++){
 		if(mHints[i]->IsPresent()){
@@ -321,15 +335,6 @@ bool decorators::KillBugModel::IsHintPresent(){
 		}
 	}
 	return (mActualHint!=NULL);
-	/* TODO: eliminate if passes the lamp testing
-	 * 	 for(int i = 0 ; i < scHintCards ; i++){
-		if(mHints[i]->IsPresent()){
-			mActualHint = mHints[i];
-			return true;
-		}
-	}
-	return false;
-	*/
 }
 
 void decorators::KillBugModel::MakeMove(){
@@ -412,6 +417,9 @@ void decorators::KillBugModel::Start(){
 	mProportion4 = 0.0f;
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DisplayBug(){
 
 	int tTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/ladybug-smallwhite.jpg");
@@ -569,6 +577,9 @@ void decorators::KillBugModel::SetProportionNumber(wykobi::point2d<float> pPosit
 
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DisplayCircularHint(){
 
 	float tRadius = mWorkingTriangle/18;
@@ -591,6 +602,9 @@ void decorators::KillBugModel::DisplayCircularHint(){
 
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DisplayRectangularHint(){
 	//TODO: Change color and size if needed
 	float tRecWidth = mWorkingTriangle/12;
@@ -641,6 +655,9 @@ void decorators::KillBugModel::DisplayRectangularHint(){
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DisplayDiscreteHint(){
 	float tBoxWidth = mWorkingTriangle/12;
 	float tBoxHeight = tBoxWidth/1.5;
@@ -746,6 +763,9 @@ void decorators::KillBugModel::DisplayDiscreteHint(){
 
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DisplayDecimalHint(){
 	//TODO: Change color and size if needed
 	char tProportion1[3];
@@ -772,6 +792,9 @@ void decorators::KillBugModel::DisplayDecimalHint(){
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DisplayFractionHint(){
 	char tProportion1Numerator[3];
 	char tProportion2Numerator[3];
@@ -810,6 +833,9 @@ void decorators::KillBugModel::DisplayFractionHint(){
 
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DivideRectangleManipulatives(int pParts){
 	float tDistanceX = 8.0f;
 	float tDistanceY = 4.0f;
@@ -851,6 +877,9 @@ void decorators::KillBugModel::DivideRectangleManipulatives(int pParts){
 	}
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DivideCircunferenceManipulatives(int pParts){
 	float pRadio = 14;
 
@@ -923,6 +952,9 @@ void decorators::KillBugModel::DivideCircunferenceManipulatives(int pParts){
 		}
 }
 
+/*
+ * TODO: Eliminate this method from this class, put it in KillBugView
+ */
 void decorators::KillBugModel::DisplayFlipperFeedback(){
 	static const long cShotPreparationTime = 6l*1000l;
 	long tElapsedTime = Time::MillisTimestamp() - mLastShot;
