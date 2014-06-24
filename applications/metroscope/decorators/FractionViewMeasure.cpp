@@ -26,11 +26,6 @@ const DecoratorManager::Registerer decorators::FractionViewMeasure::mRegisterer(
 
 decorators::FiducialDecorator *decorators::FractionViewMeasure::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager){
 	try{
-
-
-
-			// FractionViewMeasure (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, CircularFractionModel *pAngleModel1, CircularFractionModel *pAngleModel2,
-		//	RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2, TokenModel *pTokenModel1, FractionCard ** pFractionCards);
 			return new decorators::FractionViewMeasure (pDecoratorManager, (FiducialMarker *) pDecoratorManager.loadMarker(pSetting["marker"]),
 					(CircularFractionModel *) pDecoratorManager.loadDecorator(pSetting["circular_1"]),
 					(CircularFractionModel *) pDecoratorManager.loadDecorator(pSetting["circular_2"]),

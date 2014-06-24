@@ -110,4 +110,4 @@
 #include "CircularFractionModel.hpp"
 #include "FractionBugHint.hpp"
 #include "FractionViewMeasure.hpp"
-
+#include "EquivalentFractionView.hpp"
