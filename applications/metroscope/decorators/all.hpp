@@ -111,3 +111,4 @@
 #include "FractionBugHint.hpp"
 #include "FractionViewMeasure.hpp"
 #include "EquivalentFractionView.hpp"
+#include "FractionComparisionView.hpp"

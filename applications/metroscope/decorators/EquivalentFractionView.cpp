@@ -84,7 +84,7 @@ void decorators::EquivalentFractionView::update(){
 
 				mDecoratorManager.GetDisplay().PushTransformation();
 				mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-				mDecoratorManager.GetDisplay().RenderText((mEquivalentManipulatives == mActiveManipulatives)? "Tres bien!" : "Essaye encore une fois",
+				mDecoratorManager.GetDisplay().RenderText((mEquivalentManipulatives == mActiveManipulatives)? "Tres bien!" : "Essayez encore une fois",
 						tOrigin.x, tOrigin.y, 0.7f, (mEquivalentManipulatives == mActiveManipulatives)? 0.0f: 1.0f,
 								(mEquivalentManipulatives == mActiveManipulatives)? 1.0f : 0.0f, 0.0f);
 

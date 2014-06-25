@@ -20,8 +20,83 @@
 #ifndef KILLBUGVIEW_HPP_
 #define KILLBUGVIEW_HPP_
 
+#include <qa/pipeables/misc/DecoratorManager.hpp>
+#include "../KillBugConstant.hpp"
+#include <fstream> // (?)
 
+namespace decorators{
+class KillBugView : public FiducialDecorator
+{
+	public:
+		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
+
+		KillBugView(DecoratorManager &pDecoratorManager);
+		~KillBugView();
+
+		void SetProportion(int pProportionNumber, int pNumerator, int pDenominator);
+		void SetDisplayWidth(int pWidth){mDisplayWidth = pWidth;}
+		void SetDisplayHeight(int pHeight){mDisplayHeight = pHeight;}
+		void SetWrongMovementFrames(int pFrames);
+		void SetNewMapFrames(int pFrames);
+		void SetProportionFeedbackFrames(int pProportionFrameNumber, int pFrames);
+		void SetProportionGreater (int pProportionNumber, bool pProportion);
+		void DisplayMap(int pMapSize, wykobi::point2d<float> pBugOrigin, bool pGameStarted, bool pMapFinished, bool pNewMap);
+		void DisplayGrid();
+		void DisplayWorkingArea();
+		void DisplayEndingPoints();
+		void DisplayObstacles();
+		void DisplayBug();
+		void DisplayProportions();
+		void RenderProportion(float pProportion, int pProportionNumber);
+		void DisplayProportions(int pHintType);
+		void DisplayCircularHint();
+		void DisplayRectangularHint();
+		void DisplayDiscreteHint();
+		void DisplayDecimalHint();
+		void DisplayFractionHint();
+		void DisplayFlipperFeedback();
+		void DivideCircunferenceManipulatives(int pParts);
+		void DivideRectangleManipulatives(int pParts);
+
+	protected:
+		void update();
+
+
+		long mLastShot;
+
+	private:
+		static const std::string scDecoratorName;
+		static const DecoratorManager::Registerer mRegisterer;
+
+		//Carte *mActualCarte;
+		//FractionBugHint *mActualHint;
+		float mProportion1,mProportion2,mProportion3,mProportion4;
+
+		int mDisplayWidth, mDisplayHeight;
+		float mWorkingTriangle;
+		int mMapSize;
+		wykobi::point2d<float> mCellDimension;
+		float mMapWidth, mMapHeight;
+		wykobi::point2d<int> mBugPosition;
+		int mSteps;
+		bool mGameStarted;
+		bool mMapFinished;
+		bool mMapNew;
+		wykobi::point2d<int> mMapPoint1, mMapPoint2, mMapPoint3, mMapPoint4;
+		wykobi::point2d<int> mProportion1Point, mProportion2Point, mProportion3Point, mProportion4Point;
+		int mProportion1Numerator, mProportion1Denominator;
+		int mProportion2Numerator, mProportion2Denominator;
+		int mProportion3Numerator, mProportion3Denominator;
+		int mProportion4Numerator, mProportion4Denominator;
+		int mWrongMovementFrames;
+		int mNewMapFrames;
+		int mProportionFeedbackFrames13, mProportionFeedbackFrames24;
+		bool mProportion1Greater, mProportion2Greater, mProportion3Greater, mProportion4Greater;
+		std::vector<wykobi::point2d<int>> mBugTrayectory;
+};
+}
 
 
 
 #endif /* KILLBUGVIEW_HPP_ */
+
