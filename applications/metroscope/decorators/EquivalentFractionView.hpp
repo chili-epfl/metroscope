@@ -54,6 +54,7 @@ class EquivalentFractionView : public FiducialDecorator
 		void CheckManipulativesPresent();
 		int mActiveManipulatives;
 		int mEquivalentManipulatives;
+		FractionCard *mCurrentActivity;
 
 	private:
 		static const std::string scDecoratorName;

@@ -64,12 +64,28 @@ decorators::EquivalentFractionView::EquivalentFractionView(DecoratorManager &pDe
 			mAngleModel1(pAngleModel1), mAngleModel2(pAngleModel2),
 			mRectangleModel1(pRectangleModel1), mRectangleModel2(pRectangleModel2),
 			mTokenModel(pTokenModel1), mActivityCard(pActivityCards),mFractionCards(pFractionCards),
-			mCurrentProportion(0.0f), mActiveManipulatives(0), mEquivalentManipulatives(0){
+			mCurrentProportion(0.0f), mActiveManipulatives(0), mEquivalentManipulatives(0),mCurrentActivity(0){
 }
 
 
 void decorators::EquivalentFractionView::update(){
 	if(mMarker->isPresent() && IsActivityPresent()){
+		wykobi::quadix<float ,2> tMarkerCorners = mCurrentActivity->getMarker().getCorners();
+		mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
+		wykobi::point2d<float> tOrigin;
+		wykobi::point2d<float> tXUnit;
+		wykobi::point2d<float> tYUnit;
+		FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+
+		mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+		mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,70.0f,70.0f,0.0f,0.0f,0.0f,1.0f,1);
+
+		mDecoratorManager.GetDisplay().RenderText("Mettez des fractions équivalentes", tOrigin.x - 150.0f, tOrigin.y - 70.0f, 0.7f, 0.0f, 0.0f, 0.0f);
+		mDecoratorManager.GetDisplay().PopTransformation();
+
 		CheckManipulativesPresent();
 		if(mActiveManipulatives>0){
 
@@ -98,6 +114,7 @@ void decorators::EquivalentFractionView::update(){
 bool decorators::EquivalentFractionView::IsActivityPresent(){
 	for(int i = 0; i < 9 ; i++){
 		if(mActivityCard[i]->IsPresent()){
+			mCurrentActivity = mActivityCard[i];
 			mCurrentProportion = mActivityCard[i]->GetValue();
 			return true;
 		}
