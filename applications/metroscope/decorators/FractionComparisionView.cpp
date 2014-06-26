@@ -91,8 +91,6 @@ void decorators::FractionComparisionView::update(){
 				mDecoratorManager.GetDisplay().RenderText(mCorrectOrder? "Tres bien!" : "Essaye encore une fois",
 						tOrigin.x, tOrigin.y, 0.7f, (mCorrectOrder) ? 0.0f: 1.0f,
 						(mCorrectOrder)? 1.0f : 0.0f, 0.0f);
-
-
 				mDecoratorManager.GetDisplay().PopTransformation();
 
 				if(mCorrectOrder){
@@ -158,26 +156,21 @@ void decorators::FractionComparisionView::CheckAnswer(){
 	int tIteration = 1;
 
 	while(it != mFractions.end() && tIteration < mActiveManipulatives){
-		float a = (*it).second;
+		float tLeft = (*it).second;
 		it++;
-		float b = (*it).second;
+		float tRight = (*it).second;
 		switch(mOrder){
 			case 0: //greater than
-				if(a > b)	tComparisionCorrect++;
+				if(tLeft > tRight)	tComparisionCorrect++;
 				break;
 			case 1:
-				if(a < b)	tComparisionCorrect++;
+				if(tLeft < tRight)	tComparisionCorrect++;
 				break;
 		}
 
 		if(it == mFractions.end()) break;
 		tIteration++;
 	}
-
-	int d = tIteration-10;
-	    // iterator->first = key
-	    // iterator->second = value
-
 
 	mCorrectOrder = (tComparisionCorrect == (mActiveManipulatives - 1));
 }
