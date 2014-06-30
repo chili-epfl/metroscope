@@ -112,11 +112,11 @@ void decorators::FractionComparisionView::CheckManipulativesPresent(){
 
 	if(mAngleModel1->isPresent()){
 		mActiveManipulatives++;
-		mFractions[mAngleModel1->GetCenter().x] = mAngleModel1->Proportion();
+		mFractions[mAngleModel1->GetCenter().x] = mAngleModel1->GetProportion();
 	}
 	if(mAngleModel2->isPresent()){
 		mActiveManipulatives++;
-		mFractions[mAngleModel2->GetCenter().x] = mAngleModel2->Proportion();
+		mFractions[mAngleModel2->GetCenter().x] = mAngleModel2->GetProportion();
 	}
 	if(mRectangleModel1->isPresent()){
 		mActiveManipulatives++;

@@ -33,7 +33,7 @@ class CircularFractionModel : public FiducialDecorator{
 		bool isPresent();
 		//const wykobi::point2d<float> &StartPoint() const {return mStartPoint;}
 		//const wykobi::point2d<float> &EndPoint() const {return mEndPoint;}
-		float Proportion() const {return mProportion;}
+		float GetProportion() const {return mProportion;}
 		int Numerator() const {return mNumerator;}
 		int Denominator() const {return mDenominator;}
 		wykobi::point2d<float> GetCenter() {return mAngleModel->getMarker().getCenter();}
