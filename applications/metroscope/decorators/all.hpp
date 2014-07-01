@@ -112,3 +112,4 @@
 #include "FractionViewMeasure.hpp"
 #include "EquivalentFractionView.hpp"
 #include "FractionComparisionView.hpp"
+#include "FractionSum.hpp"

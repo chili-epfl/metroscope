@@ -41,7 +41,8 @@ decorators::CircularFractionModel::CircularFractionModel(DecoratorManager &pDeco
 		mProportion(0.0f),
 		mNumerator(0),
 		mDenominator(1),
-		mAngleModel(pAngleModel){
+		mAngleModel(pAngleModel),
+		mAngle(0.0f){
 
 }
 
@@ -65,9 +66,9 @@ void decorators::CircularFractionModel::update(){
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldStartPoint);
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldEndPoint);
 
-		float tAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
+		mAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
 
-		mProportion = (1 - tAngle/360.0f);
+		mProportion = (1 - mAngle/360.0f);
 
 		CalculateFractionFromDecimal();
 
