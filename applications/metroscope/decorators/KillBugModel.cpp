@@ -311,17 +311,18 @@ void decorators::KillBugModel::DisplayMap(){
 }
 
 /*
- * Returns true if one of the maps has been showed, it doesn't need to persist (just to have less cards in the table)
+ * Returns true if one of the maps has been showed, the map doesn't need to be all the time in the table (just to have less cards in the table)
  */
 bool decorators::KillBugModel::IsCartePresent(){
 	Carte * tPreviusCarte = mActualCarte;
 	for(int i = 0 ; i < scCarteCards ; i++){
 		if(mCartes[i]->isPresent()){
 			mActualCarte = mCartes[i];
-			mMapFinished = mActualCarte->IsFinished();
+
 			if(tPreviusCarte != mActualCarte)	Start();
 		}
 	}
+	mMapFinished = mActualCarte->IsFinished();
 	return (mActualCarte!=NULL);
 }
 
