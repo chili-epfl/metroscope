@@ -322,7 +322,7 @@ bool decorators::KillBugModel::IsCartePresent(){
 			if(tPreviusCarte != mActualCarte)	Start();
 		}
 	}
-	mMapFinished = mActualCarte->IsFinished();
+	if(mActualCarte!=NULL)	mMapFinished = mActualCarte->IsFinished();
 	return (mActualCarte!=NULL);
 }
 
