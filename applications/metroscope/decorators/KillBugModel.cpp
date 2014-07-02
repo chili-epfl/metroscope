@@ -89,14 +89,14 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 				mBugPosition.x = 0;
 				mBugPosition.y = 0;
 
-				mMapPoint1.x = mWorkingTriangle/4;
+				mMapPoint1.x = mWorkingTriangle/2.5;
 				mMapPoint1.y = mDisplayHeight/2;
 				mMapPoint2.x = mDisplayWidth/2;
-				mMapPoint2.y = mWorkingTriangle/4 + mDisplayHeight/2 - mDisplayWidth/2;
-				mMapPoint3.x = mDisplayWidth-mWorkingTriangle/4;
+				mMapPoint2.y = mWorkingTriangle/2.5 + mDisplayHeight/2 - mDisplayWidth/2;
+				mMapPoint3.x = mDisplayWidth-mWorkingTriangle/2.5;
 				mMapPoint3.y = mDisplayHeight/2;
 				mMapPoint4.x = mDisplayWidth/2;
-				mMapPoint4.y = mDisplayHeight/2 - mWorkingTriangle/4 + mDisplayWidth/2;
+				mMapPoint4.y = mDisplayHeight/2 - mWorkingTriangle/2.5 + mDisplayWidth/2;
 
 				mProportion1Point.x = (mMapPoint2.x + mMapPoint3.x)/2 + 40.0f;
 				mProportion1Point.y = (mMapPoint2.y + mMapPoint3.y)/2 - 40.0f;
