@@ -83,20 +83,20 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
 
-				mWorkingTriangle = (0.85*mDisplayHeight);
+				mWorkingTriangle = (0.9*mDisplayHeight);
 				mMapWidth = mDisplayWidth - mWorkingTriangle;
 				mMapHeight = mMapWidth;
 				mBugPosition.x = 0;
 				mBugPosition.y = 0;
 
-				mMapPoint1.x = mWorkingTriangle/3;
+				mMapPoint1.x = mWorkingTriangle/4;
 				mMapPoint1.y = mDisplayHeight/2;
 				mMapPoint2.x = mDisplayWidth/2;
-				mMapPoint2.y = mWorkingTriangle/3 + mDisplayHeight/2 - mDisplayWidth/2;
-				mMapPoint3.x = mDisplayWidth-mWorkingTriangle/3;
+				mMapPoint2.y = mWorkingTriangle/4 + mDisplayHeight/2 - mDisplayWidth/2;
+				mMapPoint3.x = mDisplayWidth-mWorkingTriangle/4;
 				mMapPoint3.y = mDisplayHeight/2;
 				mMapPoint4.x = mDisplayWidth/2;
-				mMapPoint4.y = mDisplayHeight/2 - mWorkingTriangle/3 + mDisplayWidth/2;
+				mMapPoint4.y = mDisplayHeight/2 - mWorkingTriangle/4 + mDisplayWidth/2;
 
 				mProportion1Point.x = (mMapPoint2.x + mMapPoint3.x)/2 + 40.0f;
 				mProportion1Point.y = (mMapPoint2.y + mMapPoint3.y)/2 - 40.0f;
