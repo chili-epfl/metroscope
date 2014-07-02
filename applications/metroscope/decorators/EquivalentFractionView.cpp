@@ -128,28 +128,125 @@ void decorators::EquivalentFractionView::CheckManipulativesPresent(){
 
 	if(mAngleModel1->isPresent()){
 		mActiveManipulatives++;
-		if((mAngleModel1->Numerator()/(float)mAngleModel1->Denominator()) == mCurrentProportion)	mEquivalentManipulatives++;
+		if((mAngleModel1->Numerator()/(float)mAngleModel1->Denominator()) == mCurrentProportion){
+			mEquivalentManipulatives++;
+			//TODO: do it in a nice way, methods
+			wykobi::quadix<float ,2> tMarkerCorners = mAngleModel1->getMarker().getCorners();
+			mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
+			wykobi::point2d<float> tOrigin;
+			wykobi::point2d<float> tXUnit;
+			wykobi::point2d<float> tYUnit;
+			FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+
+			mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+
+			mDecoratorManager.GetDisplay().PushTransformation();
+			mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+			mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,170.0f,170.0f,0.0f,1.0f,0.0f,1.0f,1);
+
+			mDecoratorManager.GetDisplay().PopTransformation();
+		}
 	}
 	if(mAngleModel2->isPresent()){
 		mActiveManipulatives++;
-		if((mAngleModel2->Numerator()/(float)mAngleModel2->Denominator()) == mCurrentProportion)	mEquivalentManipulatives++;
+		if((mAngleModel2->Numerator()/(float)mAngleModel2->Denominator()) == mCurrentProportion){
+			mEquivalentManipulatives++;
+
+			//TODO: do it in a nice way, methods
+			wykobi::quadix<float ,2> tMarkerCorners = mAngleModel2->getMarker().getCorners();
+						mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
+						wykobi::point2d<float> tOrigin;
+						wykobi::point2d<float> tXUnit;
+						wykobi::point2d<float> tYUnit;
+						FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+
+						mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+
+						mDecoratorManager.GetDisplay().PushTransformation();
+						mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+						mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,170.0f,170.0f,0.0f,1.0f,0.0f,1.0f,1);
+
+						mDecoratorManager.GetDisplay().PopTransformation();
+		}
 	}
 	if(mRectangleModel1->isPresent()){
 		mActiveManipulatives++;
-		if((mRectangleModel1->Numerator()/(float)mRectangleModel1->Denominator()) == mCurrentProportion)	mEquivalentManipulatives++;
+		if((mRectangleModel1->Numerator()/(float)mRectangleModel1->Denominator()) == mCurrentProportion){
+			mEquivalentManipulatives++;
+
+			//TODO: do it in a nice way, methods
+			wykobi::quadix<float ,2> tMarkerCorners = mRectangleModel1->getMarker().getCorners();
+						mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
+						wykobi::point2d<float> tOrigin;
+						wykobi::point2d<float> tXUnit;
+						wykobi::point2d<float> tYUnit;
+						FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+
+						mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+
+						mDecoratorManager.GetDisplay().PushTransformation();
+						mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+						mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,170.0f,170.0f,0.0f,1.0f,0.0f,1.0f,1);
+
+						mDecoratorManager.GetDisplay().PopTransformation();
+		}
 	}
 	if(mRectangleModel2->isPresent()){
 		mActiveManipulatives++;
-		if((mRectangleModel2->Numerator()/(float)mRectangleModel2->Denominator()) == mCurrentProportion)	mEquivalentManipulatives++;
+		if((mRectangleModel2->Numerator()/(float)mRectangleModel2->Denominator()) == mCurrentProportion){
+			mEquivalentManipulatives++;
+			//TODO: do it in a nice way, methods
+						wykobi::quadix<float ,2> tMarkerCorners = mRectangleModel2->getMarker().getCorners();
+									mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
+									wykobi::point2d<float> tOrigin;
+									wykobi::point2d<float> tXUnit;
+									wykobi::point2d<float> tYUnit;
+									FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+
+									mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+
+									mDecoratorManager.GetDisplay().PushTransformation();
+									mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+									mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,170.0f,170.0f,0.0f,1.0f,0.0f,1.0f,1);
+
+									mDecoratorManager.GetDisplay().PopTransformation();
+		}
 	}
 	if(mTokenModel->isPresent()){
 		mActiveManipulatives++;
-		if(mTokenModel->GetProportion() == mCurrentProportion)	mEquivalentManipulatives++;
+		if(mTokenModel->GetProportion() == mCurrentProportion){
+			mEquivalentManipulatives++;
+			//TODO: do it in a nice way, methods
+
+									wykobi::point2d<float> tOrigin = mTokenModel->GetPosition();
+
+									mDecoratorManager.GetDisplay().PushTransformation();
+									mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,100.0f,100.0f,0.0f,1.0f,0.0f,1.0f,1);
+
+									mDecoratorManager.GetDisplay().PopTransformation();
+		}
 	}
 	for(int i = 0 ; i < 15 ; i++){
 		if(mFractionCards[i]->IsPresent()){
 			mActiveManipulatives++;
-			if(mFractionCards[i]->GetValue() == mCurrentProportion)	mEquivalentManipulatives++;
+			if(mFractionCards[i]->GetValue() == mCurrentProportion){
+				mEquivalentManipulatives++;
+				//TODO: do it in a nice way, methods
+							wykobi::quadix<float ,2> tMarkerCorners = mFractionCards[i]->getMarker().getCorners();
+										mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
+										wykobi::point2d<float> tOrigin;
+										wykobi::point2d<float> tXUnit;
+										wykobi::point2d<float> tYUnit;
+										FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+
+										mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+
+										mDecoratorManager.GetDisplay().PushTransformation();
+										mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+										mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,70.0f,70.0f,0.0f,1.0f,0.0f,1.0f,1);
+
+										mDecoratorManager.GetDisplay().PopTransformation();
+			}
 		}
 	}
 
