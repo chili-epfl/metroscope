@@ -76,7 +76,8 @@ void decorators::FractionViewMeasure::update(){
 			tDenominator = mTokenModel->getTotalTokens();
 		}
 		if(tNumerator!= -1 && tDenominator!= -1){
-			if(tNumerator == mExpectedNumerator && tDenominator == mExpectedDenominator){
+			//if(tNumerator == mExpectedNumerator && tDenominator == mExpectedDenominator){
+			if(tNumerator/((float)tDenominator) == mExpectedNumerator/((float)mExpectedDenominator)){
 				tRed = 0.0f;
 				tGreen = 1.0f;
 			}else{
