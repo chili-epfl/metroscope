@@ -83,7 +83,7 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
 
-				mWorkingTriangle = (0.9*mDisplayHeight);
+				mWorkingTriangle = (mDisplayHeight);
 				mMapWidth = mDisplayWidth - mWorkingTriangle;
 				mMapHeight = mMapWidth;
 				mBugPosition.x = 0;
