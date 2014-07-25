@@ -23,7 +23,10 @@
 #include <qa/pipeables/io/SnapshotTaker.hpp>
 #include <qa/pipeables/vision/CraftagUpdate.hpp>
 #include <qa/pipeables/misc/DecoratorManager.hpp>
+#include <qa/components/misc/NetworkedStateManager.hpp>
 #include "decorators/all.hpp"
+
+NetworkedStateManager* stateManager;
 
 int main(int /*argc*/, char* /*argv*/[])
 {

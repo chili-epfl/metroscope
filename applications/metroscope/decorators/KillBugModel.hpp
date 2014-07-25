@@ -21,6 +21,7 @@
 #define KILLBUGMODEL_HPP_
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
+#include <qa/components/misc/NetworkedStateManager.hpp>
 #include "CircularFractionModel.hpp"
 #include "RectangleFractionModel.hpp"
 #include "TokenModel.hpp"
@@ -84,6 +85,9 @@ class KillBugModel : public FiducialDecorator
 		void SetProportionNumber(wykobi::point2d<float> pPosition, int pNumerator, int pDenominator);
 		void DivideCircunferenceManipulatives(int pParts);
 		void DivideRectangleManipulatives(int pParts);
+
+		void UpdateDeviceStatus();
+		int CalculateDistanceToTarget(int mapsize, wykobi::point2d<int> bugPosition, std::vector<wykobi::point2d<float>> endPoints, std::vector<wykobi::point2d<float>> obstacles);
 
 		long mLastShot;
 

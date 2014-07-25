@@ -31,13 +31,35 @@
 #include <qa/pipeables/misc/FPSPrinter.hpp>
 #include <qa/pipeables/io/CvShower.hpp>
 #include <qa/pipeables/io/CvWaiter.hpp>
+#include <qa/pipeables/misc/Wait.hpp>
+#include <qa/components/misc/NetworkedStateManager.hpp>
+#include <qa/pipeables/networking/PutPostRemoteJSONString.hpp>
+#include <qa/pipeables/networking/GetRemoteJSONString.hpp>
+
 #include "decorators/all.hpp"
 
 #include <time.h>
+#include <exception>
+#include <string>
+#include <iostream>
 
 //#define DEBUG_metroscope_NOMT
 
-NetworkedStateManager* stateManager;
+
+//We define the global variable for the local states
+NetworkedStateManager* stateManager(new NetworkedStateManager());
+
+std::string extractIdFromURL(std::string pUrl){
+	//Just extracts the last thing after the '/' in an URL, or the same string if there is no /
+	unsigned found = pUrl.rfind("/");
+	  if (found!=std::string::npos){//We found a slash
+		  std::string newString = pUrl.substr(found+1,std::string::npos);//we get until the end of the string
+		  return newString;
+	  }
+	  else return pUrl;
+}
+
+
 
 int main(int argc, char* argv[])
 {
@@ -45,6 +67,16 @@ int main(int argc, char* argv[])
 	const IplImage* const *tGrabbedImage = 0;
 	Pipeable *tPreProcess = 0;
 	bool tNoLog = false;
+
+	int tWaitDeviceTime = 500;
+	int tWaitClassroomTime = 1000;
+	std::string tUrlDevice = "";
+	std::string tUrlClassroom = "";
+	std::string tUrlDeviceHistory = "";
+	std::string tUrlClassroomHistory = "";
+
+	//Parsing the arguments from the command line:
+	//metroscope-class [-opencv] [-log] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://...
 	for (int i = 1; i < argc; ++i)
 	{
 		std::string tArgument(argv[i]);
@@ -58,14 +90,93 @@ int main(int argc, char* argv[])
 		{
 			tNoLog = true;
 		}
+		else if (tArgument.substr(0,12) == "-waitdevice=")
+		{
+			if(tArgument.length()>12){
+				  try
+				  {
+					  tWaitDeviceTime = atoi(tArgument.substr(12,tArgument.length()).c_str());
+				  }
+				  catch (std::exception& e)
+				  {
+				    std::cout << "Incorrect syntax in -waitdevice: " << std::endl;
+				    std::cout << "metroscope-class [-opencv] [-nolog] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://... -urldevicehistory=http://... -urlclassroomhistory=http://..." << std::endl;
+				    return(0);
+				  }
+
+			}
+		}
+		else if (tArgument.substr(0,15) == "-waitclassroom=")
+		{
+			if(tArgument.length()>15){
+				  try
+				  {
+					  tWaitClassroomTime = atoi(tArgument.substr(15,tArgument.length()).c_str());
+				  }
+				  catch (std::exception& e)
+				  {
+					  std::cout << "Incorrect syntax in -waitclassroom: " << std::endl;
+					  std::cout << "metroscope-class [-opencv] [-nolog] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://... -urldevicehistory=http://... -urlclassroomhistory=http://..." << std::endl;
+				    return(0);
+				  }
+
+			}
+		}
+		else if (tArgument.substr(0,11) == "-urldevice=")
+		{
+			if(tArgument.length()>11){
+			  tUrlDevice = tArgument.substr(11,tArgument.length());
+			}
+		}
+		else if (tArgument.substr(0,14) == "-urlclassroom=")
+		{
+			if(tArgument.length()>14){
+			  tUrlClassroom = tArgument.substr(14,tArgument.length());
+			}
+		}
+		else if (tArgument.substr(0,18) == "-urldevicehistory=")
+		{
+			if(tArgument.length()>18){
+			  tUrlDeviceHistory = tArgument.substr(18,tArgument.length());
+			}
+		}
+		else if (tArgument.substr(0,21) == "-urlclassroomhistory=")
+		{
+			if(tArgument.length()>21){
+			  tUrlClassroomHistory = tArgument.substr(21,tArgument.length());
+			}
+		}
 	}
+
+	//If we do not have URLs, we just quit
+	if(tUrlClassroom.length()==0 || tUrlDevice.length()==0 || tUrlClassroomHistory.length()==0 || tUrlDeviceHistory.length()==0 ){
+			  std::cout << "Missing parameters: " << std::endl;
+			  std::cout << "metroscope-class [-opencv] [-nolog] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://... -urldevicehistory=http://... -urlclassroomhistory=http://..." << std::endl;
+		      return(0);
+
+			}
+
+	//We extract the meteor IDs to pass them to the state manager (it is the only part we know in advance)
+    //std::cout << "Extracting meteor ids from command line" << std::endl;
+	std::string deviceMeteorId = extractIdFromURL(tUrlDevice);
+	stateManager->SetDeviceMeteorId(deviceMeteorId);
+
+	//Initializing the networking pipeables...
+    //std::cout << "Initializing networking pipeables" << std::endl;
+	Wait tWaitDevice(tWaitDeviceTime);
+	Wait tWaitClassroom(tWaitClassroomTime);
+	PutPostRemoteJSONString tPutRemoteDevice(tUrlDevice, tUrlDeviceHistory, DEVICE);
+	PutPostRemoteJSONString tPutRemoteClassroom(tUrlClassroom, tUrlClassroomHistory, CLASSROOM);
+	GetRemoteJSONString tGetRemoteClassroom(tUrlClassroom, CLASSROOM);
+
+
+	//Initializing the CV and tag detection pipeables...
 	if (!tGrabber)
 	{
 		tGrabber = new FlyCapture2Grabber(1280, 960, 15.0f);
 		tPreProcess = new Flip(Flip::scHorizontally, ((FlyCapture2Grabber *) tGrabber)->Image());
 		tGrabbedImage = ((Flip *) tPreProcess)->GetOutputImage();
 	}
-
 
 	auto tOpenGl2DDisplay = new OpenGl2DDisplay(0, 0, 1280, 768);
 	CraftagUpdate *tCraftagUpdate = new CraftagUpdate(tGrabbedImage);
@@ -103,6 +214,23 @@ int main(int argc, char* argv[])
 	OpenGl2DDisplay::scDefaultOpenGl2DDisplay.startDebug();
 #else
 
+	//Define and start the device HTTP putter thread...
+    //std::cout << "Starting networking thread" << std::endl;
+    tPutRemoteDevice
+    | tWaitDevice
+    | tPutRemoteDevice;
+
+    tPutRemoteDevice.startNoWait();
+
+	//Define and start the classroom HTTP getter/putter thread...
+	tGetRemoteClassroom
+	| tWaitClassroom
+	| tPutRemoteClassroom
+	| tGetRemoteClassroom;
+
+	tGetRemoteClassroom.startNoWait();
+
+
 	*tGrabber
 	| *tPreProcess
 	| *tCraftagUpdate
@@ -120,6 +248,13 @@ int main(int argc, char* argv[])
 	tOpenGl2DDisplay->start();
 	tGrabber->stop();
 	tGrabber->join();
+
+	tPutRemoteDevice.stop();
+	tPutRemoteDevice.join();
+
+	tGetRemoteClassroom.stop();
+	tGetRemoteClassroom.join();
+
 
 #endif
 

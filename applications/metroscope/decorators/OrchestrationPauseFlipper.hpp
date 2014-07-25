@@ -17,40 +17,39 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef FiducialDecorator_HPP
-#define FiducialDecorator_HPP
+#ifndef ORCHESTRATIONPAUSEFLIPPER_HPP_
+#define ORCHESTRATIONPAUSEFLIPPER_HPP_
 
-#include <qa/components/vision/FiducialMarker.hpp>
-class DecoratorManager;
+
+#include <qa/components/misc/NetworkedStateManager.hpp>
+#include <qa/pipeables/misc/DecoratorManager.hpp>
+#include "../FractionsConstants.hpp"
+#include "Flipper.hpp"
+
+	static const long scTogglePauseDelay = 10l*1000l;
+
+
 
 namespace decorators {
 
-class FiducialDecorator
-{	public:
-		virtual void update() = 0;
-		const FiducialMarker& getMarker() const { return *mMarker; }
-		virtual ~FiducialDecorator(){}
-		bool isOrchestrator() { return mOrchestrator; }
+class OrchestrationPauseFlipper : public FiducialDecorator
+{
+	public:
+		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
+		OrchestrationPauseFlipper(DecoratorManager &pDecoratorManager, Flipper * pFlipper);
 
 	protected:
-		DecoratorManager &mDecoratorManager;
-		const FiducialMarker *mMarker;
-		bool mOrchestrator;
-
-		FiducialDecorator(
-				DecoratorManager &pDecoratorManager,
-				const FiducialMarker *pMarker,
-				bool pOrchestrator = false)
-			: mDecoratorManager(pDecoratorManager)
-			, mMarker(pMarker)
-			, mOrchestrator(pOrchestrator)
-		{}
+		void update();
+		void blackoutScreen();
 
 	private:
-		FiducialDecorator();
-		FiducialDecorator(const FiducialDecorator& );
-		FiducialDecorator& operator=(const FiducialDecorator& );
+		static const std::string scDecoratorName;
+		static const DecoratorManager::Registerer mRegisterer;
+
+		Flipper *mFlipper;
+		long mLastToggle;
+
 };
 
 }
-#endif
+#endif /* ORCHESTRATIONPAUSE_HPP_ */

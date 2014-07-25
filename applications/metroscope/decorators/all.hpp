@@ -113,3 +113,6 @@
 #include "EquivalentFractionView.hpp"
 #include "FractionComparisionView.hpp"
 #include "FractionSum.hpp"
+
+//networking
+#include "OrchestrationPauseFlipper.hpp"

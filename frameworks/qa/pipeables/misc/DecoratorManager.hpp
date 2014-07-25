@@ -27,6 +27,7 @@
 #include <qa/components/vision/CraftagRegistrar.hpp>
 #include <qa/components/vision/PlaneCoordinateMapper.hpp>
 #include <qa/pipeables/io/OpenGl2DDisplay.hpp>
+#include <qa/components/misc/NetworkedStateManager.hpp>
 #include <libconfig.h++>
 #include <list>
 #include <map>
