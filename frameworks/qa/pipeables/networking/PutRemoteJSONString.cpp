@@ -69,14 +69,16 @@ bool PutRemoteJSONString::putRemoteString(std::string pUrl, std::string data){
 		//headers = curl_slist_append(headers, client_id_header);
 	    headers = curl_slist_append(headers, "Content-Type: application/json");
 
-	    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-	    curl_easy_setopt(curl, CURLOPT_URL, pUrl.c_str());
-	    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT"); /* !!! */
+	    if(CURLE_OK == (code = curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1))
+	    		&& CURLE_OK == (code = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers))
+	    		&& CURLE_OK == (code = curl_easy_setopt(curl, CURLOPT_URL, pUrl.c_str()))
+	    		&& CURLE_OK == (code = curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT"))
+	    		&& CURLE_OK == (code = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str()))){
 
-	    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str()); /* data goes here */
+		    code = curl_easy_perform(curl);
+		    if(code==CURLE_OK) success = true;
 
-	    code = curl_easy_perform(curl);
-	    if(code==CURLE_OK) success = true;
+	    }
 
 	    curl_slist_free_all(headers);
 	    curl_easy_cleanup(curl);
