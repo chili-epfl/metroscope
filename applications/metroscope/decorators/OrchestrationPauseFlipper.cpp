@@ -44,33 +44,32 @@ mLastToggle(Time::MillisTimestamp())
 }
 
 void decorators::OrchestrationPauseFlipper::update() {
-	//std::cout << "Entering orchestration decorator. Classroom pause: " << stateManager->isClassroomPaused() << std::endl;
-	if (mFlipper->IsPresent())
+	std::cout << "Entering orchestration decorator. Classroom pause: " << stateManager->isClassroomPaused() << std::endl;
+	if (mFlipper->IsPresent() && mFlipper->GetCurrentSide() != NULL)
 	{
 		//We have the pausing flipper on sight...
 		stateManager->addMarkerToDeviceState("pause");
 
-		//std::cout << "Pausing flipper is present" << std::endl;
+		//std::cout << "Pausing flipper is present, flipped " << mFlipper->IsFlipped() << ", lastFlip " << mFlipper->GetTimeOfLastFlip() << ", lastToggle " << mLastToggle << std::endl;
+		long tElapsedTime = mFlipper->GetTimeOfLastFlip() - mLastToggle;
 
-		if(mFlipper->IsFlipped()){
+		if(mFlipper->IsFlipped() && tElapsedTime>scTogglePauseDelay){ //???
 			//...and it has been flipped, we toggle the pause if a certain amount of time has passed
-
-			long tElapsedTime = Time::MillisTimestamp() - mLastToggle;
 
 
 			//std::cout << "Pausing flipper is flipped" << std::endl;
-			if(stateManager->isClassroomPaused() && tElapsedTime>scTogglePauseDelay){
+			if(stateManager->isClassroomPaused()){
 				//std::cout << "Toggling flipper to false" << std::endl;
-				mLastToggle = Time::MillisTimestamp();
 				stateManager->SetClassroomPaused(false);
 			}
-			else if (!stateManager->isClassroomPaused() && tElapsedTime>scTogglePauseDelay){
+			else{
 				//std::cout << "Toggling flipper to true" << std::endl;
-				mLastToggle = Time::MillisTimestamp();
 				stateManager->SetClassroomPaused(true);
 			}
-		}else{
-			//std::cout << "Pausing flipper is NOT flipped anymore" << std::endl;
+
+			mLastToggle = mFlipper->GetTimeOfLastFlip(); //We use the flippers own timer
+
+
 		}
 
 		//Note: We do not check for the pauserDevice, we assume we can toggle the pause at any time
@@ -81,6 +80,7 @@ void decorators::OrchestrationPauseFlipper::update() {
 		stateManager->removeMarkerFromDeviceState("pause");
 	}
 
+	//std::cout << "Doing blackout? Classroom pause: " << stateManager->isClassroomPaused() << std::endl;
 	if(stateManager->isClassroomPaused()) blackoutScreen();
 
 

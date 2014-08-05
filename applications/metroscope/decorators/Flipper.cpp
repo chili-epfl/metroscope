@@ -59,7 +59,7 @@ decorators::Flipper::Flipper(DecoratorManager &pDecoratorManager, FiducialMarker
 							Craftag *pSide1Tag2,
 							Craftag *pSide2Tag1,
 							Craftag *pSide2Tag2):
-FiducialDecorator(pDecoratorManager, pMarker),
+FiducialDecorator(pDecoratorManager, pMarker, true),
 mMarker2(pMarker2),
 mCurrentSide(NULL),
 mLastFlipTimestamp(0),

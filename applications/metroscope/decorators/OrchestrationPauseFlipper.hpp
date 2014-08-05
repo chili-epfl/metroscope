@@ -26,7 +26,7 @@
 #include "../FractionsConstants.hpp"
 #include "Flipper.hpp"
 
-	static const long scTogglePauseDelay = 10l*1000l;
+	static const long scTogglePauseDelay = 5l*1000l;
 
 
 
