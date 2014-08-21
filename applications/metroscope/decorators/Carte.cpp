@@ -90,6 +90,36 @@ decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *p
 	{
 		mOriginPoint.x = pOriginX;
 		mOriginPoint.y = pOriginY;
+
+		CreateStepMap();
+
+		std::cout << "New Map: ";
+		std::cout << mEndNumber;
+		std::cout << std::endl;
+
+		for(std::vector<wykobi::point2d<float>>::iterator it = mEndPoint.begin(); it != mEndPoint.end() ; ++it){
+			std::cout << (*it).x;
+			std::cout << (*it).y;
+			std::cout << std::endl;
+		}
+
+		std::cout << "---";
+		std::cout << std::endl;
+		for(std::vector<wykobi::point2d<float>>::iterator it = mObstacles.begin(); it != mObstacles.end() ; ++it){
+					std::cout << (*it).x;
+					std::cout << (*it).y;
+					std::cout << std::endl;
+		}
+
+		for (int nRow = 0; nRow < mSize; nRow++)
+		{
+			for (int nCol = 0; nCol < mSize; nCol++)
+				std::cout << mStepMap[nRow][nCol] << "\t";
+
+			std::cout << std::endl;
+		}
+
+
 	}
 
 decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, const int pSize,
@@ -105,6 +135,8 @@ decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *p
 	{
 			mOriginPoint.x = pOriginX;
 			mOriginPoint.y = pOriginY;
+
+			//CreateStepMap();
 	}
 
 decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, const int pSize,
@@ -118,6 +150,9 @@ decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *p
 	{
 			mOriginPoint.x = pOriginX;
 			mOriginPoint.y = pOriginY;
+
+			//CreateStepMap();
+
 	}
 decorators::Carte::~Carte(){ }
 
@@ -142,3 +177,49 @@ bool decorators::Carte::IsEndCell(int pPositionX, int pPositionY){
 	}
 	return false;
 }
+
+bool decorators::Carte::IsInsideMap(int pPointX, int pPointY){
+	return ((pPointX >= 0 && pPointX < mSize)&&(pPointY >= 0 && pPointY < mSize));
+}
+
+void decorators::Carte::CreateStepMap(){
+	//mStepMap[20][20] = {-2};
+
+	for(int i = 1; i< mSize ; i++){
+		for(std::vector<wykobi::point2d<float>>::iterator it = mEndPoint.begin(); it != mEndPoint.end() ; ++it){
+
+			//Upper side of the square
+			for(int j = 0 ; j < 2*i + 1 ; j++){
+				int tX = (*it).x - i + j;
+				int tY = (*it).y - i;
+				if(IsInsideMap(tX,tY) && mStepMap[tY][tX] == 0)		mStepMap[tY][tX] = (IsEmptyCell(tX,tY))? i : -1;
+			}
+			//Left side of the square
+			for(int j = 0 ; j < 2*i + 1; j++){
+				int tX = (*it).x - i;
+				int tY = (*it).y - i + j;
+				if(IsInsideMap(tX,tY) && mStepMap[tY][tX] == 0)		mStepMap[tY][tX] = (IsEmptyCell(tX,tY))? i : -1;
+			}
+			//Right side of the square
+			for(int j = 0 ; j < 2*i + 1 ; j++){
+				int tX = (*it).x + i;
+				int tY = (*it).y - i + j;
+				if(IsInsideMap(tX,tY) && mStepMap[tY][tX] == 0)		mStepMap[tY][tX] = (IsEmptyCell(tX,tY))? i : -1;
+			}
+			//Bottom side of the square
+			for(int j = 0 ; j < 2*i + 1; j++){
+				int tX = (*it).x - i + j;
+				int tY = (*it).y + i;
+				if(IsInsideMap(tX,tY) && mStepMap[tY][tX] == 0)		mStepMap[tY][tX] = (IsEmptyCell(tX,tY))? i : -1;
+			}
+		}
+	}
+
+	for(std::vector<wykobi::point2d<float>>::iterator it = mEndPoint.begin(); it != mEndPoint.end() ; ++it){
+		int tX = (*it).x;
+		int tY = (*it).y;
+		mStepMap[tY][tX] = 0;
+	}
+
+}
+

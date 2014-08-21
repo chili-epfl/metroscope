@@ -54,9 +54,16 @@ class Carte : public FiducialDecorator
 		void FinishMap() {mFinished = true;}
 		bool IsEmptyCell(int pPositionX, int pPositionY);
 		bool IsEndCell(int pPositionX, int pPositionY);
+		int CalculateDistanceToTarget(wykobi::point2d<int> bugPosition);
+		bool IsInsideMap(int pPointX, int pPointY);
+
 
 	protected:
 		void update();
+		void CreateStepMap();
+		void InitializeStepMap();
+		bool IsDiagonalObstacle(int pPointX, int pPointY, int pDiagonal); //pDiagonal = 0 - UL ; 1 - UR ; 2 - BL ; 3 - BR
+
 
 	private:
 		static const std::string scDecoratorName;
@@ -69,6 +76,7 @@ class Carte : public FiducialDecorator
 		std::vector<wykobi::point2d<float>> mObstacles;
 		wykobi::point2d<float> mOriginPoint;
 		bool mFinished;
+		int mStepMap[20][20]; //I assume that every map's size is less than 20
 	};
 }
 
