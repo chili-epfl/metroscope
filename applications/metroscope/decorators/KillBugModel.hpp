@@ -25,7 +25,7 @@
 #include "RectangleFractionModel.hpp"
 #include "TokenModel.hpp"
 #include "FractionCard.hpp"
-#include "Flipper.hpp"
+#include "FlipperKillBug.hpp"
 #include "FractionBugHint.hpp"
 #include "Carte.hpp"
 #include "../KillBugConstant.hpp"
@@ -45,7 +45,9 @@ class KillBugModel : public FiducialDecorator
 				CircularFractionModel *pAngleModel1, CircularFractionModel *pAngleModel2,
 				RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2,
 				TokenModel *pTokenModel1,
-				Flipper *pGoFlipper, FractionBugHint ** pFractionHints,
+				//Flipper *pGoFlipper,
+				FlipperKillBug ** pFlipper,
+				FractionBugHint ** pFractionHints,
 				FractionCard ** pFractionCards,
 				Carte ** pCartes);
 		~KillBugModel();
@@ -115,6 +117,7 @@ class KillBugModel : public FiducialDecorator
 		int CheckFractionManipulative(int pProportionNumber);
 		void clearProportions();
 		void saveProportions();
+		bool IsFlipperPresent();
 
 		long mLastShot;
 
@@ -127,11 +130,12 @@ class KillBugModel : public FiducialDecorator
 		RectangleFractionModel *mRectangleModel1;
 		RectangleFractionModel *mRectangleModel2;
 		TokenModel *mTokenModel;
-		Flipper *mFlipper;
+		//Flipper *mFlipper;
 		FractionBugHint **mHints;
 		FractionCard ** mFractionCards;
 		Carte ** mCartes;
-
+		FlipperKillBug ** mFlipper;
+		FlipperKillBug *mActualFlipper;
 
 		Carte *mActualCarte;
 		FractionBugHint *mActualHint;

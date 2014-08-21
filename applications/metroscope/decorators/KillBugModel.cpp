@@ -47,13 +47,19 @@ decorators::FiducialDecorator *decorators::KillBugModel::create(libconfig::Setti
 			tHintCards[i] = (FractionBugHint*) pDecoratorManager.loadDecorator(tHintCardsString[i]);
 		}
 
+		FlipperKillBug ** tFlipper = new FlipperKillBug *[2];
+
+		tFlipper[0] = (FlipperKillBug *) pDecoratorManager.loadDecorator(pSetting["flipper_non_oriented"]);
+		tFlipper[1] = (FlipperKillBug *) pDecoratorManager.loadDecorator(pSetting["flipper_oriented"]);
+
 		return new decorators::KillBugModel (pDecoratorManager,
 				(CircularFractionModel *) pDecoratorManager.loadDecorator(pSetting["circular_1"]),
 				(CircularFractionModel *) pDecoratorManager.loadDecorator(pSetting["circular_2"]),
 				(RectangleFractionModel *) pDecoratorManager.loadDecorator(pSetting["rectangle_1"]),
 				(RectangleFractionModel *) pDecoratorManager.loadDecorator(pSetting["rectangle_2"]),
 				(TokenModel *) pDecoratorManager.loadDecorator(pSetting["token_1"]),
-				(Flipper *) pDecoratorManager.loadDecorator(pSetting["go_flipper"]),
+				//(Flipper *) pDecoratorManager.loadDecorator(pSetting["go_flipper"]),
+				(FlipperKillBug **) tFlipper,
 				(FractionBugHint **) tHintCards, (FractionCard **) tFractionCards, (Carte **) tCarteCards);
 
 	}catch(libconfig::SettingNotFoundException &e) {
@@ -66,56 +72,35 @@ decorators::FiducialDecorator *decorators::KillBugModel::create(libconfig::Setti
 
 decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, CircularFractionModel *pAngleModel1,
 		CircularFractionModel *pAngleModel2, RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2,
-		TokenModel *pTokenModel1, Flipper *pGoFlipper, FractionBugHint ** pFractionHints,
+		TokenModel *pTokenModel1, FlipperKillBug **pFlipper,//Flipper *pGoFlipper,
+		FractionBugHint ** pFractionHints,
 		FractionCard ** pFractionCards, Carte ** pCartes):
 			FiducialDecorator(pDecoratorManager, 0),
 			mCircularModel1(pAngleModel1), mCircularModel2(pAngleModel2),
 			mRectangleModel1(pRectangleModel1), mRectangleModel2(pRectangleModel2),
-			mTokenModel(pTokenModel1), mFlipper(pGoFlipper), mHints(pFractionHints), mFractionCards(pFractionCards), mCartes(pCartes),
+			mTokenModel(pTokenModel1), //mFlipper(pGoFlipper),
+			mFlipper(pFlipper),
+			mHints(pFractionHints), mFractionCards(pFractionCards), mCartes(pCartes),
 			mActualCarte(0),mActualHint(0), mProportion1(0.0), mProportion2(0.0), mProportion3(0.0), mProportion4(0.0),
 			mMapSize(0), mCellDimensionX(0), mCellDimensionY(0), mSteps(0),mGameStarted(false), mMapFinished(false),mMapNew(false),  mActiveManipulatives(0),mLastShot(Time::MillisTimestamp()),
 			mProportion1Numerator(0), mProportion1Denominator(1), mProportion2Numerator(0), mProportion2Denominator(1), mProportion3Numerator(0),
-			mProportion3Denominator(1),mProportion4Numerator(0),mProportion4Denominator(1),mWrongMove(false), mWrongMovementFrames(0),
+			mProportion3Denominator(1),mProportion4Numerator(0),mProportion4Denominator(1),mWrongMove(false), mWrongMovementFrames(0),mActualFlipper(0),
 			mNewMapFrames(0),mProportionFeedbackFrames13(0),mProportionFeedbackFrames24(0),mProportion1Greater(false),mProportion2Greater(false),mProportion3Greater(false),mProportion4Greater(false)
 {
-				//TODO: Put all this in the class KillBugView
-
-
-				mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
-				mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
-
-				mWorkingTriangle = (mDisplayHeight);
-				mMapWidth = mDisplayWidth - mWorkingTriangle;
-				mMapHeight = mMapWidth;
-				mBugPosition.x = 0;
-				mBugPosition.y = 0;
-
-				mMapPoint1.x = mWorkingTriangle/2.5;
-				mMapPoint1.y = mDisplayHeight/2;
-				mMapPoint2.x = mDisplayWidth/2;
-				mMapPoint2.y = mWorkingTriangle/2.5 + mDisplayHeight/2 - mDisplayWidth/2;
-				mMapPoint3.x = mDisplayWidth-mWorkingTriangle/2.5;
-				mMapPoint3.y = mDisplayHeight/2;
-				mMapPoint4.x = mDisplayWidth/2;
-				mMapPoint4.y = mDisplayHeight/2 - mWorkingTriangle/2.5 + mDisplayWidth/2;
-
-				mProportion1Point.x = (mMapPoint2.x + mMapPoint3.x)/2 + 40.0f;
-				mProportion1Point.y = (mMapPoint2.y + mMapPoint3.y)/2 - 40.0f;
-				mProportion2Point.x = (mMapPoint2.x + mMapPoint1.x)/2 - 40.0f;
-				mProportion2Point.y = (mMapPoint2.y + mMapPoint1.y)/2 - 40.0f;
-				mProportion3Point.x = (mMapPoint4.x + mMapPoint1.x)/2 - 40.0f;
-				mProportion3Point.y = (mMapPoint4.y + mMapPoint1.y)/2 + 40.0f;
-				mProportion4Point.x = (mMapPoint4.x + mMapPoint3.x)/2 + 40.0f;
-				mProportion4Point.y = (mMapPoint4.y + mMapPoint3.y)/2 + 40.0f;
 }
 
 decorators::KillBugModel::~KillBugModel(){ /*Empty*/}
 
+/*
+ * If the card is present and the game has started, then look for proportions
+ * If the Flipper is in the table, then display the animation
+ * If the Hint card is present, it will be stored
+ */
 void decorators::KillBugModel::update(){
 	if(IsCartePresent()){
 		if(mGameStarted)	FetchProportions();
 
-		if(mFlipper->IsPresent()) DisplayFlipperFeedback();
+		if(IsFlipperPresent())	DisplayFlipperFeedback();
 
 		checkHintPresent();
 	}
@@ -136,6 +121,14 @@ bool decorators::KillBugModel::IsCartePresent(){
 	}
 	if(mActualCarte!=NULL)	mMapFinished = mActualCarte->IsFinished();
 	return (mActualCarte!=NULL);
+}
+
+bool decorators::KillBugModel::IsFlipperPresent(){
+	if(mFlipper[0]->IsPresent())	mActualFlipper = mFlipper[0];
+	else if(mFlipper[1]->IsPresent())	mActualFlipper = mFlipper[1];
+	else	mActualFlipper = NULL;
+
+	return (mActualFlipper!=NULL);
 }
 
 /*
@@ -464,14 +457,14 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 
 	// If the time is more than the animation, then make a move and set the time
 	// as the last shot done
-	if (mFlipper->IsFlipped() && tElapsedTime > cShotPreparationTime) {
+	if (mActualFlipper->IsFlipped() && tElapsedTime > cShotPreparationTime) {
 		MakeMove();
 		mLastShot = Time::MillisTimestamp();
 	}
 
 	// If is present, we calculate the proportion of time that has been
 	// past, and we represent it as a degree (to be drawn in the circunference
-	if (mFlipper->IsPresent() && mFlipper->GetCurrentSide() != NULL){
+	if (mActualFlipper->IsPresent() && mActualFlipper->GetCurrentSide() != NULL){
 		float tPartialDegree = 360*(tElapsedTime/(float)cShotPreparationTime);
 		bool tFull = false;
 		if(tPartialDegree >= 360)
@@ -480,16 +473,28 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 			tFull = true;
 		}
 
-	// Display the sector of the circunference and then the text
-	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mFlipper->GetCurrentSide(),
-		mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-	mDecoratorManager.GetDisplay().RenderFilledSector(1.0f,3.3f,1.5f,1.5f,
-		tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
+		// Display the sector of the circunference and then the text
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mActualFlipper->GetCurrentSide(),
+			mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+		mDecoratorManager.GetDisplay().RenderFilledSector(1.0f,3.3f,1.5f,1.5f,
+			tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
 
-	mDecoratorManager.GetDisplay().RenderCenteredText(tFull?"Prêt!" :"En repos ...", 0.5f,5.5f,
-		true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
+		mDecoratorManager.GetDisplay().RenderCenteredText(tFull?"Prêt!" :"En repos ...", 0.5f,5.5f,
+			true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
 
-	mDecoratorManager.GetDisplay().PopTransformation();
+		if(mActualFlipper->GetType() == 1 && !tFull){ //If is content flipper then we display more feedback
+			mDecoratorManager.GetDisplay().RenderQuadFilled(-1.5f,0.0f,-2.5f,-1.5f,-2.5f,1.5f,-1.5f,0.0f,0.896f,0.896f,0.896f,0.7);
+			mDecoratorManager.GetDisplay().RenderQuadFilled(-10.5f,-1.5f,-2.5f,-1.5f,-2.5f,8.5f,-10.5f,8.5f,0.896f,0.896f,0.896f,0.7);
+
+			if(!mWrongMove){
+				mDecoratorManager.GetDisplay().RenderCenteredText("Good move", -6.0f,0.0f,
+							true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
+			}else{
+				mDecoratorManager.GetDisplay().RenderCenteredText("Bad move", -6.0f,0.0f,
+											true,1.0f, 0.0f,  0.0f, 0.0f , 1.0f);
+			}
+		}
+		mDecoratorManager.GetDisplay().PopTransformation();
 	}
 }
