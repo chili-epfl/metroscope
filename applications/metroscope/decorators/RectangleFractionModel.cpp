@@ -65,6 +65,11 @@ void decorators::RectangleFractionModel::update(){
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldStartPoint);
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldEndPoint);
 
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().RenderLine(tWorldOriginPoint.x,tWorldOriginPoint.y, tWorldStartPoint.x, tWorldStartPoint.y,0.0f,0.0f,1.0f,1.0f);
+		mDecoratorManager.GetDisplay().RenderLine(tWorldOriginPoint.x,tWorldOriginPoint.y, tWorldEndPoint.x, tWorldEndPoint.y,0.0f,1.0f,0.0f,1.0f);
+		mDecoratorManager.GetDisplay().PopTransformation();
+
 		float tAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
 		float tTotalDistance = wykobi::distance(tWorldOriginPoint,tWorldStartPoint);
 		float tProjectedDistance = wykobi::distance(tWorldOriginPoint,tWorldEndPoint)*(wykobi::cos(tAngle*wykobi::PI/180));

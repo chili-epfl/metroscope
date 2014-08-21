@@ -52,11 +52,11 @@ bool decorators::CircularFractionModel::isPresent(){
 
 void decorators::CircularFractionModel::update(){
 	if(isPresent()){
-		wykobi::point2d<float> mOriginPoint = mAngleModel->OriginPoint();
-		wykobi::point2d<float> mEndPoint = mAngleModel->EndPoint();
-
+		// We take the origin, end and start point to calculate the angle between them:
 		wykobi::quadix<float ,2> tMarkerCorners = mAngleModel->getMarker().getCorners();
 		wykobi::point2d<float> mStartPoint = wykobi::centroid(tMarkerCorners[0],tMarkerCorners[1]);
+		wykobi::point2d<float> mOriginPoint = mAngleModel->OriginPoint();
+		wykobi::point2d<float> mEndPoint = mAngleModel->EndPoint();
 
 		wykobi::point2d<float> tWorldOriginPoint = mOriginPoint;
 		wykobi::point2d<float> tWorldStartPoint = mStartPoint;
@@ -70,11 +70,12 @@ void decorators::CircularFractionModel::update(){
 
 		mProportion = (1 - mAngle/360.0f);
 
+		// Now calculate the fraction
 		CalculateFractionFromDecimal();
-
 	}
 }
 
+// This function takes a decimal and calculates the fraction (numerator and denominator)
 void decorators::CircularFractionModel::CalculateFractionFromDecimal(){
 
 	//We'll use at max 8 iterations (less than checking each fraction that has denominator 2,3,4,5,6,7,8,9 or 10)

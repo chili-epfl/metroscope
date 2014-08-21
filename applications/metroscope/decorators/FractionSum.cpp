@@ -56,8 +56,8 @@ void decorators::FractionSum::update(){
 		float tAngle = 0.0f;
 		mDecoratorManager.GetDisplay().PushTransformation();
 		for(std::vector<CircularFractionModel *>::iterator it = mActiveCircularModel.begin() ; it != mActiveCircularModel.end() ; ++it){
-			mDecoratorManager.GetDisplay().RenderFilledSector(300.0f,300.0f,90.0f,90.0f,360.0 -(*it)->GetAngle(),0.0f + tAngle,tAngle+0.1, 0.0f,0.0f,1.0f,1);
-			tAngle += (360- (*it)->GetAngle());
+			mDecoratorManager.GetDisplay().RenderFilledSector(300.0f,300.0f,90.0f,90.0f,(360.0 -(*it)->GetAngle()),90.0f + tAngle,tAngle+0.1, 0.0f,0.0f,1.0f,2);
+			tAngle += (360 - (*it)->GetAngle());
 		}
 		mDecoratorManager.GetDisplay().PopTransformation();
 	}
@@ -69,6 +69,7 @@ void decorators::FractionSum::CheckManipulativesPresent(){
 	for(int i = 0 ; i < mCircularNumber ; i++){
 		if(mCircularModel[i]->isPresent()){
 			mActiveCircularModel.push_back(mCircularModel[i]);
+			mSum += mCircularModel[i]->GetProportion();
 		}
 	}
 }
