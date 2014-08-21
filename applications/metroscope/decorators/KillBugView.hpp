@@ -23,6 +23,9 @@
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "../KillBugConstant.hpp"
 #include <fstream> // (?)
+#include "KillBugModel.hpp"
+#include "Carte.hpp"
+#include "FractionBugHint.hpp"
 
 namespace decorators{
 class KillBugView : public FiducialDecorator
@@ -30,8 +33,28 @@ class KillBugView : public FiducialDecorator
 	public:
 		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
 
-		KillBugView(DecoratorManager &pDecoratorManager);
+		KillBugView(DecoratorManager &pDecoratorManager, KillBugModel *pKillBugModel);
 		~KillBugView();
+
+		void displayMap();
+		void drawGrid();
+		void drawOriginPoint(float tPositionX, float tPositionY);
+		void drawEndingPoints();
+		void drawObstaclePoints();
+		void drawMapStatusFeedback();
+		void drawMoveFeedback();
+		void displayBug();
+		void displayHint();
+		void displayDiscreteHint(std::vector<int> pNumerator, std::vector<int> pDenominator);
+		void displayFractionHint(std::vector<int> pNumerator, std::vector<int> pDenominator);
+		void displayDecimalHint(std::vector<float> pProportion);
+		void displayRectangularHint(std::vector<float> pProportion);
+		void displayCircularHint(std::vector<float> pProportion);
+		void displayIndividualDiscreteHint(int pNumerator, int pDenominator, int pProportionNumber);
+		void displayIndividualFractionHint(int pNumerator, int pDenominator, int pProportionNumber);
+		void displayIndividualDecimalHint(float pProportion, int pProportionNumber);
+		void displayIndividualRectangularHint(float pProportion, int pProportionNumber);
+		void displayIndividualCircularHint(float pProportion, int pProportionNumber);
 
 		void SetProportion(int pProportionNumber, int pNumerator, int pDenominator);
 		void SetDisplayWidth(int pWidth){mDisplayWidth = pWidth;}
@@ -40,11 +63,6 @@ class KillBugView : public FiducialDecorator
 		void SetNewMapFrames(int pFrames);
 		void SetProportionFeedbackFrames(int pProportionFrameNumber, int pFrames);
 		void SetProportionGreater (int pProportionNumber, bool pProportion);
-		void DisplayMap(int pMapSize, wykobi::point2d<float> pBugOrigin, bool pGameStarted, bool pMapFinished, bool pNewMap);
-		void DisplayGrid();
-		void DisplayWorkingArea();
-		void DisplayEndingPoints();
-		void DisplayObstacles();
 		void DisplayBug();
 		void DisplayProportions();
 		void RenderProportion(float pProportion, int pProportionNumber);
@@ -68,13 +86,14 @@ class KillBugView : public FiducialDecorator
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
 
-		//Carte *mActualCarte;
-		//FractionBugHint *mActualHint;
+		KillBugModel *mKillBugModel;
+		Carte *mActualMap;
+		FractionBugHint *mActualHint;
 		float mProportion1,mProportion2,mProportion3,mProportion4;
 
 		int mDisplayWidth, mDisplayHeight;
 		float mWorkingTriangle;
-		int mMapSize;
+		int mMapSize; //TODO: Is is necessary to have it here?
 		wykobi::point2d<float> mCellDimension;
 		float mMapWidth, mMapHeight;
 		wykobi::point2d<int> mBugPosition;
@@ -93,6 +112,8 @@ class KillBugView : public FiducialDecorator
 		int mProportionFeedbackFrames13, mProportionFeedbackFrames24;
 		bool mProportion1Greater, mProportion2Greater, mProportion3Greater, mProportion4Greater;
 		std::vector<wykobi::point2d<int>> mBugTrayectory;
+		float mCellDimensionX;
+		float mCellDimensionY;
 };
 }
 

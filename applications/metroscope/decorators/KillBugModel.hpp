@@ -28,7 +28,6 @@
 #include "Flipper.hpp"
 #include "FractionBugHint.hpp"
 #include "Carte.hpp"
-#include "KillBugView.hpp"
 #include "../KillBugConstant.hpp"
 #include <fstream>
 
@@ -51,13 +50,39 @@ class KillBugModel : public FiducialDecorator
 				Carte ** pCartes);
 		~KillBugModel();
 
+		bool isMapPresent() {return IsCartePresent();}
+		Carte * getActualMap() {return mActualCarte;}
+		bool isGameStarted() {return mGameStarted;}
+		int getNewMapFrames() {return mNewMapFrames;}
+		void decreaseNewMapFrames() {mNewMapFrames--;}
+		int getWrongMovementFrames() {return mWrongMovementFrames;}
+		void decreaseWrongMovementFrames() {mWrongMovementFrames--;}
+		int get13Frames(){return mProportionFeedbackFrames13;}
+		int get24Frames(){return mProportionFeedbackFrames24;}
+		void decrease13Frames(){mProportionFeedbackFrames13--;}
+		void decrease24Frames(){mProportionFeedbackFrames24--;}
+		bool isProportion1Greater() {return mProportion1Greater;}
+		bool isProportion2Greater() {return mProportion2Greater;}
+		bool isProportion3Greater() {return mProportion3Greater;}
+		bool isProportion4Greater() {return mProportion4Greater;}
+		void setGameStarted(bool newState) {mGameStarted = newState;}
+		wykobi::point2d<int> & getBugPosition() {return mBugPosition;}
+
+		bool isHintPresent() {return IsHintPresent();}
+		FractionBugHint * getActualHint() {return mActualHint;}
+		std::vector<int> getProportionNumerator() {return mProportionNumerator;}
+		std::vector<int> getProportionDenominator()	{return mProportionDenominator;}
+		std::vector<float> getProportionValue(){return mProportion;}
+
+
+
 
 	protected:
 		void update();
 		void MakeMove();
 		void Start();
-
-		void DisplayMap();
+		void checkHintPresent();
+		//void DisplayMap();
 		//void DisplayGrid();
 		//void DisplayWorkingArea();
 		//void DisplayEndingPoints();
@@ -84,6 +109,12 @@ class KillBugModel : public FiducialDecorator
 		void SetProportionNumber(wykobi::point2d<float> pPosition, int pNumerator, int pDenominator);
 		void DivideCircunferenceManipulatives(int pParts);
 		void DivideRectangleManipulatives(int pParts);
+		int CheckCircularManipulative(int pProportionNumber);
+		int CheckRectangularManipulative(int pProportionNumber);
+		int CheckTokenManipulative(int pProportionNumber);
+		int CheckFractionManipulative(int pProportionNumber);
+		void clearProportions();
+		void saveProportions();
 
 		long mLastShot;
 
@@ -101,7 +132,6 @@ class KillBugModel : public FiducialDecorator
 		FractionCard ** mFractionCards;
 		Carte ** mCartes;
 
-		//KillBugView *mKillBugView;
 
 		Carte *mActualCarte;
 		FractionBugHint *mActualHint;
@@ -134,6 +164,9 @@ class KillBugModel : public FiducialDecorator
 		int mProportion3Denominator;
 		int mProportion4Numerator;
 		int mProportion4Denominator;
+		std::vector<int> mProportionNumerator;
+		std::vector<int> mProportionDenominator;
+		std::vector<float> mProportion;
 		bool mWrongMove;
 		int mWrongMovementFrames;
 		int mNewMapFrames;
