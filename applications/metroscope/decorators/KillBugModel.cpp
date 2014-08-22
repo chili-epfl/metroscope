@@ -297,15 +297,18 @@ void decorators::KillBugModel::saveProportions(){
 	mProportion.push_back(mProportion3);
 	mProportion.push_back(mProportion4);
 
+
 	mProportionNumerator.push_back(mProportion1Numerator);
 	mProportionNumerator.push_back(mProportion2Numerator);
 	mProportionNumerator.push_back(mProportion3Numerator);
 	mProportionNumerator.push_back(mProportion4Numerator);
 
+
 	mProportionDenominator.push_back(mProportion1Denominator);
 	mProportionDenominator.push_back(mProportion2Denominator);
 	mProportionDenominator.push_back(mProportion3Denominator);
 	mProportionDenominator.push_back(mProportion4Denominator);
+
 
 }
 
@@ -371,11 +374,11 @@ int decorators::KillBugModel::CheckFractionManipulative(int tProportionNumber){
 }
 
 int decorators::KillBugModel::GetProportionNumber(wykobi::point2d<float> pPosition){
-	if(pPosition.x < mDisplayWidth/2){
-		if(pPosition.y < mDisplayHeight/2)	return 2;
+	if(pPosition.x < mDecoratorManager.GetDisplay().GetWidth()/2){
+		if(pPosition.y < mDecoratorManager.GetDisplay().GetHeight()/2)	return 2;
 		else return 3;
 	}else{
-		if(pPosition.y < mDisplayHeight/2)	return 1;
+		if(pPosition.y < mDecoratorManager.GetDisplay().GetHeight()/2)	return 1;
 		else return 4;
 	}
 }
@@ -393,10 +396,10 @@ void decorators::KillBugModel::SetProportionNumber(wykobi::point2d<float> pPosit
 
 void decorators::KillBugModel:: SetProportionNumber(int pCuadrant, float pProportion){
 	switch(pCuadrant){
-		case 1: mProportion1 = pProportion; break;
-		case 2: mProportion2 = pProportion; break;
-		case 3: mProportion3 = pProportion; break;
-		case 4: mProportion4 = pProportion; break;
+		case 1: mProportion1 = pProportion;break;
+		case 2: mProportion2 = pProportion;break;
+		case 3: mProportion3 = pProportion;break;
+		case 4: mProportion4 = pProportion;break;
 	}
 }
 
@@ -492,7 +495,7 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 							true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
 			}else{
 				mDecoratorManager.GetDisplay().RenderCenteredText("Bad move", -6.0f,0.0f,
-											true,1.0f, 0.0f,  0.0f, 0.0f , 1.0f);
+											true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
 			}
 		}
 		mDecoratorManager.GetDisplay().PopTransformation();
