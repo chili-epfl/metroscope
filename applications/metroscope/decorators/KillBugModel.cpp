@@ -465,6 +465,7 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 		mLastShot = Time::MillisTimestamp();
 	}
 
+	/*
 	// If is present, we calculate the proportion of time that has been
 	// past, and we represent it as a degree (to be drawn in the circunference
 	if (mActualFlipper->IsPresent() && mActualFlipper->GetCurrentSide() != NULL){
@@ -487,8 +488,8 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 			true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
 
 		if(mActualFlipper->GetType() == 1 && !tFull){ //If is content flipper then we display more feedback
-			mDecoratorManager.GetDisplay().RenderQuadFilled(-1.5f,0.0f,-2.5f,-1.5f,-2.5f,1.5f,-1.5f,0.0f,0.896f,0.896f,0.896f,0.7);
-			mDecoratorManager.GetDisplay().RenderQuadFilled(-10.5f,-1.5f,-2.5f,-1.5f,-2.5f,8.5f,-10.5f,8.5f,0.896f,0.896f,0.896f,0.7);
+			mDecoratorManager.GetDisplay().RenderQuadFilled(-1.5f,0.0f,-2.5f,-1.5f,-2.5f,1.5f,-1.5f,0.0f,0.896f,0.896f,0.896f,0.9);
+			mDecoratorManager.GetDisplay().RenderQuadFilled(-10.5f,-1.5f,-2.5f,-1.5f,-2.5f,8.5f,-10.5f,8.5f,0.896f,0.896f,0.896f,0.9);
 
 			if(!mWrongMove){
 				mDecoratorManager.GetDisplay().RenderCenteredText("Good move", -6.0f,0.0f,
@@ -499,5 +500,5 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 			}
 		}
 		mDecoratorManager.GetDisplay().PopTransformation();
-	}
+	}*/
 }

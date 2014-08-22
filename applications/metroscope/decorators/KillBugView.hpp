@@ -26,6 +26,7 @@
 #include "KillBugModel.hpp"
 #include "Carte.hpp"
 #include "FractionBugHint.hpp"
+#include "FlipperKillBug.hpp"
 
 namespace decorators{
 class KillBugView : public FiducialDecorator
@@ -55,6 +56,7 @@ class KillBugView : public FiducialDecorator
 		void displayIndividualDecimalHint(float pProportion, int pProportionNumber);
 		void displayIndividualRectangularHint(float pProportion, int pProportionNumber);
 		void displayIndividualCircularHint(float pProportion, int pProportionNumber);
+		void DisplayFlipperFeedback();
 
 		void SetProportion(int pProportionNumber, int pNumerator, int pDenominator);
 		void SetDisplayWidth(int pWidth){mDisplayWidth = pWidth;}
@@ -72,7 +74,7 @@ class KillBugView : public FiducialDecorator
 		void DisplayDiscreteHint();
 		void DisplayDecimalHint();
 		void DisplayFractionHint();
-		void DisplayFlipperFeedback();
+		//void DisplayFlipperFeedback();
 		void DivideCircunferenceManipulatives(int pParts);
 		void DivideRectangleManipulatives(int pParts);
 
@@ -90,6 +92,7 @@ class KillBugView : public FiducialDecorator
 		Carte *mActualMap;
 		FractionBugHint *mActualHint;
 		float mProportion1,mProportion2,mProportion3,mProportion4;
+		FlipperKillBug *mActualFlipper;
 
 		int mDisplayWidth, mDisplayHeight;
 		float mWorkingTriangle;
@@ -114,6 +117,7 @@ class KillBugView : public FiducialDecorator
 		std::vector<wykobi::point2d<int>> mBugTrayectory;
 		float mCellDimensionX;
 		float mCellDimensionY;
+		//long mLastShot;
 };
 }
 

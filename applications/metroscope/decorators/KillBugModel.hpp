@@ -69,9 +69,13 @@ class KillBugModel : public FiducialDecorator
 		bool isProportion4Greater() {return mProportion4Greater;}
 		void setGameStarted(bool newState) {mGameStarted = newState;}
 		wykobi::point2d<int> & getBugPosition() {return mBugPosition;}
+		bool IsWrongMove() {return mWrongMove;}
+		bool IsFlipperPresent();
+		int StepsDone() {return mSteps;}
 
 		bool isHintPresent() {return IsHintPresent();}
 		FractionBugHint * getActualHint() {return mActualHint;}
+		FlipperKillBug * GetActualFlipper() {return mActualFlipper;}
 		std::vector<int> getProportionNumerator() {return mProportionNumerator;}
 		std::vector<int> getProportionDenominator()	{return mProportionDenominator;}
 		std::vector<float> getProportionValue(){return mProportion;}
@@ -117,7 +121,7 @@ class KillBugModel : public FiducialDecorator
 		int CheckFractionManipulative(int pProportionNumber);
 		void clearProportions();
 		void saveProportions();
-		bool IsFlipperPresent();
+
 
 		long mLastShot;
 

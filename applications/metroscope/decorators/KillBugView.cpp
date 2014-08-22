@@ -19,6 +19,7 @@
 
 #include "KillBugView.hpp"
 #include <iostream>
+#include <qa/utils/Time.hpp>
 
 const std::string decorators::KillBugView::scDecoratorName("KillBugView");
 const  DecoratorManager::Registerer decorators::KillBugView::mRegisterer(decorators::KillBugView::scDecoratorName, &decorators::KillBugView::create);
@@ -38,7 +39,7 @@ decorators::FiducialDecorator *decorators::KillBugView::create(libconfig::Settin
 
 decorators::KillBugView::KillBugView(DecoratorManager &pDecoratorManager,KillBugModel *pKillBugModel):
 FiducialDecorator(pDecoratorManager, 0),
-mKillBugModel(pKillBugModel), mBugTrayectory(),mActualMap()
+mKillBugModel(pKillBugModel), mBugTrayectory(),mActualMap(), mActualFlipper(), mActualHint(),mLastShot(Time::MillisTimestamp())
 {
 	mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 	mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
@@ -112,6 +113,10 @@ void decorators::KillBugView::update() {
 		if(mKillBugModel->isHintPresent()){
 			mActualHint = mKillBugModel->getActualHint();
 			displayHint();
+		}
+		if(mKillBugModel->IsFlipperPresent()){
+			mActualFlipper = mKillBugModel->GetActualFlipper();
+			DisplayFlipperFeedback();
 		}
 	}
 }
@@ -319,26 +324,16 @@ void decorators::KillBugView::displayHint(){
 
 	// We check the type of hint that is shown
 	switch(mActualHint->GetHintType()){
-
-	case 0: // Discrete help
-		displayDiscreteHint(tNumerator,tDenominator);
-		break;
-
-	case 1: // Fraction help
-		displayFractionHint(tNumerator,tDenominator);
-		break;
-
-	case 2: // Decimal help
-		displayDecimalHint(tProportion);
-		break;
-
-	case 3: // Rectangular help
-		displayRectangularHint(tProportion);
-		break;
-
-	case 4: // Circular help
-		displayCircularHint(tProportion);
-		break;
+		case 0: displayDiscreteHint(tNumerator,tDenominator);	// Discrete help
+			break;
+		case 1: displayFractionHint(tNumerator,tDenominator);	// Fraction help
+			break;
+		case 2: displayDecimalHint(tProportion);	// Decimal help
+			break;
+		case 3: displayRectangularHint(tProportion);	// Rectangular help
+			break;
+		case 4: displayCircularHint(tProportion);	// Circular help
+			break;
 	}
 }
 
@@ -572,4 +567,98 @@ void decorators::KillBugView::displayIndividualCircularHint(float pProportion, i
 	mDecoratorManager.GetDisplay().RenderEllipse(tPosX,tPosY,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f);
 
 	mDecoratorManager.GetDisplay().PopTransformation();
+}
+
+void decorators::KillBugView::DisplayFlipperFeedback(){
+	static const long cShotPreparationTime = 6l*1000l;
+	long tElapsedTime = Time::MillisTimestamp() - mLastShot;
+
+		// If the time is more than the animation, then make a move and set the time
+		// as the last shot done
+		if (mActualFlipper->IsFlipped() && tElapsedTime > cShotPreparationTime) {
+			//MakeMove();
+			mLastShot = Time::MillisTimestamp();
+		}
+
+		// If is present, we calculate the proportion of time that has been
+		// past, and we represent it as a degree (to be drawn in the circunference
+		if (mActualFlipper->IsPresent() && mActualFlipper->GetCurrentSide() != NULL){
+			float tPartialDegree = 360*(tElapsedTime/(float)cShotPreparationTime);
+			bool tFull = false;
+			if(tPartialDegree >= 360)
+			{
+				tPartialDegree = 360;
+				tFull = true;
+			}
+
+			char tStepsDone[3];
+			char tStepsToGo[3];
+			char tP1Num[3];
+			char tP1Den[3];
+			char tP2Num[3];
+			char tP2Den[3];
+			char tP3Num[3];
+			char tP3Den[3];
+			char tP4Num[3];
+			char tP4Den[3];
+
+
+
+			sprintf(tStepsDone, "%d", mKillBugModel->StepsDone());
+			sprintf(tStepsToGo, "%d", 10);
+			sprintf(tP1Num, "%d", mKillBugModel->getProportionNumerator()[0]);
+			sprintf(tP1Den, "%d", mKillBugModel->getProportionDenominator()[0]);
+			sprintf(tP2Num, "%d", mKillBugModel->getProportionNumerator()[1]);
+			sprintf(tP2Den, "%d", mKillBugModel->getProportionDenominator()[1]);
+			sprintf(tP3Num, "%d", mKillBugModel->getProportionNumerator()[2]);
+			sprintf(tP3Den, "%d", mKillBugModel->getProportionDenominator()[2]);
+			sprintf(tP4Num, "%d", mKillBugModel->getProportionNumerator()[3]);
+			sprintf(tP4Den, "%d", mKillBugModel->getProportionDenominator()[3]);
+
+			// Display the sector of the circunference and then the text
+			mDecoratorManager.GetDisplay().PushTransformation();
+			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mActualFlipper->GetCurrentSide(),
+				mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+			mDecoratorManager.GetDisplay().RenderFilledSector(1.0f,3.3f,1.5f,1.5f,
+				tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
+
+			mDecoratorManager.GetDisplay().RenderCenteredText(tFull?"Prêt!" :"En repos ...", 0.5f,5.5f,
+				true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
+
+			if(mActualFlipper->GetType() == 1 && !tFull){ //If is content flipper then we display more feedback
+				mDecoratorManager.GetDisplay().RenderQuadFilled(-1.5f,0.0f,-2.5f,-1.5f,-2.5f,1.5f,-1.5f,0.0f,0.896f,0.896f,0.896f,0.9);
+				mDecoratorManager.GetDisplay().RenderQuadFilled(-10.5f,-1.5f,-2.5f,-1.5f,-2.5f,8.5f,-10.5f,8.5f,0.896f,0.896f,0.896f,0.9);
+
+				if(!mKillBugModel->IsWrongMove()){
+					mDecoratorManager.GetDisplay().RenderCenteredText("Well Done!", -6.0f,0.0f,
+								true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
+					mDecoratorManager.GetDisplay().RenderText("I've done", -9.5f,2.5f,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
+					mDecoratorManager.GetDisplay().RenderText(tStepsDone, -9.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(" steps...", -8.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(tStepsToGo, -9.5f,5.5f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(" more", -8.0f,5.5f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText("to finish", -9.5f,7.0f,0.05,0.0f,0.0f,0.0f,1.0f);
+
+				}else{
+					mDecoratorManager.GetDisplay().RenderCenteredText("Oh no!", -6.0f,0.0f, true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
+					mDecoratorManager.GetDisplay().RenderText("Remember:", -10.0f,2.5f,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
+					mDecoratorManager.GetDisplay().RenderText(tP1Num, -8.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(tP3Num, -5.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText((mKillBugModel->isProportion1Greater())? ">" : (mKillBugModel->isProportion3Greater())? "<" : "=", -7.5f,5.0f,0.08,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(tP1Den, -8.5f,5.5f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(tP3Den, -5.5f,5.5f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(tP2Num, -8.5f,7.0f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(tP4Num, -5.5f,7.0f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText((mKillBugModel->isProportion2Greater())? ">" : (mKillBugModel->isProportion4Greater())? "<" : "=", -7.5f,8.0f,0.08,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(tP2Den, -8.5f,8.5f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(tP4Den, -5.5f,8.5f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderLine(-8.5f,4.45f,-7.3f,4.5,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderLine(-5.5f,4.45f,-4.3f,4.5,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderLine(-8.5f,7.45f,-7.3f,7.5,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderLine(-5.5f,7.45f,-4.3f,7.5,0.0f,0.0f,0.0f,1.0f);
+
+				}
+			}
+			mDecoratorManager.GetDisplay().PopTransformation();
+		}
 }
