@@ -43,6 +43,9 @@ class FractionComparisionView : public FiducialDecorator
 						RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2, TokenModel *pTokenModel1,
 						FractionCard ** pFractionCards, int pOrder); //pOrder: 0-> greater than, 1-> smaller than
 
+		void SetCurrentActivity(bool pIsCurrentActivity) {mIsCurrentActivity = pIsCurrentActivity;}
+		bool IsPresent() {return (IsActivityPresent() && mMarker->isPresent());}
+
 	protected:
 		void update();
 		FiducialMarker *mActivityMarker;
@@ -67,6 +70,8 @@ class FractionComparisionView : public FiducialDecorator
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
+		bool mIsCurrentActivity;
+
 };
 }
 

@@ -115,3 +115,4 @@
 #include "FractionSum.hpp"
 #include "KillBugView.hpp"
 #include "FlipperKillBug.hpp"
+#include "FractionLearningModel.hpp"

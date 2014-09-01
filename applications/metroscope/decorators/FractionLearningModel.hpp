@@ -17,55 +17,47 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef EQUIVALENTFRACTIONVIEW_HPP_
-#define EQUIVALENTFRACTIONVIEW_HPP_
-
+#ifndef FRACTIONLEARNINGMODE_HPP_
+#define FRACTIONLEARNINGMODE_HPP_
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
-#include "CircularFractionModel.hpp"
-#include "RectangleFractionModel.hpp"
-#include "TokenModel.hpp"
-#include <fstream>
-#include "../KillBugConstant.hpp"
-#include "FractionCard.hpp"
+#include "KillBugModel.hpp"
+#include "FractionComparisionView.hpp"
+#include "FractionViewMeasure.hpp"
+#include "EquivalentFractionView.hpp"
 
-namespace decorators {
+namespace decorators{
 
-class EquivalentFractionView : public FiducialDecorator
+class FractionLearningModel : public FiducialDecorator
 {
 	public:
-		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		EquivalentFractionView(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker,
-				CircularFractionModel *pAngleModel1, CircularFractionModel *pAngleModel2,
-				RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2, TokenModel *pTokenModel1,
-				FractionCard ** pActivityCards, FractionCard ** pFractionCards);
-
-		void SetCurrentActivity(bool pIsCurrentActivity) {mIsCurrentActivity = pIsCurrentActivity;}
-		bool IsPresent(){return mMarker->isPresent() && IsActivityPresent();}
+		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
+		FractionLearningModel(DecoratorManager &pDecoratorManager , KillBugModel *pKillBugModel , FractionComparisionView *pComparisonGreater,
+				FractionComparisionView *pComparisonSmaller, FractionViewMeasure **pFractionView, EquivalentFractionView *pEquivalentFraction,
+				int pConstructionActivity);
+		~FractionLearningModel();
 
 	protected:
 		void update();
-		CircularFractionModel *mAngleModel1;
-		CircularFractionModel *mAngleModel2;
-		RectangleFractionModel *mRectangleModel1;
-		RectangleFractionModel *mRectangleModel2;
-		TokenModel *mTokenModel;
-		FractionCard **mActivityCard;
-		FractionCard **mFractionCards;
-		bool IsActivityPresent();
-		float mCurrentProportion;
-		void CheckManipulativesPresent();
-		int mActiveManipulatives;
-		int mEquivalentManipulatives;
-		FractionCard *mCurrentActivity;
+		bool IsPresentFractionComparison();
+		bool IsPresentFractionConstruction();
+		void SetFractionComparison(bool pIsCurrentActivity);
+		void SetFractionConstruction(bool pIsCurrentActivity);
+
 
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-		bool mIsCurrentActivity;
+		FractionViewMeasure **mFractionConstruction;
+		EquivalentFractionView *mFractionEquivalent;
+		FractionComparisionView *mFractionComparisonGreater;
+		FractionComparisionView *mFractionComparisonSmaller;
+		KillBugModel *mKillBugGame;
+		int mConstructionActivity;
+		int mComparisonActivity;
 };
 
 }
 
+#endif /* FRACTIONLEARNINGMODE_HPP_ */
 
-#endif /* EQUIVALENTFRACTIONVIEW_HPP_ */

@@ -37,6 +37,9 @@ class FractionViewMeasure : public FiducialDecorator
 				RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2, TokenModel *pTokenModel1,
 				int pExpectedNumerator, int pExpectedDenominator);
 
+		void SetCurrentActivity(bool pIsCurrentActivity) {mIsCurrentActivity = pIsCurrentActivity;}
+		bool IsPresent() {return mMarker->isPresent();}
+
 	protected:
 		void update();
 		CircularFractionModel *mAngleModel1;
@@ -50,6 +53,7 @@ class FractionViewMeasure : public FiducialDecorator
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
+		bool mIsCurrentActivity;
 };
 }
 

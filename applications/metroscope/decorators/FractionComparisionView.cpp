@@ -54,55 +54,55 @@ decorators::FractionComparisionView::FractionComparisionView(DecoratorManager &p
 			FiducialDecorator(pDecoratorManager, pMarker),mActivityMarker(pActivityMarker),
 			mAngleModel1(pAngleModel1), mAngleModel2(pAngleModel2), mRectangleModel1(pRectangleModel1), mRectangleModel2(pRectangleModel2),
 			mTokenModel(pTokenModel1), mFractionCards(pFractionCards),mActiveManipulatives(0), mOrder(pOrder), mCorrectOrder(false),
-			mActivityPresent(0),mRectangleWidth(0.0f){
+			mActivityPresent(0),mRectangleWidth(0.0f),mIsCurrentActivity(false){
 }
 void decorators::FractionComparisionView::update(){
-	if(IsActivityPresent()){
-		CheckManipulativesPresent();
-		if(mActiveManipulatives>1){
-			mRectangleWidth = mDecoratorManager.GetDisplay().GetWidth()/(float)mActiveManipulatives;
+		if(IsActivityPresent()){
+				CheckManipulativesPresent();
+				if(mActiveManipulatives>1){
+					mRectangleWidth = mDecoratorManager.GetDisplay().GetWidth()/(float)mActiveManipulatives;
 
-			mDecoratorManager.GetDisplay().PushTransformation();
-			for(int i = 1; i < mActiveManipulatives ; i++){
-				mDecoratorManager.GetDisplay().RenderLine(i*mRectangleWidth,0.0f,i*mRectangleWidth,mDecoratorManager.GetDisplay().GetHeight()/2 - 50.0f,0.0f,0.0f,0.0f,1.0f);
-				mDecoratorManager.GetDisplay().RenderLine(i*mRectangleWidth,mDecoratorManager.GetDisplay().GetHeight()/2 + 50.0f,i*mRectangleWidth,mDecoratorManager.GetDisplay().GetHeight(),0.0f,0.0f,0.0f,1.0f);
-				//mDecoratorManager.GetDisplay().RenderFilledEllipse(i*mRectangleWidth,mDecoratorManager.GetDisplay().GetHeight()/2,50.0f,50.0f,1.0f,1.0f,1.0f,1.0f,1);
-				mDecoratorManager.GetDisplay().RenderEllipse(i*mRectangleWidth,mDecoratorManager.GetDisplay().GetHeight()/2,50.0f,50.0f,0.0f,0.0f,0.0f,1.0f,1);
-			}
-
-			mDecoratorManager.GetDisplay().PopTransformation();
-
-
-			if(mMarker->isPresent()){
-				//IdentifyFractions();
-				CheckAnswer();
-
-				wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
-				mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
-				wykobi::point2d<float> tOrigin;
-				wykobi::point2d<float> tXUnit;
-				wykobi::point2d<float> tYUnit;
-				FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
-
-				mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
-
-				mDecoratorManager.GetDisplay().PushTransformation();
-				mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-				mDecoratorManager.GetDisplay().RenderText(mCorrectOrder? "Tres bien!" : "Essaye encore une fois",
-						tOrigin.x, tOrigin.y, 0.7f, (mCorrectOrder) ? 0.0f: 1.0f,
-						(mCorrectOrder)? 1.0f : 0.0f, 0.0f);
-				mDecoratorManager.GetDisplay().PopTransformation();
-
-				if(mCorrectOrder){
 					mDecoratorManager.GetDisplay().PushTransformation();
 					for(int i = 1; i < mActiveManipulatives ; i++){
-						mDecoratorManager.GetDisplay().RenderText((mOrder == 0)? ">" : "<", i*mRectangleWidth-15.0,mDecoratorManager.GetDisplay().GetHeight()/2+15.0, 2.0f, 0.0f,0.0f,0.0f,1.0f);
+						mDecoratorManager.GetDisplay().RenderLine(i*mRectangleWidth,0.0f,i*mRectangleWidth,mDecoratorManager.GetDisplay().GetHeight()/2 - 50.0f,0.0f,0.0f,0.0f,1.0f);
+						mDecoratorManager.GetDisplay().RenderLine(i*mRectangleWidth,mDecoratorManager.GetDisplay().GetHeight()/2 + 50.0f,i*mRectangleWidth,mDecoratorManager.GetDisplay().GetHeight(),0.0f,0.0f,0.0f,1.0f);
+						mDecoratorManager.GetDisplay().RenderEllipse(i*mRectangleWidth,mDecoratorManager.GetDisplay().GetHeight()/2,50.0f,50.0f,0.0f,0.0f,0.0f,1.0f,1);
 					}
+
 					mDecoratorManager.GetDisplay().PopTransformation();
+
+
+					if(mMarker->isPresent()){
+						CheckAnswer();
+
+						wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
+						mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
+						wykobi::point2d<float> tOrigin;
+						wykobi::point2d<float> tXUnit;
+						wykobi::point2d<float> tYUnit;
+						FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+
+						mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+
+						mDecoratorManager.GetDisplay().PushTransformation();
+						mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+						mDecoratorManager.GetDisplay().RenderText(mCorrectOrder? "Tres bien!" : "Essaye encore une fois",
+								tOrigin.x, tOrigin.y, 0.7f, (mCorrectOrder) ? 0.0f: 1.0f,
+								(mCorrectOrder)? 1.0f : 0.0f, 0.0f);
+						mDecoratorManager.GetDisplay().PopTransformation();
+
+						if(mCorrectOrder){
+							mDecoratorManager.GetDisplay().PushTransformation();
+							for(int i = 1; i < mActiveManipulatives ; i++){
+								mDecoratorManager.GetDisplay().RenderText((mOrder == 0)? ">" : "<", i*mRectangleWidth-15.0,mDecoratorManager.GetDisplay().GetHeight()/2+15.0, 2.0f, 0.0f,0.0f,0.0f,1.0f);
+							}
+							mDecoratorManager.GetDisplay().PopTransformation();
+						}
+					}
 				}
 			}
-		}
-	}
+		if(!mIsCurrentActivity)		mActivityPresent = 0;
+
 }
 
 
