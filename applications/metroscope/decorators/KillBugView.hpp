@@ -78,6 +78,7 @@ class KillBugView : public FiducialDecorator
 		void DivideCircunferenceManipulatives(int pParts);
 		void DivideRectangleManipulatives(int pParts);
 
+
 	protected:
 		void update();
 

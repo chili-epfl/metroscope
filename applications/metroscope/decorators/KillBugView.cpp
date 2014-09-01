@@ -37,6 +37,7 @@ decorators::FiducialDecorator *decorators::KillBugView::create(libconfig::Settin
 	return 0;
 }
 
+// TODO: Maintain the order of declaration in KillBugView.hpp
 decorators::KillBugView::KillBugView(DecoratorManager &pDecoratorManager,KillBugModel *pKillBugModel):
 FiducialDecorator(pDecoratorManager, 0),
 mKillBugModel(pKillBugModel), mBugTrayectory(),mActualMap(), mActualFlipper(), mActualHint(),mLastShot(Time::MillisTimestamp())
@@ -103,8 +104,13 @@ decorators::KillBugView::~KillBugView(){
 
 }
 
+/*
+ * Is a map is present, then we show the map
+ * If a hint is present, then we display the corresponding hint
+ * If the flipper is present we display the feedback
+ */
 void decorators::KillBugView::update() {
-	if(mKillBugModel->isMapPresent()){
+	if(mKillBugModel->isMapPresent() && mKillBugModel->IsCurrentActivity()){
 		mActualMap = mKillBugModel->getActualMap();
 		displayMap();
 		if(mKillBugModel->isGameStarted()){
@@ -121,33 +127,44 @@ void decorators::KillBugView::update() {
 	}
 }
 
+/*
+ *	Draws the origin, obstacle and ending points
+ *	Also initializes the game
+ */
 void decorators::KillBugView::displayMap(){
 
+	//	Get the size of the map to calculate the dimension of each cell:
 	mMapSize = mKillBugModel->getActualMap()->getSize();
-
 	mCellDimensionX = (mMapPoint3.x - mMapPoint1.x)/(2*mMapSize);
 	mCellDimensionY = (mMapPoint4.y - mMapPoint2.y)/(2*mMapSize);
 
+	//	Get the origin point of the map
 	wykobi::point2d<float> tBugOrigin = mActualMap->getOriginPoint();
 
+	//	If the game is not started, we set the position of the bug
+	//	as the origin position of the map
 	if(!mKillBugModel->isGameStarted()){
 		mBugPosition.x = (int)tBugOrigin.x;
 		mBugPosition.y = (int)tBugOrigin.y;
 	}
 
+	//	We interpolate the the real point (x,y) of the bug
 	float tBugPositionX = mMapPoint2.x + (tBugOrigin.x - tBugOrigin.y)*mCellDimensionX;
 	float tBugPositionY = mMapPoint2.y + (tBugOrigin.x + tBugOrigin.y + 1)*mCellDimensionY;
 
-	// Draw everything that is necessary: map border, starting point, ending point(s) and obstacle(s)
+	//	Draw everything that is necessary: map border, starting point,
+	//	ending point(s) and obstacle(s)
 	drawGrid();
 	drawOriginPoint(tBugPositionX,tBugPositionY);
 	drawEndingPoints();
 	drawObstaclePoints();
 
-	// Check for feedback map finished, wrong moves, new map, proportions greater than others, etc...
+	// 	Check for feedback map finished, wrong moves, new map,
+	//	proportions greater than others, etc...
 	drawMapStatusFeedback(); // New or finished map
 	drawMoveFeedback();
 
+	//	We set the game as started
 	mKillBugModel->setGameStarted(true);
 }
 
@@ -161,16 +178,16 @@ void decorators::KillBugView::drawGrid(){
 	mDecoratorManager.GetDisplay().RenderQuad(mMapPoint1.x, mMapPoint1.y, mMapPoint2.x, mMapPoint2.y,
 			mMapPoint3.x, mMapPoint3.y, mMapPoint4.x, mMapPoint4.y, 0.0f,0.0f,0.0f,1.0f);
 
-	// Corner 1:
+	// Corner 1 - Proportion 1:
 	mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,
 			90.0f,180.0f,scProp1R,scProp1G,scProp1B,0.1f,1);
-	// Corner 2:
+	// Corner 2 - Proportion 2:
 	mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,
 			90.0f,270.0f,scProp2R,scProp2G,scProp2B,0.1f,1);
-	// Corner 3:
+	// Corner 3 - Proportion 3:
 	mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,
 			90.0f,360.0f,scProp3R,scProp3G,scProp3B,0.1f,1);
-	// Corner 4:
+	// Corner 4 - Proportion 4:
 	mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,
 			90.0f,90.0f,scProp4R,scProp4G,scProp4B,0.1f,1); //Prop4
 
@@ -194,6 +211,7 @@ void decorators::KillBugView::drawEndingPoints(){
 	if(mActualMap->getEndNumber() > 0){
 		std::vector<wykobi::point2d<float>> tEnd = mActualMap->getEndPoint();
 		for(std::vector<wykobi::point2d<float>>::iterator it = tEnd.begin(); it != tEnd.end() ; ++it){
+			//	Interpolate the position of the ending points
 			float tEndPositionX = mMapPoint2.x + ((*it).x - (*it).y)*mCellDimensionX;
 			float tEndPositionY = mMapPoint2.y + ((*it).x + (*it).y + 1)*mCellDimensionY;
 			mDecoratorManager.GetDisplay().PushTransformation();
@@ -211,6 +229,7 @@ void decorators::KillBugView::drawObstaclePoints(){
 		int tObstacleTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/obstacle-small.jpg");
 		std::vector<wykobi::point2d<float>> tObstacle = mActualMap->getObstaclesPoint();
 		for(std::vector<wykobi::point2d<float>>::iterator it = tObstacle.begin(); it != tObstacle.end() ; ++it){
+			//	Interpolate the position of the obstacle
 			float tPoint1X = mMapPoint2.x + ((*it).x - (*it).y)*mCellDimensionX;
 			float tPoint1Y = mMapPoint2.y + ((*it).y + (*it).x)*mCellDimensionY;
 			float tPoint2X = mMapPoint2.x + ((*it).x - (*it).y + 1)*mCellDimensionX;
@@ -229,7 +248,7 @@ void decorators::KillBugView::drawObstaclePoints(){
 }
 
 /*
- * Gives the feedback if the map is finished
+ * Gives the feedback if the map is finished or is a new map
  */
 void decorators::KillBugView::drawMapStatusFeedback(){
 	mDecoratorManager.GetDisplay().PushTransformation();
@@ -337,6 +356,9 @@ void decorators::KillBugView::displayHint(){
 	}
 }
 
+/*
+ * Display the discrete representation for all the fractions
+ */
 void decorators::KillBugView::displayDiscreteHint(std::vector<int> pNumerator, std::vector<int> pDenominator){
 	for(int i = 0 ; i < 4 ; i++){
 		int tNum = pNumerator[i];
@@ -345,6 +367,9 @@ void decorators::KillBugView::displayDiscreteHint(std::vector<int> pNumerator, s
 	}
 }
 
+/*
+ * Display the fraction representation of all the fractions
+ */
 void decorators::KillBugView::displayFractionHint(std::vector<int> pNumerator, std::vector<int> pDenominator){
 	for(int i = 0 ; i < 4 ; i++){
 		int tNum = pNumerator[i];
@@ -353,6 +378,9 @@ void decorators::KillBugView::displayFractionHint(std::vector<int> pNumerator, s
 	}
 }
 
+/*
+ * Display the decimal representation of all the fractions
+ */
 void decorators::KillBugView::displayDecimalHint(std::vector<float> pProportion){
 	for(int i = 0 ; i < 4 ; i++){
 		float tProportion = pProportion[i];
@@ -360,6 +388,9 @@ void decorators::KillBugView::displayDecimalHint(std::vector<float> pProportion)
 	}
 }
 
+/*
+ * Display the rectangular representation of all the fractions
+ */
 void decorators::KillBugView::displayRectangularHint(std::vector<float> pProportion){
 	for(int i = 0 ; i < 4 ; i++){
 		float tProportion = pProportion[i];
@@ -367,6 +398,9 @@ void decorators::KillBugView::displayRectangularHint(std::vector<float> pProport
 	}
 }
 
+/*
+ * Display the circular representation of all the fractions
+ */
 void decorators::KillBugView::displayCircularHint(std::vector<float> pProportion){
 	for(int i = 0 ; i < 4 ; i++){
 		float tProportion = pProportion[i];
@@ -393,16 +427,17 @@ void decorators::KillBugView::displayIndividualDiscreteHint(int pNumerator, int 
 
 	// Depending of the proportion number (1,2,3 or 4) we have different X and Y
 	switch(pProportionNumber){
-	case 1:		tPartialX = mProportion1Point.x - tBoxWidth/2;	tPartialY = mProportion1Point.y - tBoxHeight/2;
-		break;
-	case 2:		tPartialX = mProportion2Point.x - tBoxWidth/2;	tPartialY = mProportion2Point.y - tBoxHeight/2;
-		break;
-	case 3:		tPartialX = mProportion3Point.x - tBoxWidth/2;	tPartialY = mProportion3Point.y - tBoxHeight/2;
-		break;
-	case 4:		tPartialX = mProportion4Point.x - tBoxWidth/2;	tPartialY = mProportion4Point.y - tBoxHeight/2;
-		break;
+		case 1:		tPartialX = mProportion1Point.x - tBoxWidth/2;	tPartialY = mProportion1Point.y - tBoxHeight/2;
+			break;
+		case 2:		tPartialX = mProportion2Point.x - tBoxWidth/2;	tPartialY = mProportion2Point.y - tBoxHeight/2;
+			break;
+		case 3:		tPartialX = mProportion3Point.x - tBoxWidth/2;	tPartialY = mProportion3Point.y - tBoxHeight/2;
+			break;
+		case 4:		tPartialX = mProportion4Point.x - tBoxWidth/2;	tPartialY = mProportion4Point.y - tBoxHeight/2;
+			break;
 	}
 
+	// Display the cells
 	mDecoratorManager.GetDisplay().PushTransformation();
 	for(int i = 0 ; i < 4 ; i++){
 		for(int j = 0 ; j < 5 ; j++){
@@ -429,34 +464,33 @@ void decorators::KillBugView::displayIndividualDiscreteHint(int pNumerator, int 
  * Display the fraction hint of one proportion
  */
 void decorators::KillBugView::displayIndividualFractionHint(int pNumerator, int pDenominator, int pProportionNumber){
+	//	Some variables
 	int tPosX, tPosY;
-
-	switch(pProportionNumber){
-	case 1:
-		tPosX = mProportion1Point.x; 	tPosY = mProportion1Point.y;
-		break;
-	case 2:
-		tPosX = mProportion2Point.x; tPosY = mProportion2Point.y;
-		break;
-	case 3:
-		tPosX = mProportion3Point.x; tPosY = mProportion3Point.y;
-		break;
-	case 4:
-		tPosX = mProportion4Point.x; tPosY = mProportion4Point.y;
-		break;
-	}
-
 	char tProportionNumerator[3];
 	char tProportionDenominator[3];
 
+	//	Depending of the proportion number (1,2,3 or 4) we have different X and Y
+	switch(pProportionNumber){
+		case 1:		tPosX = mProportion1Point.x; 	tPosY = mProportion1Point.y;
+			break;
+		case 2:		tPosX = mProportion2Point.x; tPosY = mProportion2Point.y;
+			break;
+		case 3:		tPosX = mProportion3Point.x; tPosY = mProportion3Point.y;
+			break;
+		case 4:		tPosX = mProportion4Point.x; tPosY = mProportion4Point.y;
+			break;
+	}
+
+	//	We save in the char* the numerator and denominator
 	sprintf(tProportionNumerator, "%d", pNumerator);
 	sprintf(tProportionDenominator, "%d",pDenominator);
 
+	//	Display the representation
 	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportionNumerator,tPosX,tPosY - 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f);
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportionDenominator,tPosX,tPosY + 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportionNumerator,tPosX,tPosY - 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f); // Numerator
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportionDenominator,tPosX,tPosY + 15.0f,true,1.0f,0.0f,0.0f,0.0f,1.0f); // Denominator
 
-	mDecoratorManager.GetDisplay().RenderLine(tPosX-15,tPosY,tPosX+15,tPosY,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderLine(tPosX-15,tPosY,tPosX+15,tPosY,0.0f,0.0f,0.0f,1.0f);	//	Fraction line
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
@@ -464,29 +498,26 @@ void decorators::KillBugView::displayIndividualFractionHint(int pNumerator, int 
  * Display the decimal hint of one proportion
  */
 void decorators::KillBugView::displayIndividualDecimalHint(float pProportion, int pProportionNumber){
-
+	// Some variables
 	int tPosX, tPosY;
+	char tProportionText[3];
 
 	switch(pProportionNumber){
-	case 1:
-		tPosX = mProportion1Point.x; 	tPosY = mProportion1Point.y;
-		break;
-	case 2:
-		tPosX = mProportion2Point.x; tPosY = mProportion2Point.y;
-		break;
-	case 3:
-		tPosX = mProportion3Point.x; tPosY = mProportion3Point.y;
-		break;
-	case 4:
-		tPosX = mProportion4Point.x; tPosY = mProportion4Point.y;
-		break;
+		case 1:		tPosX = mProportion1Point.x; 	tPosY = mProportion1Point.y;
+			break;
+		case 2:		tPosX = mProportion2Point.x; tPosY = mProportion2Point.y;
+			break;
+		case 3:		tPosX = mProportion3Point.x; tPosY = mProportion3Point.y;
+			break;
+		case 4:		tPosX = mProportion4Point.x; tPosY = mProportion4Point.y;
+			break;
 	}
 
-	char tProportionText[3];
+	//	Save the proportion, with 2 decimals
 	sprintf(tProportionText, "%3.2f", pProportion);
 
 	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().RenderCenteredText(tProportionText, tPosX,tPosY,true,1.0f,0.0f,0.0f,0.0f,1.0f);
+	mDecoratorManager.GetDisplay().RenderCenteredText(tProportionText, tPosX,tPosY,true,1.0f,0.0f,0.0f,0.0f,1.0f);	//	Render the value
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
@@ -533,6 +564,7 @@ void decorators::KillBugView::displayIndividualRectangularHint(float pProportion
 
 		mDecoratorManager.GetDisplay().PopTransformation();
 }
+
 /*
  * Display the circular hint of one proportion
  */
@@ -570,18 +602,23 @@ void decorators::KillBugView::displayIndividualCircularHint(float pProportion, i
 }
 
 void decorators::KillBugView::DisplayFlipperFeedback(){
+	char tStepsDone[3] , tStepsToGo[3];		// Steps information
+	char tP1Num[3] , tP2Num[3] , tP3Num[3] , tP4Num[3];		//	Numerator information
+	char tP1Den[3] , tP2Den[3] , tP3Den[3] , tP4Den[3];		//	Denominator information
+
 	static const long cShotPreparationTime = 6l*1000l;
-	long tElapsedTime = Time::MillisTimestamp() - mLastShot;
+	//long tElapsedTime = Time::MillisTimestamp() - mLastShot;
+	long tElapsedTime = Time::MillisTimestamp() - mKillBugModel->GetLastShot();
 
 		// If the time is more than the animation, then make a move and set the time
 		// as the last shot done
-		if (mActualFlipper->IsFlipped() && tElapsedTime > cShotPreparationTime) {
+		//if (mActualFlipper->IsFlipped() && tElapsedTime > cShotPreparationTime) {
 			//MakeMove();
-			mLastShot = Time::MillisTimestamp();
-		}
+		//	mLastShot = Time::MillisTimestamp();
+		//}
 
-		// If is present, we calculate the proportion of time that has been
-		// past, and we represent it as a degree (to be drawn in the circunference
+		// If is present, we calculate the proportion of time that has passed
+		// and we represent it as a degree (to be drawn in the circumference
 		if (mActualFlipper->IsPresent() && mActualFlipper->GetCurrentSide() != NULL){
 			float tPartialDegree = 360*(tElapsedTime/(float)cShotPreparationTime);
 			bool tFull = false;
@@ -591,21 +628,11 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 				tFull = true;
 			}
 
-			char tStepsDone[3];
-			char tStepsToGo[3];
-			char tP1Num[3];
-			char tP1Den[3];
-			char tP2Num[3];
-			char tP2Den[3];
-			char tP3Num[3];
-			char tP3Den[3];
-			char tP4Num[3];
-			char tP4Den[3];
 
 
 
 			sprintf(tStepsDone, "%d", mKillBugModel->StepsDone());
-			sprintf(tStepsToGo, "%d", 10);
+			sprintf(tStepsToGo, "%d", mActualMap->GetStepsToGo(mKillBugModel->getBugPosition().x,mKillBugModel->getBugPosition().y));
 			sprintf(tP1Num, "%d", mKillBugModel->getProportionNumerator()[0]);
 			sprintf(tP1Den, "%d", mKillBugModel->getProportionDenominator()[0]);
 			sprintf(tP2Num, "%d", mKillBugModel->getProportionNumerator()[1]);

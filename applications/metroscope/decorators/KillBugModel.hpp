@@ -72,6 +72,7 @@ class KillBugModel : public FiducialDecorator
 		bool IsWrongMove() {return mWrongMove;}
 		bool IsFlipperPresent();
 		int StepsDone() {return mSteps;}
+		long GetLastShot()	{return mLastShot;}
 
 		bool isHintPresent() {return IsHintPresent();}
 		FractionBugHint * getActualHint() {return mActualHint;}
@@ -79,6 +80,9 @@ class KillBugModel : public FiducialDecorator
 		std::vector<int> getProportionNumerator() {return mProportionNumerator;}
 		std::vector<int> getProportionDenominator()	{return mProportionDenominator;}
 		std::vector<float> getProportionValue(){return mProportion;}
+		bool IsPresent() {return isMapPresent();}
+		void SetCurrentActivity(bool pIsCurrentActivity) {mIsCurrentActivity = pIsCurrentActivity;}
+		bool IsCurrentActivity() {return mIsCurrentActivity;}
 
 
 
@@ -185,6 +189,7 @@ class KillBugModel : public FiducialDecorator
 		bool mProportion3Greater;
 		bool mProportion4Greater;
 		//std::vector<wykobi::point2d<int>> mBugTrayectory;
+		bool mIsCurrentActivity;
 
 };
 }

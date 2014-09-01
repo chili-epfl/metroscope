@@ -85,7 +85,8 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 			mMapSize(0), mCellDimensionX(0), mCellDimensionY(0), mSteps(0),mGameStarted(false), mMapFinished(false),mMapNew(false),  mActiveManipulatives(0),mLastShot(Time::MillisTimestamp()),
 			mProportion1Numerator(0), mProportion1Denominator(1), mProportion2Numerator(0), mProportion2Denominator(1), mProportion3Numerator(0),
 			mProportion3Denominator(1),mProportion4Numerator(0),mProportion4Denominator(1),mWrongMove(false), mWrongMovementFrames(0),mActualFlipper(0),
-			mNewMapFrames(0),mProportionFeedbackFrames13(0),mProportionFeedbackFrames24(0),mProportion1Greater(false),mProportion2Greater(false),mProportion3Greater(false),mProportion4Greater(false)
+			mNewMapFrames(0),mProportionFeedbackFrames13(0),mProportionFeedbackFrames24(0),mProportion1Greater(false),mProportion2Greater(false),mProportion3Greater(false),mProportion4Greater(false),
+			mIsCurrentActivity(false)
 {
 }
 
@@ -97,12 +98,16 @@ decorators::KillBugModel::~KillBugModel(){ /*Empty*/}
  * If the Hint card is present, it will be stored
  */
 void decorators::KillBugModel::update(){
-	if(IsCartePresent()){
-		if(mGameStarted)	FetchProportions();
+	if(mIsCurrentActivity){
+		if(IsCartePresent()){
+			if(mGameStarted)	FetchProportions();
 
-		if(IsFlipperPresent())	DisplayFlipperFeedback();
+			if(IsFlipperPresent())	DisplayFlipperFeedback();
 
-		checkHintPresent();
+			checkHintPresent();
+		}
+	}else{
+		mActualCarte = NULL;
 	}
 }
 
@@ -115,10 +120,10 @@ bool decorators::KillBugModel::IsCartePresent(){
 	for(int i = 0 ; i < scCarteCards ; i++){
 		if(mCartes[i]->isPresent()){
 			mActualCarte = mCartes[i];
-
 			if(tPreviusCarte != mActualCarte)	Start();
 		}
 	}
+
 	if(mActualCarte!=NULL)	mMapFinished = mActualCarte->IsFinished();
 	return (mActualCarte!=NULL);
 }

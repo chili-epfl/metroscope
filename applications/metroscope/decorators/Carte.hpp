@@ -56,7 +56,12 @@ class Carte : public FiducialDecorator
 		bool IsEndCell(int pPositionX, int pPositionY);
 		int CalculateDistanceToTarget(wykobi::point2d<int> bugPosition);
 		bool IsInsideMap(int pPointX, int pPointY);
-
+		int GetMinDistanceNeighbours(int pX,int pY);
+		bool AreVertexesNotVisited(int pRadius,std::vector<wykobi::point2d<float>>::iterator pIterator);
+		int GetNumberCellInsideMap(int pRadius, int pX, int pY);
+		void CheckNeighbours(int pRow,int pCol);
+		void AddNeighbours(int pX,int pY);
+		int GetStepsToGo(int pX, int pY) {return mStepMap[pY][pX];}
 
 	protected:
 		void update();
@@ -77,6 +82,10 @@ class Carte : public FiducialDecorator
 		wykobi::point2d<float> mOriginPoint;
 		bool mFinished;
 		int mStepMap[20][20]; //I assume that every map's size is less than 20
+		std::vector<wykobi::point2d<int>> mNotVisitedVertexes;
+		std::vector<wykobi::point2d<int>> mVisitedVertexes;
+		bool mVisitedVertex[20][20]; //I assume that every map's size is less than 20
+
 	};
 }
 

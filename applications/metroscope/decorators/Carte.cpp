@@ -93,33 +93,6 @@ decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *p
 
 		CreateStepMap();
 
-		std::cout << "New Map: ";
-		std::cout << mEndNumber;
-		std::cout << std::endl;
-
-		for(std::vector<wykobi::point2d<float>>::iterator it = mEndPoint.begin(); it != mEndPoint.end() ; ++it){
-			std::cout << (*it).x;
-			std::cout << (*it).y;
-			std::cout << std::endl;
-		}
-
-		std::cout << "---";
-		std::cout << std::endl;
-		for(std::vector<wykobi::point2d<float>>::iterator it = mObstacles.begin(); it != mObstacles.end() ; ++it){
-					std::cout << (*it).x;
-					std::cout << (*it).y;
-					std::cout << std::endl;
-		}
-
-		for (int nRow = 0; nRow < mSize; nRow++)
-		{
-			for (int nCol = 0; nCol < mSize; nCol++)
-				std::cout << mStepMap[nRow][nCol] << "\t";
-
-			std::cout << std::endl;
-		}
-
-
 	}
 
 decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, const int pSize,
@@ -136,7 +109,7 @@ decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *p
 			mOriginPoint.x = pOriginX;
 			mOriginPoint.y = pOriginY;
 
-			//CreateStepMap();
+			CreateStepMap();
 	}
 
 decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, const int pSize,
@@ -151,7 +124,7 @@ decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *p
 			mOriginPoint.x = pOriginX;
 			mOriginPoint.y = pOriginY;
 
-			//CreateStepMap();
+			CreateStepMap();
 
 	}
 decorators::Carte::~Carte(){ }
@@ -182,44 +155,117 @@ bool decorators::Carte::IsInsideMap(int pPointX, int pPointY){
 	return ((pPointX >= 0 && pPointX < mSize)&&(pPointY >= 0 && pPointY < mSize));
 }
 
-void decorators::Carte::CreateStepMap(){
-	//mStepMap[20][20] = {-2};
+int decorators::Carte::GetMinDistanceNeighbours(int pX,int pY){
+	// Each cell has 8 neighbors (4 diagonals + 4 sides)
+	int tMinDistance = 10000; //We start with the minimum distance = 10000
 
-	for(int i = 1; i< mSize ; i++){
-		for(std::vector<wykobi::point2d<float>>::iterator it = mEndPoint.begin(); it != mEndPoint.end() ; ++it){
-
-			//Upper side of the square
-			for(int j = 0 ; j < 2*i + 1 ; j++){
-				int tX = (*it).x - i + j;
-				int tY = (*it).y - i;
-				if(IsInsideMap(tX,tY) && mStepMap[tY][tX] == 0)		mStepMap[tY][tX] = (IsEmptyCell(tX,tY))? i : -1;
-			}
-			//Left side of the square
-			for(int j = 0 ; j < 2*i + 1; j++){
-				int tX = (*it).x - i;
-				int tY = (*it).y - i + j;
-				if(IsInsideMap(tX,tY) && mStepMap[tY][tX] == 0)		mStepMap[tY][tX] = (IsEmptyCell(tX,tY))? i : -1;
-			}
-			//Right side of the square
-			for(int j = 0 ; j < 2*i + 1 ; j++){
-				int tX = (*it).x + i;
-				int tY = (*it).y - i + j;
-				if(IsInsideMap(tX,tY) && mStepMap[tY][tX] == 0)		mStepMap[tY][tX] = (IsEmptyCell(tX,tY))? i : -1;
-			}
-			//Bottom side of the square
-			for(int j = 0 ; j < 2*i + 1; j++){
-				int tX = (*it).x - i + j;
-				int tY = (*it).y + i;
-				if(IsInsideMap(tX,tY) && mStepMap[tY][tX] == 0)		mStepMap[tY][tX] = (IsEmptyCell(tX,tY))? i : -1;
+	for(int i = -1 ; i < 2 ; i++){
+		for (int j = -1 ; j < 2 ; j++){
+			wykobi::point2d<int> tPoint = wykobi::make_point(pX + j,pY+i);
+			if(!(tPoint == wykobi::make_point(pX,pY))){
+				if(IsInsideMap(tPoint.x,tPoint.y) && mStepMap[tPoint.y][tPoint.x] < tMinDistance
+						&& std::find(mVisitedVertexes.begin(), mVisitedVertexes.end(), tPoint)!= mVisitedVertexes.end()){
+					tMinDistance = mStepMap[tPoint.y][tPoint.x] + 1;
+				}
 			}
 		}
 	}
 
-	for(std::vector<wykobi::point2d<float>>::iterator it = mEndPoint.begin(); it != mEndPoint.end() ; ++it){
-		int tX = (*it).x;
+	return tMinDistance;
+}
+
+/*
+ * Creates the...
+ */
+void decorators::Carte::CreateStepMap(){
+	for(std::vector<wykobi::point2d<float>>::iterator it = mObstacles.begin() ; it != mObstacles.end() ; ++it){
 		int tY = (*it).y;
+		int tX = (*it).x;
+		mStepMap[tY][tX] = 10000;
+		mVisitedVertexes.push_back(wykobi::make_point(tX,tY));
+	}
+	for(std::vector<wykobi::point2d<float>>::iterator it = mEndPoint.begin() ; it != mEndPoint.end() ; ++it){
+		int tY = (*it).y;
+		int tX = (*it).x;
 		mStepMap[tY][tX] = 0;
+		mVisitedVertexes.push_back(wykobi::make_point(tX,tY));
+		AddNeighbours(tX,tY);
 	}
 
+		for(std::vector<wykobi::point2d<float>>::iterator it = mEndPoint.begin(); it != mEndPoint.end() ; ++it){
+
+			while(mNotVisitedVertexes.size() > 0){
+				std::vector<wykobi::point2d<int>>::iterator it = mNotVisitedVertexes.begin();
+
+				int tX = (*it).x;
+				int tY = (*it).y;
+
+				mStepMap[(*it).y][(*it).x] = GetMinDistanceNeighbours(tX, tY);
+
+				mVisitedVertexes.push_back(wykobi::make_point(tX,tY));
+				AddNeighbours(tX,tY);
+
+				mNotVisitedVertexes.erase(mNotVisitedVertexes.begin());
+		}
+	}
+}
+
+void decorators::Carte::AddNeighbours(int pX,int pY){
+
+	for(int i = -1 ; i < 2 ; i++){
+		for (int j = -1 ; j < 2 ; j++){
+			wykobi::point2d<int> tPoint = wykobi::make_point(pX + j,pY+i);
+			if(!(tPoint == wykobi::make_point(pX,pY))){
+				if(std::find(mVisitedVertexes.begin(), mVisitedVertexes.end(), tPoint) == mVisitedVertexes.end() && IsInsideMap(tPoint.x,tPoint.y)
+						&& std::find(mNotVisitedVertexes.begin(), mNotVisitedVertexes.end(), tPoint) == mNotVisitedVertexes.end()){
+					mNotVisitedVertexes.push_back(tPoint); // Up
+				}
+			}
+		}
+	}
+}
+
+bool decorators::Carte::AreVertexesNotVisited(int pRadius,std::vector<wykobi::point2d<float>>::iterator pIterator){
+	int tCount = 0;
+
+	for(int j = 0 ; j < 2*pRadius + 1 ; j++){ // Horizontal side of the square
+		int tX = (*pIterator).x - pRadius + j;
+		int tYUpper = (*pIterator).y - pRadius;
+		int tYBottom = (*pIterator).y + pRadius;
+		if(mVisitedVertex[tYUpper][tX] && IsInsideMap(tX,tYUpper))	tCount++;
+		if(mVisitedVertex[tYBottom][tX] && IsInsideMap(tX,tYBottom))	tCount++;
+
+		if(j >0 && j < 2*pRadius){ // Vertical side of the square
+			int tXRight = (*pIterator).x + pRadius;
+			int tXLeft = (*pIterator).x - pRadius;
+			int tY = (*pIterator).y - pRadius + j;
+			if(mVisitedVertex[tY][tXRight] && IsInsideMap(tXRight,tY))	tCount++;
+			if(mVisitedVertex[tY][tXLeft] && IsInsideMap(tXLeft,tY))	tCount++;
+		}
+	}
+
+	return !(tCount == GetNumberCellInsideMap(pRadius, (*pIterator).x,(*pIterator).y));
+}
+
+int decorators::Carte::GetNumberCellInsideMap(int pRadius, int pX, int pY){
+	int tCount = 0;
+
+	for(int j = 0 ; j < 2*pRadius + 1 ; j++){ // Horizontal side of the square
+		int tX = pX - pRadius + j;
+		int tYUpper = pY - pRadius;
+		int tYBottom = pY + pRadius;
+		if(IsInsideMap(tX,tYUpper))	tCount++;
+		if(IsInsideMap(tX,tYBottom))	tCount++;
+
+		if(j >0 && j < 2*pRadius){ // Vertical side of the square
+			int tXRight = pX + pRadius;
+			int tXLeft = pX - pRadius;
+			int tY = pY - pRadius + j;
+			if(IsInsideMap(tXRight,tY))	tCount++;
+			if(IsInsideMap(tXLeft,tY))	tCount++;
+		}
+	}
+
+	return tCount;
 }
 
