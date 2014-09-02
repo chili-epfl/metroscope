@@ -41,8 +41,8 @@ decorators::CircularFractionModel::CircularFractionModel(DecoratorManager &pDeco
 		mProportion(0.0f),
 		mNumerator(0),
 		mDenominator(1),
-		mAngleModel(pAngleModel),
-		mAngle(0.0f){
+		mAngle(0.0f),
+		mAngleModel(pAngleModel){
 
 }
 
