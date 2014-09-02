@@ -31,22 +31,18 @@ class CircularFractionModel : public FiducialDecorator{
 		CircularFractionModel (DecoratorManager &pDecoratorManager, AngleModel * pAngleModel);
 		~CircularFractionModel() {}
 
-		bool isPresent();
-		//const wykobi::point2d<float> &StartPoint() const {return mStartPoint;}
-		//const wykobi::point2d<float> &EndPoint() const {return mEndPoint;}
+		bool IsPresent();
 		float GetProportion() const {return mProportion;}
 		int Numerator() const {return mNumerator;}
 		int Denominator() const {return mDenominator;}
 		float GetAngle() const {return mAngle;}
 		wykobi::point2d<float> GetCenter() {return mAngleModel->getMarker().getCenter();}
-		const FiducialMarker& getMarker() const { return mAngleModel->getMarker(); }
+		const FiducialMarker& GetMarker() const { return mAngleModel->getMarker(); }
 		void CalculateFractionFromDecimal();
 		float SimplifyDecimal();
 
 	protected:
 		void update();
-		//wykobi::point2d<float> mStartPoint;
-		//wykobi::point2d<float> mEndPoint;
 		float mProportion;
 		int mNumerator;
 		int mDenominator;
@@ -59,7 +55,5 @@ class CircularFractionModel : public FiducialDecorator{
 
 };
 }
-
-
 
 #endif /* CIRCULARFRACTIONMODEL_HPP_ */

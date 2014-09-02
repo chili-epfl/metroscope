@@ -46,12 +46,16 @@ decorators::CircularFractionModel::CircularFractionModel(DecoratorManager &pDeco
 
 }
 
-bool decorators::CircularFractionModel::isPresent(){
+bool decorators::CircularFractionModel::IsPresent(){
 	return (mAngleModel->isPresent());
 }
 
+/*
+ * If this decorator is present, then we'll calculate the proportion (angle) and
+ * then convert it in a fraction (num / den) form
+ */
 void decorators::CircularFractionModel::update(){
-	if(isPresent()){
+	if(IsPresent()){
 		// We take the origin, end and start point to calculate the angle between them:
 		wykobi::quadix<float ,2> tMarkerCorners = mAngleModel->getMarker().getCorners();
 		wykobi::point2d<float> mStartPoint = wykobi::centroid(tMarkerCorners[0],tMarkerCorners[1]);
@@ -62,10 +66,12 @@ void decorators::CircularFractionModel::update(){
 		wykobi::point2d<float> tWorldStartPoint = mStartPoint;
 		wykobi::point2d<float> tWorldEndPoint = mEndPoint;
 
+		// We interpolate the points
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldOriginPoint);
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldStartPoint);
 		mDecoratorManager.GetCam2World().InterpolatedMap(tWorldEndPoint);
 
+		// We calculate the angle
 		mAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
 
 		mProportion = (1 - mAngle/360.0f);
@@ -75,23 +81,25 @@ void decorators::CircularFractionModel::update(){
 	}
 }
 
-// This function takes a decimal and calculates the fraction (numerator and denominator)
+/*
+ * This function takes a decimal and calculates the fraction (numerator and denominator)
+ */
 void decorators::CircularFractionModel::CalculateFractionFromDecimal(){
 
-	//We'll use at max 8 iterations (less than checking each fraction that has denominator 2,3,4,5,6,7,8,9 or 10)
+	// We'll use at max 8 iterations (less than checking each fraction that has denominator 2,3,4,5,6,7,8,9 or 10)
 	int tMaxIterations = 8;
 
 	std::vector<double> tZ(tMaxIterations+1);
 	std::vector<double> tD(tMaxIterations+1);
 
-	//We'll simplify the proportion so it'll have 2 numbers after the comma (0.25555454843213541 ~ 0.26)
+	// We'll simplify the proportion so it'll have 2 numbers after the comma (0.25555454843213541 ~ 0.26)
 	double tX;
 	int tModule = (int)(mProportion*100)%10;
 	if(tModule >= 7 && tModule <= 9) tX = floor(mProportion*10 + 0.5)/10;
 	else if(tModule >= 3 && tModule <= 6) tX= (floor(mProportion*10)+0.5)/10;
 	else tX = floor(mProportion*10)/10;
 
-	//Initialize the variables
+	// Initialize the variables
 	int tIterations = 1;
 	tZ[0] = 0.0;
 	tZ[1] = tX;
@@ -100,7 +108,7 @@ void decorators::CircularFractionModel::CalculateFractionFromDecimal(){
 
 	double tN;
 
-	//We put an epsilon of 0.001 to stop
+	// We put an epsilon of 0.001 to stop
 	while(tIterations < 8 && tZ[tIterations] - (int)tZ[tIterations] > 0.001){
 
 		tZ[tIterations + 1] = 1/(tZ[tIterations] - (int)tZ[tIterations]);
@@ -110,6 +118,7 @@ void decorators::CircularFractionModel::CalculateFractionFromDecimal(){
 		tIterations++;
 	}
 
+	// We calculate the numerator and denominator
 	mNumerator = tN;
 	mDenominator = tD[tIterations];
 }
