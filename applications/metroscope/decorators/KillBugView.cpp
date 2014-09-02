@@ -40,7 +40,7 @@ decorators::FiducialDecorator *decorators::KillBugView::create(libconfig::Settin
 // TODO: Maintain the order of declaration in KillBugView.hpp
 decorators::KillBugView::KillBugView(DecoratorManager &pDecoratorManager,KillBugModel *pKillBugModel):
 FiducialDecorator(pDecoratorManager, 0),
-mKillBugModel(pKillBugModel), mBugTrayectory(),mActualMap(), mActualFlipper(), mActualHint(),mLastShot(Time::MillisTimestamp())
+mKillBugModel(pKillBugModel), mBugTrajectory(),mActualMap(), mActualFlipper(), mActualHint(),mLastShot(Time::MillisTimestamp())
 {
 	mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 	mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
@@ -317,16 +317,29 @@ void decorators::KillBugView::displayBug(){
 
 	int tTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/ladybug-smallwhite.jpg");
 	wykobi::point2d<int> tBugPosition = mKillBugModel->getBugPosition();
+	mBugTrajectory.push_back(tBugPosition);
 
-	//Display the image
+	//Display the image and also the trajectory
 	mDecoratorManager.GetDisplay().PushTransformation();
 
+	for(int i = 1 ; i < mBugTrajectory.size() ; i++){
+		wykobi::point2d<int> tPoint1 = wykobi::make_point(mBugTrajectory[i-1].x,mBugTrajectory[i-1].y);
+		wykobi::point2d<int> tPoint2 = wykobi::make_point(mBugTrajectory[i].x,mBugTrajectory[i].y);
+
+		mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + (tPoint1.x - tPoint1.y)*mCellDimensionX,mMapPoint2.y + (tPoint1.x + tPoint1.y + 1)*mCellDimensionY,
+			mMapPoint2.x + (tPoint2.x - tPoint2.y)*mCellDimensionX, mMapPoint2.y + (tPoint2.x + tPoint2.y + 1)*mCellDimensionY, 1.0f, 0.0f, 0.0f, 0.8f);
+
+		mDecoratorManager.GetDisplay().RenderFilledEllipse(mMapPoint2.x + (tPoint1.x - tPoint1.y)*mCellDimensionX, mMapPoint2.y + (tPoint1.x + tPoint1.y + 1)*mCellDimensionY, mCellDimensionX/6,mCellDimensionY/6,1.0f,0.0f,0.0f,0.8f,1);
+	}
 
 	mDecoratorManager.GetDisplay().RenderTexture(tTextureId,
 		mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX - mCellDimensionX/2, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY/2,
 		mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 1)*mCellDimensionX - mCellDimensionX/2, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 1)*mCellDimensionY - mCellDimensionY/2,
 		mMapPoint2.x + (tBugPosition.x - tBugPosition.y )*mCellDimensionX + mCellDimensionX/2, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 2)*mCellDimensionY - mCellDimensionY/2,
 		mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 1)*mCellDimensionX + mCellDimensionX/2, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 1)*mCellDimensionY + mCellDimensionY/2);
+
+
+
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 

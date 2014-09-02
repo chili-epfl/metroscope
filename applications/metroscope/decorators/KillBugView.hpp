@@ -115,7 +115,7 @@ class KillBugView : public FiducialDecorator
 		int mNewMapFrames;
 		int mProportionFeedbackFrames13, mProportionFeedbackFrames24;
 		bool mProportion1Greater, mProportion2Greater, mProportion3Greater, mProportion4Greater;
-		std::vector<wykobi::point2d<int>> mBugTrayectory;
+		std::vector<wykobi::point2d<int>> mBugTrajectory;
 		float mCellDimensionX;
 		float mCellDimensionY;
 		//long mLastShot;
