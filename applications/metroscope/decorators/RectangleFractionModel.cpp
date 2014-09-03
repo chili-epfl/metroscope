@@ -27,7 +27,9 @@ const DecoratorManager::Registerer decorators::RectangleFractionModel::mRegister
 decorators::FiducialDecorator *decorators::RectangleFractionModel::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 {
 	try{
-		return new decorators::RectangleFractionModel(pDecoratorManager,pDecoratorManager.loadMarker(pSetting["start"]),pDecoratorManager.loadMarker(pSetting["end"]));
+		return new decorators::RectangleFractionModel(pDecoratorManager,
+				(FiducialMarker *)pDecoratorManager.loadMarker(pSetting["start"]),
+				(FiducialMarker *)pDecoratorManager.loadMarker(pSetting["end"]));
 	}catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
 	} catch(libconfig::SettingTypeException &e) {
@@ -46,12 +48,19 @@ decorators::RectangleFractionModel::RectangleFractionModel(DecoratorManager &pDe
 		{
 		}
 
-bool decorators::RectangleFractionModel::isPresent(){
+/*
+ * Is present if both the marker and the tag that moves are present
+ */
+bool decorators::RectangleFractionModel::IsPresent(){
 	return (mMarker->isPresent() && mEnd->isPresent());
 }
 
+/*
+ * If the decorator is present, then it calculate the proportion and
+ * then transform it into a fraction (num / den) form
+ */
 void decorators::RectangleFractionModel::update(){
-	if(isPresent()){
+	if(IsPresent()){
 
 		wykobi::point2d<float> mOriginPoint = mMarker->getCorners()[0];
 		wykobi::point2d<float> mEndPoint = mEnd->getCorners()[0];
@@ -70,9 +79,11 @@ void decorators::RectangleFractionModel::update(){
 		mDecoratorManager.GetDisplay().RenderLine(tWorldOriginPoint.x,tWorldOriginPoint.y, tWorldEndPoint.x, tWorldEndPoint.y,0.0f,1.0f,0.0f,1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
 
+		// We calculate the angle between the origin point and the end point and then we calculate the projected distance
 		float tAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
 		float tTotalDistance = wykobi::distance(tWorldOriginPoint,tWorldStartPoint);
 		float tProjectedDistance = wykobi::distance(tWorldOriginPoint,tWorldEndPoint)*(wykobi::cos(tAngle*wykobi::PI/180));
+
 		mProportion = (float)tProjectedDistance/tTotalDistance;
 
 		if(mProportion > 1) mProportion = 1;
@@ -83,22 +94,25 @@ void decorators::RectangleFractionModel::update(){
 	}
 }
 
+/*
+ * This function takes a decimal and calculates the fraction (numerator and denominator)
+ */
 void decorators::RectangleFractionModel::CalculateFractionFromDecimal(){
 
-	//We'll use at max 8 iterations (less than checking each fraction that has denominator 2,3,4,5,6,7,8,9 or 10)
+	// We'll use at max 8 iterations (less than checking each fraction that has denominator 2,3,4,5,6,7,8,9 or 10)
 	int tMaxIterations = 8;
 
 	std::vector<double> tZ(tMaxIterations+1);
 	std::vector<double> tD(tMaxIterations+1);
 
-	//We'll simplify the proportion so it'll have 2 numbers after the comma (0.25555454843213541 ~ 0.26)
+	// We'll simplify the proportion so it'll have 2 numbers after the comma (0.25555454843213541 ~ 0.26)
 	double tX;
 	int tModule = (int)(mProportion*100)%10;
 	if(tModule >= 7 && tModule <= 9) tX = floor(mProportion*10 + 0.5)/10;
 	else if(tModule >= 3 && tModule <= 6) tX= (floor(mProportion*10)+0.5)/10;
 	else tX = floor(mProportion*10)/10;
 
-	//Initialize the variables
+	// Initialize the variables
 	int tIterations = 1;
 	tZ[0] = 0.0;
 	tZ[1] = tX;
@@ -107,7 +121,7 @@ void decorators::RectangleFractionModel::CalculateFractionFromDecimal(){
 
 	double tN;
 
-	//We put an epsilon of 0.001 to stop
+	// We put an epsilon of 0.001 to stop
 	while(tIterations < 8 && tZ[tIterations] - (int)tZ[tIterations] > 0.001){
 
 		tZ[tIterations + 1] = 1/(tZ[tIterations] - (int)tZ[tIterations]);
@@ -117,6 +131,7 @@ void decorators::RectangleFractionModel::CalculateFractionFromDecimal(){
 		tIterations++;
 	}
 
+	// We calculate the numerator and denominator
 	mNumerator = tN;
 	mDenominator = tD[tIterations];
 }

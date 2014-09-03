@@ -30,12 +30,12 @@ class RectangleFractionModel : public FiducialDecorator{
 
 		RectangleFractionModel (DecoratorManager &pDecoratorManager, FiducialMarker *pStartRectangle, FiducialMarker *pEndRectangle);
 
-		bool isPresent();
+		bool IsPresent();
 		const wykobi::point2d<float> &StartPoint() const {return mStartPoint;}
 		const wykobi::point2d<float> &EndPoint() const {return mEndPoint;}
 		wykobi::point2d<float> GetCenter() {return mStart->getCenter();}
 		void CalculateFractionFromDecimal();
-		float proportion() const {return mProportion;}
+		float GetProportion() const {return mProportion;}
 		int Numerator() const {return mNumerator;}
 		int Denominator() const {return mDenominator;}
 
@@ -44,7 +44,6 @@ class RectangleFractionModel : public FiducialDecorator{
 
 		FiducialMarker *mStart;
 		FiducialMarker *mEnd;
-
 		wykobi::point2d<float> mStartPoint;
 		wykobi::point2d<float> mEndPoint;
 		float mProportion;
@@ -56,6 +55,5 @@ class RectangleFractionModel : public FiducialDecorator{
 		static const DecoratorManager::Registerer mRegisterer;
 };
 }
-
 
 #endif /* RECTANGLEMODEL_HPP_ */
