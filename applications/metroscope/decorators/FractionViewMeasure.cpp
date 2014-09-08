@@ -112,9 +112,9 @@ void decorators::FractionViewMeasure::update(){
 				sprintf(tDenomString,"%d",tDenominator);
 				mDecoratorManager.GetDisplay().PushTransformation();
 				mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-				mDecoratorManager.GetDisplay().RenderText(tNumString, tOrigin.x, tOrigin.y, 1.25f, tRed, tGreen, 0.0f);
-				mDecoratorManager.GetDisplay().RenderText(tDenomString, tOrigin.x, tOrigin.y + 35.0f, 1.25f, tRed, tGreen, 0.0f);
-				mDecoratorManager.GetDisplay().RenderLine(tOrigin.x-5,tOrigin.y+5,tOrigin.x+25,tOrigin.y+5,tRed,tGreen,0.0f,1.0f);
+				mDecoratorManager.GetDisplay().RenderText(tNumString, tOrigin.x, tOrigin.y-85.0f, 1.25f, tRed, tGreen, 0.0f);
+				mDecoratorManager.GetDisplay().RenderText(tDenomString, tOrigin.x, tOrigin.y -85.0f + 35.0f, 1.25f, tRed, tGreen, 0.0f);
+				mDecoratorManager.GetDisplay().RenderLine(tOrigin.x-5,tOrigin.y - 85 +5,tOrigin.x+25,tOrigin.y - 85 +5,tRed,tGreen,0.0f,1.0f);
 				mDecoratorManager.GetDisplay().PopTransformation();
 			}
 		}
