@@ -49,6 +49,8 @@ namespace decorators {
 		float GetProportion(int pQuadrant);
 		int GetNumerator(int pQuadrant);
 		int GetDenominator(int pQuadrant);
+		float GetXRadius() {return mMaxX - mMinX;}
+		float GetYRadius() {return mMaxY - mMinY;}
 
 
 	protected:
@@ -69,6 +71,7 @@ namespace decorators {
 		std::vector<FractionToken *> mSecondTokens;			// Tokens that are blue (type = 1)
 		std::vector<FractionToken *> mActiveTokens;
 		int mTokenFirstQuadrant, mTokenSecondQuadrant, mTokenThirdQuadrant, mTokenFourthQuadrant;
+		float mMinX, mMaxX, mMinY, mMaxY;
 	};
 }
 

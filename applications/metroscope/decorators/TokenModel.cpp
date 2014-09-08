@@ -55,7 +55,11 @@ decorators::TokenModel::TokenModel (DecoratorManager &pDecoratorManager, Fractio
 		mTokenFirstQuadrant(0),
 		mTokenSecondQuadrant(0),
 		mTokenThirdQuadrant(0),
-		mTokenFourthQuadrant(0){
+		mTokenFourthQuadrant(0),
+		mMinX(0.0f),
+		mMaxX(0.0f),
+		mMinY(0.0f),
+		mMaxY(0.0f){
 
 			for(int i = 0 ; i < mTokenNumbers ; i++){
 				switch(mTokens[i]->mType){
@@ -82,6 +86,10 @@ void decorators::TokenModel::update(){
 	mTokenThirdQuadrant = 0;
 	mTokenFourthQuadrant = 0;
 	mActiveTokens.clear();
+	mMinX = 10000.0f;
+	mMaxX = 0.0f;
+	mMinY = 10000.0f;
+	mMaxY = 0.0f;
 
 	// For each token that is present, we see if is yellow or blue
 	for(int i = 0; i < mTokenNumbers; i++){
@@ -101,6 +109,10 @@ void decorators::TokenModel::update(){
 			case 3: mTokenThirdQuadrant++; break;
 			case 4: mTokenFourthQuadrant++; break;
 		}
+		if((*it)->GetLocation().x < mMinX)	mMinX = (*it)->GetLocation().x;
+		if((*it)->GetLocation().x > mMaxX)	mMaxX = (*it)->GetLocation().x;
+		if((*it)->GetLocation().y < mMinY)	mMinY = (*it)->GetLocation().y;
+		if((*it)->GetLocation().y > mMaxY)	mMaxY = (*it)->GetLocation().y;
 	}
 }
 
@@ -257,4 +269,5 @@ int decorators::TokenModel::GetDenominator(int pQuadrant){
 	if(tTotalToken !=0) return tTotalToken;
 	else return 0;
 }
+
 

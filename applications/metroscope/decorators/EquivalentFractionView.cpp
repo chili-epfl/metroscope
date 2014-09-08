@@ -185,7 +185,7 @@ void decorators::EquivalentFractionView::CheckTokenModel(){
 		wykobi::point2d<float> tOrigin = mTokenModel->GetPosition();
 
 		mDecoratorManager.GetDisplay().PushTransformation();
-		mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y,150.0f,150.0f,
+		mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y,mTokenModel->GetXRadius() + 10.0f,mTokenModel->GetYRadius() + 10.0f,
 				(mTokenModel->GetProportion() == mCurrentProportion)?0.0f:1.0f,
 				(mTokenModel->GetProportion() == mCurrentProportion)?1.0f:0.0f,0.0f,1.0f,1);
 
