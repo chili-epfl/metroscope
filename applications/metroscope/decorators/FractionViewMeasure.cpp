@@ -46,74 +46,78 @@ decorators::FractionViewMeasure::FractionViewMeasure(DecoratorManager &pDecorato
 		CircularFractionModel *pAngleModel2, RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2,
 		TokenModel *pTokenModel1, int pExpectedNumerator, int pExpectedDenominator):
 			FiducialDecorator(pDecoratorManager, pMarker),
-			mAngleModel1(pAngleModel1), mAngleModel2(pAngleModel2),
-			mRectangleModel1(pRectangleModel1), mRectangleModel2(pRectangleModel2),
-			mTokenModel(pTokenModel1), mExpectedNumerator(pExpectedNumerator), mExpectedDenominator(pExpectedDenominator),mIsCurrentActivity(false){
+			mAngleModel1(pAngleModel1),
+			mAngleModel2(pAngleModel2),
+			mRectangleModel1(pRectangleModel1),
+			mRectangleModel2(pRectangleModel2),
+			mTokenModel(pTokenModel1),
+			mExpectedNumerator(pExpectedNumerator),
+			mExpectedDenominator(pExpectedDenominator),
+			mIsCurrentActivity(false){
 }
 
-
+/*
+ * If there is one manipulative (only one fraction to be considered),
+ * it will display the corresponding fraction that has been
+ * constructed
+ */
 void decorators::FractionViewMeasure::update(){
 	if(mIsCurrentActivity){
 		if(mMarker->isPresent()){
-				int tNumerator = -1;
-				int tDenominator = -1;
-				float tRed;
-				float tGreen;
+			int tNumerator = -1;
+			int tDenominator = -1;
+			float tRed;
+			float tGreen;
 
-				if(mAngleModel1->isPresent()){
-					tNumerator = mAngleModel1->Numerator();
-					tDenominator = mAngleModel1->Denominator();
-				}else if (mAngleModel2->isPresent()){
-					tNumerator = mAngleModel2->Numerator();
-					tDenominator = mAngleModel2->Denominator();
-				}else if (mRectangleModel1->isPresent()){
-					tNumerator = mRectangleModel1->Numerator();
-					tDenominator = mRectangleModel1->Denominator();
-				}else if (mRectangleModel2->isPresent()){
-					tNumerator = mRectangleModel2->Numerator();
-					tDenominator = mRectangleModel2->Denominator();
-				}else if (mTokenModel->isPresent()){
-					tNumerator = mTokenModel->getActiveTokens(0);
-					tDenominator = mTokenModel->getTotalTokens();
-				}
-				if(tNumerator!= -1 && tDenominator!= -1){
-					//if(tNumerator == mExpectedNumerator && tDenominator == mExpectedDenominator){
-					if(tNumerator/((float)tDenominator) == mExpectedNumerator/((float)mExpectedDenominator)){
-						tRed = 0.0f;
-						tGreen = 1.0f;
-					}else{
-						tRed = 1.0f;
-						tGreen = 0.0f;
-					}
-					char tNumString[3];
-					char tDenomString[3];
-
-					wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
-					mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
-					wykobi::point2d<float> tOrigin;
-					wykobi::point2d<float> tXUnit;
-					wykobi::point2d<float> tYUnit;
-					FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
-
-					mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
-
-					sprintf(tNumString,"%d",tNumerator);
-					sprintf(tDenomString,"%d",tDenominator);
-
-					mDecoratorManager.GetDisplay().PushTransformation();
-					mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-					mDecoratorManager.GetDisplay().RenderText(tNumString, tOrigin.x, tOrigin.y, 1.25f, tRed, tGreen, 0.0f);
-					mDecoratorManager.GetDisplay().RenderText(tDenomString, tOrigin.x, tOrigin.y + 35.0f, 1.25f, tRed, tGreen, 0.0f);
-
-					mDecoratorManager.GetDisplay().RenderLine(tOrigin.x-5,tOrigin.y+5,tOrigin.x+25,tOrigin.y+5,tRed,tGreen,0.0f,1.0f);
-					mDecoratorManager.GetDisplay().PopTransformation();
-				}
-
-
-
-
+			if(mAngleModel1->IsPresent()){ // If circular manipulative is present, take numerator and denominator
+				tNumerator = mAngleModel1->Numerator();
+				tDenominator = mAngleModel1->Denominator();
+			}else if (mAngleModel2->IsPresent()){ // If circular manipulative is present, take numerator and denominator
+				tNumerator = mAngleModel2->Numerator();
+				tDenominator = mAngleModel2->Denominator();
+			}else if (mRectangleModel1->IsPresent()){ // If rectangular manipulative is present, take numerator and denominator
+				tNumerator = mRectangleModel1->Numerator();
+				tDenominator = mRectangleModel1->Denominator();
+			}else if (mRectangleModel2->IsPresent()){ // If rectangular manipulative is present, take numerator and denominator
+				tNumerator = mRectangleModel2->Numerator();
+				tDenominator = mRectangleModel2->Denominator();
+			}else if (mTokenModel->IsPresent()){ // If token model is present, take numerator and denominator
+				tNumerator = mTokenModel->GetActiveTokens(0);
+				tDenominator = mTokenModel->GetTotalTokens();
 			}
-	}
 
+			if(tNumerator!= -1 && tDenominator!= -1){ // If we find anything
+				if(tNumerator/((float)tDenominator) == mExpectedNumerator/((float)mExpectedDenominator)){ // If the fraction is the expected one
+					tRed = 0.0f;
+					tGreen = 1.0f; // Text is going to be green
+				}else{
+					tRed = 1.0f; // Text is going to be red
+					tGreen = 0.0f;
+				}
+
+				char tNumString[3];
+				char tDenomString[3];
+
+				wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
+				mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
+				wykobi::point2d<float> tOrigin;
+				wykobi::point2d<float> tXUnit;
+				wykobi::point2d<float> tYUnit;
+				FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+
+				mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+
+				// Show feedback
+				sprintf(tNumString,"%d",tNumerator);
+				sprintf(tDenomString,"%d",tDenominator);
+				mDecoratorManager.GetDisplay().PushTransformation();
+				mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+				mDecoratorManager.GetDisplay().RenderText(tNumString, tOrigin.x, tOrigin.y, 1.25f, tRed, tGreen, 0.0f);
+				mDecoratorManager.GetDisplay().RenderText(tDenomString, tOrigin.x, tOrigin.y + 35.0f, 1.25f, tRed, tGreen, 0.0f);
+				mDecoratorManager.GetDisplay().RenderLine(tOrigin.x-5,tOrigin.y+5,tOrigin.x+25,tOrigin.y+5,tRed,tGreen,0.0f,1.0f);
+				mDecoratorManager.GetDisplay().PopTransformation();
+			}
+		}
+	}
 }
 

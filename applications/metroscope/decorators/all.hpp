@@ -111,7 +111,7 @@
 #include "FractionBugHint.hpp"
 #include "FractionViewMeasure.hpp"
 #include "EquivalentFractionView.hpp"
-#include "FractionComparisionView.hpp"
+#include "FractionComparisonView.hpp"
 #include "FractionSum.hpp"
 #include "KillBugView.hpp"
 #include "FlipperKillBug.hpp"

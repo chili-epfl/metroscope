@@ -22,7 +22,7 @@
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "KillBugModel.hpp"
-#include "FractionComparisionView.hpp"
+#include "FractionComparisonView.hpp"
 #include "FractionViewMeasure.hpp"
 #include "EquivalentFractionView.hpp"
 
@@ -32,8 +32,8 @@ class FractionLearningModel : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		FractionLearningModel(DecoratorManager &pDecoratorManager , KillBugModel *pKillBugModel , FractionComparisionView *pComparisonGreater,
-				FractionComparisionView *pComparisonSmaller, FractionViewMeasure **pFractionView, EquivalentFractionView *pEquivalentFraction,
+		FractionLearningModel(DecoratorManager &pDecoratorManager , KillBugModel *pKillBugModel , FractionComparisonView *pComparisonGreater,
+				FractionComparisonView *pComparisonSmaller, FractionViewMeasure **pFractionView, EquivalentFractionView *pEquivalentFraction,
 				int pConstructionActivity);
 		~FractionLearningModel();
 
@@ -50,11 +50,10 @@ class FractionLearningModel : public FiducialDecorator
 		static const DecoratorManager::Registerer mRegisterer;
 		FractionViewMeasure **mFractionConstruction;
 		EquivalentFractionView *mFractionEquivalent;
-		FractionComparisionView *mFractionComparisonGreater;
-		FractionComparisionView *mFractionComparisonSmaller;
+		FractionComparisonView *mFractionComparisonGreater;
+		FractionComparisonView *mFractionComparisonSmaller;
 		KillBugModel *mKillBugGame;
 		int mConstructionActivity;
-		int mComparisonActivity;
 };
 
 }

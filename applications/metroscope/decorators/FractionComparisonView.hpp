@@ -17,68 +17,81 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef EQUIVALENTFRACTIONVIEW_HPP_
-#define EQUIVALENTFRACTIONVIEW_HPP_
 
+
+#ifndef FRACTIONCOMPARISONVIEW_HPP_
+#define FRACTIONCOMPARISONVIEW_HPP_
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "CircularFractionModel.hpp"
 #include "RectangleFractionModel.hpp"
 #include "TokenModel.hpp"
 #include <fstream>
+#include <map>
+#include <utility>
 #include "../KillBugConstant.hpp"
 #include "FractionCard.hpp"
+#include "FractionBugHint.hpp"
 
 namespace decorators {
 
-class EquivalentFractionView : public FiducialDecorator
+class FractionComparisonView : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		EquivalentFractionView(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker,
-				CircularFractionModel *pAngleModel1, CircularFractionModel *pAngleModel2,
-				RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2, TokenModel *pTokenModel1,
-				FractionCard ** pActivityCards, FractionCard ** pFractionCards);
+		FractionComparisonView(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pActivityMarker,
+						CircularFractionModel *pAngleModel1, CircularFractionModel *pAngleModel2,
+						RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2, TokenModel *pTokenModel1,
+						FractionCard ** pFractionCards, FractionBugHint ** pFractionHints, int pOrder); //pOrder: 0-> greater than, 1-> smaller than
 
 		void SetCurrentActivity(bool pIsCurrentActivity) {mIsCurrentActivity = pIsCurrentActivity;}
-		bool IsPresent(){return mMarker->isPresent() && IsActivityPresent();}
+		bool IsPresent() {return (IsActivityPresent() && mMarker->isPresent());}
+		bool IsHintPresent();
+		void ShowHintFeedback();
+		void DisplayDiscreteHint();
+		void DisplayFractionHint();
+		void DisplayDecimalHint();
+		void DisplayRectangularHint();
+		void DisplayCircularHint();
+		void DisplayIndividualDiscreteHint(int pNumerator, int pDenominator, wykobi::point2d<float> pPosition);
+		void DisplayIndividualFractionHint(int pNumerator, int pDenominator, wykobi::point2d<float> pPosition);
+		void DisplayIndividualDecimalHint(float pProportion, wykobi::point2d<float> pPosition);
+		void DisplayIndividualRectangularHint(float pProportion, wykobi::point2d<float> pPosition);
+		void DisplayIndividualCircularHint(float pProportion, wykobi::point2d<float> pPosition);
 
 	protected:
 		void update();
-		bool IsActivityPresent();
-		void CheckManipulativesPresent();
-		void CheckCircularModel();
-		void CheckRectangularModel();
-		void CheckTokenModel();
-		void CheckFractionModel();
-		void ShowFeedback(wykobi::quadix<float,2> pMarkerCorners, int pManipulativeType, bool pIsCorrect); //0 Circular, 1 Rectangular, 2 Token, 3 Card
-		void ShowCardFeedback();
-
-
-		/*CircularFractionModel *mAngleModel1;
+		FiducialMarker *mActivityMarker;
+		CircularFractionModel *mAngleModel1;
 		CircularFractionModel *mAngleModel2;
 		RectangleFractionModel *mRectangleModel1;
 		RectangleFractionModel *mRectangleModel2;
-		*/
+		TokenModel *mTokenModel;
+		FractionCard **mFractionCards;
+		FractionBugHint ** mFractionHints;
+		void CheckManipulativesPresent();
+		int mActiveManipulatives;
+		void CheckOrder();
+		int mOrder;
+		bool mCorrectOrder;
+		bool IsActivityPresent();
+		int mActivityPresent;
+		void CheckAnswer();
+		void ShowGrid();
+		void ShowCardFeedback();
+		float mRectangleWidth;
+		std::map<float,float> mFractions; //Key is the position in X, so it will be always be orderer from left to right
+		std::map<float,int> mNumerator;
+		std::map<float,int> mDenominator;
 
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-		std::vector<CircularFractionModel *> mCircularModel;
-		std::vector<RectangleFractionModel *> mRectangularModel;
-		TokenModel *mTokenModel;
-		FractionCard **mActivityCard;
-		FractionCard **mFractionCards;
-
-		float mCurrentProportion;
-
-		int mActiveManipulatives;
-		int mEquivalentManipulatives;
-		FractionCard *mCurrentActivity;
 		bool mIsCurrentActivity;
-};
+		FractionBugHint *mActualHint;
 
+};
 }
 
+#endif /* FRACTIONCOMPARISONVIEW_HPP_ */
 
-#endif /* EQUIVALENTFRACTIONVIEW_HPP_ */

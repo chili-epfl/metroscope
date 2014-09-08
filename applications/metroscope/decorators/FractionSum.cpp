@@ -49,17 +49,25 @@ decorators::FractionSum::FractionSum (DecoratorManager &pDecoratorManager,Fiduci
 }
 
 void decorators::FractionSum::update(){
-	if(mMarker->isPresent()) mActivityPresent = true;
-
-	if(mActivityPresent){
+	 if(mMarker->isPresent()){
 		CheckManipulativesPresent();
 		float tAngle = 0.0f;
+		int tCircleNumber = (int)mSum;
+
+		mDecoratorManager.GetDisplay().PushTransformation();
+		for(int i = 0 ; i < tCircleNumber + 1; i++){
+			mDecoratorManager.GetDisplay().RenderEllipse(300.0f + 300.0*i,300.0f,90.0f,90.0f,0.0f,0.0f,0.0f,1.0f,1);
+		}
+		mDecoratorManager.GetDisplay().PopTransformation();
+
+		/*
 		mDecoratorManager.GetDisplay().PushTransformation();
 		for(std::vector<CircularFractionModel *>::iterator it = mActiveCircularModel.begin() ; it != mActiveCircularModel.end() ; ++it){
 			mDecoratorManager.GetDisplay().RenderFilledSector(300.0f,300.0f,90.0f,90.0f,(360.0 -(*it)->GetAngle()),90.0f + tAngle,tAngle+0.1, 0.0f,0.0f,1.0f,2);
 			tAngle += (360 - (*it)->GetAngle());
 		}
-		mDecoratorManager.GetDisplay().PopTransformation();
+		mDecoratorManager.GetDisplay().PopTransformation();*/
+
 	}
 }
 
@@ -67,7 +75,7 @@ void decorators::FractionSum::CheckManipulativesPresent(){
 	mActiveCircularModel.clear();
 	mSum = 0.0;
 	for(int i = 0 ; i < mCircularNumber ; i++){
-		if(mCircularModel[i]->isPresent()){
+		if(mCircularModel[i]->IsPresent()){
 			mActiveCircularModel.push_back(mCircularModel[i]);
 			mSum += mCircularModel[i]->GetProportion();
 		}

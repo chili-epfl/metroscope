@@ -37,9 +37,9 @@ namespace decorators{
 			else return tLocation;
 		}
 		const FiducialMarker *GetMarker() const {return mMarker;}
-		int getType(){return mType;}
+		int GetType(){return mType;}
 		int mType;
-		int mCuadrant;
+		int mQuadrant;
 
 	protected:
 		void update();

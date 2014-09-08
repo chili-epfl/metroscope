@@ -45,89 +45,64 @@ class KillBugModel : public FiducialDecorator
 				CircularFractionModel *pAngleModel1, CircularFractionModel *pAngleModel2,
 				RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2,
 				TokenModel *pTokenModel1,
-				//Flipper *pGoFlipper,
 				FlipperKillBug ** pFlipper,
 				FractionBugHint ** pFractionHints,
 				FractionCard ** pFractionCards,
 				Carte ** pCartes);
 		~KillBugModel();
 
-		bool isMapPresent() {return IsCartePresent();}
-		Carte * getActualMap() {return mActualCarte;}
-		bool isGameStarted() {return mGameStarted;}
-		int getNewMapFrames() {return mNewMapFrames;}
-		void decreaseNewMapFrames() {mNewMapFrames--;}
-		int getWrongMovementFrames() {return mWrongMovementFrames;}
-		void decreaseWrongMovementFrames() {mWrongMovementFrames--;}
-		int get13Frames(){return mProportionFeedbackFrames13;}
-		int get24Frames(){return mProportionFeedbackFrames24;}
-		void decrease13Frames(){mProportionFeedbackFrames13--;}
-		void decrease24Frames(){mProportionFeedbackFrames24--;}
-		bool isProportion1Greater() {return mProportion1Greater;}
-		bool isProportion2Greater() {return mProportion2Greater;}
-		bool isProportion3Greater() {return mProportion3Greater;}
-		bool isProportion4Greater() {return mProportion4Greater;}
-		void setGameStarted(bool newState) {mGameStarted = newState;}
-		wykobi::point2d<int> & getBugPosition() {return mBugPosition;}
-		bool IsWrongMove() {return mWrongMove;}
-		bool IsFlipperPresent();
-		int StepsDone() {return mSteps;}
-		long GetLastShot()	{return mLastShot;}
 
-		bool isHintPresent() {return IsHintPresent();}
-		FractionBugHint * getActualHint() {return mActualHint;}
+		bool IsMapPresent() {return IsCartePresent();}
+		Carte * GetActualMap() {return mActualCarte;}
+		bool IsGameStarted() {return mGameStarted;}
+		int GetNewMapFrames() {return mNewMapFrames;}
+		void DecreaseNewMapFrames() {mNewMapFrames--;}
+		int GetWrongMovementFrames() {return mWrongMovementFrames;}
+		void DecreaseWrongMovementFrames() {mWrongMovementFrames--;}
+		int Get13Frames(){return mProportionFeedbackFrames13;}
+		int Get24Frames(){return mProportionFeedbackFrames24;}
+		void Decrease13Frames(){mProportionFeedbackFrames13--;}
+		void Decrease24Frames(){mProportionFeedbackFrames24--;}
+		bool IsProportion1Greater() {return mProportion1Greater;}
+		bool IsProportion2Greater() {return mProportion2Greater;}
+		bool IsProportion3Greater() {return mProportion3Greater;}
+		bool IsProportion4Greater() {return mProportion4Greater;}
+		void SetGameStarted(bool pNewState) {mGameStarted = pNewState;}
+		wykobi::point2d<int> & GetBugPosition() {return mBugPosition;}
+		bool IsWrongMove() {return mWrongMove;}
+		int StepsDone() {return mSteps;}
+		long GetLastShot() {return mLastShot;}
+		bool IsAnyHintPresent() {return IsHintPresent();}
+		FractionBugHint * GetActualHint() {return mActualHint;}
 		FlipperKillBug * GetActualFlipper() {return mActualFlipper;}
-		std::vector<int> getProportionNumerator() {return mProportionNumerator;}
-		std::vector<int> getProportionDenominator()	{return mProportionDenominator;}
-		std::vector<float> getProportionValue(){return mProportion;}
-		bool IsPresent() {return isMapPresent();}
+		std::vector<int> GetProportionNumerator() {return mProportionNumerator;}
+		std::vector<int> GetProportionDenominator()	{return mProportionDenominator;}
+		std::vector<float> GetProportionValue(){return mProportion;}
+		bool IsPresent() {return IsMapPresent();}
 		void SetCurrentActivity(bool pIsCurrentActivity) {mIsCurrentActivity = pIsCurrentActivity;}
 		bool IsCurrentActivity() {return mIsCurrentActivity;}
-
-
-
+		bool IsFlipperPresent();
 
 	protected:
 		void update();
 		void MakeMove();
 		void Start();
-		void checkHintPresent();
-		//void DisplayMap();
-		//void DisplayGrid();
-		//void DisplayWorkingArea();
-		//void DisplayEndingPoints();
-		//void DisplayObstacles();
-		//void DisplayTexture();
-		void DisplayBug();
-		void DisplayProportions();
-		void RenderProportion(float pProportion, int pProportionNumber);
+		void CheckHints();
 		bool IsCartePresent();
-		//bool IsBugPosition(int pPositionX, int pPositionY);
 		void FetchProportions();
 		int GetProportionNumber(wykobi::point2d<float> pPosition);
 		void SetProportionNumber(wykobi::point2d<float> pPosition, float pProportion);
-		void SetProportionNumber(int pCuadrant, float pProportion);
+		void SetProportionNumber(int pQuadrant, float pProportion);
 		bool IsHintPresent();
-		void DisplayProportions(int pHintType);
-		void DisplayCircularHint();
-		void DisplayRectangularHint();
-		void DisplayDiscreteHint();
-		void DisplayDecimalHint();
-		void DisplayFractionHint();
-		void DisplayFlipperFeedback();
-		void SetProportionNumber(int pCuadrant, int pNumerator, int pDenominator);
+		void SetProportionNumber(int pQuadrant, int pNumerator, int pDenominator);
 		void SetProportionNumber(wykobi::point2d<float> pPosition, int pNumerator, int pDenominator);
-		void DivideCircunferenceManipulatives(int pParts);
-		void DivideRectangleManipulatives(int pParts);
 		int CheckCircularManipulative(int pProportionNumber);
 		int CheckRectangularManipulative(int pProportionNumber);
 		int CheckTokenManipulative(int pProportionNumber);
 		int CheckFractionManipulative(int pProportionNumber);
-		void clearProportions();
-		void saveProportions();
-
-
-		long mLastShot;
+		void ClearProportions();
+		void SaveProportions();
+		void DisplayFlipperFeedback();
 
 	private:
 		static const std::string scDecoratorName;
@@ -138,7 +113,6 @@ class KillBugModel : public FiducialDecorator
 		RectangleFractionModel *mRectangleModel1;
 		RectangleFractionModel *mRectangleModel2;
 		TokenModel *mTokenModel;
-		//Flipper *mFlipper;
 		FractionBugHint **mHints;
 		FractionCard ** mFractionCards;
 		Carte ** mCartes;
@@ -149,25 +123,18 @@ class KillBugModel : public FiducialDecorator
 		FractionBugHint *mActualHint;
 		float mProportion1,mProportion2,mProportion3,mProportion4;
 
-		int mDisplayWidth, mDisplayHeight;
-		float mWorkingTriangle;
-		int mMapSize;
-		float mCellDimensionX, mCellDimensionY;
-		float mMapWidth, mMapHeight;
 		wykobi::point2d<int> mBugPosition;
+
 		int mSteps;
+
 		bool mGameStarted;
 		bool mMapFinished;
 		bool mMapNew;
+
 		int mActiveManipulatives;
-		wykobi::point2d<int> mMapPoint1;
-		wykobi::point2d<int> mMapPoint2;
-		wykobi::point2d<int> mMapPoint3;
-		wykobi::point2d<int> mMapPoint4;
-		wykobi::point2d<int> mProportion1Point;
-		wykobi::point2d<int> mProportion2Point;
-		wykobi::point2d<int> mProportion3Point;
-		wykobi::point2d<int> mProportion4Point;
+
+		long mLastShot;
+
 		int mProportion1Numerator;
 		int mProportion1Denominator;
 		int mProportion2Numerator;
@@ -179,7 +146,9 @@ class KillBugModel : public FiducialDecorator
 		std::vector<int> mProportionNumerator;
 		std::vector<int> mProportionDenominator;
 		std::vector<float> mProportion;
+
 		bool mWrongMove;
+
 		int mWrongMovementFrames;
 		int mNewMapFrames;
 		int mProportionFeedbackFrames13;
@@ -188,7 +157,7 @@ class KillBugModel : public FiducialDecorator
 		bool mProportion2Greater;
 		bool mProportion3Greater;
 		bool mProportion4Greater;
-		//std::vector<wykobi::point2d<int>> mBugTrayectory;
+
 		bool mIsCurrentActivity;
 
 };

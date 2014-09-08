@@ -39,8 +39,8 @@ decorators::FiducialDecorator *decorators::FractionLearningModel::create(libconf
 
 		return new decorators::FractionLearningModel(pDecoratorManager ,
 				(KillBugModel *) pDecoratorManager.loadDecorator(pSetting["kill_bug_game"]),
-				(FractionComparisionView *) pDecoratorManager.loadDecorator(pSetting["fraction_comparison_greater"]),
-				(FractionComparisionView *) pDecoratorManager.loadDecorator(pSetting["fraction_comparison_smaller"]),
+				(FractionComparisonView *) pDecoratorManager.loadDecorator(pSetting["fraction_comparison_greater"]),
+				(FractionComparisonView *) pDecoratorManager.loadDecorator(pSetting["fraction_comparison_smaller"]),
 				tConstructionActivities,
 				(EquivalentFractionView *) pDecoratorManager.loadDecorator(pSetting["fraction_equivalent"]),
 				(int) tConstructionNb);
@@ -53,8 +53,8 @@ decorators::FiducialDecorator *decorators::FractionLearningModel::create(libconf
 	return 0;
 }
 
-decorators::FractionLearningModel::FractionLearningModel(DecoratorManager &pDecoratorManager , KillBugModel *pKillBugModel , FractionComparisionView *pComparisonGreater,
-		FractionComparisionView *pComparisonSmaller, FractionViewMeasure **pFractionView, EquivalentFractionView *pEquivalentFraction, int pConstructionActivity):
+decorators::FractionLearningModel::FractionLearningModel(DecoratorManager &pDecoratorManager , KillBugModel *pKillBugModel , FractionComparisonView *pComparisonGreater,
+		FractionComparisonView *pComparisonSmaller, FractionViewMeasure **pFractionView, EquivalentFractionView *pEquivalentFraction, int pConstructionActivity):
 				FiducialDecorator(pDecoratorManager,0),
 				mFractionConstruction(pFractionView),
 				mFractionEquivalent(pEquivalentFraction),
@@ -102,6 +102,11 @@ void decorators::FractionLearningModel::update(){
 	}
 }
 
+/*
+ * Checks if the fraction comparison is present, if it is
+ * is set as true, so it can do whatever needs and every other
+ * activity is set as false
+ */
 bool decorators::FractionLearningModel::IsPresentFractionComparison(){
 	if(mFractionComparisonGreater->IsPresent()){
 		mFractionComparisonGreater->SetCurrentActivity(true);
@@ -113,6 +118,10 @@ bool decorators::FractionLearningModel::IsPresentFractionComparison(){
 	return (mFractionComparisonGreater->IsPresent() || mFractionComparisonSmaller->IsPresent());
 }
 
+/*
+ * Checks if the construction fraction is present, if it is
+ * is set as true, so it can do whatever needs
+ */
 bool decorators::FractionLearningModel::IsPresentFractionConstruction(){
 	for(int i = 0 ; i < mConstructionActivity ; i++){
 		if(mFractionConstruction[i]->IsPresent()){
@@ -123,11 +132,17 @@ bool decorators::FractionLearningModel::IsPresentFractionConstruction(){
 	return false;
 }
 
+/*
+ * Sets both comparison cards (smaller or greater) as true or false
+ */
 void decorators::FractionLearningModel::SetFractionComparison(bool pIsCurrentActivity){
 	mFractionComparisonGreater->SetCurrentActivity(pIsCurrentActivity);
 	mFractionComparisonSmaller->SetCurrentActivity(pIsCurrentActivity);
 }
 
+/*
+ * Sets all the fraction construction cards as true or false
+ */
 void decorators::FractionLearningModel::SetFractionConstruction(bool pIsCurrentActivity){
 	for(int i = 0 ; i < mConstructionActivity ; i++){
 		mFractionConstruction[i]->SetCurrentActivity(pIsCurrentActivity);

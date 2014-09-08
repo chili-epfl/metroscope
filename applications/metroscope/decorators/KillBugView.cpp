@@ -20,6 +20,7 @@
 #include "KillBugView.hpp"
 #include <iostream>
 #include <qa/utils/Time.hpp>
+#include <wykobi/wykobi_utilities.hpp>
 
 const std::string decorators::KillBugView::scDecoratorName("KillBugView");
 const  DecoratorManager::Registerer decorators::KillBugView::mRegisterer(decorators::KillBugView::scDecoratorName, &decorators::KillBugView::create);
@@ -39,66 +40,58 @@ decorators::FiducialDecorator *decorators::KillBugView::create(libconfig::Settin
 
 // TODO: Maintain the order of declaration in KillBugView.hpp
 decorators::KillBugView::KillBugView(DecoratorManager &pDecoratorManager,KillBugModel *pKillBugModel):
-FiducialDecorator(pDecoratorManager, 0),
-mKillBugModel(pKillBugModel), mBugTrajectory(),mActualMap(), mActualFlipper(), mActualHint(),mLastShot(Time::MillisTimestamp())
-{
-	mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
-	mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
-	mWorkingTriangle = (0.90*mDisplayHeight);
-	mMapWidth = mDisplayWidth - mWorkingTriangle;
-	mMapHeight = mMapWidth;
+	FiducialDecorator(pDecoratorManager, 0),
+	mKillBugModel(pKillBugModel),
+	mActualMap(),
+	mActualHint(),
+	mProportion1(0.0f),
+	mProportion2(0.0f),
+	mProportion3(0.0f),
+	mProportion4(0.0f),
+	mActualFlipper(),
+	mMapSize(0),
+	mBugPosition(wykobi::make_point(0,0)),
+	mSteps(0),
+	mGameStarted(false),
+	mMapFinished(false),
+	mMapNew(false),
+	mProportion1Numerator(0),
+	mProportion1Denominator(1),
+	mProportion2Numerator(0),
+	mProportion2Denominator(1),
+	mProportion3Numerator(0),
+	mProportion3Denominator(1),
+	mProportion4Numerator(0),
+	mProportion4Denominator(1),
+	mWrongMovementFrames(0),
+	mNewMapFrames(0),
+	mProportionFeedbackFrames13(0), //CHECK
+	mProportionFeedbackFrames24(0), //CHECK
+	mProportion1Greater(false),
+	mProportion2Greater(false),
+	mProportion3Greater(false),
+	mProportion4Greater(false),
+	mBugTrajectory(),
+	mCellDimensionX(0.0f),
+	mCellDimensionY(0.0f),
+	mLastShot(Time::MillisTimestamp())
+	{
+		mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
+		mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
+		mWorkingTriangle = (0.90*mDisplayHeight);
+		mMapWidth = mDisplayWidth - mWorkingTriangle;
+		mMapHeight = mMapWidth;
 
-	mBugPosition.x = 0;
-	mBugPosition.y = 0;
+		mMapPoint1 = wykobi::make_point((int)(mWorkingTriangle/2.5),(int)(mDisplayHeight/2));
+		mMapPoint2 = wykobi::make_point((int)(mDisplayWidth/2),(int)(mWorkingTriangle/2.5 + mDisplayHeight/2 - mDisplayWidth/2));
+		mMapPoint3 = wykobi::make_point((int)(mDisplayWidth-mWorkingTriangle/2.5),(int)(mDisplayHeight/2));
+		mMapPoint4 = wykobi::make_point((int)(mDisplayWidth/2),(int)(mDisplayHeight/2 - mWorkingTriangle/2.5 + mDisplayWidth/2));
 
-	mMapPoint1.x = mWorkingTriangle/2.5;
-	mMapPoint1.y = mDisplayHeight/2;
-	mMapPoint2.x = mDisplayWidth/2;
-	mMapPoint2.y = mWorkingTriangle/2.5 + mDisplayHeight/2 - mDisplayWidth/2;
-	mMapPoint3.x = mDisplayWidth-mWorkingTriangle/2.5;
-	mMapPoint3.y = mDisplayHeight/2;
-	mMapPoint4.x = mDisplayWidth/2;
-	mMapPoint4.y = mDisplayHeight/2 - mWorkingTriangle/2.5 + mDisplayWidth/2;
-
-	mProportion1Point.x = (mMapPoint2.x + mMapPoint3.x)/2 + 40.0f;
-	mProportion1Point.y = (mMapPoint2.y + mMapPoint3.y)/2 - 40.0f;
-	mProportion2Point.x = (mMapPoint2.x + mMapPoint1.x)/2 - 40.0f;
-	mProportion2Point.y = (mMapPoint2.y + mMapPoint1.y)/2 - 40.0f;
-	mProportion3Point.x = (mMapPoint4.x + mMapPoint1.x)/2 - 40.0f;
-	mProportion3Point.y = (mMapPoint4.y + mMapPoint1.y)/2 + 40.0f;
-	mProportion4Point.x = (mMapPoint4.x + mMapPoint3.x)/2 + 40.0f;
-	mProportion4Point.y = (mMapPoint4.y + mMapPoint3.y)/2 + 40.0f;
-
-	mGameStarted = false;
-	mProportion1Greater = false;
-	mProportion2Greater = false;
-	mProportion3Greater = false;
-	mProportion4Greater = false;
-	mMapFinished = false;
-	mMapNew = false;
-	mProportionFeedbackFrames13 = 15; //CHECK
-	mProportionFeedbackFrames24 = 15; //CHECK
-	mProportion1Numerator = 0;
-	mProportion1Denominator = 1;
-	mProportion2Numerator = 0;
-	mProportion2Denominator = 1;
-	mProportion3Numerator = 0;
-	mProportion3Denominator = 1;
-	mProportion4Numerator = 0;
-	mProportion4Denominator = 1;
-	mSteps = 0;
-	mProportion1 = 0.0f;
-	mProportion2 = 0.0f;
-	mProportion3 = 0.0f;
-	mProportion4 = 0.0f;
-	mWrongMovementFrames = 15; //CHECK
-	mNewMapFrames = 15; //CHECK
-	mLastShot = 0.0f;
-	mMapSize = 0;
-	mCellDimensionX = 0.0f;
-	mCellDimensionY = 0.0f;
-
-}
+		mProportion1Point = wykobi::make_point((int)((mMapPoint2.x + mMapPoint3.x)/2 + 40.0f),(int)((mMapPoint2.y + mMapPoint3.y)/2 - 40.0f));
+		mProportion2Point = wykobi::make_point((int)((mMapPoint2.x + mMapPoint1.x)/2 - 40.0f),(int)((mMapPoint2.y + mMapPoint1.y)/2 - 40.0f));
+		mProportion3Point = wykobi::make_point((int)((mMapPoint4.x + mMapPoint1.x)/2 - 40.0f),(int)((mMapPoint4.y + mMapPoint1.y)/2 + 40.0f));
+		mProportion4Point = wykobi::make_point((int)((mMapPoint4.x + mMapPoint3.x)/2 + 40.0f),(int)((mMapPoint4.y + mMapPoint3.y)/2 + 40.0f));
+	}
 
 decorators::KillBugView::~KillBugView(){
 
@@ -110,14 +103,14 @@ decorators::KillBugView::~KillBugView(){
  * If the flipper is present we display the feedback
  */
 void decorators::KillBugView::update() {
-	if(mKillBugModel->isMapPresent() && mKillBugModel->IsCurrentActivity()){
-		mActualMap = mKillBugModel->getActualMap();
-		displayMap();
-		if(mKillBugModel->isGameStarted()){
+	if(mKillBugModel->IsMapPresent() && mKillBugModel->IsCurrentActivity()){
+		mActualMap = mKillBugModel->GetActualMap();
+		DisplayMap();
+		if(mKillBugModel->IsGameStarted()){
 			displayBug();
 		}
-		if(mKillBugModel->isHintPresent()){
-			mActualHint = mKillBugModel->getActualHint();
+		if(mKillBugModel->IsAnyHintPresent()){
+			mActualHint = mKillBugModel->GetActualHint();
 			displayHint();
 		}
 		if(mKillBugModel->IsFlipperPresent()){
@@ -131,10 +124,10 @@ void decorators::KillBugView::update() {
  *	Draws the origin, obstacle and ending points
  *	Also initializes the game
  */
-void decorators::KillBugView::displayMap(){
+void decorators::KillBugView::DisplayMap(){
 
 	//	Get the size of the map to calculate the dimension of each cell:
-	mMapSize = mKillBugModel->getActualMap()->getSize();
+	mMapSize = mKillBugModel->GetActualMap()->getSize();
 	mCellDimensionX = (mMapPoint3.x - mMapPoint1.x)/(2*mMapSize);
 	mCellDimensionY = (mMapPoint4.y - mMapPoint2.y)/(2*mMapSize);
 
@@ -143,7 +136,7 @@ void decorators::KillBugView::displayMap(){
 
 	//	If the game is not started, we set the position of the bug
 	//	as the origin position of the map
-	if(!mKillBugModel->isGameStarted()){
+	if(!mKillBugModel->IsGameStarted()){
 		mBugPosition.x = (int)tBugOrigin.x;
 		mBugPosition.y = (int)tBugOrigin.y;
 	}
@@ -165,7 +158,7 @@ void decorators::KillBugView::displayMap(){
 	drawMoveFeedback();
 
 	//	We set the game as started
-	mKillBugModel->setGameStarted(true);
+	mKillBugModel->SetGameStarted(true);
 }
 
 /*
@@ -258,12 +251,12 @@ void decorators::KillBugView::drawMapStatusFeedback(){
 			mMapPoint1.x, mDisplayHeight/2 + mMapHeight/4, 0.8f,0.8f,0.8f,0.5f);
 		mDecoratorManager.GetDisplay().RenderText("Carte finie!", mMapPoint1.x,  mDisplayHeight/2, 1.2f,0.0f,0.0f,0.0f,1.0f);
 	}
-	if(mKillBugModel->getNewMapFrames() > 0){
+	if(mKillBugModel->GetNewMapFrames() > 0){
 		mDecoratorManager.GetDisplay().RenderQuadFilled(mMapPoint1.x, mDisplayHeight/2 - mMapHeight/4,
 			mMapPoint2.x, mDisplayHeight/2 - mMapHeight/4, mMapPoint2.x, mDisplayHeight/2 + mMapHeight/4,
 			mMapPoint1.x, mDisplayHeight/2 + mMapHeight/4, 0.8f,0.8f,0.8f,0.5f);
 		mDecoratorManager.GetDisplay().RenderText("Carte nouvelle!", mMapPoint1.x, mDisplayHeight/2, 1.2f,0.0f,0.0f,0.0f,1.0f);
-		mKillBugModel->decreaseNewMapFrames();
+		mKillBugModel->DecreaseNewMapFrames();
 	}
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
@@ -275,36 +268,36 @@ void decorators::KillBugView::drawMapStatusFeedback(){
 void decorators::KillBugView::drawMoveFeedback(){
 	mDecoratorManager.GetDisplay().PushTransformation();
 
-	if(mKillBugModel->getWrongMovementFrames()>0){
+	if(mKillBugModel->GetWrongMovementFrames()>0){
 		mDecoratorManager.GetDisplay().RenderText("Je ne peux pas y aller...", mBugPosition.x*mCellDimensionX + mMapPoint1.x + 10.0f,
 			mBugPosition.y*mCellDimensionY + mMapPoint1.y - 10.0f, 0.95f,0.0f,0.0f,0.0f,1.0f);
-		mKillBugModel->decreaseWrongMovementFrames();
+		mKillBugModel->DecreaseWrongMovementFrames();
 	}
 
-	if(mKillBugModel->isProportion1Greater() && mKillBugModel->get13Frames()>0){
-		bool tEven = (mKillBugModel->get13Frames()%2 == 0);
+	if(mKillBugModel->IsProportion1Greater() && mKillBugModel->Get13Frames()>0){
+		bool tEven = (mKillBugModel->Get13Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,180.0f,scProp1R,scProp1G,scProp1B,tEven? 0.2:0.09f,1); //Prop1
-		mKillBugModel->decrease13Frames();
+		mKillBugModel->Decrease13Frames();
 
-	} else if(mKillBugModel->isProportion3Greater() && mKillBugModel->get13Frames()>0){
-		bool tEven = (mKillBugModel->get13Frames()%2 == 0);
+	} else if(mKillBugModel->IsProportion3Greater() && mKillBugModel->Get13Frames()>0){
+		bool tEven = (mKillBugModel->Get13Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,360.0f,scProp3R,scProp3G,scProp3B,tEven? 0.2:0.09f,1); //Prop3
-		mKillBugModel->decrease13Frames();
+		mKillBugModel->Decrease13Frames();
 	}
 
-	if(mKillBugModel->isProportion2Greater() && mKillBugModel->get24Frames()>0){
-		bool tEven = (mKillBugModel->get24Frames()%2 == 0);
+	if(mKillBugModel->IsProportion2Greater() && mKillBugModel->Get24Frames()>0){
+		bool tEven = (mKillBugModel->Get24Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,270.0f,scProp2R,scProp2G,scProp2B,tEven? 0.2:0.09f,1); //Prop 2
-		mKillBugModel->decrease24Frames();
+		mKillBugModel->Decrease24Frames();
 
-	} else if(mKillBugModel->isProportion4Greater() && mKillBugModel->get24Frames()>0){
-		bool tEven = (mKillBugModel->get24Frames()%2 == 0);
+	} else if(mKillBugModel->IsProportion4Greater() && mKillBugModel->Get24Frames()>0){
+		bool tEven = (mKillBugModel->Get24Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,90.0f,scProp4R,scProp4G,scProp4B,tEven? 0.2:0.09f,1); //Prop4
-		mKillBugModel->decrease24Frames();
+		mKillBugModel->Decrease24Frames();
 	}
 
 	mDecoratorManager.GetDisplay().PopTransformation();
@@ -316,13 +309,13 @@ void decorators::KillBugView::drawMoveFeedback(){
 void decorators::KillBugView::displayBug(){
 
 	int tTextureId = mDecoratorManager.GetDisplay().LoadTexture("./activities/proportions-network/ladybug-smallwhite.jpg");
-	wykobi::point2d<int> tBugPosition = mKillBugModel->getBugPosition();
+	wykobi::point2d<int> tBugPosition = mKillBugModel->GetBugPosition();
 	mBugTrajectory.push_back(tBugPosition);
 
 	//Display the image and also the trajectory
 	mDecoratorManager.GetDisplay().PushTransformation();
 
-	for(int i = 1 ; i < mBugTrajectory.size() ; i++){
+	for(unsigned int i = 1 ; i < mBugTrajectory.size() ; i++){
 		wykobi::point2d<int> tPoint1 = wykobi::make_point(mBugTrajectory[i-1].x,mBugTrajectory[i-1].y);
 		wykobi::point2d<int> tPoint2 = wykobi::make_point(mBugTrajectory[i].x,mBugTrajectory[i].y);
 
@@ -338,10 +331,8 @@ void decorators::KillBugView::displayBug(){
 		mMapPoint2.x + (tBugPosition.x - tBugPosition.y )*mCellDimensionX + mCellDimensionX/2, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 2)*mCellDimensionY - mCellDimensionY/2,
 		mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 1)*mCellDimensionX + mCellDimensionX/2, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 1)*mCellDimensionY + mCellDimensionY/2);
 
-
-
-
 	mDecoratorManager.GetDisplay().PopTransformation();
+
 
 }
 
@@ -350,9 +341,9 @@ void decorators::KillBugView::displayBug(){
  */
 void decorators::KillBugView::displayHint(){
 	// First we get the numerators and denominators of each proportion
-	std::vector<int> tNumerator = mKillBugModel->getProportionNumerator();
-	std::vector<int> tDenominator= mKillBugModel->getProportionDenominator();
-	std::vector<float> tProportion= mKillBugModel->getProportionValue();
+	std::vector<int> tNumerator = mKillBugModel->GetProportionNumerator();
+	std::vector<int> tDenominator= mKillBugModel->GetProportionDenominator();
+	std::vector<float> tProportion= mKillBugModel->GetProportionValue();
 
 	// We check the type of hint that is shown
 	switch(mActualHint->GetHintType()){
@@ -614,6 +605,9 @@ void decorators::KillBugView::displayIndividualCircularHint(float pProportion, i
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
+/*
+ * Displays feedback in the flipper
+ */
 void decorators::KillBugView::DisplayFlipperFeedback(){
 	char tStepsDone[3] , tStepsToGo[3];		// Steps information
 	char tP1Num[3] , tP2Num[3] , tP3Num[3] , tP4Num[3];		//	Numerator information
@@ -627,7 +621,7 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 		// as the last shot done
 		//if (mActualFlipper->IsFlipped() && tElapsedTime > cShotPreparationTime) {
 			//MakeMove();
-		//	mLastShot = Time::MillisTimestamp();
+			//mLastShot = Time::MillisTimestamp();
 		//}
 
 		// If is present, we calculate the proportion of time that has passed
@@ -641,19 +635,16 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 				tFull = true;
 			}
 
-
-
-
 			sprintf(tStepsDone, "%d", mKillBugModel->StepsDone());
-			sprintf(tStepsToGo, "%d", mActualMap->GetStepsToGo(mKillBugModel->getBugPosition().x,mKillBugModel->getBugPosition().y));
-			sprintf(tP1Num, "%d", mKillBugModel->getProportionNumerator()[0]);
-			sprintf(tP1Den, "%d", mKillBugModel->getProportionDenominator()[0]);
-			sprintf(tP2Num, "%d", mKillBugModel->getProportionNumerator()[1]);
-			sprintf(tP2Den, "%d", mKillBugModel->getProportionDenominator()[1]);
-			sprintf(tP3Num, "%d", mKillBugModel->getProportionNumerator()[2]);
-			sprintf(tP3Den, "%d", mKillBugModel->getProportionDenominator()[2]);
-			sprintf(tP4Num, "%d", mKillBugModel->getProportionNumerator()[3]);
-			sprintf(tP4Den, "%d", mKillBugModel->getProportionDenominator()[3]);
+			sprintf(tStepsToGo, "%d", mActualMap->GetStepsToGo(mKillBugModel->GetBugPosition().x,mKillBugModel->GetBugPosition().y));
+			sprintf(tP1Num, "%d", mKillBugModel->GetProportionNumerator()[0]);
+			sprintf(tP1Den, "%d", mKillBugModel->GetProportionDenominator()[0]);
+			sprintf(tP2Num, "%d", mKillBugModel->GetProportionNumerator()[1]);
+			sprintf(tP2Den, "%d", mKillBugModel->GetProportionDenominator()[1]);
+			sprintf(tP3Num, "%d", mKillBugModel->GetProportionNumerator()[2]);
+			sprintf(tP3Den, "%d", mKillBugModel->GetProportionDenominator()[2]);
+			sprintf(tP4Num, "%d", mKillBugModel->GetProportionNumerator()[3]);
+			sprintf(tP4Den, "%d", mKillBugModel->GetProportionDenominator()[3]);
 
 			// Display the sector of the circunference and then the text
 			mDecoratorManager.GetDisplay().PushTransformation();
@@ -684,12 +675,12 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 					mDecoratorManager.GetDisplay().RenderText("Remember:", -10.0f,2.5f,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tP1Num, -8.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tP3Num, -5.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
-					mDecoratorManager.GetDisplay().RenderText((mKillBugModel->isProportion1Greater())? ">" : (mKillBugModel->isProportion3Greater())? "<" : "=", -7.5f,5.0f,0.08,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText((mKillBugModel->IsProportion1Greater())? ">" : (mKillBugModel->IsProportion3Greater())? "<" : "=", -7.5f,5.0f,0.08,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tP1Den, -8.5f,5.5f,0.05,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tP3Den, -5.5f,5.5f,0.05,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tP2Num, -8.5f,7.0f,0.05,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tP4Num, -5.5f,7.0f,0.05,0.0f,0.0f,0.0f,1.0f);
-					mDecoratorManager.GetDisplay().RenderText((mKillBugModel->isProportion2Greater())? ">" : (mKillBugModel->isProportion4Greater())? "<" : "=", -7.5f,8.0f,0.08,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText((mKillBugModel->IsProportion2Greater())? ">" : (mKillBugModel->IsProportion4Greater())? "<" : "=", -7.5f,8.0f,0.08,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tP2Den, -8.5f,8.5f,0.05,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tP4Den, -5.5f,8.5f,0.05,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderLine(-8.5f,4.45f,-7.3f,4.5,0.0f,0.0f,0.0f,1.0f);

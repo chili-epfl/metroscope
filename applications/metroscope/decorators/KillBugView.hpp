@@ -37,7 +37,7 @@ class KillBugView : public FiducialDecorator
 		KillBugView(DecoratorManager &pDecoratorManager, KillBugModel *pKillBugModel);
 		~KillBugView();
 
-		void displayMap();
+		void DisplayMap();
 		void drawGrid();
 		void drawOriginPoint(float tPositionX, float tPositionY);
 		void drawEndingPoints();
@@ -83,7 +83,7 @@ class KillBugView : public FiducialDecorator
 		void update();
 
 
-		long mLastShot;
+
 
 	private:
 		static const std::string scDecoratorName;
@@ -95,18 +95,15 @@ class KillBugView : public FiducialDecorator
 		float mProportion1,mProportion2,mProportion3,mProportion4;
 		FlipperKillBug *mActualFlipper;
 
-		int mDisplayWidth, mDisplayHeight;
-		float mWorkingTriangle;
-		int mMapSize; //TODO: Is is necessary to have it here?
-		wykobi::point2d<float> mCellDimension;
-		float mMapWidth, mMapHeight;
+
+		int mMapSize;
+
 		wykobi::point2d<int> mBugPosition;
 		int mSteps;
 		bool mGameStarted;
 		bool mMapFinished;
 		bool mMapNew;
-		wykobi::point2d<int> mMapPoint1, mMapPoint2, mMapPoint3, mMapPoint4;
-		wykobi::point2d<int> mProportion1Point, mProportion2Point, mProportion3Point, mProportion4Point;
+
 		int mProportion1Numerator, mProportion1Denominator;
 		int mProportion2Numerator, mProportion2Denominator;
 		int mProportion3Numerator, mProportion3Denominator;
@@ -118,7 +115,13 @@ class KillBugView : public FiducialDecorator
 		std::vector<wykobi::point2d<int>> mBugTrajectory;
 		float mCellDimensionX;
 		float mCellDimensionY;
-		//long mLastShot;
+		long mLastShot;
+
+		int mDisplayWidth, mDisplayHeight;
+		float mWorkingTriangle;
+		float mMapWidth, mMapHeight;
+		wykobi::point2d<int> mMapPoint1, mMapPoint2, mMapPoint3, mMapPoint4;
+		wykobi::point2d<int> mProportion1Point, mProportion2Point, mProportion3Point, mProportion4Point;
 };
 }
 

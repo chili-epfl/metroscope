@@ -61,58 +61,56 @@ decorators::EquivalentFractionView::EquivalentFractionView(DecoratorManager &pDe
 		RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2, TokenModel *pTokenModel1,
 		FractionCard ** pActivityCards, FractionCard ** pFractionCards):
 			FiducialDecorator(pDecoratorManager, pMarker),
-			mAngleModel1(pAngleModel1), mAngleModel2(pAngleModel2),
-			mRectangleModel1(pRectangleModel1), mRectangleModel2(pRectangleModel2),
-			mTokenModel(pTokenModel1), mActivityCard(pActivityCards),mFractionCards(pFractionCards),
-			mCurrentProportion(0.0f), mActiveManipulatives(0), mEquivalentManipulatives(0),mCurrentActivity(0),mIsCurrentActivity(false){
-}
+			mTokenModel(pTokenModel1),
+			mActivityCard(pActivityCards),
+			mFractionCards(pFractionCards),
+			mCurrentProportion(0.0f),
+			mActiveManipulatives(0),
+			mEquivalentManipulatives(0),
+			mCurrentActivity(0),
+			mIsCurrentActivity(false){
+				mCircularModel.push_back(pAngleModel1);
+				mCircularModel.push_back(pAngleModel2);
+				mRectangularModel.push_back(pRectangleModel1);
+				mRectangularModel.push_back(pRectangleModel2);
+			}
 
-
+/*
+ * If the card is present and the fraction to be
+ * simplified or amplified, it shows above it the
+ * instruction.
+ */
 void decorators::EquivalentFractionView::update(){
 	if(mIsCurrentActivity){
 		if(mMarker->isPresent() && IsActivityPresent()){
-				wykobi::quadix<float ,2> tMarkerCorners = mCurrentActivity->getMarker().getCorners();
-				mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
-				wykobi::point2d<float> tOrigin;
-				wykobi::point2d<float> tXUnit;
-				wykobi::point2d<float> tYUnit;
-				FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+			wykobi::quadix<float ,2> tMarkerCorners = mCurrentActivity->getMarker().getCorners();
+			mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
 
-				mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+			wykobi::point2d<float> tOrigin;
+			wykobi::point2d<float> tXUnit;
+			wykobi::point2d<float> tYUnit;
+			FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
 
-				mDecoratorManager.GetDisplay().PushTransformation();
-				mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-				mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,70.0f,70.0f,0.0f,0.0f,0.0f,1.0f,1);
+			mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
 
-				mDecoratorManager.GetDisplay().RenderText("Mettez des fractions équivalentes", tOrigin.x - 150.0f, tOrigin.y - 70.0f, 0.7f, 0.0f, 0.0f, 0.0f);
-				mDecoratorManager.GetDisplay().PopTransformation();
+			mDecoratorManager.GetDisplay().PushTransformation();
+			mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+			mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,70.0f,70.0f,0.0f,0.0f,0.0f,1.0f,1);
 
-				CheckManipulativesPresent();
-				if(mActiveManipulatives>0){
+			mDecoratorManager.GetDisplay().RenderText("Mettez des fractions équivalentes", tOrigin.x - 150.0f, tOrigin.y - 70.0f, 0.7f, 0.0f, 0.0f, 0.0f);
+			mDecoratorManager.GetDisplay().PopTransformation();
 
-						wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
-						mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
-						wykobi::point2d<float> tOrigin;
-						wykobi::point2d<float> tXUnit;
-						wykobi::point2d<float> tYUnit;
-						FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+			CheckManipulativesPresent();
 
-						mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
-
-						mDecoratorManager.GetDisplay().PushTransformation();
-						mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-						mDecoratorManager.GetDisplay().RenderText((mEquivalentManipulatives == mActiveManipulatives)? "Tres bien!" : "Essayez encore une fois",
-								tOrigin.x, tOrigin.y, 0.7f, (mEquivalentManipulatives == mActiveManipulatives)? 0.0f: 1.0f,
-										(mEquivalentManipulatives == mActiveManipulatives)? 1.0f : 0.0f, 0.0f);
-
-						mDecoratorManager.GetDisplay().PopTransformation();
-			}
+			ShowCardFeedback();
 		}
 	}
 }
 
-
-
+/*
+ * Returns true if the activity card is present (fraction
+ * to be simplified or amplified)
+ */
 bool decorators::EquivalentFractionView::IsActivityPresent(){
 	for(int i = 0; i < 9 ; i++){
 		if(mActivityCard[i]->IsPresent()){
@@ -124,132 +122,157 @@ bool decorators::EquivalentFractionView::IsActivityPresent(){
 	return false;
 }
 
+/*
+ * Calculate how many manipulatives are present and how many
+ * are equivalent with the given fraction
+ */
 void decorators::EquivalentFractionView::CheckManipulativesPresent(){
 	mActiveManipulatives = 0;
 	mEquivalentManipulatives = 0;
 
-	if(mAngleModel1->isPresent()){
-		mActiveManipulatives++;
-		if((mAngleModel1->Numerator()/(float)mAngleModel1->Denominator()) == mCurrentProportion){
-			mEquivalentManipulatives++;
-			//TODO: do it in a nice way, methods
-			wykobi::quadix<float ,2> tMarkerCorners = mAngleModel1->getMarker().getCorners();
-			mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
-			wykobi::point2d<float> tOrigin;
-			wykobi::point2d<float> tXUnit;
-			wykobi::point2d<float> tYUnit;
-			FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+	CheckCircularModel();
+	CheckRectangularModel();
+	CheckTokenModel();
+	CheckFractionModel();
 
-			mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+}
 
-			mDecoratorManager.GetDisplay().PushTransformation();
-			mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-			mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,170.0f,170.0f,0.0f,1.0f,0.0f,1.0f,1);
+/*
+ * Checks the two circular model. If is present, it will show feedback
+ */
+void decorators::EquivalentFractionView::CheckCircularModel(){
 
-			mDecoratorManager.GetDisplay().PopTransformation();
+	for(std::vector<CircularFractionModel *>::iterator it = mCircularModel.begin(); it != mCircularModel.end() ; ++it){
+		CircularFractionModel *tActualCircularModel = (*it);
+		if(tActualCircularModel->IsPresent()){
+			mActiveManipulatives++;
+
+			if(tActualCircularModel->Numerator()/(float)tActualCircularModel->Denominator() == mCurrentProportion) mEquivalentManipulatives++;
+
+			ShowFeedback(tActualCircularModel->GetMarker().getCorners(),0,
+					(tActualCircularModel->Numerator()/(float)tActualCircularModel->Denominator() == mCurrentProportion));
 		}
 	}
-	if(mAngleModel2->isPresent()){
-		mActiveManipulatives++;
-		if((mAngleModel2->Numerator()/(float)mAngleModel2->Denominator()) == mCurrentProportion){
-			mEquivalentManipulatives++;
+}
 
-			//TODO: do it in a nice way, methods
-			wykobi::quadix<float ,2> tMarkerCorners = mAngleModel2->getMarker().getCorners();
-						mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
-						wykobi::point2d<float> tOrigin;
-						wykobi::point2d<float> tXUnit;
-						wykobi::point2d<float> tYUnit;
-						FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+/*
+ * Checks the two rectangular model. If is present, it will show feedback
+ */
+void decorators::EquivalentFractionView::CheckRectangularModel(){
+	for(std::vector<RectangleFractionModel *>::iterator it = mRectangularModel.begin(); it != mRectangularModel.end() ; ++it){
+		RectangleFractionModel *tActualRectangularModel = (*it);
 
-						mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+		if(tActualRectangularModel->IsPresent()){
+			mActiveManipulatives++;
 
-						mDecoratorManager.GetDisplay().PushTransformation();
-						mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-						mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,170.0f,170.0f,0.0f,1.0f,0.0f,1.0f,1);
+			if(tActualRectangularModel->Numerator()/(float)tActualRectangularModel->Denominator() == mCurrentProportion) mEquivalentManipulatives++;
 
-						mDecoratorManager.GetDisplay().PopTransformation();
+			ShowFeedback(tActualRectangularModel->getMarker().getCorners(),1,
+					(tActualRectangularModel->Numerator()/(float)tActualRectangularModel->Denominator() == mCurrentProportion));
 		}
 	}
-	if(mRectangleModel1->isPresent()){
+}
+
+/*
+ * Checks token model. If is present, it will show feedback
+ */
+void decorators::EquivalentFractionView::CheckTokenModel(){
+	if(mTokenModel->IsPresent()){
 		mActiveManipulatives++;
-		if((mRectangleModel1->Numerator()/(float)mRectangleModel1->Denominator()) == mCurrentProportion){
-			mEquivalentManipulatives++;
 
-			//TODO: do it in a nice way, methods
-			wykobi::quadix<float ,2> tMarkerCorners = mRectangleModel1->getMarker().getCorners();
-						mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
-						wykobi::point2d<float> tOrigin;
-						wykobi::point2d<float> tXUnit;
-						wykobi::point2d<float> tYUnit;
-						FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+		if(mTokenModel->GetProportion() == mCurrentProportion)	mEquivalentManipulatives++;
 
-						mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+		wykobi::point2d<float> tOrigin = mTokenModel->GetPosition();
 
-						mDecoratorManager.GetDisplay().PushTransformation();
-						mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-						mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,170.0f,170.0f,0.0f,1.0f,0.0f,1.0f,1);
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y,150.0f,150.0f,
+				(mTokenModel->GetProportion() == mCurrentProportion)?0.0f:1.0f,
+				(mTokenModel->GetProportion() == mCurrentProportion)?1.0f:0.0f,0.0f,1.0f,1);
 
-						mDecoratorManager.GetDisplay().PopTransformation();
-		}
+		mDecoratorManager.GetDisplay().PopTransformation();
+
 	}
-	if(mRectangleModel2->isPresent()){
-		mActiveManipulatives++;
-		if((mRectangleModel2->Numerator()/(float)mRectangleModel2->Denominator()) == mCurrentProportion){
-			mEquivalentManipulatives++;
-			//TODO: do it in a nice way, methods
-						wykobi::quadix<float ,2> tMarkerCorners = mRectangleModel2->getMarker().getCorners();
-									mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
-									wykobi::point2d<float> tOrigin;
-									wykobi::point2d<float> tXUnit;
-									wykobi::point2d<float> tYUnit;
-									FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+}
 
-									mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
-
-									mDecoratorManager.GetDisplay().PushTransformation();
-									mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-									mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,170.0f,170.0f,0.0f,1.0f,0.0f,1.0f,1);
-
-									mDecoratorManager.GetDisplay().PopTransformation();
-		}
-	}
-	if(mTokenModel->isPresent()){
-		mActiveManipulatives++;
-		if(mTokenModel->GetProportion() == mCurrentProportion){
-			mEquivalentManipulatives++;
-			//TODO: do it in a nice way, methods
-
-									wykobi::point2d<float> tOrigin = mTokenModel->GetPosition();
-
-									mDecoratorManager.GetDisplay().PushTransformation();
-									mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,100.0f,100.0f,0.0f,1.0f,0.0f,1.0f,1);
-
-									mDecoratorManager.GetDisplay().PopTransformation();
-		}
-	}
+/*
+ * Checks every fraction card. If is present, it will show feedback
+ */
+void decorators::EquivalentFractionView::CheckFractionModel(){
 	for(int i = 0 ; i < 15 ; i++){
 		if(mFractionCards[i]->IsPresent()){
 			mActiveManipulatives++;
-			if(mFractionCards[i]->GetValue() == mCurrentProportion){
-				mEquivalentManipulatives++;
-				//TODO: do it in a nice way, methods
-							wykobi::quadix<float ,2> tMarkerCorners = mFractionCards[i]->getMarker().getCorners();
-										mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
-										wykobi::point2d<float> tOrigin;
-										wykobi::point2d<float> tXUnit;
-										wykobi::point2d<float> tYUnit;
-										FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+			if(mFractionCards[i]->GetValue() == mCurrentProportion)	mEquivalentManipulatives++;
 
-										mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
-
-										mDecoratorManager.GetDisplay().PushTransformation();
-										mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-										mDecoratorManager.GetDisplay().RenderEllipse(tOrigin.x, tOrigin.y+20.0f,70.0f,70.0f,0.0f,1.0f,0.0f,1.0f,1);
-
-										mDecoratorManager.GetDisplay().PopTransformation();
-			}
+			ShowFeedback(mFractionCards[i]->getMarker().getCorners(), 3, (mFractionCards[i]->GetValue() == mCurrentProportion));
 		}
 	}
+}
 
+/*
+ * It displays a circle around any manipulative present (red
+ * if is wrong and green if is correct)
+ */
+void decorators::EquivalentFractionView::ShowFeedback(wykobi::quadix<float,2> pMarkerCorners, int pManipulativeType, bool pIsCorrect){
+	mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(pMarkerCorners);
+	wykobi::point2d<float> tOrigin;
+	wykobi::point2d<float> tXUnit;
+	wykobi::point2d<float> tYUnit;
+	FiducialMarker::ComputeBasisFromSquare(pMarkerCorners, tOrigin, tXUnit, tYUnit);
+
+	mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+
+	float tXPosition = 0.0f;
+	float tYPosition = 0.0f;
+	float tRadius = 0.0f;
+
+	switch(pManipulativeType){
+	case 0:
+		tXPosition = tOrigin.x;
+		tYPosition = tOrigin.y+20.0f;
+		tRadius = 170.0f;
+		break;
+	case 1:
+		tXPosition = tOrigin.x;
+		tYPosition = tOrigin.y+20.0f;
+		tRadius = 170.0f;
+		break;
+	case 3:
+		tXPosition = tOrigin.x;
+		tYPosition = tOrigin.y + 20.0f;
+		tRadius = 70.0f;
+		break;
+	}
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+	mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+	mDecoratorManager.GetDisplay().RenderEllipse(tXPosition, tYPosition,tRadius,tRadius,(pIsCorrect)?0.0f:1.0f,(pIsCorrect)?1.0f:0.0f,0.0f,1.0f,1);
+
+	mDecoratorManager.GetDisplay().PopTransformation();
+}
+
+/*
+ * Gives the feedback in the card: "Tres bien!"
+ * or "Essayez encore une fois" if more practice is
+ * needed
+ */
+void decorators::EquivalentFractionView::ShowCardFeedback(){
+
+	if(mActiveManipulatives>0){
+
+		wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
+		mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
+		wykobi::point2d<float> tOrigin;
+		wykobi::point2d<float> tXUnit;
+		wykobi::point2d<float> tYUnit;
+		FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+
+		mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+		mDecoratorManager.GetDisplay().RenderText((mEquivalentManipulatives == mActiveManipulatives)? "Tres bien!" : "Essayez encore une fois",
+						tOrigin.x, tOrigin.y, 0.7f, (mEquivalentManipulatives == mActiveManipulatives)? 0.0f: 1.0f,
+						(mEquivalentManipulatives == mActiveManipulatives)? 1.0f : 0.0f, 0.0f);
+
+		mDecoratorManager.GetDisplay().PopTransformation();
+	}
 }

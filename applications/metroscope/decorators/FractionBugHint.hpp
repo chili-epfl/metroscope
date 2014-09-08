@@ -41,8 +41,8 @@ protected:
 private:
 	static const std::string scDecoratorName;
 	static const DecoratorManager::Registerer mRegisterer;
-	int mHintType;
 	FiducialMarker *mMarker;
+	int mHintType;
 };
 }
 

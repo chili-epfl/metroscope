@@ -36,19 +36,19 @@ namespace decorators {
 		TokenModel (DecoratorManager &pDecoratormanager, FractionToken **pTokens, int pTokenNumbers);
 		~TokenModel();
 
-		int getTotalTokens() {return mTotalActiveTokens;};
-		int getActiveTokens(int pType){
+		int GetTotalTokens() {return mTotalActiveTokens;};
+		int GetActiveTokens(int pType){
 			return (pType == 0 ? mActiveFirstToken : mActiveSecondToken);
 		}
 		float GetProportion(){return (float)(mActiveFirstToken/(float)mTotalActiveTokens);}
 
-		bool isPresent();
-		bool isPresent(int pCuadrant);
+		bool IsPresent();
+		bool IsPresent(int pQuadrant);
 		bool AreTokensSpread();
 		wykobi::point2d<float> GetPosition();
-		float GetProportion(int pCuadrant);
-		int GetNumerator(int pCuadrant);
-		int GetDenominator(int pCuadrant);
+		float GetProportion(int pQuadrant);
+		int GetNumerator(int pQuadrant);
+		int GetDenominator(int pQuadrant);
 
 
 	protected:
@@ -65,10 +65,10 @@ namespace decorators {
 
 		const int mTokenNumbers;
 		FractionToken **mTokens;
-		std::vector<FractionToken *>mFirstTokens;
-		std::vector<FractionToken *>mSecondTokens;
-		std::vector<FractionToken *>mActiveTokens;
-		int mTokenFirstCuadrant, mTokenSecondCuadrant, mTokenThirdCuadrant, mTokenFourthCuadrant;
+		std::vector<FractionToken *> mFirstTokens;			// Tokens that are yellow (type = 0)
+		std::vector<FractionToken *> mSecondTokens;			// Tokens that are blue (type = 1)
+		std::vector<FractionToken *> mActiveTokens;
+		int mTokenFirstQuadrant, mTokenSecondQuadrant, mTokenThirdQuadrant, mTokenFourthQuadrant;
 	};
 }
 

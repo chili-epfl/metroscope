@@ -46,12 +46,16 @@ decorators::CircularFractionModel::CircularFractionModel(DecoratorManager &pDeco
 
 }
 
+/*
+ * Says if the model is present
+ * @return true if the manipulative is present
+ */
 bool decorators::CircularFractionModel::IsPresent(){
 	return (mAngleModel->isPresent());
 }
 
 /*
- * If this decorator is present, then we'll calculate the proportion (angle) and
+ * If this decorator is present, then it'll calculate the proportion (angle) and
  * then convert it in a fraction (num / den) form
  */
 void decorators::CircularFractionModel::update(){

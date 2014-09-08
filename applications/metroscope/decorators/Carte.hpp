@@ -43,6 +43,7 @@ class Carte : public FiducialDecorator
 				const int pSize, float pOriginX, float pOriginY, const int pEndNumber,const int pObstaclesNumber);
 
 		~Carte();
+
 		int getSize() {return mSize;}
 		int getEndNumber() {return mEndNumber;}
 		int getObstacleNumber() {return mObstaclesNumber;}
@@ -56,11 +57,10 @@ class Carte : public FiducialDecorator
 		bool IsEndCell(int pPositionX, int pPositionY);
 		int CalculateDistanceToTarget(wykobi::point2d<int> bugPosition);
 		bool IsInsideMap(int pPointX, int pPointY);
-		int GetMinDistanceNeighbours(int pX,int pY);
-		bool AreVertexesNotVisited(int pRadius,std::vector<wykobi::point2d<float>>::iterator pIterator);
+		int GetMinDistanceNeighbors(int pX,int pY);
 		int GetNumberCellInsideMap(int pRadius, int pX, int pY);
-		void CheckNeighbours(int pRow,int pCol);
-		void AddNeighbours(int pX,int pY);
+		void CheckNeighbors(int pRow,int pCol);
+		void AddNeighbors(int pX,int pY);
 		int GetStepsToGo(int pX, int pY) {return mStepMap[pY][pX];}
 
 	protected:

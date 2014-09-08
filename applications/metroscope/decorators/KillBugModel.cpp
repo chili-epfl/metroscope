@@ -58,7 +58,6 @@ decorators::FiducialDecorator *decorators::KillBugModel::create(libconfig::Setti
 				(RectangleFractionModel *) pDecoratorManager.loadDecorator(pSetting["rectangle_1"]),
 				(RectangleFractionModel *) pDecoratorManager.loadDecorator(pSetting["rectangle_2"]),
 				(TokenModel *) pDecoratorManager.loadDecorator(pSetting["token_1"]),
-				//(Flipper *) pDecoratorManager.loadDecorator(pSetting["go_flipper"]),
 				(FlipperKillBug **) tFlipper,
 				(FractionBugHint **) tHintCards, (FractionCard **) tFractionCards, (Carte **) tCarteCards);
 
@@ -72,20 +71,53 @@ decorators::FiducialDecorator *decorators::KillBugModel::create(libconfig::Setti
 
 decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, CircularFractionModel *pAngleModel1,
 		CircularFractionModel *pAngleModel2, RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2,
-		TokenModel *pTokenModel1, FlipperKillBug **pFlipper,//Flipper *pGoFlipper,
+		TokenModel *pTokenModel1, FlipperKillBug **pFlipper,
 		FractionBugHint ** pFractionHints,
 		FractionCard ** pFractionCards, Carte ** pCartes):
 			FiducialDecorator(pDecoratorManager, 0),
-			mCircularModel1(pAngleModel1), mCircularModel2(pAngleModel2),
-			mRectangleModel1(pRectangleModel1), mRectangleModel2(pRectangleModel2),
-			mTokenModel(pTokenModel1), //mFlipper(pGoFlipper),
+			mCircularModel1(pAngleModel1),
+			mCircularModel2(pAngleModel2),
+			mRectangleModel1(pRectangleModel1),
+			mRectangleModel2(pRectangleModel2),
+			mTokenModel(pTokenModel1),
+			mHints(pFractionHints),
+			mFractionCards(pFractionCards),
+			mCartes(pCartes),
 			mFlipper(pFlipper),
-			mHints(pFractionHints), mFractionCards(pFractionCards), mCartes(pCartes),
-			mActualCarte(0),mActualHint(0), mProportion1(0.0), mProportion2(0.0), mProportion3(0.0), mProportion4(0.0),
-			mMapSize(0), mCellDimensionX(0), mCellDimensionY(0), mSteps(0),mGameStarted(false), mMapFinished(false),mMapNew(false),  mActiveManipulatives(0),mLastShot(Time::MillisTimestamp()),
-			mProportion1Numerator(0), mProportion1Denominator(1), mProportion2Numerator(0), mProportion2Denominator(1), mProportion3Numerator(0),
-			mProportion3Denominator(1),mProportion4Numerator(0),mProportion4Denominator(1),mWrongMove(false), mWrongMovementFrames(0),mActualFlipper(0),
-			mNewMapFrames(0),mProportionFeedbackFrames13(0),mProportionFeedbackFrames24(0),mProportion1Greater(false),mProportion2Greater(false),mProportion3Greater(false),mProportion4Greater(false),
+			mActualFlipper(0),
+			mActualCarte(0),
+			mActualHint(0),
+			mProportion1(0.0),
+			mProportion2(0.0),
+			mProportion3(0.0),
+			mProportion4(0.0),
+			mBugPosition(wykobi::make_point(0,0)),
+			mSteps(0),
+			mGameStarted(false),
+			mMapFinished(false),
+			mMapNew(false),
+			mActiveManipulatives(0),
+			mLastShot(Time::MillisTimestamp()),
+			mProportion1Numerator(0),
+			mProportion1Denominator(1),
+			mProportion2Numerator(0),
+			mProportion2Denominator(1),
+			mProportion3Numerator(0),
+			mProportion3Denominator(1),
+			mProportion4Numerator(0),
+			mProportion4Denominator(1),
+			mProportionNumerator(0),
+			mProportionDenominator(0),
+			mProportion(0),
+			mWrongMove(false),
+			mWrongMovementFrames(0),
+			mNewMapFrames(0),
+			mProportionFeedbackFrames13(0),
+			mProportionFeedbackFrames24(0),
+			mProportion1Greater(false),
+			mProportion2Greater(false),
+			mProportion3Greater(false),
+			mProportion4Greater(false),
 			mIsCurrentActivity(false)
 {
 }
@@ -102,9 +134,9 @@ void decorators::KillBugModel::update(){
 		if(IsCartePresent()){
 			if(mGameStarted)	FetchProportions();
 
-			if(IsFlipperPresent())	DisplayFlipperFeedback();
+			IsFlipperPresent();
 
-			checkHintPresent();
+			CheckHints();
 		}
 	}else{
 		mActualCarte = NULL;
@@ -112,7 +144,7 @@ void decorators::KillBugModel::update(){
 }
 
 /*
- * Returns true if one of the maps has been showed, the map doesn't need to be
+ * Returns true if one of the maps has been showed, the map doesn't have to be
  * all the time in the table (to have less cards in the table)
  */
 bool decorators::KillBugModel::IsCartePresent(){
@@ -128,6 +160,10 @@ bool decorators::KillBugModel::IsCartePresent(){
 	return (mActualCarte!=NULL);
 }
 
+/*
+ * Checks if the Flipper is present. The hint doesn't have to stay all the
+ * time in the table (to have less cards in the table)
+ */
 bool decorators::KillBugModel::IsFlipperPresent(){
 	if(mFlipper[0]->IsPresent())	mActualFlipper = mFlipper[0];
 	else if(mFlipper[1]->IsPresent())	mActualFlipper = mFlipper[1];
@@ -147,7 +183,7 @@ bool decorators::KillBugModel::IsHintPresent(){
 /*
  * Check each hint card and see which one is shown
  */
-void decorators::KillBugModel::checkHintPresent(){
+void decorators::KillBugModel::CheckHints(){
 	for(int i = 0 ; i < scHintCards ; i++){
 		if(mHints[i]->IsPresent()){
 			mActualHint = mHints[i];
@@ -155,9 +191,12 @@ void decorators::KillBugModel::checkHintPresent(){
 	}
 }
 
+/*
+ * Checks if the answer is "correct" (i.e. moving to a correct
+ * position)
+ */
 void decorators::KillBugModel::MakeMove(){
-	int tNewPositionX;
-	int tNewPositionY;
+	int tNewPositionX , tNewPositionY;
 
 	mProportion1Greater = false;
 	mProportion3Greater = false;
@@ -169,53 +208,39 @@ void decorators::KillBugModel::MakeMove(){
 	float tComparision24 = mProportion2 - mProportion4;
 
 	if(tComparision24 < 0 ){ //if prop 2 < prop 4
-		tNewPositionX = (mBugPosition.x + 1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x; //New pos is one step to the right, just if is a good move
-		mWrongMove = !(mBugPosition.x +1 < mActualCarte->getSize()); // If tries to go out the map, then WrngMove is true
-		//mProportion4Greater = (tComparision < 0); //true
-		//mProportion2Greater = !mProportion4Greater; //false
+		tNewPositionX = (mBugPosition.x + 1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x; // New pos is one step to the right, just if is a good move
+		mWrongMove = !(mBugPosition.x +1 < mActualCarte->getSize()); // If tries to go out the map, then WrongMove is true
 
 	} else if(tComparision24 > 0){ //if prop 2 > prop 4
-		tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x; //New pos is one step to the left, just if is a good move
-		mWrongMove = !(mBugPosition.x > 0); //Try to go out the map
-		//mProportion2Greater = (tComparision > 0); //true
-		//mProportion4Greater = !mProportion2Greater; //false
+		tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x; // New pos is one step to the left, just if is a good move
+		mWrongMove = !(mBugPosition.x > 0); // If tries to go out the map, then WrongMove is true
 
 	} else { // prop 2 = prop4
 		tNewPositionX = mBugPosition.x;
 		mWrongMove = false;
-		//mProportion2Greater = false;
-		//mProportion4Greater = false;
 	}
 
 	mProportion4Greater = (tComparision24 < 0);
 	mProportion2Greater = (tComparision24 > 0);
 
-	// Now check the proportion 1 and 3
+	// Now check the proportion 1 and 3 (Upper-Right and Bottom-Left)
 	float tComparision13 = mProportion1 - mProportion3;
 
 	if(tComparision13 < 0){ // prop 1 < prop 3
 		if(!mWrongMove){
-			tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y;
-			mWrongMove = !(mBugPosition.y +1 < mActualCarte->getSize()); //Try to go out the map
+			tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y; // New pos is one step down, just if is a good move
+			mWrongMove = !(mBugPosition.y +1 < mActualCarte->getSize()); // If tries to go out the map, then WrongMove is true
 		}
-		//mProportion1Greater = false;
-		//mProportion3Greater = true;
-
 	} else if(tComparision13 > 0){ // prop 1 > prop 3
 		if(!mWrongMove){
-			tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y;
-			mWrongMove = !(mBugPosition.y > 0);
+			tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y; // New pos is one step up, just if is a good move
+			mWrongMove = !(mBugPosition.y > 0); // If tries to go out the map, then WrongMove is true
 		}
-		//mProportion1Greater = true;
-		//mProportion3Greater = false;
-
 	} else { // prop 1 == prop 3
 		if(!mWrongMove){
 			tNewPositionY = mBugPosition.y;
 			mWrongMove = false;
 		}
-		//mProportion1Greater = false;
-		//mProportion3Greater = false;
 	}
 
 	mProportion1Greater = (tComparision13 > 0);
@@ -231,17 +256,25 @@ void decorators::KillBugModel::MakeMove(){
 		mWrongMove = true;
 	}
 
+	// If the new position corresponds to an end, then mark
+	// the map as finished
 	if(mActualCarte->IsEndCell(mBugPosition.x,mBugPosition.y)){
 		mActualCarte->FinishMap();
 	}
 
+	// Set 30 frames of feedback (wrong move or fraction greater than other)
 	if(mWrongMove) mWrongMovementFrames = 30;
 	if(mProportion2Greater || mProportion4Greater)	mProportionFeedbackFrames24 = 30;
 	if(mProportion1Greater || mProportion3Greater)	mProportionFeedbackFrames13 = 30;
+
+	// Add one more step.
 	mSteps++;
 
 }
 
+/*
+ * Resets all the variables
+ */
 void decorators::KillBugModel::Start(){
 	mGameStarted = false;
 	mSteps = 0;
@@ -255,11 +288,16 @@ void decorators::KillBugModel::Start(){
 
 }
 
-
+/*
+ * Check each manipulative, in the following order: (1) Circular,
+ * (2) Rectangular, (3) Token (4) Fraction. Then it saves the
+ * proportion in the variables. It takes into account the first
+ * 4 manipulatives present
+ */
 void decorators::KillBugModel::FetchProportions(){
 	int tProportionNumber = 0;
 
-	clearProportions();
+	ClearProportions();
 
 	//Check each manipulative
 	int tCircularActive = CheckCircularManipulative(tProportionNumber);
@@ -274,10 +312,13 @@ void decorators::KillBugModel::FetchProportions(){
 	int tFractionActive = CheckFractionManipulative(tProportionNumber);
 	tProportionNumber += tFractionActive;
 
-	saveProportions();
+	SaveProportions();
 }
 
-void decorators::KillBugModel::clearProportions(){
+/*
+ * Set everything to zero
+ */
+void decorators::KillBugModel::ClearProportions(){
 	mProportion1 = 0.0f;
 	mProportion2 = 0.0f;
 	mProportion3 = 0.0f;
@@ -296,18 +337,20 @@ void decorators::KillBugModel::clearProportions(){
 	mProportion.clear();
 }
 
-void decorators::KillBugModel::saveProportions(){
+/*
+ * Puts in every vector the corresponding proportion value,
+ * numerator or denominator
+ */
+void decorators::KillBugModel::SaveProportions(){
 	mProportion.push_back(mProportion1);
 	mProportion.push_back(mProportion2);
 	mProportion.push_back(mProportion3);
 	mProportion.push_back(mProportion4);
 
-
 	mProportionNumerator.push_back(mProportion1Numerator);
 	mProportionNumerator.push_back(mProportion2Numerator);
 	mProportionNumerator.push_back(mProportion3Numerator);
 	mProportionNumerator.push_back(mProportion4Numerator);
-
 
 	mProportionDenominator.push_back(mProportion1Denominator);
 	mProportionDenominator.push_back(mProportion2Denominator);
@@ -317,60 +360,78 @@ void decorators::KillBugModel::saveProportions(){
 
 }
 
+/*
+ * Checks both circular manipulatives to see if they're present.
+ * If they are, the numerator and denominator are asigned to a proportion
+ */
 int decorators::KillBugModel::CheckCircularManipulative(int pProportionNumber){
 	int tCircularManipActive = 0;
-	if (mCircularModel1->isPresent() && pProportionNumber + tCircularManipActive < 4){
+	if (mCircularModel1->IsPresent() && pProportionNumber + tCircularManipActive < 4){
 		tCircularManipActive++;
 		SetProportionNumber(mCircularModel1->GetCenter(),mCircularModel1->Numerator(), mCircularModel1->Denominator());
-	}if (mCircularModel2->isPresent() && pProportionNumber + tCircularManipActive< 4){
+	}if (mCircularModel2->IsPresent() && pProportionNumber + tCircularManipActive< 4){
 		tCircularManipActive++;
 		SetProportionNumber(mCircularModel2->GetCenter(),mCircularModel2->Numerator(), mCircularModel2->Denominator());
 	}
 	return tCircularManipActive;
 }
+
+/*
+ * Checks both rectangular manipulatives to see if they're present.
+ * If they are, the numerator and denominator are asigned to a proportion
+ */
 int decorators::KillBugModel::CheckRectangularManipulative(int pProportionNumber){
 	int tRectangularManipActive = 0;
-	if (mRectangleModel1->isPresent() && pProportionNumber + tRectangularManipActive < 4){
+	if (mRectangleModel1->IsPresent() && pProportionNumber + tRectangularManipActive < 4){
 		tRectangularManipActive++;
 		SetProportionNumber(mRectangleModel1->getMarker().getCenter(),mRectangleModel1->Numerator(), mRectangleModel1->Denominator());
-	}if (mRectangleModel2->isPresent() && pProportionNumber + tRectangularManipActive < 4){
+	}if (mRectangleModel2->IsPresent() && pProportionNumber + tRectangularManipActive < 4){
 		tRectangularManipActive++;
 		SetProportionNumber(mRectangleModel2->getMarker().getCenter(),mRectangleModel2->Numerator(), mRectangleModel2->Denominator());
 	}
 
 	return tRectangularManipActive;
 }
+
+/*
+ * Checks token manipulatives to see if they're present.
+ * If they are, the numerator and denominator are asigned to a proportion
+ */
 int decorators::KillBugModel::CheckTokenManipulative(int pProportionNumber){
 	//Checking the token manipulative
 	int tTokenManipActive = 0;
-	if(mTokenModel->isPresent() && pProportionNumber + tTokenManipActive < 4){
-		if(!mTokenModel->AreTokensSpread()){
+	if(mTokenModel->IsPresent() && pProportionNumber + tTokenManipActive < 4){
+		if(!mTokenModel->AreTokensSpread()){ // If they're all in the same corner
 			tTokenManipActive++;
 			int tProportion = GetProportionNumber(mTokenModel->GetPosition());
-			SetProportionNumber(tProportion,mTokenModel->GetNumerator(tProportion), mTokenModel->GetDenominator(tProportion));
-		}else{
-			if(pProportionNumber + tTokenManipActive < 4 && mTokenModel->isPresent(1)){
+			SetProportionNumber(tProportion,mTokenModel->GetNumerator(tProportion), mTokenModel->GetDenominator(tProportion)); // Set the proportion number
+		}else{ // If they're spread
+			if(pProportionNumber + tTokenManipActive < 4 && mTokenModel->IsPresent(1)){ // Check in first quadrant
 				tTokenManipActive++;
 				SetProportionNumber(1,mTokenModel->GetNumerator(1), mTokenModel->GetDenominator(1));
-			}if(pProportionNumber + tTokenManipActive < 4 && mTokenModel->isPresent(2)){
+			}if(pProportionNumber + tTokenManipActive < 4 && mTokenModel->IsPresent(2)){ // Check in second quadrant
 				tTokenManipActive++;
 				SetProportionNumber(2,mTokenModel->GetNumerator(2), mTokenModel->GetDenominator(2));
-			}if(pProportionNumber + tTokenManipActive < 4 && mTokenModel->isPresent(3)){
+			}if(pProportionNumber + tTokenManipActive < 4 && mTokenModel->IsPresent(3)){ // Check in third quadrant
 				tTokenManipActive++;
 				SetProportionNumber(3,mTokenModel->GetNumerator(3), mTokenModel->GetDenominator(3));
-			}if(pProportionNumber + tTokenManipActive < 4 && mTokenModel->isPresent(4)){
+			}if(pProportionNumber + tTokenManipActive < 4 && mTokenModel->IsPresent(4)){ // Check in fourth quadrant
 				tTokenManipActive++;
 				SetProportionNumber(4,mTokenModel->GetNumerator(4), mTokenModel->GetDenominator(4));
 			}
 		}
 	}
-
 	return tTokenManipActive;
 }
+
+/*
+ * Check fraction-card manipulatives to see if they're present.
+ * If they are, the numerator and denominator are asigned to a proportion
+ */
 int decorators::KillBugModel::CheckFractionManipulative(int tProportionNumber){
 	int tFractionManipActive = 0;
 	for(int i = 0 ; i < scFractionCards ; i++){
-		if(mFractionCards[i]->IsPresent() && tProportionNumber + tFractionManipActive< 4){
+		if(mFractionCards[i]->IsPresent() && tProportionNumber + tFractionManipActive < 4){
 			tFractionManipActive++;
 			SetProportionNumber(mFractionCards[i]->GetLocation(), mFractionCards[i]->GetNumerator(),mFractionCards[i]->GetDenominator());
 		}
@@ -378,6 +439,11 @@ int decorators::KillBugModel::CheckFractionManipulative(int tProportionNumber){
 	return tFractionManipActive;
 }
 
+/*
+ * Given the position of the manipulative, it calculates the proportion (1,2,3 or 4)
+ * @param the position
+ * @return the value of the fraction: 1, 2, 3 or 4
+ */
 int decorators::KillBugModel::GetProportionNumber(wykobi::point2d<float> pPosition){
 	if(pPosition.x < mDecoratorManager.GetDisplay().GetWidth()/2){
 		if(pPosition.y < mDecoratorManager.GetDisplay().GetHeight()/2)	return 2;
@@ -388,6 +454,10 @@ int decorators::KillBugModel::GetProportionNumber(wykobi::point2d<float> pPositi
 	}
 }
 
+
+/*
+ * Given the position and proportion, it set the corresponding proportion value
+ */
 void decorators::KillBugModel::SetProportionNumber(wykobi::point2d<float> pPosition, float pProportion){
 	int tProportionNumber = GetProportionNumber(pPosition);
 
@@ -399,8 +469,11 @@ void decorators::KillBugModel::SetProportionNumber(wykobi::point2d<float> pPosit
 	}
 }
 
-void decorators::KillBugModel:: SetProportionNumber(int pCuadrant, float pProportion){
-	switch(pCuadrant){
+/*
+ * Given the quadrant and the proportion, it sets the corresponding proportion value
+ */
+void decorators::KillBugModel:: SetProportionNumber(int pQuadrant, float pProportion){
+	switch(pQuadrant){
 		case 1: mProportion1 = pProportion;break;
 		case 2: mProportion2 = pProportion;break;
 		case 3: mProportion3 = pProportion;break;
@@ -408,8 +481,12 @@ void decorators::KillBugModel:: SetProportionNumber(int pCuadrant, float pPropor
 	}
 }
 
-void decorators::KillBugModel::SetProportionNumber(int pCuadrant, int pNumerator, int pDenominator){
-	switch(pCuadrant){
+/*
+ * Given the numerator and denominator, it sets the corresponding
+ * numerator and denominator (taking into account the quadrant)
+ */
+void decorators::KillBugModel::SetProportionNumber(int pQuadrant, int pNumerator, int pDenominator){
+	switch(pQuadrant){
 		case 1:
 			mProportion1Numerator = pNumerator;		mProportion1Denominator = pDenominator;
 			SetProportionNumber(1,(pNumerator/(float)pDenominator));
@@ -429,6 +506,10 @@ void decorators::KillBugModel::SetProportionNumber(int pCuadrant, int pNumerator
 	}
 }
 
+/*
+ * Given the position, numerator and denominator; it sets the corresponding
+ * value of numerator and denominator (considering the quadrant)
+ */
 void decorators::KillBugModel::SetProportionNumber(wykobi::point2d<float> pPosition, int pNumerator, int pDenominator){
 	int tProportionNumber = GetProportionNumber(pPosition);
 
@@ -457,7 +538,7 @@ void decorators::KillBugModel::SetProportionNumber(wykobi::point2d<float> pPosit
 }
 
 /*
- * Display the feedback in the flipper card
+ * Makes a move when correspond
  */
 void decorators::KillBugModel::DisplayFlipperFeedback(){
 	static const long cShotPreparationTime = 6l*1000l;
@@ -469,41 +550,4 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 		MakeMove();
 		mLastShot = Time::MillisTimestamp();
 	}
-
-	/*
-	// If is present, we calculate the proportion of time that has been
-	// past, and we represent it as a degree (to be drawn in the circunference
-	if (mActualFlipper->IsPresent() && mActualFlipper->GetCurrentSide() != NULL){
-		float tPartialDegree = 360*(tElapsedTime/(float)cShotPreparationTime);
-		bool tFull = false;
-		if(tPartialDegree >= 360)
-		{
-			tPartialDegree = 360;
-			tFull = true;
-		}
-
-		// Display the sector of the circunference and then the text
-		mDecoratorManager.GetDisplay().PushTransformation();
-		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mActualFlipper->GetCurrentSide(),
-			mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-		mDecoratorManager.GetDisplay().RenderFilledSector(1.0f,3.3f,1.5f,1.5f,
-			tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
-
-		mDecoratorManager.GetDisplay().RenderCenteredText(tFull?"Prêt!" :"En repos ...", 0.5f,5.5f,
-			true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
-
-		if(mActualFlipper->GetType() == 1 && !tFull){ //If is content flipper then we display more feedback
-			mDecoratorManager.GetDisplay().RenderQuadFilled(-1.5f,0.0f,-2.5f,-1.5f,-2.5f,1.5f,-1.5f,0.0f,0.896f,0.896f,0.896f,0.9);
-			mDecoratorManager.GetDisplay().RenderQuadFilled(-10.5f,-1.5f,-2.5f,-1.5f,-2.5f,8.5f,-10.5f,8.5f,0.896f,0.896f,0.896f,0.9);
-
-			if(!mWrongMove){
-				mDecoratorManager.GetDisplay().RenderCenteredText("Good move", -6.0f,0.0f,
-							true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
-			}else{
-				mDecoratorManager.GetDisplay().RenderCenteredText("Bad move", -6.0f,0.0f,
-											true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
-			}
-		}
-		mDecoratorManager.GetDisplay().PopTransformation();
-	}*/
 }
