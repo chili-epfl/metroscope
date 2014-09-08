@@ -322,9 +322,9 @@ void decorators::KillBugView::displayBug(){
 		wykobi::point2d<int> tPoint2 = wykobi::make_point(mBugTrajectory[i].x,mBugTrajectory[i].y);
 
 		mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + (tPoint1.x - tPoint1.y)*mCellDimensionX,mMapPoint2.y + (tPoint1.x + tPoint1.y + 1)*mCellDimensionY,
-			mMapPoint2.x + (tPoint2.x - tPoint2.y)*mCellDimensionX, mMapPoint2.y + (tPoint2.x + tPoint2.y + 1)*mCellDimensionY, 1.0f, 0.0f, 0.0f, 0.8f);
+			mMapPoint2.x + (tPoint2.x - tPoint2.y)*mCellDimensionX, mMapPoint2.y + (tPoint2.x + tPoint2.y + 1)*mCellDimensionY, 0.545f, 0.271f, 0.075f, 0.5f);
 
-		mDecoratorManager.GetDisplay().RenderFilledEllipse(mMapPoint2.x + (tPoint1.x - tPoint1.y)*mCellDimensionX, mMapPoint2.y + (tPoint1.x + tPoint1.y + 1)*mCellDimensionY, mCellDimensionX/6,mCellDimensionY/6,1.0f,0.0f,0.0f,0.8f,1);
+		mDecoratorManager.GetDisplay().RenderFilledEllipse(mMapPoint2.x + (tPoint1.x - tPoint1.y)*mCellDimensionX, mMapPoint2.y + (tPoint1.x + tPoint1.y + 1)*mCellDimensionY, mCellDimensionX/6,mCellDimensionY/6,0.545f, 0.271f, 0.075f, 0.5f,1);
 	}
 
 	mDecoratorManager.GetDisplay().RenderTexture(tTextureId,
