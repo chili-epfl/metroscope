@@ -74,9 +74,7 @@ class KillBugView : public FiducialDecorator
 		void DisplayDiscreteHint();
 		void DisplayDecimalHint();
 		void DisplayFractionHint();
-		//void DisplayFlipperFeedback();
-		void DivideCircunferenceManipulatives(int pParts);
-		void DivideRectangleManipulatives(int pParts);
+		void RestartTrajectory() {mBugTrajectory.clear();}
 
 
 	protected:

@@ -104,7 +104,9 @@ decorators::KillBugView::~KillBugView(){
  */
 void decorators::KillBugView::update() {
 	if(mKillBugModel->IsMapPresent() && mKillBugModel->IsCurrentActivity()){
+		Carte * tPreviousMap = mActualMap;
 		mActualMap = mKillBugModel->GetActualMap();
+		if(tPreviousMap!=mActualMap)	RestartTrajectory();
 		DisplayMap();
 		if(mKillBugModel->IsGameStarted()){
 			displayBug();

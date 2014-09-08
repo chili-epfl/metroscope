@@ -134,7 +134,7 @@ void decorators::KillBugModel::update(){
 		if(IsCartePresent()){
 			if(mGameStarted)	FetchProportions();
 
-			IsFlipperPresent();
+			if(IsFlipperPresent())	DisplayFlipperFeedback();
 
 			CheckHints();
 		}
