@@ -231,9 +231,10 @@ void decorators::FractionComparisonView::ShowCardFeedback(){
 
 	mDecoratorManager.GetDisplay().PushTransformation();
 	mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-	mDecoratorManager.GetDisplay().RenderText(mCorrectOrder? "Tres bien!" : "Essaye encore une fois",
-					tOrigin.x, tOrigin.y, 0.7f, (mCorrectOrder) ? 0.0f: 1.0f,
+	mDecoratorManager.GetDisplay().RenderText(mCorrectOrder? "Tres bien!" : "Essaye encore ",
+					tOrigin.x - 60.0f, tOrigin.y - 100.0f, 0.7f, (mCorrectOrder) ? 0.0f: 1.0f,
 					(mCorrectOrder)? 1.0f : 0.0f, 0.0f);
+	if(!mCorrectOrder)	mDecoratorManager.GetDisplay().RenderText("une fois ", tOrigin.x - 60.0f, tOrigin.y - 80.0f, 0.7f, 1.0f, 0.0f, 0.0f);
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
