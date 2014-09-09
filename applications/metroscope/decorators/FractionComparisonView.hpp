@@ -58,6 +58,7 @@ class FractionComparisonView : public FiducialDecorator
 		void DisplayIndividualDecimalHint(float pProportion, wykobi::point2d<float> pPosition);
 		void DisplayIndividualRectangularHint(float pProportion, wykobi::point2d<float> pPosition);
 		void DisplayIndividualCircularHint(float pProportion, wykobi::point2d<float> pPosition);
+		bool IsActivityPresent();
 
 	protected:
 		void update();
@@ -74,7 +75,7 @@ class FractionComparisonView : public FiducialDecorator
 		void CheckOrder();
 		int mOrder;
 		bool mCorrectOrder;
-		bool IsActivityPresent();
+
 		int mActivityPresent;
 		void CheckAnswer();
 		void ShowGrid();
