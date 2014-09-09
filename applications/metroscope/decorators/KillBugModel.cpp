@@ -193,7 +193,7 @@ void decorators::KillBugModel::CheckHints(){
 
 /*
  * Checks if the answer is "correct" (i.e. moving to a correct
- * position)
+ * position) only if the map is not finished
  */
 void decorators::KillBugModel::MakeMove(){
 

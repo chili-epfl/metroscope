@@ -431,21 +431,30 @@ void decorators::KillBugView::displayIndividualDiscreteHint(int pNumerator, int 
 
 	float tPartialX, tPartialY;
 
-	// Depending of the proportion number (1,2,3 or 4) we have different X and Y
+
+	// Depending of the proportion number (1,2,3 or 4) we have different Y
 	switch(pProportionNumber){
-		case 1:		tPartialX = mProportion1Point.x - tBoxWidth/2;	tPartialY = mProportion1Point.y - tBoxHeight/2;
-			break;
-		case 2:		tPartialX = mProportion2Point.x - tBoxWidth/2;	tPartialY = mProportion2Point.y - tBoxHeight/2;
-			break;
-		case 3:		tPartialX = mProportion3Point.x - tBoxWidth/2;	tPartialY = mProportion3Point.y - tBoxHeight/2;
-			break;
-		case 4:		tPartialX = mProportion4Point.x - tBoxWidth/2;	tPartialY = mProportion4Point.y - tBoxHeight/2;
-			break;
+		case 1:		tPartialY = mProportion1Point.y - tBoxHeight/2;	break;
+		case 2:		tPartialY = mProportion2Point.y - tBoxHeight/2;	break;
+		case 3:		tPartialY = mProportion3Point.y - tBoxHeight/2;	break;
+		case 4:		tPartialY = mProportion4Point.y - tBoxHeight/2;	break;
 	}
 
 	// Display the cells
 	mDecoratorManager.GetDisplay().PushTransformation();
 	for(int i = 0 ; i < 4 ; i++){
+		// Depending of the proportion number (1,2,3 or 4) we have different X (we have to start with the same
+		// x in every row)
+			switch(pProportionNumber){
+				case 1:		tPartialX = mProportion1Point.x - tBoxWidth/2;
+					break;
+				case 2:		tPartialX = mProportion2Point.x - tBoxWidth/2;
+					break;
+				case 3:		tPartialX = mProportion3Point.x - tBoxWidth/2;
+					break;
+				case 4:		tPartialX = mProportion4Point.x - tBoxWidth/2;
+					break;
+			}
 		for(int j = 0 ; j < 5 ; j++){
 			if(tDenom > 0) {
 				mDecoratorManager.GetDisplay().RenderQuadFilled(tPartialX,tPartialY,tPartialX+tCellWidth,tPartialY,
