@@ -112,18 +112,25 @@ void decorators::CircularFractionModel::CalculateFractionFromDecimal(){
 
 	double tN;
 
-	// We put an epsilon of 0.001 to stop
-	while(tIterations < 8 && tZ[tIterations] - (int)tZ[tIterations] > 0.001){
+	// We put an epsilon of 0.001 to stop (it converges with fractions < 0.969995)
+	if(tX > 0.969995f){
+		mNumerator = 1;
+		mDenominator = 1;
+	}else{
+		while(tIterations < 8 && tZ[tIterations] - (int)tZ[tIterations] > 0.001){
 
-		tZ[tIterations + 1] = 1/(tZ[tIterations] - (int)tZ[tIterations]);
-		tD[tIterations + 1] = tD[tIterations]*(int)tZ[tIterations+1] + tD[tIterations-1];
-		tN = (tX*tD[tIterations + 1] + 0.5 >= (int)(tX*tD[tIterations + 1]) + 1) ? int(tX*tD[tIterations + 1])+1 : (int)(tX*tD[tIterations + 1]);
+				tZ[tIterations + 1] = 1/(tZ[tIterations] - (int)tZ[tIterations]);
+				tD[tIterations + 1] = tD[tIterations]*(int)tZ[tIterations+1] + tD[tIterations-1];
+				tN = (tX*tD[tIterations + 1] + 0.5 >= (int)(tX*tD[tIterations + 1]) + 1) ? int(tX*tD[tIterations + 1])+1 : (int)(tX*tD[tIterations + 1]);
 
-		tIterations++;
+				tIterations++;
+			}
+
+			// We calculate the numerator and denominator
+			mNumerator = tN;
+			mDenominator = tD[tIterations];
 	}
 
-	// We calculate the numerator and denominator
-	mNumerator = tN;
-	mDenominator = tD[tIterations];
+
 }
 
