@@ -288,6 +288,7 @@ void decorators::KillBugModel::Start(){
 	mProportion4 = 0.0f;
 	mBugPosition.x = mActualCarte->getOriginPoint().x;
 	mBugPosition.y = mActualCarte->getOriginPoint().y;
+	mActualHint = NULL;
 
 }
 
