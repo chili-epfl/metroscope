@@ -196,79 +196,82 @@ void decorators::KillBugModel::CheckHints(){
  * position)
  */
 void decorators::KillBugModel::MakeMove(){
-	int tNewPositionX , tNewPositionY;
 
-	mProportion1Greater = false;
-	mProportion3Greater = false;
-	mProportion2Greater = false;
-	mProportion4Greater = false;
+	if(!mActualCarte->IsFinished()){
+		int tNewPositionX , tNewPositionY;
 
-	// wrongMove is: 1) try to go to an obstacle 2) try to go out the map
-	// First check the proportion 2 and 4 (Upper-Left and Bottom-Right)
-	float tComparision24 = mProportion2 - mProportion4;
+		mProportion1Greater = false;
+		mProportion3Greater = false;
+		mProportion2Greater = false;
+		mProportion4Greater = false;
 
-	if(tComparision24 < 0 ){ //if prop 2 < prop 4
-		tNewPositionX = (mBugPosition.x + 1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x; // New pos is one step to the right, just if is a good move
-		mWrongMove = !(mBugPosition.x +1 < mActualCarte->getSize()); // If tries to go out the map, then WrongMove is true
+		// wrongMove is: 1) try to go to an obstacle 2) try to go out the map
+		// First check the proportion 2 and 4 (Upper-Left and Bottom-Right)
+		float tComparision24 = mProportion2 - mProportion4;
 
-	} else if(tComparision24 > 0){ //if prop 2 > prop 4
-		tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x; // New pos is one step to the left, just if is a good move
-		mWrongMove = !(mBugPosition.x > 0); // If tries to go out the map, then WrongMove is true
+		if(tComparision24 < 0 ){ //if prop 2 < prop 4
+			tNewPositionX = (mBugPosition.x + 1 < mActualCarte->getSize()) ? mBugPosition.x + 1 : mBugPosition.x; // New pos is one step to the right, just if is a good move
+			mWrongMove = !(mBugPosition.x +1 < mActualCarte->getSize()); // If tries to go out the map, then WrongMove is true
 
-	} else { // prop 2 = prop4
-		tNewPositionX = mBugPosition.x;
-		mWrongMove = false;
-	}
+		} else if(tComparision24 > 0){ //if prop 2 > prop 4
+			tNewPositionX = (mBugPosition.x > 0) ? mBugPosition.x - 1 : mBugPosition.x; // New pos is one step to the left, just if is a good move
+			mWrongMove = !(mBugPosition.x > 0); // If tries to go out the map, then WrongMove is true
 
-	mProportion4Greater = (tComparision24 < 0);
-	mProportion2Greater = (tComparision24 > 0);
-
-	// Now check the proportion 1 and 3 (Upper-Right and Bottom-Left)
-	float tComparision13 = mProportion1 - mProportion3;
-
-	if(tComparision13 < 0){ // prop 1 < prop 3
-		if(!mWrongMove){
-			tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y; // New pos is one step down, just if is a good move
-			mWrongMove = !(mBugPosition.y +1 < mActualCarte->getSize()); // If tries to go out the map, then WrongMove is true
-		}
-	} else if(tComparision13 > 0){ // prop 1 > prop 3
-		if(!mWrongMove){
-			tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y; // New pos is one step up, just if is a good move
-			mWrongMove = !(mBugPosition.y > 0); // If tries to go out the map, then WrongMove is true
-		}
-	} else { // prop 1 == prop 3
-		if(!mWrongMove){
-			tNewPositionY = mBugPosition.y;
+		} else { // prop 2 = prop4
+			tNewPositionX = mBugPosition.x;
 			mWrongMove = false;
 		}
-	}
 
-	mProportion1Greater = (tComparision13 > 0);
-	mProportion3Greater = (tComparision13 < 0);
+		mProportion4Greater = (tComparision24 < 0);
+		mProportion2Greater = (tComparision24 > 0);
 
+		// Now check the proportion 1 and 3 (Upper-Right and Bottom-Left)
+		float tComparision13 = mProportion1 - mProportion3;
 
-	if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY) ){
-		if(!mWrongMove){
-			mBugPosition.x = tNewPositionX;
-			mBugPosition.y = tNewPositionY;
+		if(tComparision13 < 0){ // prop 1 < prop 3
+			if(!mWrongMove){
+				tNewPositionY = (mBugPosition.y +1 < mActualCarte->getSize()) ? mBugPosition.y + 1 : mBugPosition.y; // New pos is one step down, just if is a good move
+				mWrongMove = !(mBugPosition.y +1 < mActualCarte->getSize()); // If tries to go out the map, then WrongMove is true
+			}
+		} else if(tComparision13 > 0){ // prop 1 > prop 3
+			if(!mWrongMove){
+				tNewPositionY = (mBugPosition.y > 0) ?  mBugPosition.y - 1 :  mBugPosition.y; // New pos is one step up, just if is a good move
+				mWrongMove = !(mBugPosition.y > 0); // If tries to go out the map, then WrongMove is true
+			}
+		} else { // prop 1 == prop 3
+			if(!mWrongMove){
+				tNewPositionY = mBugPosition.y;
+				mWrongMove = false;
+			}
 		}
-	}else{ //Wrong Move
-		mWrongMove = true;
+
+		mProportion1Greater = (tComparision13 > 0);
+		mProportion3Greater = (tComparision13 < 0);
+
+		if(mActualCarte->IsEmptyCell(tNewPositionX,tNewPositionY) ){
+			if(!mWrongMove){
+				mBugPosition.x = tNewPositionX;
+				mBugPosition.y = tNewPositionY;
+			}
+		}else{ //Wrong Move
+			mWrongMove = true;
+		}
+
+		// If the new position corresponds to an end, then mark
+		// the map as finished
+		if(mActualCarte->IsEndCell(mBugPosition.x,mBugPosition.y)){
+			mActualCarte->FinishMap();
+		}
+
+		// Set 30 frames of feedback (wrong move or fraction greater than other)
+		if(mWrongMove) mWrongMovementFrames = 30;
+		if(mProportion2Greater || mProportion4Greater)	mProportionFeedbackFrames24 = 30;
+		if(mProportion1Greater || mProportion3Greater)	mProportionFeedbackFrames13 = 30;
+
+		// Add one more step.
+		mSteps++;
 	}
 
-	// If the new position corresponds to an end, then mark
-	// the map as finished
-	if(mActualCarte->IsEndCell(mBugPosition.x,mBugPosition.y)){
-		mActualCarte->FinishMap();
-	}
-
-	// Set 30 frames of feedback (wrong move or fraction greater than other)
-	if(mWrongMove) mWrongMovementFrames = 30;
-	if(mProportion2Greater || mProportion4Greater)	mProportionFeedbackFrames24 = 30;
-	if(mProportion1Greater || mProportion3Greater)	mProportionFeedbackFrames13 = 30;
-
-	// Add one more step.
-	mSteps++;
 
 }
 
