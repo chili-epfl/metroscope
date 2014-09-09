@@ -59,6 +59,7 @@ class FractionComparisonView : public FiducialDecorator
 		void DisplayIndividualRectangularHint(float pProportion, wykobi::point2d<float> pPosition);
 		void DisplayIndividualCircularHint(float pProportion, wykobi::point2d<float> pPosition);
 		bool IsActivityPresent();
+		bool IsMarkerPresent() {return mActivityMarker->isPresent();}
 
 	protected:
 		void update();
