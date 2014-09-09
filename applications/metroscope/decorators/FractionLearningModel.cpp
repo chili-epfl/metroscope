@@ -108,14 +108,14 @@ void decorators::FractionLearningModel::update(){
  * activity is set as false
  */
 bool decorators::FractionLearningModel::IsPresentFractionComparison(){
-	if(mFractionComparisonGreater->IsMarkerPresent()){
+	if(mFractionComparisonGreater->IsPresent()){
 		mFractionComparisonGreater->SetCurrentActivity(true);
 		mFractionComparisonSmaller->SetCurrentActivity(false);
-	}else if(mFractionComparisonSmaller->IsMarkerPresent()){
+	}else if(mFractionComparisonSmaller->IsPresent()){
 		mFractionComparisonGreater->SetCurrentActivity(false);
 		mFractionComparisonSmaller->SetCurrentActivity(true);
 	}
-	return (mFractionComparisonGreater->IsMarkerPresent() || mFractionComparisonSmaller->IsMarkerPresent());
+	return (mFractionComparisonGreater->IsPresent() || mFractionComparisonSmaller->IsPresent());
 }
 
 /*

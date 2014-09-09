@@ -45,7 +45,7 @@ class FractionComparisonView : public FiducialDecorator
 						FractionCard ** pFractionCards, FractionBugHint ** pFractionHints, int pOrder); //pOrder: 0-> greater than, 1-> smaller than
 
 		void SetCurrentActivity(bool pIsCurrentActivity) {mIsCurrentActivity = pIsCurrentActivity;}
-		bool IsPresent() {return (IsActivityPresent() && mMarker->isPresent());}
+		bool IsPresent() {return (mActivityMarker->isPresent() || mMarker->isPresent());}
 		bool IsHintPresent();
 		void ShowHintFeedback();
 		void DisplayDiscreteHint();
