@@ -152,7 +152,7 @@ bool decorators::KillBugModel::IsCartePresent(){
 	for(int i = 0 ; i < scCarteCards ; i++){
 		if(mCartes[i]->isPresent()){
 			mActualCarte = mCartes[i];
-			if(tPreviusCarte != mActualCarte)	Start();
+			if(tPreviusCarte != mActualCarte && !mActualCarte->IsFinished())	Start();
 		}
 	}
 

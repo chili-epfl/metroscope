@@ -253,7 +253,7 @@ void decorators::KillBugView::drawMapStatusFeedback(){
 				0.0f, mDisplayHeight/2 + mMapHeight/4, 0.8f,0.8f,0.8f,0.5f);
 		mDecoratorManager.GetDisplay().RenderText("Carte finie!", mMapPoint1.x + 130.0f,  mDisplayHeight/2, 2.2f,0.0f,0.0f,0.0f,1.0f);
 	}
-	if(mKillBugModel->GetNewMapFrames() > 0){
+	if(!mActualMap->IsFinished() && mKillBugModel->GetNewMapFrames() > 0){
 		mDecoratorManager.GetDisplay().RenderQuadFilled(0.0f, mDisplayHeight/2 - mMapHeight/4,
 			mDisplayWidth, mDisplayHeight/2 - mMapHeight/4, mDisplayWidth, mDisplayHeight/2 + mMapHeight/4,
 			0.0f, mDisplayHeight/2 + mMapHeight/4, 0.8f,0.8f,0.8f,0.5f);
