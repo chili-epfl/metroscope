@@ -270,6 +270,9 @@ void decorators::KillBugView::drawMapStatusFeedback(){
 void decorators::KillBugView::drawMoveFeedback(){
 	mDecoratorManager.GetDisplay().PushTransformation();
 
+	wykobi::point2d<int> tBugPosition = mKillBugModel->GetBugPosition();
+
+
 	if(mKillBugModel->GetWrongMovementFrames()>0){
 		mDecoratorManager.GetDisplay().RenderText("Je ne peux pas y aller...", mBugPosition.x*mCellDimensionX + mMapPoint1.x + 10.0f,
 			mBugPosition.y*mCellDimensionY + mMapPoint1.y - 10.0f, 0.95f,0.0f,0.0f,0.0f,1.0f);
@@ -280,12 +283,18 @@ void decorators::KillBugView::drawMoveFeedback(){
 		bool tEven = (mKillBugModel->Get13Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,180.0f,scProp1R,scProp1G,scProp1B,tEven? 0.2:0.09f,1); //Prop1
+		mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+				mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 2)*mCellDimensionY + mCellDimensionY,
+				scProp1R,scProp1G,scProp1B,tEven? 0.6:0.2f);
 		mKillBugModel->Decrease13Frames();
 
 	} else if(mKillBugModel->IsProportion3Greater() && mKillBugModel->Get13Frames()>0){
 		bool tEven = (mKillBugModel->Get13Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,360.0f,scProp3R,scProp3G,scProp3B,tEven? 0.2:0.09f,1); //Prop3
+		mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+				mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 2)*mCellDimensionY + mCellDimensionY,
+				scProp3R,scProp3G,scProp3B,tEven? 0.6:0.2f);
 		mKillBugModel->Decrease13Frames();
 	}
 
@@ -293,12 +302,18 @@ void decorators::KillBugView::drawMoveFeedback(){
 		bool tEven = (mKillBugModel->Get24Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,270.0f,scProp2R,scProp2G,scProp2B,tEven? 0.2:0.09f,1); //Prop 2
+		mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+				mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 2)*mCellDimensionY + mCellDimensionY,
+				scProp2R,scProp2G,scProp2B,tEven? 0.6:0.2f);
 		mKillBugModel->Decrease24Frames();
 
 	} else if(mKillBugModel->IsProportion4Greater() && mKillBugModel->Get24Frames()>0){
 		bool tEven = (mKillBugModel->Get24Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,90.0f,scProp4R,scProp4G,scProp4B,tEven? 0.2:0.09f,1); //Prop4
+		mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+				mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 2)*mCellDimensionY + mCellDimensionY,
+				scProp4R,scProp4G,scProp4B,tEven? 0.6:0.2f);
 		mKillBugModel->Decrease24Frames();
 	}
 
