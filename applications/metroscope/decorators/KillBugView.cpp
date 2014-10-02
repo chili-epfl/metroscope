@@ -274,8 +274,15 @@ void decorators::KillBugView::drawMoveFeedback(){
 
 
 	if(mKillBugModel->GetWrongMovementFrames()>0){
-		mDecoratorManager.GetDisplay().RenderText("Je ne peux pas y aller...", mBugPosition.x*mCellDimensionX + mMapPoint1.x + 10.0f,
-			mBugPosition.y*mCellDimensionY + mMapPoint1.y - 10.0f, 0.95f,0.0f,0.0f,0.0f,1.0f);
+		//Point where the bug is, and radius of the bubble with the error message (top/left)
+		//TODO: Make these values configurable?
+		float x = mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX;
+		float y = mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY*1.5f;
+		float radiusx = 150.0f;
+		float radiusy = 30.0f;
+		mDecoratorManager.GetDisplay().RenderFilledEllipse(x-50+radiusx-10,y+100+radiusy-35,radiusx+10,radiusy+10, 1.0f, 1.0f, 1.0f, 0.9f);
+		mDecoratorManager.GetDisplay().RenderFilledSector(x,y,65,65,20,275.0f, 1.0f, 1.0f, 1.0f, 0.9f);
+		mDecoratorManager.GetDisplay().RenderText("Je ne peux pas y aller...", x - 50, y + 100, 0.95f,0.0f,0.0f,0.0f,1.0f);
 		mKillBugModel->DecreaseWrongMovementFrames();
 	}
 
