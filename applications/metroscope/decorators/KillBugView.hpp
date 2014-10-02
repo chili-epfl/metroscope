@@ -44,6 +44,10 @@ class KillBugView : public FiducialDecorator
 		void drawObstaclePoints();
 		void drawMapStatusFeedback();
 		void drawMoveFeedback();
+		void drawArrow(int width, float x1, float y1, float x2, float y2,
+				float r, float g, float b, float a);
+		void drawStroke(int width, float x1, float y1, float x2, float y2,
+				float r, float g, float b, float a);
 		void displayBug();
 		void displayHint();
 		void displayDiscreteHint(std::vector<int> pNumerator, std::vector<int> pDenominator);

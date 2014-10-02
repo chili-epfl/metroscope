@@ -283,18 +283,22 @@ void decorators::KillBugView::drawMoveFeedback(){
 		bool tEven = (mKillBugModel->Get13Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,180.0f,scProp1R,scProp1G,scProp1B,tEven? 0.2:0.09f,1); //Prop1
-		mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-				mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 2)*mCellDimensionY + mCellDimensionY,
-				scProp1R,scProp1G,scProp1B,tEven? 0.6:0.2f);
+		if(scArrowWidth>0){//We display the arrows
+			drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+					mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 2)*mCellDimensionY + mCellDimensionY,
+					scProp1R,scProp1G,scProp1B,tEven? 0.6:0.2f);
+		}
 		mKillBugModel->Decrease13Frames();
 
 	} else if(mKillBugModel->IsProportion3Greater() && mKillBugModel->Get13Frames()>0){
 		bool tEven = (mKillBugModel->Get13Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,360.0f,scProp3R,scProp3G,scProp3B,tEven? 0.2:0.09f,1); //Prop3
-		mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-				mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 2)*mCellDimensionY + mCellDimensionY,
-				scProp3R,scProp3G,scProp3B,tEven? 0.6:0.2f);
+		if(scArrowWidth>0){//We display the arrows
+			drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+					mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 2)*mCellDimensionY + mCellDimensionY,
+					scProp3R,scProp3G,scProp3B,tEven? 0.6:0.2f);
+		}
 		mKillBugModel->Decrease13Frames();
 	}
 
@@ -302,22 +306,102 @@ void decorators::KillBugView::drawMoveFeedback(){
 		bool tEven = (mKillBugModel->Get24Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(0.0f, 0.0f, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,270.0f,scProp2R,scProp2G,scProp2B,tEven? 0.2:0.09f,1); //Prop 2
-		mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-				mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 2)*mCellDimensionY + mCellDimensionY,
-				scProp2R,scProp2G,scProp2B,tEven? 0.6:0.2f);
+		if(scArrowWidth>0){//We display the arrows
+			drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+					mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 2)*mCellDimensionY + mCellDimensionY,
+					scProp2R,scProp2G,scProp2B,tEven? 0.6:0.2f);
+			//In the case of vector composition, we draw the resulting vector, for additional clarity
+			if(mKillBugModel->IsProportion1Greater() && mKillBugModel->Get13Frames()>0){
+				//Arrow up
+				drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+						mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 3)*mCellDimensionY + mCellDimensionY,
+						0,0,0,0.5f);
+			} else if(mKillBugModel->IsProportion3Greater() && mKillBugModel->Get13Frames()>0){
+				//Arrow left
+				drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+						mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 3)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+						0,0,0,0.5f);
+			}
+		}
 		mKillBugModel->Decrease24Frames();
 
 	} else if(mKillBugModel->IsProportion4Greater() && mKillBugModel->Get24Frames()>0){
 		bool tEven = (mKillBugModel->Get24Frames()%2 == 0);
 		mDecoratorManager.GetDisplay().RenderFilledSector(mDisplayWidth, mDisplayHeight, mWorkingTriangle/2,mWorkingTriangle/2,
 				90.0f,90.0f,scProp4R,scProp4G,scProp4B,tEven? 0.2:0.09f,1); //Prop4
-		mDecoratorManager.GetDisplay().RenderLine(mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+		if(scArrowWidth>0){//We display the arrows
+			drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
 				mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 2)*mCellDimensionY + mCellDimensionY,
 				scProp4R,scProp4G,scProp4B,tEven? 0.6:0.2f);
+			//In the case of vector composition, we draw the resulting vector, for additional clarity
+			if(mKillBugModel->IsProportion1Greater() && mKillBugModel->Get13Frames()>0){
+				//Arrow right
+				drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+					mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 3)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+					0,0,0,0.5f);
+			} else if(mKillBugModel->IsProportion3Greater() && mKillBugModel->Get13Frames()>0){
+				//Arrow down
+				drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+					mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 3)*mCellDimensionY + mCellDimensionY,
+					0,0,0,0.5f);
+			}
+		}
 		mKillBugModel->Decrease24Frames();
 	}
 
+
 	mDecoratorManager.GetDisplay().PopTransformation();
+}
+
+
+/*
+ * Draw an wide stroke, knowing the width, origin, end, and color
+ */
+void decorators::KillBugView::drawStroke(int width, float x1, float y1, float x2, float y2,
+		float r, float g, float b, float a){
+
+	//We calculate the length of the arrow,
+	// plus the trigonometric functions of the angle, which will be useful for drawing the arrow of a certain width
+	float length = sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
+	float sine = (y2-y1)/length;
+	float cosine = (x2-x1)/length;
+
+	//We render the main stroke, as a quad of width width
+	mDecoratorManager.GetDisplay().RenderQuadFilled(x1+((width/2)*sine),y1-((width/2)*cosine),
+			x2+((width/2)*sine), y2-((width/2)*cosine),
+			x2-((width/2)*sine), y2+((width/2)*cosine),
+			x1-((width/2)*sine), y1+((width/2)*cosine), r, g, b, a);
+}
+
+/*
+ * Draw an arrow, made up of wide strokes
+ */
+void decorators::KillBugView::drawArrow(int width, float x1, float y1, float x2, float y2,
+		float r, float g, float b, float a){
+
+	float length = sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
+	float sine = (y2-y1)/length;
+	float cosine = (x2-x1)/length;
+
+	//We draw the main stroke
+	drawStroke(width, x1, y1, x2, y2, r, g, b, a);
+
+	//The trigonometric functions of the angle of the arrowhead
+	float sinehead = sin(scArrowAngle);
+	float cosinehead = cos(scArrowAngle);
+
+	//First arrowhead stroke, applying: cos(A+B) = cos A cos B − sin A sin B; sin(A+B) = sin A cos B + cos A sin B; cos(A−B) = cos A cos B + sin A sin B; sin(A−B) = sin A cos B − cos A sin B
+	//We calculate the endpoints of the stroke of the arrowhead, from the end
+	float x3 = x2-(scArrowStrokeLength*(cosine*cosinehead-sine*sinehead));
+	float y3 = y2-(scArrowStrokeLength*(sine*cosinehead+cosine*sinehead));
+	drawStroke(width, x2, y2, x3, y3, r, g, b, a);
+
+	//First arrowhead stroke, applying: cos(A+B) = cos A cos B − sin A sin B; sin(A+B) = sin A cos B + cos A sin B; cos(A−B) = cos A cos B + sin A sin B; sin(A−B) = sin A cos B − cos A sin B
+	//We calculate the endpoints of the stroke of the arrowhead, from the end
+	float x4 = x2-(scArrowStrokeLength*(cosine*cosinehead+sine*sinehead));
+	float y4 = y2-(scArrowStrokeLength*(sine*cosinehead-cosine*sinehead));
+	drawStroke(width, x2, y2, x4, y4, r, g, b, a);
+
 }
 
 /*

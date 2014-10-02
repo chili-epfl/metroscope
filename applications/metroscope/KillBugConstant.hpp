@@ -20,6 +20,8 @@
 #ifndef KILLBUGCONSTANT_HPP_
 #define KILLBUGCONSTANT_HPP_
 
+#include <math.h>
+
 static const int scFractionCards = 40;
 static const int scCarteCards = 10;
 static const int scHintCards = 5;
@@ -45,6 +47,12 @@ static const float scProp3B = 0.0f;
 static const float scProp4R = 1.0f;
 static const float scProp4G = 0.5f;
 static const float scProp4B = 0.0f;
+
+//Width for the arrows (if 0, they will not be displayed)
+static const int scArrowWidth = 6;
+static const int scArrowStrokeLength = 4*scArrowWidth;
+//Angle for the arrowheads (in radians)
+static const float scArrowAngle = M_PI/6;
 
 
 #endif /* KILLBUGCONSTANT_HPP_ */
