@@ -447,17 +447,19 @@ void decorators::KillBugView::displayHint(){
 	std::vector<float> tProportion= mKillBugModel->GetProportionValue();
 
 	// We check the type of hint that is shown
-	switch(mActualHint->GetHintType()){
-		case 0: displayDiscreteHint(tNumerator,tDenominator);	// Discrete help
-			break;
-		case 1: displayFractionHint(tNumerator,tDenominator);	// Fraction help
-			break;
-		case 2: displayDecimalHint(tProportion);	// Decimal help
-			break;
-		case 3: displayRectangularHint(tProportion);	// Rectangular help
-			break;
-		case 4: displayCircularHint(tProportion);	// Circular help
-			break;
+	if(tNumerator.size()==4 && tDenominator.size()==4){	//If the proportions have not yet been initialized, we skip the function for now
+		switch(mActualHint->GetHintType()){
+			case 0: displayDiscreteHint(tNumerator,tDenominator);	// Discrete help
+				break;
+			case 1: displayFractionHint(tNumerator,tDenominator);	// Fraction help
+				break;
+			case 2: displayDecimalHint(tProportion);	// Decimal help
+				break;
+			case 3: displayRectangularHint(tProportion);	// Rectangular help
+				break;
+			case 4: displayCircularHint(tProportion);	// Circular help
+				break;
+		}
 	}
 }
 
@@ -722,6 +724,9 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 	char tStepsDone[3] , tStepsToGo[3];		// Steps information
 	char tP1Num[3] , tP2Num[3] , tP3Num[3] , tP4Num[3];		//	Numerator information
 	char tP1Den[3] , tP2Den[3] , tP3Den[3] , tP4Den[3];		//	Denominator information
+
+	//If the proportions have not yet been initialized, we skip the function for now
+	if(mKillBugModel->GetProportionNumerator().size()!=4 || mKillBugModel->GetProportionDenominator().size()!=4) return;
 
 	static const long cShotPreparationTime = 6l*1000l;
 	//long tElapsedTime = Time::MillisTimestamp() - mLastShot;
