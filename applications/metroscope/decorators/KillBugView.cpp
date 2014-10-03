@@ -280,8 +280,8 @@ void decorators::KillBugView::drawMoveFeedback(){
 		float y = mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY*1.5f;
 		float radiusx = 150.0f;
 		float radiusy = 30.0f;
-		mDecoratorManager.GetDisplay().RenderFilledEllipse(x-50+radiusx-10,y+100+radiusy-35,radiusx+10,radiusy+10, 1.0f, 1.0f, 1.0f, 0.9f);
-		mDecoratorManager.GetDisplay().RenderFilledSector(x,y,65,65,20,275.0f, 1.0f, 1.0f, 1.0f, 0.9f);
+		mDecoratorManager.GetDisplay().RenderFilledEllipse(x-50+radiusx-10,y+100+radiusy-35,radiusx+10,radiusy+10, 0.9f, 0.9f, 0.9f, 0.9f);
+		mDecoratorManager.GetDisplay().RenderFilledSector(x,y,65,65,20,275.0f, 0.9f, 0.9f, 0.9f, 0.9f);
 		mDecoratorManager.GetDisplay().RenderText("Je ne peux pas y aller...", x - 50, y + 100, 0.95f,0.0f,0.0f,0.0f,1.0f);
 		mKillBugModel->DecreaseWrongMovementFrames();
 	}
@@ -292,7 +292,7 @@ void decorators::KillBugView::drawMoveFeedback(){
 				90.0f,180.0f,scProp1R,scProp1G,scProp1B,tEven? 0.2:0.09f,1); //Prop1
 		if(scArrowWidth>0){//We display the arrows
 			drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-					mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 2)*mCellDimensionY + mCellDimensionY,
+					mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 1.5)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 1.5)*mCellDimensionY + mCellDimensionY,
 					scProp1R,scProp1G,scProp1B,tEven? 0.6:0.2f);
 		}
 		mKillBugModel->Decrease13Frames();
@@ -303,7 +303,7 @@ void decorators::KillBugView::drawMoveFeedback(){
 				90.0f,360.0f,scProp3R,scProp3G,scProp3B,tEven? 0.2:0.09f,1); //Prop3
 		if(scArrowWidth>0){//We display the arrows
 			drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-					mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 2)*mCellDimensionY + mCellDimensionY,
+					mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 1.5)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 1.5)*mCellDimensionY + mCellDimensionY,
 					scProp3R,scProp3G,scProp3B,tEven? 0.6:0.2f);
 		}
 		mKillBugModel->Decrease13Frames();
@@ -315,19 +315,19 @@ void decorators::KillBugView::drawMoveFeedback(){
 				90.0f,270.0f,scProp2R,scProp2G,scProp2B,tEven? 0.2:0.09f,1); //Prop 2
 		if(scArrowWidth>0){//We display the arrows
 			drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-					mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 2)*mCellDimensionY + mCellDimensionY,
+					mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 1.5)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 1.5)*mCellDimensionY + mCellDimensionY,
 					scProp2R,scProp2G,scProp2B,tEven? 0.6:0.2f);
 			//In the case of vector composition, we draw the resulting vector, for additional clarity
 			if(mKillBugModel->IsProportion1Greater() && mKillBugModel->Get13Frames()>0){
 				//Arrow up
-				drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-						mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 3)*mCellDimensionY + mCellDimensionY,
-						0,0,0,0.5f);
+				drawArrow(scArrowWidth*1.5, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+						mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x - 2)*mCellDimensionY + mCellDimensionY,
+						0,0,0,0.7f);
 			} else if(mKillBugModel->IsProportion3Greater() && mKillBugModel->Get13Frames()>0){
 				//Arrow left
-				drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-						mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 3)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-						0,0,0,0.5f);
+				drawArrow(scArrowWidth*1.5, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+						mMapPoint2.x + (tBugPosition.x - tBugPosition.y - 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+						0,0,0,0.7f);
 			}
 		}
 		mKillBugModel->Decrease24Frames();
@@ -338,19 +338,19 @@ void decorators::KillBugView::drawMoveFeedback(){
 				90.0f,90.0f,scProp4R,scProp4G,scProp4B,tEven? 0.2:0.09f,1); //Prop4
 		if(scArrowWidth>0){//We display the arrows
 			drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-				mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 2)*mCellDimensionY + mCellDimensionY,
+				mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 1.5)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 1.5)*mCellDimensionY + mCellDimensionY,
 				scProp4R,scProp4G,scProp4B,tEven? 0.6:0.2f);
 			//In the case of vector composition, we draw the resulting vector, for additional clarity
 			if(mKillBugModel->IsProportion1Greater() && mKillBugModel->Get13Frames()>0){
 				//Arrow right
-				drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-					mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 3)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-					0,0,0,0.5f);
+				drawArrow(scArrowWidth*1.5, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+					mMapPoint2.x + (tBugPosition.x - tBugPosition.y + 2)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+					0,0,0,0.7f);
 			} else if(mKillBugModel->IsProportion3Greater() && mKillBugModel->Get13Frames()>0){
 				//Arrow down
-				drawArrow(scArrowWidth, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
-					mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 3)*mCellDimensionY + mCellDimensionY,
-					0,0,0,0.5f);
+				drawArrow(scArrowWidth*1.5, mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x)*mCellDimensionY + mCellDimensionY,
+					mMapPoint2.x + (tBugPosition.x - tBugPosition.y)*mCellDimensionX, mMapPoint2.y + (tBugPosition.y + tBugPosition.x + 2)*mCellDimensionY + mCellDimensionY,
+					0,0,0,0.7f);
 			}
 		}
 		mKillBugModel->Decrease24Frames();

@@ -49,7 +49,7 @@ static const float scProp4G = 0.5f;
 static const float scProp4B = 0.0f;
 
 //Width for the arrows (if 0, they will not be displayed)
-static const int scArrowWidth = 6;
+static const int scArrowWidth = 4;
 static const int scArrowStrokeLength = 4*scArrowWidth;
 //Angle for the arrowheads (in radians)
 static const float scArrowAngle = M_PI/6;
