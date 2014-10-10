@@ -29,6 +29,8 @@ decorators::FiducialDecorator *decorators::Carte::create(libconfig::Setting &pSe
 		int tEnd = pSetting ["end_num"];
 		int tObstacles = pSetting ["obs_num"];
 
+		int tId = pSetting["id"];
+
 		std::vector<wykobi::point2d<float>> tEndPoint;
 		std::vector<wykobi::point2d<float>> tObstaclesPoint;
 
@@ -58,15 +60,15 @@ decorators::FiducialDecorator *decorators::Carte::create(libconfig::Setting &pSe
 
 		//Obstacles and end
 		if(tObstacles != 0 && tEnd!= 0)	return new decorators::Carte(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]),(int)pSetting ["size"],
-					(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tEndPoint, tObstacles, tObstaclesPoint);
+					(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tEndPoint, tObstacles, tObstaclesPoint, tId);
 
 		//No obstacles but with end
 		else if(tObstacles == 0 && tEnd!= 0)	return new decorators::Carte(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]), (int)pSetting ["size"],
-					(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tEndPoint, tObstacles);
+					(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tEndPoint, tObstacles, tId);
 
 		//No obstacles and no end
 		else if (tObstacles == 0 && tEnd == 0) return new decorators::Carte(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]), (int)pSetting ["size"],
-				(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tObstacles);
+				(float)tOriginPoint[0], (float)tOriginPoint[1], tEnd, tObstacles, tId);
 
 	}catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
@@ -81,7 +83,7 @@ decorators::FiducialDecorator *decorators::Carte::create(libconfig::Setting &pSe
  */
 decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, const int pSize,
 		float pOriginX, float pOriginY, const int pEndNumber, const std::vector<wykobi::point2d<float>> &pEndPoint,
-		const int pObstaclesNumber, const std::vector<wykobi::point2d<float>> &pObstacles):
+		const int pObstaclesNumber, const std::vector<wykobi::point2d<float>> &pObstacles, const int pId):
 				FiducialDecorator(pDecoratorManager, pMarker),
 				mMarker(pMarker),
 				mSize (pSize),
@@ -89,7 +91,8 @@ decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *p
 				mObstaclesNumber (pObstaclesNumber),
 				mEndPoint (pEndPoint),
 				mObstacles (pObstacles),
-				mFinished(false)
+				mFinished(false),
+				mId(pId)
 	{
 		mOriginPoint.x = pOriginX;
 		mOriginPoint.y = pOriginY;
@@ -103,14 +106,15 @@ decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *p
  */
 decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, const int pSize,
 			float pOriginX, float pOriginY, const int pEndNumber, const std::vector<wykobi::point2d<float>> &pEndPoint,
-			const int pObstaclesNumber):
+			const int pObstaclesNumber, const int pId):
 				FiducialDecorator(pDecoratorManager, pMarker),
 				mMarker(pMarker),
 				mSize (pSize),
 				mEndNumber (pEndNumber),
 				mObstaclesNumber (pObstaclesNumber),
 				mEndPoint (pEndPoint),
-				mFinished(false)
+				mFinished(false),
+				mId(pId)
 	{
 			mOriginPoint.x = pOriginX;
 			mOriginPoint.y = pOriginY;
@@ -122,13 +126,14 @@ decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *p
  * Map without obstacle(s) and ending point(s)
  */
 decorators::Carte::Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, const int pSize,
-			float pOriginX, float pOriginY, const int pEndNumber,const int pObstaclesNumber):
+			float pOriginX, float pOriginY, const int pEndNumber,const int pObstaclesNumber, const int pId):
 				FiducialDecorator(pDecoratorManager, pMarker),
 				mMarker(pMarker),
 				mSize (pSize),
 				mEndNumber (pEndNumber),
 				mObstaclesNumber (pObstaclesNumber),
-				mFinished(false)
+				mFinished(false),
+				mId(pId)
 	{
 			mOriginPoint.x = pOriginX;
 			mOriginPoint.y = pOriginY;

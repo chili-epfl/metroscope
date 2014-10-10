@@ -32,15 +32,17 @@ class Carte : public FiducialDecorator
 		Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker,
 				const int pSize, float pOriginX, float pOriginY,
 				const int pEndNumber, const std::vector<wykobi::point2d<float>> &pEndPoint,
-				const int pObstaclesNumber, const std::vector<wykobi::point2d<float>> &pObstacles);
+				const int pObstaclesNumber, const std::vector<wykobi::point2d<float>> &pObstacles,
+				const int pId);
 
 		Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker,
 						const int pSize, float pOriginX, float pOriginY,
 						const int pEndNumber, const std::vector<wykobi::point2d<float>> &pEndPoint,
-						const int pObstaclesNumber);
+						const int pObstaclesNumber, const int pId);
 
 		Carte (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker,
-				const int pSize, float pOriginX, float pOriginY, const int pEndNumber,const int pObstaclesNumber);
+				const int pSize, float pOriginX, float pOriginY, const int pEndNumber,
+				const int pObstaclesNumber, const int pId);
 
 		~Carte();
 
@@ -62,6 +64,7 @@ class Carte : public FiducialDecorator
 		void CheckNeighbors(int pRow,int pCol);
 		void AddNeighbors(int pX,int pY);
 		int GetStepsToGo(int pX, int pY) {return mStepMap[pY][pX];}
+		int GetId() {return mId;}
 
 	protected:
 		void update();
@@ -85,6 +88,8 @@ class Carte : public FiducialDecorator
 		std::vector<wykobi::point2d<int>> mNotVisitedVertexes;
 		std::vector<wykobi::point2d<int>> mVisitedVertexes;
 		bool mVisitedVertex[20][20]; //I assume that every map's size is less than 20
+
+		int mId;
 
 	};
 }

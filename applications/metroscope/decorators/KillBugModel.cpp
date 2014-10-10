@@ -564,6 +564,16 @@ std::string decorators::KillBugModel::GetStringRepresentation(){
 	std::string rep;
 	if(mIsCurrentActivity){ //We only return these stats if we are playing the game
 		std::stringstream repr;
+		if(IsHintPresent()){
+			repr << "HintType=" << mActualHint->GetHintType() << "; ";
+		}else{
+			repr << "HintType=-1; ";
+		}
+		if(IsCartePresent()){
+			repr << "Map=" << mActualCarte->GetId() << "; ";
+		}else{
+			repr << "Map=-1; ";
+		}
 		repr << "Proportion1=" << mProportion1 << "; ";
 		repr << "Proportion2=" << mProportion2 << "; ";
 		repr << "Proportion3=" << mProportion3 << "; ";
@@ -571,6 +581,7 @@ std::string decorators::KillBugModel::GetStringRepresentation(){
 		repr << "BugPositionX=" << mBugPosition.x << "; ";
 		repr << "BugPositionY=" << mBugPosition.y << "; ";
 		repr << "Steps=" << mSteps << "; ";
+		repr << "StepsToGo=" << mActualCarte->GetStepsToGo(mBugPosition.x,mBugPosition.y) << "; ";
 		repr << "GameStarted=" << mGameStarted << "; ";
 		repr << "MapFinished=" << mMapFinished << "; ";
 		repr << "MapNew=" << mMapNew << "; ";
