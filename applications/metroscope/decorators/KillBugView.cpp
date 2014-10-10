@@ -29,7 +29,7 @@ decorators::FiducialDecorator *decorators::KillBugView::create(libconfig::Settin
 {
 	try {
 		return new decorators::KillBugView(pDecoratorManager,
-				(KillBugModel *) pDecoratorManager.loadDecorator(pSetting["model"]));
+				(KillBugModel *) pDecoratorManager.loadDecorator(pSetting["model"]), pSetting["lang"]);
 	} catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
 	} catch(libconfig::SettingTypeException &e) {
@@ -39,7 +39,7 @@ decorators::FiducialDecorator *decorators::KillBugView::create(libconfig::Settin
 }
 
 // TODO: Maintain the order of declaration in KillBugView.hpp
-decorators::KillBugView::KillBugView(DecoratorManager &pDecoratorManager,KillBugModel *pKillBugModel):
+decorators::KillBugView::KillBugView(DecoratorManager &pDecoratorManager,KillBugModel *pKillBugModel, std::string pLang):
 	FiducialDecorator(pDecoratorManager, 0),
 	mKillBugModel(pKillBugModel),
 	mActualMap(),
@@ -74,7 +74,8 @@ decorators::KillBugView::KillBugView(DecoratorManager &pDecoratorManager,KillBug
 	mBugTrajectory(),
 	mCellDimensionX(0.0f),
 	mCellDimensionY(0.0f),
-	mLastShot(Time::MillisTimestamp())
+	mLastShot(Time::MillisTimestamp()),
+	mLang(pLang)
 	{
 		mDisplayWidth = mDecoratorManager.GetDisplay().GetWidth();
 		mDisplayHeight = mDecoratorManager.GetDisplay().GetHeight();
@@ -91,6 +92,13 @@ decorators::KillBugView::KillBugView(DecoratorManager &pDecoratorManager,KillBug
 		mProportion2Point = wykobi::make_point((int)((mMapPoint2.x + mMapPoint1.x)/2 - 40.0f),(int)((mMapPoint2.y + mMapPoint1.y)/2 - 40.0f));
 		mProportion3Point = wykobi::make_point((int)((mMapPoint4.x + mMapPoint1.x)/2 - 40.0f),(int)((mMapPoint4.y + mMapPoint1.y)/2 + 40.0f));
 		mProportion4Point = wykobi::make_point((int)((mMapPoint4.x + mMapPoint3.x)/2 + 40.0f),(int)((mMapPoint4.y + mMapPoint3.y)/2 + 40.0f));
+
+		if(mLang=="en"){//Load the textual messages in English
+			mMessages = scMessagesEnglish;
+		}else{//The default language will be French
+			mMessages = scMessagesFrench;
+		}
+		std::cout << "Loaded Ladybug language " << mLang << std::endl;
 	}
 
 decorators::KillBugView::~KillBugView(){
@@ -251,13 +259,13 @@ void decorators::KillBugView::drawMapStatusFeedback(){
 		mDecoratorManager.GetDisplay().RenderQuadFilled(0.0f, mDisplayHeight/2 - mMapHeight/4,
 				mDisplayWidth, mDisplayHeight/2 - mMapHeight/4, mDisplayWidth, mDisplayHeight/2 + mMapHeight/4,
 				0.0f, mDisplayHeight/2 + mMapHeight/4, 0.8f,0.8f,0.8f,0.5f);
-		mDecoratorManager.GetDisplay().RenderText("Carte finie!", mMapPoint1.x + 130.0f,  mDisplayHeight/2, 2.2f,0.0f,0.0f,0.0f,1.0f);
+		mDecoratorManager.GetDisplay().RenderText(mMessages.mapFinished.c_str(), mMapPoint1.x + 130.0f,  mDisplayHeight/2, 2.2f,0.0f,0.0f,0.0f,1.0f);
 	}
 	if(!mActualMap->IsFinished() && mKillBugModel->GetNewMapFrames() > 0){
 		mDecoratorManager.GetDisplay().RenderQuadFilled(0.0f, mDisplayHeight/2 - mMapHeight/4,
 			mDisplayWidth, mDisplayHeight/2 - mMapHeight/4, mDisplayWidth, mDisplayHeight/2 + mMapHeight/4,
 			0.0f, mDisplayHeight/2 + mMapHeight/4, 0.8f,0.8f,0.8f,0.5f);
-		mDecoratorManager.GetDisplay().RenderText("Carte nouvelle!", mMapPoint1.x + 130.0f, mDisplayHeight/2, 2.2f,0.0f,0.0f,0.0f,1.0f);
+		mDecoratorManager.GetDisplay().RenderText(mMessages.newMap.c_str(), mMapPoint1.x + 130.0f, mDisplayHeight/2, 2.2f,0.0f,0.0f,0.0f,1.0f);
 		mKillBugModel->DecreaseNewMapFrames();
 	}
 	mDecoratorManager.GetDisplay().PopTransformation();
@@ -282,7 +290,7 @@ void decorators::KillBugView::drawMoveFeedback(){
 		float radiusy = 30.0f;
 		mDecoratorManager.GetDisplay().RenderFilledEllipse(x-50+radiusx-10,y+100+radiusy-35,radiusx+10,radiusy+10, 0.9f, 0.9f, 0.9f, 0.9f);
 		mDecoratorManager.GetDisplay().RenderFilledSector(x,y,65,65,20,275.0f, 0.9f, 0.9f, 0.9f, 0.9f);
-		mDecoratorManager.GetDisplay().RenderText("Je ne peux pas y aller...", x - 50, y + 100, 0.95f,0.0f,0.0f,0.0f,1.0f);
+		mDecoratorManager.GetDisplay().RenderText(mMessages.cannotGo.c_str(), x - 50, y + 100, 0.95f,0.0f,0.0f,0.0f,1.0f);
 		mKillBugModel->DecreaseWrongMovementFrames();
 	}
 
@@ -775,7 +783,7 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 			mDecoratorManager.GetDisplay().RenderFilledSector(1.0f,3.3f,1.5f,1.5f,
 				tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
 
-			mDecoratorManager.GetDisplay().RenderCenteredText(tFull?"Prêt!" :"En repos ...", 0.5f,5.5f,
+			mDecoratorManager.GetDisplay().RenderCenteredText(tFull? mMessages.ready.c_str() : mMessages.resting.c_str(), 0.5f,5.5f,
 				true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
 
 			if(mActualFlipper->GetType() == 1 && !tFull){ //If is content flipper then we display more feedback
@@ -783,18 +791,18 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 				mDecoratorManager.GetDisplay().RenderQuadFilled(-10.5f,-1.5f,-2.5f,-1.5f,-2.5f,8.5f,-10.5f,8.5f,0.896f,0.896f,0.896f,0.9);
 
 				if(!mKillBugModel->IsWrongMove()){
-					mDecoratorManager.GetDisplay().RenderCenteredText("Well Done!", -6.0f,0.0f,
+					mDecoratorManager.GetDisplay().RenderCenteredText(mMessages.wellDone.c_str(), -6.0f,0.0f,
 								true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
-					mDecoratorManager.GetDisplay().RenderText("I've done", -9.5f,2.5f,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
+					mDecoratorManager.GetDisplay().RenderText(mMessages.iveDone.c_str(), -9.5f,2.5f,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tStepsDone, -9.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
-					mDecoratorManager.GetDisplay().RenderText(" steps...", -8.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(mMessages.steps.c_str(), -8.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tStepsToGo, -9.5f,5.5f,0.05,0.0f,0.0f,0.0f,1.0f);
-					mDecoratorManager.GetDisplay().RenderText(" more", -8.0f,5.5f,0.05,0.0f,0.0f,0.0f,1.0f);
-					mDecoratorManager.GetDisplay().RenderText("to finish", -9.5f,7.0f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(mMessages.more.c_str(), -8.0f,5.5f,0.05,0.0f,0.0f,0.0f,1.0f);
+					mDecoratorManager.GetDisplay().RenderText(mMessages.toFinish.c_str(), -9.5f,7.0f,0.05,0.0f,0.0f,0.0f,1.0f);
 
 				}else{
-					mDecoratorManager.GetDisplay().RenderCenteredText("Oh no!", -6.0f,0.0f, true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
-					mDecoratorManager.GetDisplay().RenderText("Remember:", -10.0f,2.5f,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
+					mDecoratorManager.GetDisplay().RenderCenteredText(mMessages.ohNo.c_str(), -6.0f,0.0f, true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
+					mDecoratorManager.GetDisplay().RenderText(mMessages.remember.c_str(), -10.0f,2.5f,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tP1Num, -8.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tP3Num, -5.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderText((mKillBugModel->IsProportion1Greater())? ">" : (mKillBugModel->IsProportion3Greater())? "<" : "=", -7.5f,5.0f,0.08,0.0f,0.0f,0.0f,1.0f);

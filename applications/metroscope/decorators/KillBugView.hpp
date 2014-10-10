@@ -34,7 +34,7 @@ class KillBugView : public FiducialDecorator
 	public:
 		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
 
-		KillBugView(DecoratorManager &pDecoratorManager, KillBugModel *pKillBugModel);
+		KillBugView(DecoratorManager &pDecoratorManager, KillBugModel *pKillBugModel, std::string pLang);
 		~KillBugView();
 
 		void DisplayMap();
@@ -97,6 +97,8 @@ class KillBugView : public FiducialDecorator
 		float mProportion1,mProportion2,mProportion3,mProportion4;
 		FlipperKillBug *mActualFlipper;
 
+		const std::string mLang;
+		messages mMessages;
 
 		int mMapSize;
 

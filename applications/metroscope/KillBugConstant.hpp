@@ -54,5 +54,49 @@ static const int scArrowStrokeLength = 4*scArrowWidth;
 //Angle for the arrowheads (in radians)
 static const float scArrowAngle = M_PI/6;
 
+struct messages{
+	std::string mapFinished;
+	std::string newMap;
+	std::string cannotGo;
+	std::string ready;
+	std::string resting;
+	std::string wellDone;
+	std::string iveDone;
+	std::string steps;
+	std::string more;
+	std::string toFinish;
+	std::string ohNo;
+	std::string remember;
+};
+
+static const messages scMessagesEnglish = {
+		std::string("Map finished!"),
+		std::string("New map!"),
+		std::string("I cannot go there..."),
+		std::string("Ready!"),
+		std::string("Resting..."),
+		std::string("Well Done!"),
+		std::string("I've done"),
+		std::string(" steps..."),
+		std::string(" more"),
+		std::string("to finish"),
+		std::string("Oh no!"),
+		std::string("Remember:")
+};
+
+static const messages scMessagesFrench = {
+		std::string("Carte finie!"),
+		std::string("Carte nouvelle!"),
+		std::string("Je ne peux pas y aller..."),
+		std::string("Prêt!"),
+		std::string("En repos ..."),
+		std::string("Bravo!"),
+		std::string("J'ai fait"),
+		std::string(" étapes..."),
+		std::string(" de plus"),
+		std::string("jusq'à la fin"),
+		std::string("Oh non!"),
+		std::string("N'oubliez pas:")
+};
 
 #endif /* KILLBUGCONSTANT_HPP_ */
