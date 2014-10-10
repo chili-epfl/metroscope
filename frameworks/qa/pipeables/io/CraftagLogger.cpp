@@ -53,6 +53,19 @@ void CraftagLogger::run()
 
 	mLogfile << "    {" << std::endl;
 	mLogfile << "        timestamp = " << Time::MillisTimestamp() << "L;" << std::endl;
+
+	//We add the ladybug game stats, if applicable
+	if(&mDecoratorManager!=NULL){
+		//We try to find the object for the ladybug game
+		decorators::FiducialDecorator *gameDec = mDecoratorManager.getDecorator("activities/proportions.cfggame_activity");
+		if(gameDec){
+				//If the game decorator is present, we insert the stats
+				mLogfile << "        game = {";
+				mLogfile << gameDec->GetStringRepresentation();
+				mLogfile << "};" << std::endl;
+		}
+	}
+
 	mLogfile << "        tags = (";
 	const int cNTotalTagsTracked = mCraftagRegistrar.GetTranscoder().getNTotalTagsTracked();
 	const int cCurrentFrameId = mCraftagRegistrar.getFrameId();
@@ -73,18 +86,7 @@ void CraftagLogger::run()
 	}
 	mLogfile << std::endl << "        );" << std::endl;
 
-	//We add the ladybug game stats, if applicable
-	if(&mDecoratorManager!=NULL){
-		//We try to find the object for the ladybug game
-		decorators::FiducialDecorator *gameDec = mDecoratorManager.getDecorator("activities/proportions.cfggame_activity");
-		if(gameDec){
-				//If the game decorator is present, we insert the stats
-				mLogfile << "        game = (";
-				mLogfile << gameDec->GetStringRepresentation();
-				mLogfile << ");" << std::endl;
-		}
-	}
-
+	//End of entry
 	mLogfile << "    }," << std::endl;
 
 	std::cout.flags(tPreviousFlags);
