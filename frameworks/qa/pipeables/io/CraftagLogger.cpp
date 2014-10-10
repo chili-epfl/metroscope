@@ -19,12 +19,16 @@
 
 #include "CraftagLogger.hpp"
 #include <qa/utils/Time.hpp>
+#include <qa/components/decorators/FiducialDecorator.hpp>
 #include <iostream>
+
 
 CraftagLogger::CraftagLogger(
     const char *pFilename,
+	DecoratorManager &pDecoratorManager,
 	CraftagRegistrar &pCraftagRegistrar):
 mLogfile(pFilename),
+mDecoratorManager(pDecoratorManager),
 mCraftagRegistrar(pCraftagRegistrar)
 {
 	if (!mLogfile) std::cout << "CraftagLogger: Unable to write in file: " << pFilename << std::endl;
@@ -68,6 +72,19 @@ void CraftagLogger::run()
 		}
 	}
 	mLogfile << std::endl << "        );" << std::endl;
+
+	//We add the ladybug game stats, if applicable
+	if(&mDecoratorManager!=NULL){
+		//We try to find the object for the ladybug game
+		decorators::FiducialDecorator *gameDec = mDecoratorManager.getDecorator("activities/proportions.cfggame_activity");
+		if(gameDec){
+				//If the game decorator is present, we insert the stats
+				mLogfile << "        game = (";
+				mLogfile << gameDec->GetStringRepresentation();
+				mLogfile << ");" << std::endl;
+		}
+	}
+
 	mLogfile << "    }," << std::endl;
 
 	std::cout.flags(tPreviousFlags);

@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 		time_t tTimestamp = time(0);
 		struct tm *tTime = localtime(&tTimestamp);
 		sprintf(tFilename, "./%d-%.2d-%.2d_%.2d-%.2d-%.2d.tags.log", tTime->tm_year+1900, tTime->tm_mon+1, tTime->tm_mday, tTime->tm_hour, tTime->tm_min, tTime->tm_sec);
-		tCraftagLogger = new CraftagLogger(tFilename);
+		tCraftagLogger = new CraftagLogger(tFilename,*tDecoratorManager);
 		tSnapshotTaker = new SnapshotTaker(tGrabbedImage, "./", 1000l, ".jpg");
 	}
 

@@ -21,6 +21,7 @@
 #define FiducialDecorator_HPP
 
 #include <qa/components/vision/FiducialMarker.hpp>
+#include <string>
 class DecoratorManager;
 
 namespace decorators {
@@ -30,6 +31,7 @@ class FiducialDecorator
 		virtual void update() = 0;
 		const FiducialMarker& getMarker() const { return *mMarker; }
 		virtual ~FiducialDecorator(){}
+		virtual std::string GetStringRepresentation() {std::string s1; return s1;};
 
 	protected:
 		DecoratorManager &mDecoratorManager;

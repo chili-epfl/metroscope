@@ -555,3 +555,41 @@ void decorators::KillBugModel::DisplayFlipperFeedback(){
 		mLastShot = Time::MillisTimestamp();
 	}
 }
+
+/*
+ * Returns an string representation of the main game variables, in the format "var1=1; var2=3;...;"
+ */
+std::string decorators::KillBugModel::GetStringRepresentation(){
+
+	std::string rep;
+	if(mIsCurrentActivity){ //We only return these stats if we are playing the game
+		std::stringstream repr;
+		repr << "Proportion1=" << mProportion1 << "; ";
+		repr << "Proportion2=" << mProportion2 << "; ";
+		repr << "Proportion3=" << mProportion3 << "; ";
+		repr << "Proportion4=" << mProportion4 << "; ";
+		repr << "BugPositionX=" << mBugPosition.x << "; ";
+		repr << "BugPositionY=" << mBugPosition.y << "; ";
+		repr << "Steps=" << mSteps << "; ";
+		repr << "GameStarted=" << mGameStarted << "; ";
+		repr << "MapFinished=" << mMapFinished << "; ";
+		repr << "MapNew=" << mMapNew << "; ";
+		repr << "Proportion1Num=" << mProportion1Numerator << "; ";
+		repr << "Proportion2Num=" << mProportion2Numerator << "; ";
+		repr << "Proportion3Num=" << mProportion3Numerator << "; ";
+		repr << "Proportion4Num=" << mProportion4Numerator << "; ";
+		repr << "Proportion1Den=" << mProportion1Denominator << "; ";
+		repr << "Proportion2Den=" << mProportion2Denominator << "; ";
+		repr << "Proportion3Den=" << mProportion3Denominator << "; ";
+		repr << "Proportion4Den=" << mProportion4Denominator << "; ";
+		repr << "WrongMove=" << mWrongMove << "; ";
+		repr << "P1Greater=" << mProportion1Greater << "; ";
+		repr << "P2Greater=" << mProportion2Greater << "; ";
+		repr << "P3Greater=" << mProportion3Greater << "; ";
+		repr << "P4Greater=" << mProportion4Greater << "; ";
+
+		rep = repr.str();
+	}
+	return rep;
+
+}

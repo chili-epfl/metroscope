@@ -110,6 +110,7 @@ void DecoratorManager::run()
 	}
 }
 
+
 DecoratorManager::~DecoratorManager()
 {
 	for (std::map<int, decorators::FiducialDecorator *>::iterator it = mMarkerMasks.begin(); it != mMarkerMasks.end(); ++it) {

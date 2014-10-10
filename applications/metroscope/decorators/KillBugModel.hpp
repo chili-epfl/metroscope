@@ -30,6 +30,7 @@
 #include "Carte.hpp"
 #include "../KillBugConstant.hpp"
 #include <fstream>
+#include <string>
 
 
 
@@ -82,6 +83,7 @@ class KillBugModel : public FiducialDecorator
 		void SetCurrentActivity(bool pIsCurrentActivity) {mIsCurrentActivity = pIsCurrentActivity;}
 		bool IsCurrentActivity() {return mIsCurrentActivity;}
 		bool IsFlipperPresent();
+		std::string GetStringRepresentation();
 
 	protected:
 		void update();

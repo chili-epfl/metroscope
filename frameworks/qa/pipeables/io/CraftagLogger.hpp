@@ -22,6 +22,7 @@
 
 #include <qa/pipeables/Pipeable.hpp>
 #include <qa/components/vision/CraftagRegistrar.hpp>
+#include <qa/pipeables/misc/DecoratorManager.hpp>
 #include <fstream>
 
 class CraftagLogger: public Pipeable
@@ -29,14 +30,16 @@ class CraftagLogger: public Pipeable
     public:
 
         CraftagLogger(
-        		const char *pFilename,
-        		CraftagRegistrar &pCraftagRegistrar = CraftagRegistrar::GetDefault());
+                const char *pFilename,
+        		DecoratorManager &pDecoratorManager,
+                CraftagRegistrar &pCraftagRegistrar = CraftagRegistrar::GetDefault());
 		virtual ~CraftagLogger();
 
     protected:
         void run();
         std::ofstream mLogfile;
         CraftagRegistrar &mCraftagRegistrar;
+        DecoratorManager &mDecoratorManager;
 
     private:
         CraftagLogger();
