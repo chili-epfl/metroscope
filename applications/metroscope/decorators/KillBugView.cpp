@@ -470,9 +470,9 @@ void decorators::KillBugView::displayHint(){
 				break;
 			case 2: displayDecimalHint(tProportion);	// Decimal help
 				break;
-			case 3: displayRectangularHint(tProportion);	// Rectangular help
+			case 3: displayRectangularHint(tNumerator,tDenominator);	// Rectangular help
 				break;
-			case 4: displayCircularHint(tProportion);	// Circular help
+			case 4: displayCircularHint(tNumerator,tDenominator);	// Circular help
 				break;
 		}
 	}
@@ -513,20 +513,22 @@ void decorators::KillBugView::displayDecimalHint(std::vector<float> pProportion)
 /*
  * Display the rectangular representation of all the fractions
  */
-void decorators::KillBugView::displayRectangularHint(std::vector<float> pProportion){
+void decorators::KillBugView::displayRectangularHint(std::vector<int> pNumerator, std::vector<int> pDenominator){
 	for(int i = 0 ; i < 4 ; i++){
-		float tProportion = pProportion[i];
-		displayIndividualRectangularHint(tProportion, i+1);
+		int tNum = pNumerator[i];
+		int tDenom = pDenominator[i];
+		displayIndividualRectangularHint(tNum,tDenom, i+1);
 	}
 }
 
 /*
  * Display the circular representation of all the fractions
  */
-void decorators::KillBugView::displayCircularHint(std::vector<float> pProportion){
+void decorators::KillBugView::displayCircularHint(std::vector<int> pNumerator, std::vector<int> pDenominator){
 	for(int i = 0 ; i < 4 ; i++){
-		float tProportion = pProportion[i];
-		displayIndividualCircularHint(tProportion, i+1);
+		int tNum = pNumerator[i];
+		int tDenom = pDenominator[i];
+		displayIndividualCircularHint(tNum,tDenom, i+1);
 	}
 }
 
@@ -655,10 +657,10 @@ void decorators::KillBugView::displayIndividualDecimalHint(float pProportion, in
 /*
  * Display the rectangular hint of one proportion
  */
-void decorators::KillBugView::displayIndividualRectangularHint(float pProportion, int pProportionNumber){
+void decorators::KillBugView::displayIndividualRectangularHint(int pNumerator, int pDenominator, int pProportionNumber){
 	float tRecWidth = mWorkingTriangle/12;
 	float tRecHeight = tRecWidth/2;
-
+	float tCell = (float)(tRecWidth/pDenominator);
 	int tPosX, tPosY;
 	float tR, tG, tB;
 
@@ -684,14 +686,19 @@ void decorators::KillBugView::displayIndividualRectangularHint(float pProportion
 	mDecoratorManager.GetDisplay().PushTransformation();
 
 	mDecoratorManager.GetDisplay().RenderQuadFilled(tPosX-tRecWidth/2, tPosY - tRecHeight/2,
-					pProportion*tRecWidth +  tPosX-tRecWidth/2, tPosY - tRecHeight/2,
-					pProportion*tRecWidth +  tPosX-tRecWidth/2, tPosY + tRecHeight/2,
-					tPosX - tRecWidth/2 , tPosY + tRecHeight/2, tR,tG,tB,1.0f);
+			(float)(pNumerator/pDenominator)*tRecWidth +  tPosX-tRecWidth/2, tPosY - tRecHeight/2,
+			(float)(pNumerator/pDenominator) +  tPosX-tRecWidth/2, tPosY + tRecHeight/2,
+			tPosX - tRecWidth/2 , tPosY + tRecHeight/2, tR,tG,tB,1.0f);
 
 	mDecoratorManager.GetDisplay().RenderQuad(tPosX-tRecWidth/2, tPosY - tRecHeight/2,
 			tPosX + tRecWidth/2 , tPosY - tRecHeight/2,
 			tPosX + tRecWidth/2 , tPosY + tRecHeight/2,
 			tPosX - tRecWidth/2 , tPosY + tRecHeight/2, 0.0f,0.0f,0.0f,1.0f);
+
+	for(int i = 0 ; i < pDenominator ; i++){
+		mDecoratorManager.GetDisplay().RenderLine(tPosX - tRecHeight/2 + i*tCell,tPosY - tRecHeight/2,
+				tPosX - tRecHeight/2 + i*tCell, tPosY - tRecHeight/2,0.0f,0.0f,0.0f,1.0f); //NO ME ACUERDO BIEN DE LOS PARAMETROS QUE VIENEN
+	}
 
 		mDecoratorManager.GetDisplay().PopTransformation();
 }
@@ -699,11 +706,12 @@ void decorators::KillBugView::displayIndividualRectangularHint(float pProportion
 /*
  * Display the circular hint of one proportion
  */
-void decorators::KillBugView::displayIndividualCircularHint(float pProportion, int pProportionNumber){
+void decorators::KillBugView::displayIndividualCircularHint(int pNumerator, int pDenominator, int pProportionNumber){
 	// The parameter
 	float tRadius = mWorkingTriangle/18;
 	int tPosX, tPosY;
 	float tR, tG, tB;
+	float tAngle = 360/pDenominator;
 
 	switch(pProportionNumber){
 	case 1:
@@ -726,8 +734,20 @@ void decorators::KillBugView::displayIndividualCircularHint(float pProportion, i
 
 	mDecoratorManager.GetDisplay().PushTransformation();
 
-	mDecoratorManager.GetDisplay().RenderFilledSector(tPosX,tPosY,tRadius,tRadius,pProportion*360,90.0f - pProportion*360,tR,tG,tB,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderFilledSector(tPosX,tPosY,tRadius,tRadius,(float)(pNumerator/pDenominator)*360,90.0f - (float)(pNumerator/pDenominator)*360,tR,tG,tB,1.0f,1);
+
 	mDecoratorManager.GetDisplay().RenderEllipse(tPosX,tPosY,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f);
+
+	float tPartialAngle = 0.0f;
+	for(int i = 0 ; i < pDenominator ; i++){
+
+		tPartialAngle += tAngle;
+
+		float tPartialX = tRadius*wykobi::sin(tPartialAngle*wykobi::PI/180);
+		float tPartialY = -tRadius*wykobi::cos(tPartialAngle*wykobi::PI/180);
+		mDecoratorManager.GetDisplay().RenderLine(0.0f,0.0f,tPartialX,tPartialY,0.0f,0.0f,0.0f,1.0f);
+
+	}
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 }

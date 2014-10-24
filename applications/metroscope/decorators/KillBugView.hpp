@@ -53,13 +53,13 @@ class KillBugView : public FiducialDecorator
 		void displayDiscreteHint(std::vector<int> pNumerator, std::vector<int> pDenominator);
 		void displayFractionHint(std::vector<int> pNumerator, std::vector<int> pDenominator);
 		void displayDecimalHint(std::vector<float> pProportion);
-		void displayRectangularHint(std::vector<float> pProportion);
-		void displayCircularHint(std::vector<float> pProportion);
+		void displayRectangularHint(std::vector<int> pNumerator, std::vector<int> pDenominator);
+		void displayCircularHint(std::vector<int> pNumerator, std::vector<int> pDenominator);
 		void displayIndividualDiscreteHint(int pNumerator, int pDenominator, int pProportionNumber);
 		void displayIndividualFractionHint(int pNumerator, int pDenominator, int pProportionNumber);
 		void displayIndividualDecimalHint(float pProportion, int pProportionNumber);
-		void displayIndividualRectangularHint(float pProportion, int pProportionNumber);
-		void displayIndividualCircularHint(float pProportion, int pProportionNumber);
+		void displayIndividualRectangularHint(int pNumerator, int pDenominator, int pProportionNumber);
+		void displayIndividualCircularHint(int pNumerator, int pDenominator, int pProportionNumber);
 		void DisplayFlipperFeedback();
 
 		void SetProportion(int pProportionNumber, int pNumerator, int pDenominator);
