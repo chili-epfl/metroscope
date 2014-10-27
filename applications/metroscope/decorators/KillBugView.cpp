@@ -688,7 +688,7 @@ void decorators::KillBugView::displayIndividualRectangularHint(int pNumerator, i
 	mDecoratorManager.GetDisplay().RenderQuadFilled(tPosX-tRecWidth/2, tPosY - tRecHeight/2,
 			((float)pNumerator/(float)pDenominator)*tRecWidth +  tPosX-tRecWidth/2, tPosY - tRecHeight/2,
 			((float)pNumerator/(float)pDenominator)*tRecWidth +  tPosX-tRecWidth/2, tPosY + tRecHeight/2,
-			tPosX - tRecWidth/2 , tPosY + tRecHeight/2, tR,tG,tB,1.0f);
+			tPosX - tRecWidth/2 , tPosY + tRecHeight/2, tR,tG,tB,0.8f);
 
 	mDecoratorManager.GetDisplay().RenderQuad(tPosX-tRecWidth/2, tPosY - tRecHeight/2,
 			tPosX + tRecWidth/2 , tPosY - tRecHeight/2,
@@ -734,7 +734,7 @@ void decorators::KillBugView::displayIndividualCircularHint(int pNumerator, int 
 
 	mDecoratorManager.GetDisplay().PushTransformation();
 
-	mDecoratorManager.GetDisplay().RenderFilledSector(tPosX,tPosY,tRadius,tRadius,((float)pNumerator/(float)pDenominator)*360,90.0f - ((float)pNumerator/(float)pDenominator)*360,tR,tG,tB,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderFilledSector(tPosX,tPosY,tRadius,tRadius,((float)pNumerator/(float)pDenominator)*360,90.0f - ((float)pNumerator/(float)pDenominator)*360,tR,tG,tB,0.8f,1);
 
 	mDecoratorManager.GetDisplay().RenderEllipse(tPosX,tPosY,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f);
 
