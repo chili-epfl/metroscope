@@ -47,4 +47,11 @@ decorators::FractionBugHint::~FractionBugHint(){ /*Empty*/}
 void decorators::FractionBugHint::update() {
 }
 
+void decorators::FractionBugHint::VaryHintType() {
+
+	//We rotate over the values of hints, from 0 to 4
+	if(mVaryingHintType==4) mVaryingHintType=0;
+	else mVaryingHintType++;
+
+}
 

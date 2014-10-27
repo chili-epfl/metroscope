@@ -34,6 +34,15 @@ public:
 
 	int GetHintType(){return mHintType;}
 	bool IsPresent(){return mMarker->isPresent();}
+	int GetVaryingHintType(){return mVaryingHintType;}
+	void VaryHintType();
+
+	static const int scDISCRETE_TYPE = 0;
+	static const int scFRACTION_TYPE = 1;
+	static const int scDECIMAL_TYPE = 2;
+	static const int scRECTANGULAR_TYPE = 3;
+	static const int scCIRCULAR_TYPE = 4;
+	static const int scVARYING_TYPE = 5;
 
 protected:
 	void update();
@@ -43,6 +52,7 @@ private:
 	static const DecoratorManager::Registerer mRegisterer;
 	FiducialMarker *mMarker;
 	int mHintType;
+	int mVaryingHintType = scDECIMAL_TYPE;
 };
 }
 

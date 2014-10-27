@@ -464,15 +464,29 @@ void decorators::KillBugView::displayHint(){
 	// We check the type of hint that is shown
 	if(tNumerator.size()==4 && tDenominator.size()==4){	//If the proportions have not yet been initialized, we skip the function for now
 		switch(mActualHint->GetHintType()){
-			case 0: displayDiscreteHint(tNumerator,tDenominator);	// Discrete help
+			case mActualHint->scDISCRETE_TYPE: displayDiscreteHint(tNumerator,tDenominator);	// Discrete help
 				break;
-			case 1: displayFractionHint(tNumerator,tDenominator);	// Fraction help
+			case mActualHint->scFRACTION_TYPE: displayFractionHint(tNumerator,tDenominator);	// Fraction help
 				break;
-			case 2: displayDecimalHint(tProportion);	// Decimal help
+			case mActualHint->scDECIMAL_TYPE: displayDecimalHint(tProportion);	// Decimal help
 				break;
-			case 3: displayRectangularHint(tNumerator,tDenominator);	// Rectangular help
+			case mActualHint->scRECTANGULAR_TYPE: displayRectangularHint(tNumerator,tDenominator);	// Rectangular help
 				break;
-			case 4: displayCircularHint(tNumerator,tDenominator);	// Circular help
+			case mActualHint->scCIRCULAR_TYPE: displayCircularHint(tNumerator,tDenominator);	// Circular help
+				break;
+			case 5:
+				switch(mActualHint->GetVaryingHintType()){
+					case mActualHint->scDISCRETE_TYPE: displayDiscreteHint(tNumerator,tDenominator);	// Discrete help
+						break;
+					case mActualHint->scFRACTION_TYPE: displayFractionHint(tNumerator,tDenominator);	// Fraction help
+						break;
+					case mActualHint->scDECIMAL_TYPE: displayDecimalHint(tProportion);	// Decimal help
+						break;
+					case mActualHint->scRECTANGULAR_TYPE: displayRectangularHint(tNumerator,tDenominator);	// Rectangular help
+						break;
+					case mActualHint->scCIRCULAR_TYPE: displayCircularHint(tNumerator,tDenominator);	// Circular help
+						break;
+				}
 				break;
 		}
 	}

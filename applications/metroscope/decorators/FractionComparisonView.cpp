@@ -29,7 +29,7 @@ decorators::FiducialDecorator *decorators::FractionComparisonView::create(libcon
 		FractionCard **tFractionCards = new FractionCard *[24];
 
 		libconfig::Setting &tHintCardsString = pSetting ["hint_cards"];
-		FractionBugHint **tHintCards = new FractionBugHint *[5];
+		FractionBugHint **tHintCards = new FractionBugHint *[scHintCards];
 
 		for(int i = 0 ; i < scHintCards ; ++i){
 			tHintCards[i] = (FractionBugHint*) pDecoratorManager.loadDecorator(tHintCardsString[i]);
