@@ -686,8 +686,8 @@ void decorators::KillBugView::displayIndividualRectangularHint(int pNumerator, i
 	mDecoratorManager.GetDisplay().PushTransformation();
 
 	mDecoratorManager.GetDisplay().RenderQuadFilled(tPosX-tRecWidth/2, tPosY - tRecHeight/2,
-			(float)(pNumerator/pDenominator)*tRecWidth +  tPosX-tRecWidth/2, tPosY - tRecHeight/2,
-			(float)(pNumerator/pDenominator) +  tPosX-tRecWidth/2, tPosY + tRecHeight/2,
+			((float)pNumerator/(float)pDenominator)*tRecWidth +  tPosX-tRecWidth/2, tPosY - tRecHeight/2,
+			((float)pNumerator/(float)pDenominator)*tRecWidth +  tPosX-tRecWidth/2, tPosY + tRecHeight/2,
 			tPosX - tRecWidth/2 , tPosY + tRecHeight/2, tR,tG,tB,1.0f);
 
 	mDecoratorManager.GetDisplay().RenderQuad(tPosX-tRecWidth/2, tPosY - tRecHeight/2,
@@ -696,8 +696,8 @@ void decorators::KillBugView::displayIndividualRectangularHint(int pNumerator, i
 			tPosX - tRecWidth/2 , tPosY + tRecHeight/2, 0.0f,0.0f,0.0f,1.0f);
 
 	for(int i = 0 ; i < pDenominator ; i++){
-		mDecoratorManager.GetDisplay().RenderLine(tPosX - tRecHeight/2 + i*tCell,tPosY - tRecHeight/2,
-				tPosX - tRecHeight/2 + i*tCell, tPosY - tRecHeight/2,0.0f,0.0f,0.0f,1.0f); //NO ME ACUERDO BIEN DE LOS PARAMETROS QUE VIENEN
+		mDecoratorManager.GetDisplay().RenderLine(tPosX - tRecWidth/2 + i*tCell,tPosY - tRecHeight/2,
+				tPosX - tRecWidth/2 + i*tCell, tPosY + tRecHeight/2,0.0f,0.0f,0.0f,1.0f);
 	}
 
 		mDecoratorManager.GetDisplay().PopTransformation();
@@ -734,7 +734,7 @@ void decorators::KillBugView::displayIndividualCircularHint(int pNumerator, int 
 
 	mDecoratorManager.GetDisplay().PushTransformation();
 
-	mDecoratorManager.GetDisplay().RenderFilledSector(tPosX,tPosY,tRadius,tRadius,(float)(pNumerator/pDenominator)*360,90.0f - (float)(pNumerator/pDenominator)*360,tR,tG,tB,1.0f,1);
+	mDecoratorManager.GetDisplay().RenderFilledSector(tPosX,tPosY,tRadius,tRadius,((float)pNumerator/(float)pDenominator)*360,90.0f - ((float)pNumerator/(float)pDenominator)*360,tR,tG,tB,1.0f,1);
 
 	mDecoratorManager.GetDisplay().RenderEllipse(tPosX,tPosY,tRadius,tRadius,0.0f,0.0f,0.0f,1.0f);
 
@@ -745,7 +745,7 @@ void decorators::KillBugView::displayIndividualCircularHint(int pNumerator, int 
 
 		float tPartialX = tRadius*wykobi::sin(tPartialAngle*wykobi::PI/180);
 		float tPartialY = -tRadius*wykobi::cos(tPartialAngle*wykobi::PI/180);
-		mDecoratorManager.GetDisplay().RenderLine(0.0f,0.0f,tPartialX,tPartialY,0.0f,0.0f,0.0f,1.0f);
+		mDecoratorManager.GetDisplay().RenderLine(tPosX,tPosY,tPosX+tPartialX,tPosY+tPartialY,0.0f,0.0f,0.0f,1.0f);
 
 	}
 
