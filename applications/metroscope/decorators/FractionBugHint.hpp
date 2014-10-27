@@ -52,7 +52,7 @@ private:
 	static const DecoratorManager::Registerer mRegisterer;
 	FiducialMarker *mMarker;
 	int mHintType;
-	int mVaryingHintType = scDECIMAL_TYPE;
+	int mVaryingHintType;
 };
 }
 

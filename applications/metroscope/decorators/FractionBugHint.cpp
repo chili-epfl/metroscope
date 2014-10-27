@@ -38,7 +38,8 @@ decorators::FiducialDecorator *decorators::FractionBugHint::create(libconfig::Se
 decorators::FractionBugHint::FractionBugHint(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pHintType):
 FiducialDecorator(pDecoratorManager, pMarker),
 mMarker(pMarker),
-mHintType(pHintType)
+mHintType(pHintType),
+mVaryingHintType(scDECIMAL_TYPE)
 {
 
 }
