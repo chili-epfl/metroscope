@@ -825,8 +825,11 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 				mDecoratorManager.GetDisplay().RenderQuadFilled(-10.5f,-1.5f,-2.5f,-1.5f,-2.5f,8.5f,-10.5f,8.5f,0.896f,0.896f,0.896f,0.9);
 
 				if(!mKillBugModel->IsWrongMove()){
-					mDecoratorManager.GetDisplay().RenderCenteredText(mMessages.wellDone.c_str(), -6.0f,0.0f,
-								true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
+					if(!mKillBugModel->IsNeutralMove()){ //If it is a really good move (decreases steps to go), say Well done!
+						mDecoratorManager.GetDisplay().RenderCenteredText(mMessages.wellDone.c_str(), -6.0f,0.0f,
+									true,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
+					}
+
 					mDecoratorManager.GetDisplay().RenderText(mMessages.iveDone.c_str(), -9.5f,2.5f,0.05f, 0.0f,  0.0f, 0.0f , 1.0f);
 					mDecoratorManager.GetDisplay().RenderText(tStepsDone, -9.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);
 					mDecoratorManager.GetDisplay().RenderText(mMessages.steps.c_str(), -8.5f,4.0f,0.05,0.0f,0.0f,0.0f,1.0f);

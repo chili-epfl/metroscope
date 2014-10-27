@@ -110,6 +110,7 @@ decorators::KillBugModel::KillBugModel(DecoratorManager &pDecoratorManager, Circ
 			mProportionDenominator(0),
 			mProportion(0),
 			mWrongMove(false),
+			mNeutralMove(false),
 			mWrongMovementFrames(0),
 			mNewMapFrames(0),
 			mProportionFeedbackFrames13(0),
@@ -205,6 +206,8 @@ void decorators::KillBugModel::MakeMove(){
 		mProportion2Greater = false;
 		mProportion4Greater = false;
 
+		int stepsToGoBefore = mActualCarte->GetStepsToGo(mBugPosition.x,mBugPosition.y);
+
 		// wrongMove is: 1) try to go to an obstacle 2) try to go out the map
 		// First check the proportion 2 and 4 (Upper-Left and Bottom-Right)
 		float tComparision24 = mProportion2 - mProportion4;
@@ -252,6 +255,10 @@ void decorators::KillBugModel::MakeMove(){
 			if(!mWrongMove){
 				mBugPosition.x = tNewPositionX;
 				mBugPosition.y = tNewPositionY;
+
+				int stepsToGoAfter = mActualCarte->GetStepsToGo(mBugPosition.x,mBugPosition.y);
+				if(stepsToGoBefore > stepsToGoAfter) mNeutralMove = false;
+				else mNeutralMove = true;
 			}
 		}else{ //Wrong Move
 			mWrongMove = true;

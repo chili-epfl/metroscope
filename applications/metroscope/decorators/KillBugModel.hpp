@@ -71,6 +71,7 @@ class KillBugModel : public FiducialDecorator
 		void SetGameStarted(bool pNewState) {mGameStarted = pNewState;}
 		wykobi::point2d<int> & GetBugPosition() {return mBugPosition;}
 		bool IsWrongMove() {return mWrongMove;}
+		bool IsNeutralMove() {return mNeutralMove;}
 		int StepsDone() {return mSteps;}
 		long GetLastShot() {return mLastShot;}
 		bool IsAnyHintPresent() {return IsHintPresent();}
@@ -150,6 +151,7 @@ class KillBugModel : public FiducialDecorator
 		std::vector<float> mProportion;
 
 		bool mWrongMove;
+		bool mNeutralMove;
 
 		int mWrongMovementFrames;
 		int mNewMapFrames;
