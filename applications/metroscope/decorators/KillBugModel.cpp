@@ -279,7 +279,7 @@ void decorators::KillBugModel::MakeMove(){
 		mSteps++;
 
 		// If the hint present is the varying one, we vary the type it displays
-		if(mActualHint!=NULL && mActualHint->IsPresent() && mActualHint->GetHintType()==mActualHint->scVARYING_TYPE) mActualHint->VaryHintType();
+		if(mActualHint!=NULL && mActualHint->GetHintType()==mActualHint->scVARYING_TYPE) mActualHint->VaryHintType();
 	}
 
 
