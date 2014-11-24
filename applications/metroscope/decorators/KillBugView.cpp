@@ -814,10 +814,10 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 			mDecoratorManager.GetDisplay().PushTransformation();
 			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mActualFlipper->GetCurrentSide(),
 				mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-			mDecoratorManager.GetDisplay().RenderFilledSector(1.0f,3.3f,1.5f,1.5f,
+			mDecoratorManager.GetDisplay().RenderFilledSector(0.2f,2.7f,1.2f,1.2f,
 				tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
 
-			mDecoratorManager.GetDisplay().RenderCenteredText(tFull? mMessages.ready.c_str() : mMessages.resting.c_str(), 0.5f,5.5f,
+			mDecoratorManager.GetDisplay().RenderCenteredText(tFull? mMessages.ready.c_str() : mMessages.resting.c_str(), 3.5f,3.0f,
 				true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
 
 			if(mActualFlipper->GetType() == 1 && !tFull){ //If is content flipper then we display more feedback
