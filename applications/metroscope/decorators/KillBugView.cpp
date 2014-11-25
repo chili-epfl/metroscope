@@ -791,6 +791,11 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 		// If is present, we calculate the proportion of time that has passed
 		// and we represent it as a degree (to be drawn in the circumference
 		if (mActualFlipper->IsPresent() && mActualFlipper->GetCurrentSide() != NULL){
+			// Display the sector of the circunference and then the text
+			mDecoratorManager.GetDisplay().PushTransformation();
+			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mActualFlipper->GetCurrentSide(),
+				mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
 			float tPartialDegree = 360*(tElapsedTime/(float)cShotPreparationTime);
 			bool tFull = false;
 			if(tPartialDegree >= 360)
@@ -810,10 +815,6 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 			sprintf(tP4Num, "%d", mKillBugModel->GetProportionNumerator()[3]);
 			sprintf(tP4Den, "%d", mKillBugModel->GetProportionDenominator()[3]);
 
-			// Display the sector of the circunference and then the text
-			mDecoratorManager.GetDisplay().PushTransformation();
-			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mActualFlipper->GetCurrentSide(),
-				mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 			mDecoratorManager.GetDisplay().RenderFilledSector(0.2f,2.7f,1.2f,1.2f,
 				tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
 
