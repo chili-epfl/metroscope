@@ -20,7 +20,8 @@
 #include "AggregatedFiducialMarker.hpp"
 #include <opencv2/opencv.hpp>
 #include <qa/utils/CvWykobiBridge.hpp>
-
+#include <algorithm>
+#include <iterator>
 //#define DEBUG_AggregatedFiducialMarker
 #ifdef DEBUG_AggregatedFiducialMarker
 #include <iostream>
@@ -72,6 +73,7 @@ bool AggregatedFiducialMarker::isPresent() const
 wykobi::quadix<float, 2> AggregatedFiducialMarker::getCorners() const
 {
 	float mHomography[9];
+	if(mSrcPoints.size()<4) return mSrcCorners;//If the corners disappeared, we just return the points themselves
 	CvWykobiBridge::findHomography(mSrcPoints, mDstPoints, mHomography);
 	wykobi::quadix<float, 2> tResult = mSrcCorners;
 	CvWykobiBridge::applyHomography(mHomography, tResult);

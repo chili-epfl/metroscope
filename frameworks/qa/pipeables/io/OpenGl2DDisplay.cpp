@@ -124,6 +124,8 @@ void OpenGl2DDisplay::TransformToMarkersLocalCoordinates(const FiducialMarker &p
 		const PlaneCoordinateMapper & pWorld2Proj)
 {
 	wykobi::quadix<float, 2> tCorners = pMarker.getCorners();
+	std::cout << "Transform Corners " << tCorners.size() << std::endl;
+	if(tCorners.size()<4) return;//The markers had disappeared, we just do nothing
 	pCam2World.InterpolatedMapOnQuad(tCorners);
 	wykobi::point2d<float> tCenter;
 	wykobi::vector2d<float> tXUnit;
