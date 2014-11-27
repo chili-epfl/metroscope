@@ -97,7 +97,7 @@ void decorators::FractionViewMeasure::update(){
 
 				char tNumString[3];
 				char tDenomString[3];
-				char tDecimalString[7];
+				char tDecimalString[8];
 
 				//wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
 				//mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);

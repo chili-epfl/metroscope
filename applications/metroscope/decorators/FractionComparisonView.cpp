@@ -93,8 +93,23 @@ void decorators::FractionComparisonView::update(){
 
 				if(mCorrectOrder){
 					mDecoratorManager.GetDisplay().PushTransformation();
+					//We draw a green area to say it's correct
+					mDecoratorManager.GetDisplay().RenderQuadFilled(0,0,
+							mDecoratorManager.GetDisplay().GetWidth(),0,
+							mDecoratorManager.GetDisplay().GetWidth(),mDecoratorManager.GetDisplay().GetHeight(),
+							0,mDecoratorManager.GetDisplay().GetHeight(),
+							0,1,0,0.1f);
+
 					for(int i = 1; i < mActiveManipulatives ; i++){
-						mDecoratorManager.GetDisplay().RenderText((mOrder == 0)? ">" : "<", i*mRectangleWidth-15.0,mDecoratorManager.GetDisplay().GetHeight()/2+15.0, 2.0f, 0.0f,0.0f,0.0f,1.0f);
+						char tSign[2];
+						switch(mOrder){
+							case 0: sprintf(tSign,">");break;
+							case 1: sprintf(tSign,"<");break;
+							case 2: sprintf(tSign,"=");break;
+						}
+
+
+						mDecoratorManager.GetDisplay().RenderText(tSign, i*mRectangleWidth-15.0,mDecoratorManager.GetDisplay().GetHeight()/2+15.0, 2.0f, 0.0f,0.0f,0.0f,1.0f);
 					}
 					mDecoratorManager.GetDisplay().PopTransformation();
 				}
