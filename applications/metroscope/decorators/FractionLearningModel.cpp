@@ -41,6 +41,7 @@ decorators::FiducialDecorator *decorators::FractionLearningModel::create(libconf
 				(KillBugModel *) pDecoratorManager.loadDecorator(pSetting["kill_bug_game"]),
 				(FractionComparisonView *) pDecoratorManager.loadDecorator(pSetting["fraction_comparison_greater"]),
 				(FractionComparisonView *) pDecoratorManager.loadDecorator(pSetting["fraction_comparison_smaller"]),
+				(FractionComparisonView *) pDecoratorManager.loadDecorator(pSetting["fraction_comparison_equal"]),
 				tConstructionActivities,
 				(EquivalentFractionView *) pDecoratorManager.loadDecorator(pSetting["fraction_equivalent"]),
 				(int) tConstructionNb);
@@ -54,12 +55,13 @@ decorators::FiducialDecorator *decorators::FractionLearningModel::create(libconf
 }
 
 decorators::FractionLearningModel::FractionLearningModel(DecoratorManager &pDecoratorManager , KillBugModel *pKillBugModel , FractionComparisonView *pComparisonGreater,
-		FractionComparisonView *pComparisonSmaller, FractionViewMeasure **pFractionView, EquivalentFractionView *pEquivalentFraction, int pConstructionActivity):
+		FractionComparisonView *pComparisonSmaller, FractionComparisonView *pComparisonEqual, FractionViewMeasure **pFractionView, EquivalentFractionView *pEquivalentFraction, int pConstructionActivity):
 				FiducialDecorator(pDecoratorManager,0),
 				mFractionConstruction(pFractionView),
 				mFractionEquivalent(pEquivalentFraction),
 				mFractionComparisonGreater(pComparisonGreater),
 				mFractionComparisonSmaller(pComparisonSmaller),
+				mFractionComparisonEqual(pComparisonEqual),
 				mKillBugGame(pKillBugModel),
 				mConstructionActivity(pConstructionActivity)
 
@@ -111,11 +113,17 @@ bool decorators::FractionLearningModel::IsPresentFractionComparison(){
 	if(mFractionComparisonGreater->IsPresent()){
 		mFractionComparisonGreater->SetCurrentActivity(true);
 		mFractionComparisonSmaller->SetCurrentActivity(false);
+		mFractionComparisonEqual->SetCurrentActivity(false);
 	}else if(mFractionComparisonSmaller->IsPresent()){
 		mFractionComparisonGreater->SetCurrentActivity(false);
 		mFractionComparisonSmaller->SetCurrentActivity(true);
+		mFractionComparisonEqual->SetCurrentActivity(false);
+	}else if(mFractionComparisonEqual->IsPresent()){
+		mFractionComparisonGreater->SetCurrentActivity(false);
+		mFractionComparisonSmaller->SetCurrentActivity(false);
+		mFractionComparisonEqual->SetCurrentActivity(true);
 	}
-	return (mFractionComparisonGreater->IsPresent() || mFractionComparisonSmaller->IsPresent());
+	return (mFractionComparisonGreater->IsPresent() || mFractionComparisonSmaller->IsPresent() || mFractionComparisonEqual->IsPresent());
 }
 
 /*
@@ -138,6 +146,7 @@ bool decorators::FractionLearningModel::IsPresentFractionConstruction(){
 void decorators::FractionLearningModel::SetFractionComparison(bool pIsCurrentActivity){
 	mFractionComparisonGreater->SetCurrentActivity(pIsCurrentActivity);
 	mFractionComparisonSmaller->SetCurrentActivity(pIsCurrentActivity);
+	mFractionComparisonEqual->SetCurrentActivity(pIsCurrentActivity);
 }
 
 /*

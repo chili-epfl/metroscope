@@ -31,8 +31,9 @@ decorators::FiducialDecorator *decorators::FractionComparisonModel::create(libco
 		const char *tActivityName;
 		const color *tActivityColor;
 		switch((int)pSetting["comparison_type"]){
-		case 0: tComparisonType = LessThan; tActivityName = scCOMPARISON_LESS_THAN_NAME; tActivityColor = scCOMPARISON_LESS_THAN_ACTIVITY_COLOR; break;
-		case 1: tComparisonType = EqualTo; tActivityName = scCOMPARISON_EQUAL_TO_NAME; tActivityColor = scCOMPARISON_EQUAL_TO_ACTIVITY_COLOR; break;
+		case 0: tComparisonType = GreaterThan; tActivityName = scCOMPARISON_MORE_THAN_NAME; tActivityColor = scCOMPARISON_MORE_THAN_ACTIVITY_COLOR; break;
+		case 1: tComparisonType = LesserThan; tActivityName = scCOMPARISON_LESS_THAN_NAME; tActivityColor = scCOMPARISON_LESS_THAN_ACTIVITY_COLOR; break;
+		case 2: tComparisonType = EqualTo; tActivityName = scCOMPARISON_EQUAL_TO_NAME; tActivityColor = scCOMPARISON_EQUAL_TO_ACTIVITY_COLOR; break;
 		default:
 			std::cerr << "Creating a comparison activity decorator: Invalid comparison type" << std::endl;
 			return 0;
@@ -100,7 +101,8 @@ bool decorators::FractionComparisonModel::getOperands(){
 
 bool decorators::FractionComparisonModel::answerIsCorrect(){
 	switch (mComparisonType) {
-			case LessThan: return mLHS->GetValue() < mRHS->GetValue();
+			case LesserThan: return mLHS->GetValue() < mRHS->GetValue();
+			case GreaterThan: return mLHS->GetValue() > mRHS->GetValue();
 			case EqualTo: return mLHS->GetValue() == mRHS->GetValue();
 			default: return false;
 	}
@@ -109,11 +111,19 @@ bool decorators::FractionComparisonModel::answerIsCorrect(){
 void decorators::FractionComparisonModel::updateHintState(){ //FIXME
 	float tFactor;
 	switch (mComparisonType) {
-		case LessThan:
+		case LesserThan:
 			switch(mFractionModel->GetHintLevel()){
 			case 0: mFractionModel->SetHintMessage(scCOMPARISON_LESS_THAN_HINT_MESSAGE_1); break;
 			case 1: mFractionModel->SetHintMessage(scCOMPARISON_LESS_THAN_HINT_MESSAGE_2); break;
 			default: mFractionModel->SetHintMessage(scCOMPARISON_LESS_THAN_HINT_MESSAGE_3); break;
+			}
+			mFractionModel->IncreaseHintLevel();
+			break;
+		case LesserThan:
+			switch(mFractionModel->GetHintLevel()){
+			case 0: mFractionModel->SetHintMessage(scCOMPARISON_MORE_THAN_HINT_MESSAGE_1); break;
+			case 1: mFractionModel->SetHintMessage(scCOMPARISON_MORE_THAN_HINT_MESSAGE_2); break;
+			default: mFractionModel->SetHintMessage(scCOMPARISON_MORE_THAN_HINT_MESSAGE_3); break;
 			}
 			mFractionModel->IncreaseHintLevel();
 			break;

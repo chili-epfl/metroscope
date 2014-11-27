@@ -96,6 +96,7 @@
 	static const color * const scDIVISION_ACTIVITY_COLOR = &scLIGHT_ORANGE;
 	static const color * const scSORTING_ACTIVITY_COLOR = &scLIGHT_MAGENTA;
 	static const color * const scCOMPARISON_LESS_THAN_ACTIVITY_COLOR = &scLIGHT_RED;
+	static const color * const scCOMPARISON_MORE_THAN_ACTIVITY_COLOR = &scLIGHT_GREEN;
 	static const color * const scCOMPARISON_EQUAL_TO_ACTIVITY_COLOR = &scLIGHT_TURQUOISE;
 
 	static const color * const scNUMERATOR_DIAL_COLOR = &scDEEP_MAGENTA;
@@ -256,7 +257,8 @@ static const float scREAL_WORLD_MARKER_HEIGHT_MM = 20.0f;
 	static const char * const scMULTIPLICATION_NAME = "MULTIPLICATION";
 	static const char * const scDIVISION_NAME = "DIVISION";
 	static const char * const scCOMPARISON_EQUAL_TO_NAME = "FINDING EQUAL FRACTIONS";
-	static const char * const scCOMPARISON_LESS_THAN_NAME = "COMPARING UNEQUAL FRACTIONS";
+	static const char * const scCOMPARISON_LESS_THAN_NAME = "COMPARING LESS THAN FRACTIONS";
+	static const char * const scCOMPARISON_MORE_THAN_NAME = "COMPARING MORE THAN FRACTIONS";
 	static const char * const scSORTING_NAME = "SORTING";
 
 
@@ -302,6 +304,11 @@ static const float scREAL_WORLD_MARKER_HEIGHT_MM = 20.0f;
 	static const char * const scCOMPARISON_LESS_THAN_HINT_MESSAGE_1 = "Remember, a bigger denominator does NOT mean that the fraction is bigger.";
 	static const char * const scCOMPARISON_LESS_THAN_HINT_MESSAGE_2 = "The bigger fraction goes next to the open end of the comparison sign.";
 	static const char * const scCOMPARISON_LESS_THAN_HINT_MESSAGE_3 = "Try finding a common denominator before comparing the fractions.";
+
+	static const char * const scCOMPARISON_MORE_THAN_HINT_MESSAGE_1 = "Remember, a smaller denominator does NOT mean that the fraction is smaller.";
+	static const char * const scCOMPARISON_MORE_THAN_HINT_MESSAGE_2 = "The smaller fraction goes next to the closed end of the comparison sign.";
+	static const char * const scCOMPARISON_MORE_THAN_HINT_MESSAGE_3 = "Try finding a common denominator before comparing the fractions.";
+
 
 	static const char * const scCOMPARISON_EQUAL_TO_HINT_MESSAGE_1 = "You multiply the numerator of %d/%d (%d) by %.0f to get the numerator of %d/%d (%d). "
 																		"What would happen if you multiplied the denominator of %d/%d by %.0f?";

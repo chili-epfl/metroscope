@@ -105,7 +105,7 @@ void decorators::FractionComparisonView::update(){
 		}
 	}
 
-	if(!mIsCurrentActivity)		mActivityPresent = 0;
+	if(!mIsCurrentActivity)	mActivityPresent = 0;
 
 }
 
@@ -182,6 +182,9 @@ void decorators::FractionComparisonView::CheckAnswer(){
 				break;
 			case 1: // the order is less than
 				if(tLeft < tRight)	tComparisionCorrect++;
+				break;
+			case 2: // the order is equal
+				if(tLeft == tRight)  tComparisionCorrect++;
 				break;
 		}
 

@@ -43,7 +43,7 @@ class FractionComparisonModel : public FractionActivityCard
 
 		FractionModel *mFractionModel;
 
-		enum ComparisonType {LessThan, GreaterThan, EqualTo};
+		enum ComparisonType {GreaterThan, LesserThan, EqualTo};
 		ComparisonType mComparisonType;
 
 		FractionCard *mLHS;

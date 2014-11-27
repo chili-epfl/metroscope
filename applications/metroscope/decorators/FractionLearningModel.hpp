@@ -33,7 +33,7 @@ class FractionLearningModel : public FiducialDecorator
 	public:
 		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
 		FractionLearningModel(DecoratorManager &pDecoratorManager , KillBugModel *pKillBugModel , FractionComparisonView *pComparisonGreater,
-				FractionComparisonView *pComparisonSmaller, FractionViewMeasure **pFractionView, EquivalentFractionView *pEquivalentFraction,
+				FractionComparisonView *pComparisonSmaller, FractionComparisonView *pComparisonEqual, FractionViewMeasure **pFractionView, EquivalentFractionView *pEquivalentFraction,
 				int pConstructionActivity);
 		~FractionLearningModel();
 
@@ -52,6 +52,7 @@ class FractionLearningModel : public FiducialDecorator
 		EquivalentFractionView *mFractionEquivalent;
 		FractionComparisonView *mFractionComparisonGreater;
 		FractionComparisonView *mFractionComparisonSmaller;
+		FractionComparisonView *mFractionComparisonEqual;
 		KillBugModel *mKillBugGame;
 		int mConstructionActivity;
 };

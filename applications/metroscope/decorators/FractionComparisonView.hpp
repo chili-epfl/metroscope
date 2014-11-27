@@ -42,7 +42,7 @@ class FractionComparisonView : public FiducialDecorator
 		FractionComparisonView(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pActivityMarker,
 						CircularFractionModel *pAngleModel1, CircularFractionModel *pAngleModel2,
 						RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2, TokenModel *pTokenModel1,
-						FractionCard ** pFractionCards, FractionBugHint ** pFractionHints, int pOrder); //pOrder: 0-> greater than, 1-> smaller than
+						FractionCard ** pFractionCards, FractionBugHint ** pFractionHints, int pOrder); //pOrder: 0-> greater than, 1-> smaller than, 2-> equal/equivalent
 
 		void SetCurrentActivity(bool pIsCurrentActivity) {mIsCurrentActivity = pIsCurrentActivity;}
 		bool IsPresent() {return (mActivityMarker->isPresent() || mMarker->isPresent());}
