@@ -97,24 +97,39 @@ void decorators::FractionViewMeasure::update(){
 
 				char tNumString[3];
 				char tDenomString[3];
+				char tDecimalString[7];
 
-				wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
-				mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
-				wykobi::point2d<float> tOrigin;
-				wykobi::point2d<float> tXUnit;
-				wykobi::point2d<float> tYUnit;
-				FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
-
-				mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+				//wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
+				//mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
+				//wykobi::point2d<float> tOrigin;
+				//wykobi::point2d<float> tXUnit;
+				//wykobi::point2d<float> tYUnit;
+				//FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+				//mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
 
 				// Show feedback
 				sprintf(tNumString,"%d",tNumerator);
 				sprintf(tDenomString,"%d",tDenominator);
+
+				float tDecimal = 0.0f;
+				if(tDenominator>0) tDecimal = tNumerator/((float)tDenominator);
+				sprintf(tDecimalString," = %.2f",tDecimal);
+
 				mDecoratorManager.GetDisplay().PushTransformation();
-				mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-				mDecoratorManager.GetDisplay().RenderText(tNumString, tOrigin.x, tOrigin.y-85.0f, 1.25f, tRed, tGreen, 0.0f);
-				mDecoratorManager.GetDisplay().RenderText(tDenomString, tOrigin.x, tOrigin.y -85.0f + 35.0f, 1.25f, tRed, tGreen, 0.0f);
-				mDecoratorManager.GetDisplay().RenderLine(tOrigin.x-5,tOrigin.y - 85 +5,tOrigin.x+25,tOrigin.y - 85 +5,tRed,tGreen,0.0f,1.0f);
+
+				mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mMarker,
+					mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+				mDecoratorManager.GetDisplay().RenderText(tNumString, -3.3f, -3.7f, 0.05f, tRed, tGreen, 0.0f);
+				mDecoratorManager.GetDisplay().RenderLine(-3.7f,-3.2f,-2.4f,-3.2f,tRed,tGreen,0.0f);
+				mDecoratorManager.GetDisplay().RenderText(tDecimalString, -2.6f, -2.8f, 0.05f, tRed, tGreen, 0.0f);
+				mDecoratorManager.GetDisplay().RenderText(tDenomString, -3.3f, -1.9f, 0.05f, tRed, tGreen, 0.0f);
+
+				//mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+				//mDecoratorManager.GetDisplay().RenderText(tNumString, tOrigin.x, tOrigin.y-85.0f, 1.25f, tRed, tGreen, 0.0f);
+				//mDecoratorManager.GetDisplay().RenderText(tDenomString, tOrigin.x, tOrigin.y -85.0f + 35.0f, 1.25f, tRed, tGreen, 0.0f);
+				//mDecoratorManager.GetDisplay().RenderLine(tOrigin.x-5,tOrigin.y - 85 +5,tOrigin.x+25,tOrigin.y - 85 +5,tRed,tGreen,0.0f,1.0f);
+
 				mDecoratorManager.GetDisplay().PopTransformation();
 			}
 		}
