@@ -23,7 +23,7 @@
 #include <math.h>
 
 static const int scFractionCards = 40;
-static const int scCarteCards = 10;
+static const int scCarteCards = 12;
 static const int scHintCards = 6;
 static const int scTriangleProp = 4;
 

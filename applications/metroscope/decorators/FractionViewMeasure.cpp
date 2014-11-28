@@ -120,10 +120,10 @@ void decorators::FractionViewMeasure::update(){
 				mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mMarker,
 					mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 
-				mDecoratorManager.GetDisplay().RenderText(tNumString, -3.3f, -3.7f, 0.05f, tRed, tGreen, 0.0f);
-				mDecoratorManager.GetDisplay().RenderLine(-3.7f,-3.2f,-2.4f,-3.2f,tRed,tGreen,0.0f);
-				mDecoratorManager.GetDisplay().RenderText(tDecimalString, -2.6f, -2.8f, 0.05f, tRed, tGreen, 0.0f);
-				mDecoratorManager.GetDisplay().RenderText(tDenomString, -3.3f, -1.9f, 0.05f, tRed, tGreen, 0.0f);
+				mDecoratorManager.GetDisplay().RenderCenteredText(tNumString, -3.6f, -3.0f,false, 0.05f, tRed, tGreen, 0.0f, 1.0f);
+				mDecoratorManager.GetDisplay().RenderCenteredText(tDenomString, -3.6f, -1.2f, false, 0.05f, tRed, tGreen, 0.0f, 1.0f);
+				mDecoratorManager.GetDisplay().RenderLine(-4.4f,-2.5f,-2.7f,-2.5f,tRed,tGreen,0.0f);
+				mDecoratorManager.GetDisplay().RenderText(tDecimalString, -2.5f, -2.1f, 0.05f, tRed, tGreen, 0.0f);
 
 				//mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
 				//mDecoratorManager.GetDisplay().RenderText(tNumString, tOrigin.x, tOrigin.y-85.0f, 1.25f, tRed, tGreen, 0.0f);
