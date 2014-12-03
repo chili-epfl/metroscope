@@ -815,10 +815,10 @@ void decorators::KillBugView::DisplayFlipperFeedback(){
 			sprintf(tP4Num, "%d", mKillBugModel->GetProportionNumerator()[3]);
 			sprintf(tP4Den, "%d", mKillBugModel->GetProportionDenominator()[3]);
 
-			mDecoratorManager.GetDisplay().RenderFilledSector(0.2f,2.7f,1.2f,1.2f,
+			mDecoratorManager.GetDisplay().RenderFilledSector(0.2f,3.2f,1.2f,1.2f,
 				tPartialDegree,0.0f,0.0f,tFull? 1.0 : 0.0f,tFull ? 0.0 : 1.0f,0.8f,1);
 
-			mDecoratorManager.GetDisplay().RenderCenteredText(tFull? mMessages.ready.c_str() : mMessages.resting.c_str(), 3.5f,3.0f,
+			mDecoratorManager.GetDisplay().RenderCenteredText(tFull? mMessages.ready.c_str() : mMessages.resting.c_str(), 3.5f,3.5f,
 				true,0.03f, 0.0f, tFull? 1.0f : 0.0f, tFull? 0.0f : 1.0f, 1.0f);
 
 			if(mActualFlipper->GetType() == 1 && !tFull){ //If is content flipper then we display more feedback
