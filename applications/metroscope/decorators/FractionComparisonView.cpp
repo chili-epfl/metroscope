@@ -246,21 +246,29 @@ void decorators::FractionComparisonView::ShowGrid(){
  * or not (Essaye encore une fois)
  */
 void decorators::FractionComparisonView::ShowCardFeedback(){
-	wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
 
-	mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
-	wykobi::point2d<float> tOrigin;
-	wykobi::point2d<float> tXUnit;
-	wykobi::point2d<float> tYUnit;
-	FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
-
-	mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+//	wykobi::quadix<float ,2> tMarkerCorners = mMarker->getCorners();
+//
+//	mDecoratorManager.GetCam2World().InterpolatedMapOnQuad(tMarkerCorners);
+//	wykobi::point2d<float> tOrigin;
+//	wykobi::point2d<float> tXUnit;
+//	wykobi::point2d<float> tYUnit;
+//	FiducialMarker::ComputeBasisFromSquare(tMarkerCorners, tOrigin, tXUnit, tYUnit);
+//
+//	mDecoratorManager.GetWorld2Proj().InterpolatedMap(tOrigin);
+//
+//	mDecoratorManager.GetDisplay().PushTransformation();
+//	mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
+//	mDecoratorManager.GetDisplay().RenderText(mCorrectOrder? mMessages.veryGood.c_str() : mMessages.tryAgain.c_str(),
+//					tOrigin.x - 60.0f, tOrigin.y - 100.0f, 0.7f, (mCorrectOrder) ? 0.0f: 1.0f,
+//					(mCorrectOrder)? 1.0f : 0.0f, 0.0f);
 
 	mDecoratorManager.GetDisplay().PushTransformation();
-	mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-	mDecoratorManager.GetDisplay().RenderText(mCorrectOrder? mMessages.veryGood.c_str() : mMessages.tryAgain.c_str(),
-					tOrigin.x - 60.0f, tOrigin.y - 100.0f, 0.7f, (mCorrectOrder) ? 0.0f: 1.0f,
-					(mCorrectOrder)? 1.0f : 0.0f, 0.0f);
+	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinates(*mMarker,
+		mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+	mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(mCorrectOrder? mMessages.veryGood.c_str() : mMessages.tryAgain.c_str(), scTEXT_DELIMITERS,
+					-2.0f, -6.0f, 4.0f,false,0.07f,(mCorrectOrder) ? 0.0f: 1.0f,
+					(mCorrectOrder)? 1.0f : 0.0f, 0.0f, 1.0f);
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
