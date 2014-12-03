@@ -208,7 +208,7 @@ void decorators::FractionComparisonView::CheckAnswer(){
 				if(tLeft < tRight)	tComparisionCorrect++;
 				break;
 			case 2: // the order is equal
-				if(tLeft == tRight)  tComparisionCorrect++;
+				if(tLeft == tRight || (tLeft>(tRight-0.025f) && (tLeft<(tRight+0.025f))) )  tComparisionCorrect++;
 				break;
 		}
 
