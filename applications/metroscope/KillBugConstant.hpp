@@ -67,6 +67,8 @@ struct messages{
 	std::string toFinish;
 	std::string ohNo;
 	std::string remember;
+	std::string veryGood;
+	std::string tryAgain;
 };
 
 static const messages scMessagesEnglish = {
@@ -81,7 +83,9 @@ static const messages scMessagesEnglish = {
 		std::string(" more"),
 		std::string("to finish"),
 		std::string("Oh no!"),
-		std::string("Remember:")
+		std::string("Remember:"),
+		std::string("Very good!"),
+		std::string("Please try again")
 };
 
 static const messages scMessagesFrench = {
@@ -96,7 +100,9 @@ static const messages scMessagesFrench = {
 		std::string(" de plus"),
 		std::string("jusq'à la fin"),
 		std::string("Oh non!"),
-		std::string("N'oubliez pas:")
+		std::string("N'oubliez pas:"),
+		std::string("Très bien!"),
+		std::string("Essayez une fois encore")
 };
 
 #endif /* KILLBUGCONSTANT_HPP_ */

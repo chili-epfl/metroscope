@@ -42,7 +42,7 @@ class FractionComparisonView : public FiducialDecorator
 		FractionComparisonView(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pActivityMarker,
 						CircularFractionModel *pAngleModel1, CircularFractionModel *pAngleModel2,
 						RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2, TokenModel *pTokenModel1,
-						FractionCard ** pFractionCards, FractionBugHint ** pFractionHints, int pOrder); //pOrder: 0-> greater than, 1-> smaller than, 2-> equal/equivalent
+						FractionCard ** pFractionCards, FractionBugHint ** pFractionHints, int pOrder, std::string pLang); //pOrder: 0-> greater than, 1-> smaller than, 2-> equal/equivalent
 
 		void SetCurrentActivity(bool pIsCurrentActivity) {mIsCurrentActivity = pIsCurrentActivity;}
 		bool IsPresent() {return (mActivityMarker->isPresent() || mMarker->isPresent());}
@@ -85,6 +85,10 @@ class FractionComparisonView : public FiducialDecorator
 		std::map<float,float> mFractions; //Key is the position in X, so it will be always be orderer from left to right
 		std::map<float,int> mNumerator;
 		std::map<float,int> mDenominator;
+
+		const std::string mLang;
+		messages mMessages;
+
 
 	private:
 		static const std::string scDecoratorName;

@@ -44,7 +44,7 @@ decorators::FiducialDecorator *decorators::FractionComparisonView::create(libcon
 				(RectangleFractionModel *) pDecoratorManager.loadDecorator(pSetting["rectangle_1"]),
 				(RectangleFractionModel *) pDecoratorManager.loadDecorator(pSetting["rectangle_2"]),
 				(TokenModel *) pDecoratorManager.loadDecorator(pSetting["token_1"]),
-				(FractionCard **) tFractionCards, (FractionBugHint**) tHintCards ,(int)pSetting["order"]);
+				(FractionCard **) tFractionCards, (FractionBugHint**) tHintCards ,(int)pSetting["order"], pSetting["lang"]);
 
 		}catch(libconfig::SettingNotFoundException &e) {
 			std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
@@ -57,7 +57,7 @@ decorators::FiducialDecorator *decorators::FractionComparisonView::create(libcon
 decorators::FractionComparisonView::FractionComparisonView(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pActivityMarker,
 		CircularFractionModel *pAngleModel1, CircularFractionModel *pAngleModel2,
 		RectangleFractionModel *pRectangleModel1, RectangleFractionModel *pRectangleModel2, TokenModel *pTokenModel1,
-		FractionCard ** pFractionCards, FractionBugHint ** pFractionHints, int pOrder):
+		FractionCard ** pFractionCards, FractionBugHint ** pFractionHints, int pOrder, std::string pLang):
 			FiducialDecorator(pDecoratorManager, pMarker),
 			mActivityMarker(pActivityMarker),
 			mAngleModel1(pAngleModel1),
@@ -73,7 +73,16 @@ decorators::FractionComparisonView::FractionComparisonView(DecoratorManager &pDe
 			mActivityPresent(0),
 			mRectangleWidth(0.0f),
 			mIsCurrentActivity(false),
-			mActualHint(){
+			mActualHint(),
+			mLang(pLang){
+
+	if(mLang=="en"){//Load the textual messages in English
+		mMessages = scMessagesEnglish;
+	}else{//The default language will be French
+		mMessages = scMessagesFrench;
+	}
+	std::cout << "Loaded comparisons language " << mLang << std::endl;
+
 }
 
 /*
@@ -98,7 +107,7 @@ void decorators::FractionComparisonView::update(){
 							mDecoratorManager.GetDisplay().GetWidth(),0,
 							mDecoratorManager.GetDisplay().GetWidth(),mDecoratorManager.GetDisplay().GetHeight(),
 							0,mDecoratorManager.GetDisplay().GetHeight(),
-							0,1,0,0.1f);
+							0,1,0,0.05f);
 
 					for(int i = 1; i < mActiveManipulatives ; i++){
 						char tSign[2];
@@ -249,10 +258,9 @@ void decorators::FractionComparisonView::ShowCardFeedback(){
 
 	mDecoratorManager.GetDisplay().PushTransformation();
 	mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-	mDecoratorManager.GetDisplay().RenderText(mCorrectOrder? "Tres bien!" : "Essaye encore ",
+	mDecoratorManager.GetDisplay().RenderText(mCorrectOrder? mMessages.veryGood.c_str() : mMessages.tryAgain.c_str(),
 					tOrigin.x - 60.0f, tOrigin.y - 100.0f, 0.7f, (mCorrectOrder) ? 0.0f: 1.0f,
 					(mCorrectOrder)? 1.0f : 0.0f, 0.0f);
-	if(!mCorrectOrder)	mDecoratorManager.GetDisplay().RenderText("une fois ", tOrigin.x - 60.0f, tOrigin.y - 80.0f, 0.7f, 1.0f, 0.0f, 0.0f);
 	mDecoratorManager.GetDisplay().PopTransformation();
 }
 
