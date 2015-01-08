@@ -23,6 +23,10 @@
 #include <iostream>
 #include <sstream>
 #include <math.h>
+#include <unistd.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 const std::string decorators::Executor::scDecoratorName("Executor");
 const  DecoratorManager::Registerer decorators::Executor::mRegisterer(decorators::Executor::scDecoratorName, &decorators::Executor::create);
@@ -103,15 +107,48 @@ void decorators::Executor::displayCountdown(){
 /*Just displays a text message next to the marker*/
 void decorators::Executor::executeCommand(){
 	if(mMarker->isPresent()){
+// My attempts
+//		char *cmd[] = {"/home/lprisan/workspace/metroscope-fractions/metroscope-data/execute-metroscope.sh",(char*)0};
+//		//char *cmd[] = {"/bin/ls",(char*)0};//This one seems to work
+//		int output = execv(cmd[0],cmd);
+//		if(output == -1)
+//		{
+//		    std::cout << errno << " " << strerror(errno) << std::endl;
+//		} else {
+//			std::cout << output << std::endl;
+//		}
+//		std::cout << "Exiting!" << std::endl;
 
-			//SUBSTITUTE THESE LINES WITH THE CODE TO EXECUTE THE COMMAND, stored in (std::string) mCommand
-			mDecoratorManager.GetDisplay().PushTransformation();
-			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarkerMessages, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-				mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth("BAM!", scTEXT_DELIMITERS,
-						0, -100, 400.0,
-						false, 3,
-						scMESSAGE_COLOR->r, scMESSAGE_COLOR->g, scMESSAGE_COLOR->b, scMESSAGE_COLOR->a);
-				mDecoratorManager.GetDisplay().PopTransformation();
-			////////////////////////////
+		//Lorenzo's suggestion: http://stackoverflow.com/questions/19099663/how-to-correctly-use-fork-exec-wait
+		pid_t parent = getpid();
+		pid_t pid = fork();
+
+		if (pid == -1)
+		{
+			std::cerr << "Failed to fork!" << std::endl;
+		}
+		else if (pid > 0)
+		{
+		    int status;
+		    waitpid(pid, &status, 0);
+		}
+		else
+		{
+			std::cout << "Entering the child executor!" << std::endl;
+		    // we are the child
+			char *cmd[] = {"/home/lprisan/workspace/metroscope-fractions/metroscope-data/execute-metroscope.sh",(char*)0};
+			int output = execv(cmd[0],cmd);
+
+			execv(cmd[0], cmd);
+			if(output == -1)
+					{
+					    std::cout << errno << " " << strerror(errno) << std::endl;
+					} else {
+						std::cout << output << std::endl;
+					}
+					std::cout << "Exiting!" << std::endl;
+
+		    _exit(EXIT_FAILURE);   // exec never returns
+		}
 	}
 }
