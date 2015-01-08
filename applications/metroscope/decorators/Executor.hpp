@@ -24,8 +24,8 @@
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "../FractionsConstants.hpp"
-
-static const color * const scMESSAGE_COLOR = &scGREEN;
+#include "SimpleText.hpp"
+//static const color * const scMESSAGE_COLOR = &scGREEN;
 
 
 namespace decorators {
@@ -34,7 +34,7 @@ class Executor : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		Executor(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pMarkerMessages, std::string pCommand, std::string pMessage, int pCountdown);
+		Executor(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pMarkerMessages, std::string pCommand, std::string pMessage, int pCountdown, int pExitcode);
 
 	protected:
 		void update();
@@ -50,6 +50,7 @@ class Executor : public FiducialDecorator
 		const int mCountdown = 0;
 		FiducialMarker *mMarkerMessages;
 		long mCountdownStart;
+		const int mExitcode = 0;
 
 };
 

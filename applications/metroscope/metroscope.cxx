@@ -66,6 +66,7 @@ int main(int argc, char* argv[])
 
 
 	auto tOpenGl2DDisplay = new OpenGl2DDisplay(0, 0, 1280, 768);
+	tOpenGl2DDisplay->BackgroundColor(0.8f,0.8f,0.8f,1.0f);
 	CraftagUpdate *tCraftagUpdate = new CraftagUpdate(tGrabbedImage);
     const PlaneCoordinateMapper tDefaultCam2World("config/cam2world.map");
     const PlaneCoordinateMapper tDefaultWorld2Proj("config/world2proj.map", 2.0f);

@@ -34,7 +34,7 @@ const  DecoratorManager::Registerer decorators::Executor::mRegisterer(decorators
 decorators::FiducialDecorator *decorators::Executor::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 {
 	try {
-		return new decorators::Executor(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]),  pDecoratorManager.loadMarker(pSetting["messagemarker"]), pSetting["command"], pSetting["message"], pSetting["countdown"]);
+		return new decorators::Executor(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]),  pDecoratorManager.loadMarker(pSetting["messagemarker"]), pSetting["command"], pSetting["message"], pSetting["countdown"], pSetting["exitcode"]);
 	} catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
 	} catch(libconfig::SettingTypeException &e) {
@@ -43,17 +43,21 @@ decorators::FiducialDecorator *decorators::Executor::create(libconfig::Setting &
 	return 0;
 }
 
-decorators::Executor::Executor(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pMarkerMessages, std::string pCommand, std::string pMessage, int pCountdown):
+decorators::Executor::Executor(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pMarkerMessages, std::string pCommand, std::string pMessage, int pCountdown, int pExitcode):
 FiducialDecorator(pDecoratorManager, pMarker),
 mMarkerMessages(pMarkerMessages),
 mCommand(pCommand),
 mCountdown(pCountdown),
 mCountdownStart(0),
-mMessage(pMessage)
+mMessage(pMessage),
+mExitcode(pExitcode)
 {
 }
 
 void decorators::Executor::update() {
+
+
+
 	if (mMarker->isPresent())
 	{
 		if(mCountdown>0){
@@ -98,7 +102,7 @@ void decorators::Executor::displayCountdown(){
 			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarkerMessages, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 				mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(oss.str().c_str(), scTEXT_DELIMITERS,
 						0, 200.0, 400.0,
-						false, 3,
+						false, 5,
 						scMESSAGE_COLOR->r, scMESSAGE_COLOR->g, scMESSAGE_COLOR->b, transparency);
 				mDecoratorManager.GetDisplay().PopTransformation();
 	}
@@ -108,10 +112,11 @@ void decorators::Executor::displayCountdown(){
 void decorators::Executor::executeCommand(){
 	if(mMarker->isPresent()){
 // My attempts
-//		char *cmd[] = {"/home/lprisan/workspace/metroscope-fractions/metroscope-data/execute-metroscope.sh",(char*)0};
-//		//char *cmd[] = {"/bin/ls",(char*)0};//This one seems to work
+		//char *cmd[] = {"/home/lprisan/workspace/metroscope-fractions/metroscope-data/execute-metroscope.sh",(char*)0};
+//		char *cmd[] = {"/bin/ls",(char*)0};//This one seems to work
+//		std::cout << "Executing " << cmd[0] << std::endl;
 //		int output = execv(cmd[0],cmd);
-//		if(output == -1)
+//		if(output == -1)// Code never arrives here if the exec succeeded...
 //		{
 //		    std::cout << errno << " " << strerror(errno) << std::endl;
 //		} else {
@@ -120,35 +125,40 @@ void decorators::Executor::executeCommand(){
 //		std::cout << "Exiting!" << std::endl;
 
 		//Lorenzo's suggestion: http://stackoverflow.com/questions/19099663/how-to-correctly-use-fork-exec-wait
-		pid_t parent = getpid();
-		pid_t pid = fork();
+//		pid_t parent = getpid();
+//		pid_t pid = fork();
+//
+//		if (pid == -1)
+//		{
+//			std::cerr << "Failed to fork!" << std::endl;
+//		}
+//		else if (pid > 0)
+//		{
+//			std::cout << "Entering the parent exit!" << std::endl;
+//		    _exit(EXIT_FAILURE);   // exec never returns
+//		    //int status;
+//		    //waitpid(pid, &status, 0);
+//		}
+//		else
+//		{
+//			std::cout << "Entering the child executor!" << std::endl;
+//		    // we are the child
+//			char *cmd[] = {"/home/lprisan/workspace/metroscope-fractions/metroscope-data/execute-metroscope.sh",(char*)0};
+//			int output = execv(cmd[0],cmd);
+//
+//			execv(cmd[0], cmd);
+//			if(output == -1)
+//					{
+//					    std::cout << errno << " " << strerror(errno) << std::endl;
+//					} else {
+//						std::cout << output << std::endl;
+//					}
+//					std::cout << "Exiting!" << std::endl;
+//
+//		    _exit(EXIT_FAILURE);   // exec never returns
+//		}
 
-		if (pid == -1)
-		{
-			std::cerr << "Failed to fork!" << std::endl;
-		}
-		else if (pid > 0)
-		{
-		    int status;
-		    waitpid(pid, &status, 0);
-		}
-		else
-		{
-			std::cout << "Entering the child executor!" << std::endl;
-		    // we are the child
-			char *cmd[] = {"/home/lprisan/workspace/metroscope-fractions/metroscope-data/execute-metroscope.sh",(char*)0};
-			int output = execv(cmd[0],cmd);
-
-			execv(cmd[0], cmd);
-			if(output == -1)
-					{
-					    std::cout << errno << " " << strerror(errno) << std::endl;
-					} else {
-						std::cout << output << std::endl;
-					}
-					std::cout << "Exiting!" << std::endl;
-
-		    _exit(EXIT_FAILURE);   // exec never returns
-		}
+		//Cheap/silly solutions: use simply the exit code to signal the next command to execute
+		_exit(mExitcode);
 	}
 }
