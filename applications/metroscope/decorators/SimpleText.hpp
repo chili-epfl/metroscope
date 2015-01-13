@@ -21,7 +21,6 @@
 #define SIMPLETEXT_HPP_
 
 
-
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include "../FractionsConstants.hpp"
 

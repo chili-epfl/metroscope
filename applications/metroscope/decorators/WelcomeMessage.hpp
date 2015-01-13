@@ -17,43 +17,35 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef EXECUTOR_HPP_
-#define EXECUTOR_HPP_
-
+#ifndef WELCOMEMESSAGE_HPP_
+#define WELCOMEMESSAGE_HPP_
 
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
+#include "Executor.hpp"
 #include "../FractionsConstants.hpp"
-#include "SimpleText.hpp"
-//static const color * const scMESSAGE_COLOR = &scGREEN;
 
 
 namespace decorators {
 
-class Executor : public FiducialDecorator
+class WelcomeMessage : public FiducialDecorator
 {
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
-		Executor(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, FiducialMarker *pMarkerMessages, std::string pCommand, std::string pMessage, int pCountdown, int pExitcode);
-		bool IsPresent(){return mMarker->isPresent();}
+		WelcomeMessage(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, std::string message, std::string imgFile, int numActiveMarkers, Executor ** activeMarkers);
 
 	protected:
 		void update();
 		void displayMessage();
-		void displayCountdown();
-		void executeCommand();
 
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
-		const std::string mCommand;
-		const std::string mMessage;
-		const int mCountdown = 0;
-		FiducialMarker *mMarkerMessages;
-		long mCountdownStart;
-		const int mExitcode = 0;
-
+		const std::string sMessage;
+		const std::string sImgFile;
+		const int mNumActiveMarkers;
+		Executor ** mActiveMarkers;
 };
 
 }
-#endif /* EXECUTOR_HPP_ */
+#endif /* SIMPLETEXT_HPP_ */

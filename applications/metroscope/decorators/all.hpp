@@ -85,3 +85,4 @@
 //silly examples
 #include "SimpleText.hpp"
 #include "Executor.hpp"
+#include "WelcomeMessage.hpp"
