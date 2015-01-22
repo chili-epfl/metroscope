@@ -142,6 +142,18 @@ void decorators::Microscope::AddAxis(const wykobi::line<float, 2>& pAxis)
 	wykobi::polygon<float, 2> tSplit2;
 	Geometry::split(mAreaOfInterest, pAxis, tSplit1, tSplit2);
 	mAreaOfInterest = tSplit1;
+
+	//Let's try making the AOI smaller
+	mAreaOfInterest[0].x = mAreaOfInterest[0].x / 4.0f;
+	mAreaOfInterest[0].y = mAreaOfInterest[0].y / 4.0f;
+	mAreaOfInterest[1].x = mAreaOfInterest[1].x / 4.0f;
+	mAreaOfInterest[1].y = mAreaOfInterest[1].y / 4.0f;
+	mAreaOfInterest[2].x = mAreaOfInterest[2].x / 4.0f;
+	mAreaOfInterest[2].y = mAreaOfInterest[2].y / 4.0f;
+	mAreaOfInterest[3].x = mAreaOfInterest[3].x / 4.0f;
+	mAreaOfInterest[3].y = mAreaOfInterest[3].y / 4.0f;
+
+
 #ifdef DEBUG_Microscope
 	std::cout << mAreaOfInterest << std::endl;
 #endif
@@ -158,8 +170,8 @@ void decorators::Microscope::AddAxis(const wykobi::line<float, 2>& pAxis)
 //				tMirrored = wykobi::mirror(tMirrored, mAxes[i]);
 //			}
 //		}
-		tMirrored = wykobi::translate(mAreaOfInterest[2][1]*2.0f,0.0f,tMirrored);
-		tMirrored = wykobi::scale(3.0f,3.0f,tMirrored);
+		tMirrored = wykobi::translate(mAreaOfInterest[2][1]*2.5f,0.0f,tMirrored);
+		tMirrored = wykobi::scale(6.0f,6.0f,tMirrored);
 		mMirroredAreasOfInterest.push_back(tMirrored);
 	}
 }
