@@ -116,3 +116,6 @@
 #include "KillBugView.hpp"
 #include "FlipperKillBug.hpp"
 #include "FractionLearningModel.hpp"
+
+//Additional for review classroom activity
+#include "Microscope.hpp"
