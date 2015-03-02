@@ -169,3 +169,5 @@ template void PlaneCoordinateMapper::InterpolatedMap(CvPoint2D32f &pPoint) const
 template void PlaneCoordinateMapper::InterpolatedMapOnQuad(wykobi::quadix<float, 2> &pQuad) const;
 template void PlaneCoordinateMapper::InterpolatedMapOnQuad(wykobi::point2d<float> *&pQuad) const;
 template void PlaneCoordinateMapper::InterpolatedMapOnQuad(CvPoint2D32f *&pQuad) const;
+
+template void PlaneCoordinateMapper::InterpolatedMapOnPolygon(wykobi::polygon<float, 2> &pPoly, int size) const;

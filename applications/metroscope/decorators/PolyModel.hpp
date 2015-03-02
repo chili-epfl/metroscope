@@ -17,55 +17,35 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef PlaneCoordinateMapper_HPP
-#define PlaneCoordinateMapper_HPP
+#ifndef PolyModel_HPP
+#define PolyModel_HPP
 
-#include <opencv2/opencv.hpp>
+#include <vector>
+#include <qa/pipeables/misc/DecoratorManager.hpp>
 #include <wykobi/wykobi.hpp>
 
-class PlaneCoordinateMapper
+namespace decorators {
+
+class PolyModel : public FiducialDecorator
 {
 	public:
-		PlaneCoordinateMapper(const char *pMappingFile, float pScale = 1.0f);
-		virtual ~PlaneCoordinateMapper();
-
-		void InterpolatedMap(float &pX, float &pY) const;
-
-		template <class T>
-		void InterpolatedMap(T &pPoint) const
-		{
-			InterpolatedMap(pPoint.x, pPoint.y);
-		}
-
-		template <class T>
-		void InterpolatedMapOnQuad(T &pQuad) const
-		{
-			InterpolatedMap(pQuad[0].x, pQuad[0].y);
-			InterpolatedMap(pQuad[1].x, pQuad[1].y);
-			InterpolatedMap(pQuad[2].x, pQuad[2].y);
-			InterpolatedMap(pQuad[3].x, pQuad[3].y);
-		}
-
-		template <class T>
-		void InterpolatedMapOnPolygon(T &pPoly, int size) const
-		{
-			for (int i=0; i<size; i++){
-				InterpolatedMap(pPoly[i].x, pPoly[i].y);
-			}
-
-		}
-
+		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
+		PolyModel(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pNumVertices,
+				std::vector<float> pCoords, std::vector<float> pOrigin);
+		const wykobi::polygon<float, 2> &getPolygon() const {return mPolygon;}
+		int getSize() const {return mNumVertices;}
+		const wykobi::point2d<float> &getOrigin() const {return mOrigin;}
 
 	protected:
-		IplImage *mMap;
-		float mScale;
-		wykobi::rectangle<float> mMapBounds;
-		wykobi::point2d<float> mMapCenter;
-		wykobi::point2d<float> mMappedCenter;
+		void update(){}
+		wykobi::polygon<float, 2> mPolygon;
+		wykobi::point2d<float> mOrigin;
+		int mNumVertices;
 
 	private:
-		PlaneCoordinateMapper();
-		PlaneCoordinateMapper(const PlaneCoordinateMapper& pPlaneCoordinateMapper);
-		PlaneCoordinateMapper& operator=(const PlaneCoordinateMapper& pPlaneCoordinateMapper);
+		static const std::string scDecoratorName;
+		static const DecoratorManager::Registerer mRegisterer;
 };
+
+}
 #endif

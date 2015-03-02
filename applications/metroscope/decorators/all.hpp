@@ -116,3 +116,8 @@
 
 //networking
 #include "OrchestrationPauseFlipper.hpp"
+
+
+//Battleship
+#include "PolyModel.hpp"
+#include "PolyViewPerimeter.hpp"

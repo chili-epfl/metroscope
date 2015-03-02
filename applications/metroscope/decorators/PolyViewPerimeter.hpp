@@ -17,55 +17,33 @@
 *   along with Metroscope.  If not, see <http://www.gnu.org/licenses/>.        *
 *******************************************************************************/
 
-#ifndef PlaneCoordinateMapper_HPP
-#define PlaneCoordinateMapper_HPP
+#ifndef PolyViewPerimeter_HPP
+#define PolyViewPerimeter_HPP
 
-#include <opencv2/opencv.hpp>
-#include <wykobi/wykobi.hpp>
+#include <qa/pipeables/misc/DecoratorManager.hpp>
+#include "PolyModel.hpp"
 
-class PlaneCoordinateMapper
+namespace decorators {
+
+class PolyViewPerimeter : public FiducialDecorator
 {
 	public:
-		PlaneCoordinateMapper(const char *pMappingFile, float pScale = 1.0f);
-		virtual ~PlaneCoordinateMapper();
-
-		void InterpolatedMap(float &pX, float &pY) const;
-
-		template <class T>
-		void InterpolatedMap(T &pPoint) const
-		{
-			InterpolatedMap(pPoint.x, pPoint.y);
-		}
-
-		template <class T>
-		void InterpolatedMapOnQuad(T &pQuad) const
-		{
-			InterpolatedMap(pQuad[0].x, pQuad[0].y);
-			InterpolatedMap(pQuad[1].x, pQuad[1].y);
-			InterpolatedMap(pQuad[2].x, pQuad[2].y);
-			InterpolatedMap(pQuad[3].x, pQuad[3].y);
-		}
-
-		template <class T>
-		void InterpolatedMapOnPolygon(T &pPoly, int size) const
-		{
-			for (int i=0; i<size; i++){
-				InterpolatedMap(pPoly[i].x, pPoly[i].y);
-			}
-
-		}
-
+		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
+		PolyViewPerimeter(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, const PolyModel &pPolyModel,
+				float pRed, float pGreen, float pBlue);
 
 	protected:
-		IplImage *mMap;
-		float mScale;
-		wykobi::rectangle<float> mMapBounds;
-		wykobi::point2d<float> mMapCenter;
-		wykobi::point2d<float> mMappedCenter;
+		void update();
+
+		const PolyModel &mPolyModel;
+		float mRed;
+		float mGreen;
+		float mBlue;
 
 	private:
-		PlaneCoordinateMapper();
-		PlaneCoordinateMapper(const PlaneCoordinateMapper& pPlaneCoordinateMapper);
-		PlaneCoordinateMapper& operator=(const PlaneCoordinateMapper& pPlaneCoordinateMapper);
+		static const std::string scDecoratorName;
+		static const DecoratorManager::Registerer mRegisterer;
 };
+
+}
 #endif
