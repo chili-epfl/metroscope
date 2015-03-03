@@ -121,3 +121,5 @@
 //Battleship
 #include "PolyModel.hpp"
 #include "PolyViewPerimeter.hpp"
+#include "PolyViewAngleMeasures.hpp"
+#include "PolyViewLines.hpp"
