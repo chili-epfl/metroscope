@@ -123,3 +123,5 @@
 #include "PolyViewPerimeter.hpp"
 #include "PolyViewAngleMeasures.hpp"
 #include "PolyViewLines.hpp"
+#include "PolyViewCoords.hpp"
+#include "PolyViewSideMeasures.hpp"
