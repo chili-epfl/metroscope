@@ -63,7 +63,7 @@ mNumVertices(pNumVertices)
 
 	for(int i=0; i<pNumVertices; i++){
 
-		mPolygon.push_back(wykobi::make_point<float>(pCoords[2*i],pCoords[(2*i)+i]));
+		mPolygon.push_back(wykobi::make_point<float>(pCoords[2*i],pCoords[(2*i)+1]));
 //		mPolygon[i].x = pCoords[2*i];
 //		mPolygon[i].y = pCoords[(2*i)+i];
 	}
