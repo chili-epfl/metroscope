@@ -104,9 +104,9 @@ void decorators::BattleshipAnalysisSheet::update() {
 
 		mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-		mDecoratorManager.GetDisplay().RenderQuad(mMarker->getCenter().x, mMarker->getCenter().y,
-				mTRMarker->getCenter().x, mTRMarker->getCenter().y, mBRMarker->getCenter().x, mBRMarker->getCenter().y,
-				mBLMarker->getCenter().x, mBLMarker->getCenter().y, 0.0f, 0.0f, 0.0f, 1.0f);
+		mDecoratorManager.GetDisplay().RenderQuad(0.0f, 0.0f,
+				0.0f, 150.0f, 190.0f, 150.0f,
+				190.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
 	}
 }
