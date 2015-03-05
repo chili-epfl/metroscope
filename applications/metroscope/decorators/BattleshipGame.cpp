@@ -104,9 +104,10 @@ void decorators::BattleshipGame::DisplayPhase(){
 	mDecoratorManager.GetDisplay().PushTransformation();
 	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 		mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(tmp.c_str(), scTEXT_DELIMITERS,
-				0.0, 0.0, 600,
-				false, 2,
+				0.0, 100.0, 1200,
+				false, 3,
 				0.0, 0.0, 0.0, 1.0);
+//std::cout << "Just printed " << tmp.c_str() << " at " << mMarker->getCenter().x << "," << mMarker->getCenter().y;
 		mDecoratorManager.GetDisplay().PopTransformation();
 
 }
@@ -117,7 +118,7 @@ void decorators::BattleshipGame::GreyOutScreen(){
 				mDecoratorManager.GetDisplay().GetWidth(),0,
 				mDecoratorManager.GetDisplay().GetWidth(),mDecoratorManager.GetDisplay().GetHeight(),
 				0,mDecoratorManager.GetDisplay().GetHeight(),
-				scBLACK.r, scBLACK.g, scBLACK.b, 0.4f);
+				scBLACK.r, scBLACK.g, scBLACK.b, 0.5f);
 		mDecoratorManager.GetDisplay().PopTransformation();
 
 }
