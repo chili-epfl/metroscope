@@ -184,26 +184,35 @@ void NetworkedStateManager::SetClassroomPaused(bool paused){
 
 	pthread_mutex_lock(&classstate_mutex);
 	bool oldPause = mClassroomState->GetGlobal().paused;
-	std::string oldPauserDevice = mClassroomState->GetGlobal().pauserDevice;
-	std::string oldMasterHint = mClassroomState->GetGlobal().masterHint;
+//	std::string oldPauserDevice = mClassroomState->GetGlobal().pauserDevice;
+//	std::string oldMasterHint = mClassroomState->GetGlobal().masterHint;
+	std::string oldPhase = mClassroomState->GetGlobal().phase;
+	int oldTurn = mClassroomState->GetGlobal().turn;
 
 	//if currently it is unpaused and we want to pause it, we just do it
 	if(!oldPause && paused){
 		global_class newGlobal;
 		newGlobal.paused = paused;
-		std::string newPauser(mDeviceState->GetMeteorId());//TODO: shouldn-t we be getting the device mutex also? this value doesn-t actually change over the execution, but...
-		newGlobal.pauserDevice = newPauser;
-		newGlobal.masterHint = oldMasterHint;
+//		std::string newPauser(mDeviceState->GetMeteorId());//TODO: shouldn-t we be getting the device mutex also? this value doesn-t actually change over the execution, but...
+//		newGlobal.pauserDevice = newPauser;
+//		newGlobal.masterHint = oldMasterHint;
+		newGlobal.phase = oldPhase;
+		newGlobal.turn = oldTurn;
 		mClassroomState->SetGlobal(newGlobal);
 		mClassroomState->SetHasChanged(true);
 	}
 	//if currently it is paused and we want to unpause it, We only change pause if the pauserDevice matches the one that paused the class
 	//TODO: shouldn-t we be getting the device mutex also? this value doesn-t actually change over the execution, but...
-	else if(oldPause && !paused && oldPauserDevice.compare(mDeviceState->GetMeteorId())==0){
+//	else if(oldPause && !paused && oldPauserDevice.compare(mDeviceState->GetMeteorId())==0){
+
+	//We do not check the pauserdevice
+	else if(oldPause && !paused){
 		global_class newGlobal;
 		newGlobal.paused = paused;
-		newGlobal.pauserDevice = "";
-		newGlobal.masterHint = oldMasterHint;
+//		newGlobal.pauserDevice = "";
+//		newGlobal.masterHint = oldMasterHint;
+		newGlobal.phase = oldPhase;
+		newGlobal.turn = oldTurn;
 		mClassroomState->SetGlobal(newGlobal);
 		mClassroomState->SetHasChanged(true);
 	}
@@ -213,19 +222,63 @@ void NetworkedStateManager::SetClassroomPaused(bool paused){
 }
 
 
-void NetworkedStateManager::SetMasterHint(std::string pHint){
+//void NetworkedStateManager::SetMasterHint(std::string pHint){
+//
+//	pthread_mutex_lock(&classstate_mutex);
+//	std::string oldHint = mClassroomState->GetGlobal().masterHint;
+//	bool oldPaused = mClassroomState->GetGlobal().paused;
+//	std::string oldPauserDevice = mClassroomState->GetGlobal().pauserDevice;
+//
+//	//if the current hint is different from the one passed, we change it
+//	if(oldHint.compare(pHint)!=0){
+//		global_class newGlobal;
+//		newGlobal.paused = oldPaused;
+//		newGlobal.pauserDevice = oldPauserDevice;
+//		newGlobal.masterHint = pHint;
+//		mClassroomState->SetGlobal(newGlobal);
+//		mClassroomState->SetHasChanged(true);
+//	}
+//
+//	//else, we do nothing
+//
+//	pthread_mutex_unlock(&classstate_mutex);
+//}
+
+void NetworkedStateManager::SetPhase(std::string pPhase){
 
 	pthread_mutex_lock(&classstate_mutex);
-	std::string oldHint = mClassroomState->GetGlobal().masterHint;
+	std::string oldPhase = mClassroomState->GetGlobal().phase;
 	bool oldPaused = mClassroomState->GetGlobal().paused;
-	std::string oldPauserDevice = mClassroomState->GetGlobal().pauserDevice;
+	int oldTurn = mClassroomState->GetGlobal().turn;
 
 	//if the current hint is different from the one passed, we change it
-	if(oldHint.compare(pHint)!=0){
+	if(oldPhase.compare(pPhase)!=0){
 		global_class newGlobal;
 		newGlobal.paused = oldPaused;
-		newGlobal.pauserDevice = oldPauserDevice;
-		newGlobal.masterHint = pHint;
+		newGlobal.phase = pPhase;
+		newGlobal.turn = oldTurn;
+		mClassroomState->SetGlobal(newGlobal);
+		mClassroomState->SetHasChanged(true);
+	}
+
+	//else, we do nothing
+
+	pthread_mutex_unlock(&classstate_mutex);
+}
+
+void NetworkedStateManager::SetTurn(int pTurn){
+
+	pthread_mutex_lock(&classstate_mutex);
+	std::string oldPhase = mClassroomState->GetGlobal().phase;
+	bool oldPaused = mClassroomState->GetGlobal().paused;
+	int oldTurn = mClassroomState->GetGlobal().turn;
+
+	//if the current hint is different from the one passed, we change it
+	if(oldTurn != pTurn){
+		global_class newGlobal;
+		newGlobal.paused = oldPaused;
+		newGlobal.phase = oldPhase;
+		newGlobal.turn = pTurn;
 		mClassroomState->SetGlobal(newGlobal);
 		mClassroomState->SetHasChanged(true);
 	}
@@ -368,20 +421,34 @@ bool NetworkedStateManager::isClassroomPaused(){
 	return paused;
 }
 
-std::string NetworkedStateManager::getPauserDevice(){
+//std::string NetworkedStateManager::getPauserDevice(){
+//
+//	pthread_mutex_lock(&classstate_mutex);
+//	std::string device(mClassroomState->GetGlobal().pauserDevice);
+//	pthread_mutex_unlock(&classstate_mutex);
+//	return device;
+//}
 
+//std::string NetworkedStateManager::getMasterHint(){
+//	pthread_mutex_lock(&classstate_mutex);
+//	std::string hint(mClassroomState->GetGlobal().masterHint);
+//	pthread_mutex_unlock(&classstate_mutex);
+//	return hint;
+//}
+std::string NetworkedStateManager::getPhase(){
 	pthread_mutex_lock(&classstate_mutex);
-	std::string device(mClassroomState->GetGlobal().pauserDevice);
+	std::string phase(mClassroomState->GetGlobal().phase);
 	pthread_mutex_unlock(&classstate_mutex);
-	return device;
+	return phase;
 }
 
-std::string NetworkedStateManager::getMasterHint(){
+int NetworkedStateManager::getTurn(){
 	pthread_mutex_lock(&classstate_mutex);
-	std::string hint(mClassroomState->GetGlobal().masterHint);
+	int turn = mClassroomState->GetGlobal().turn;
 	pthread_mutex_unlock(&classstate_mutex);
-	return hint;
+	return turn;
 }
+
 
 std::string NetworkedStateManager::getDeviceId(){
 	pthread_mutex_lock(&devstate_mutex);

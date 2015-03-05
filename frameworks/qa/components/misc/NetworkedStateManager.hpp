@@ -29,8 +29,10 @@ public:
 	std::string getAlternateDeviceJSON();//In this case, instead of setting the meteor _id, we set the field deviceid
 	std::string getAlternateClassroomJSON();//In this case, instead of setting the meteor _id, we set the field classroomid
 
-	std::string getPauserDevice();
-	std::string getMasterHint();
+//	std::string getPauserDevice();
+//	std::string getMasterHint();
+	std::string getPhase();
+	int getTurn();
 	std::string getDeviceId();
 
 
@@ -41,7 +43,9 @@ public:
 	void SetHasClassroomChanged(bool changed);
 
 	void SetClassroomPaused(bool changed);
-	void SetMasterHint(std::string pHint);
+//	void SetMasterHint(std::string pHint);
+	void SetPhase(std::string pPhase);
+	void SetTurn(int pTurn);
 	bool isClassroomPaused();
 
 	void addMarkerToDeviceState(std::string tagName);

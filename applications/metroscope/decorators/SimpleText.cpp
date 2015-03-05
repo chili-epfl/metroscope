@@ -18,6 +18,7 @@
 *******************************************************************************/
 
 #include "SimpleText.hpp"
+#include "../FractionsConstants.hpp"
 #include <iostream>
 
 const std::string decorators::SimpleText::scDecoratorName("SimpleText");
@@ -52,11 +53,11 @@ void decorators::SimpleText::update() {
 void decorators::SimpleText::displayMessage(){
 	if(mMarker->isPresent()){
 			mDecoratorManager.GetDisplay().PushTransformation();
-			//mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-				//mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(sMessage.c_str(), scTEXT_DELIMITERS,
-					//	scHINT_MESSAGE_OFFSET_X, scHINT_MESSAGE_OFFSET_Y, scHINT_MESSAGE_WIDTH,
-						//false, scHINT_MESSAGE_SCALE,
-						//scHINT_MESSAGE_COLOR->r, scHINT_MESSAGE_COLOR->g, scHINT_MESSAGE_COLOR->b, scHINT_MESSAGE_COLOR->a);
+			mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+				mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(sMessage.c_str(), scTEXT_DELIMITERS,
+						0.0, 0.0, 600,
+						false, 2,
+						0.0, 0.0, 0.0, 1.0);
 				mDecoratorManager.GetDisplay().PopTransformation();
 	}
 }

@@ -32,6 +32,10 @@
 		static const std::string scStepsToGo="stepsToGo";
 		static const std::string scHintPresent="hintPresent";
 		static const std::string scWrongMoves="wrongMoves";
+		static const std::string scActive="active";
+		static const std::string scPhase="phase";
+		static const std::string scTurn="turn";
+		static const std::string scCurrentStateClassVariables="current_state";
 
 
 #endif

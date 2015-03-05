@@ -125,3 +125,5 @@
 #include "PolyViewLines.hpp"
 #include "PolyViewCoords.hpp"
 #include "PolyViewSideMeasures.hpp"
+#include "BattleshipGame.hpp"
+#include "SimpleText.hpp"

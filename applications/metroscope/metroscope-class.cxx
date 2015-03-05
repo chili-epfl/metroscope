@@ -216,16 +216,16 @@ int main(int argc, char* argv[])
 
 	//Define and start the device HTTP putter thread...
     //std::cout << "Starting networking thread" << std::endl;
-    tPutRemoteDevice
-    | tWaitDevice
-    | tPutRemoteDevice;
+//    tPutRemoteDevice
+//    | tWaitDevice
+//    | tPutRemoteDevice;
 
-    tPutRemoteDevice.startNoWait();
+//    tPutRemoteDevice.startNoWait();
 
 	//Define and start the classroom HTTP getter/putter thread...
 	tGetRemoteClassroom
 	| tWaitClassroom
-	| tPutRemoteClassroom
+//	| tPutRemoteClassroom
 	| tGetRemoteClassroom;
 
 	tGetRemoteClassroom.startNoWait();
@@ -249,8 +249,8 @@ int main(int argc, char* argv[])
 	tGrabber->stop();
 	tGrabber->join();
 
-	tPutRemoteDevice.stop();
-	tPutRemoteDevice.join();
+//	tPutRemoteDevice.stop();
+//	tPutRemoteDevice.join();
 
 	tGetRemoteClassroom.stop();
 	tGetRemoteClassroom.join();
