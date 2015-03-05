@@ -28,6 +28,9 @@
 const std::string decorators::BattleshipAnalysisSheet::scDecoratorName("BattleshipAnalysisSheet");
 const DecoratorManager::Registerer decorators::BattleshipAnalysisSheet::mRegisterer(decorators::BattleshipAnalysisSheet::scDecoratorName, &decorators::BattleshipAnalysisSheet::create);
 
+static const float scPX2MM = 1.73f;
+
+
 
 decorators::FiducialDecorator *decorators::BattleshipAnalysisSheet::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 {
@@ -62,27 +65,13 @@ FiducialDecorator(pDecoratorManager, pTLMarker),
 mTRMarker(pTRMarker),
 mBRMarker(pBRMarker),
 mBLMarker(pBLMarker),
-mAreaOfInterest(),
-mBoxOfInterest(),
-mNormalizedAreaOfInterest(),
-mMirroredAreasOfInterest(),
-mSelection(),
-mLocalSelection()
+mAreaOfInterest()
 {
-	mAreaOfInterest.push_back(wykobi::make_point(-pWorldWidth/2.0f, -pWorldHeight/2.0f));
-	mAreaOfInterest.push_back(wykobi::make_point( pWorldWidth/2.0f, -pWorldHeight/2.0f));
-	mAreaOfInterest.push_back(wykobi::make_point( pWorldWidth/2.0f,  pWorldHeight/2.0f));
-	mAreaOfInterest.push_back(wykobi::make_point(-pWorldWidth/2.0f,  pWorldHeight/2.0f));
+	mAreaOfInterest.push_back(wykobi::make_point(0.0f, 0.0f));
+	mAreaOfInterest.push_back(wykobi::make_point(pWorldWidth*10.0f*scPX2MM, 0.0f));
+	mAreaOfInterest.push_back(wykobi::make_point(pWorldWidth*10.0f*scPX2MM, pWorldHeight*10.0f*scPX2MM));
+	mAreaOfInterest.push_back(wykobi::make_point(0.0f, pWorldHeight*10.0f*scPX2MM));
 
-	mBoxOfInterest[0] = mAreaOfInterest[0];
-	mBoxOfInterest[1] = mAreaOfInterest[2];
-
-	mLocalSelection[0] = mAreaOfInterest[0];
-	mLocalSelection[1] = mAreaOfInterest[1];
-	mLocalSelection[2] = mAreaOfInterest[2];
-	mLocalSelection[3] = mAreaOfInterest[3];
-
-	static const float scMM2Px = 32.0f;
 
 }
 
@@ -97,16 +86,12 @@ void decorators::BattleshipAnalysisSheet::update() {
 			&& mBRMarker->isPresent()
 			&& mBLMarker->isPresent())
 	{
-		mSelection[0] = mMarker->getCenter();
-		mSelection[1] = mTRMarker->getCenter();
-		mSelection[2] = mBRMarker->getCenter();
-		mSelection[3] = mBLMarker->getCenter();
 
 		mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-		mDecoratorManager.GetDisplay().RenderQuad(0.0f, 0.0f,
-				0.0f, 150.0f, 190.0f, 150.0f,
-				190.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		mDecoratorManager.GetDisplay().RenderQuad(mAreaOfInterest[0].x, mAreaOfInterest[0].y,
+				mAreaOfInterest[1].x, mAreaOfInterest[1].y, mAreaOfInterest[2].x, mAreaOfInterest[2].y,
+				mAreaOfInterest[3].x, mAreaOfInterest[3].y, 0.0f, 0.0f, 0.0f, 1.0f);
 		mDecoratorManager.GetDisplay().PopTransformation();
 	}
 }

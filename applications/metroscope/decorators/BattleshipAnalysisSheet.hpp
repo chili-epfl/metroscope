@@ -51,11 +51,7 @@ class BattleshipAnalysisSheet : public FiducialDecorator
 		const FiducialMarker *mBLMarker;
 
 		wykobi::polygon<float, 2> mAreaOfInterest;
-		wykobi::rectangle<float> mBoxOfInterest;
-		wykobi::polygon<float, 2> mNormalizedAreaOfInterest;
-		std::vector<wykobi::polygon<float, 2> > mMirroredAreasOfInterest;
-		wykobi::quadix<float, 2> mSelection;
-		wykobi::quadix<float, 2> mLocalSelection;
+
 
 	private:
 		BattleshipAnalysisSheet();
