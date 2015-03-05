@@ -119,17 +119,57 @@ void decorators::BattleshipAnalysisSheet::DisplayGrid() {
 	mDecoratorManager.GetDisplay().RenderLine(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX,
 			mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX*scAxesOnSheet,
 			0.0f, 0.0f, 0.0f, 1.0f); //Vertical line from team's origin to y=zero
+
 	mDecoratorManager.GetDisplay().RenderLine(mInitialOriginMM.x * tWidthPX + (-1)*mInitialOriginCoords.x*tWidthPX*scAxesOnSheet, mInitialOriginMM.y * tHeightPX,
 			mInitialOriginMM.x * tWidthPX + (-1)*mInitialOriginCoords.x*tWidthPX, mInitialOriginMM.y * tHeightPX,
-			0.0f, 0.0f, 0.0f, 0.7f); //Horizontal line from x=zero to end of sheet (lighter)
+			0.0f, 0.0f, 0.0f, 0.5f); //Horizontal line from x=zero to end of sheet (lighter)
 	mDecoratorManager.GetDisplay().RenderLine(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX*scAxesOnSheet,
 			mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX,
-			0.0f, 0.0f, 0.0f, 0.7f); //Vertical line from y=zero to end of sheet (lighter)
+			0.0f, 0.0f, 0.0f, 0.5f); //Vertical line from y=zero to end of sheet (lighter)
+
+	mDecoratorManager.GetDisplay().RenderQuadFilled((mInitialOriginMM.x * tWidthPX)-1  + (-1)*mInitialOriginCoords.x*tWidthPX*scAxesOnSheet, mInitialOriginMM.y * tHeightPX,
+			(mInitialOriginMM.x * tWidthPX)+1  + (-1)*mInitialOriginCoords.x*tWidthPX*scAxesOnSheet, mInitialOriginMM.y * tHeightPX,
+			(mInitialOriginMM.x * tWidthPX)+1  + (-1)*mInitialOriginCoords.x*tWidthPX*scAxesOnSheet, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX,
+			(mInitialOriginMM.x * tWidthPX)-1  + (-1)*mInitialOriginCoords.x*tWidthPX*scAxesOnSheet, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX,
+			0.0f, 0.0f, 0.0f, 1.0f); //Vertical line x=zero (thicker)
+	mDecoratorManager.GetDisplay().RenderQuadFilled(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX*scAxesOnSheet -1,
+			mInitialOriginMM.x * tWidthPX + (-1)*mInitialOriginCoords.x*tWidthPX, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX*scAxesOnSheet -1,
+			mInitialOriginMM.x * tWidthPX + (-1)*mInitialOriginCoords.x*tWidthPX, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX*scAxesOnSheet +1,
+			mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX*scAxesOnSheet +1,
+			0.0f, 0.0f, 0.0f, 1.0f); //Horizontal line y=zero (thicker)
+
+	for (int i=1; i< 10*(1+(1-scAxesOnSheet)/scAxesOnSheet); ++i){
+
+		if(i==10) continue; //This is actually the origin
+		else if(i<10){//the first 9 lines are darker
+			mDecoratorManager.GetDisplay().RenderLine(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX + 0.1*i*tHeightPX*scAxesOnSheet*mInitialOriginCoords.y,
+					mInitialOriginMM.x * tWidthPX + (-1)*mInitialOriginCoords.x*tWidthPX, mInitialOriginMM.y * tHeightPX + 0.1*i*tHeightPX*scAxesOnSheet*mInitialOriginCoords.y,
+					0.0f, 0.0f, 0.0f, 0.2f); //Horizontal 0.1 lines from team's origin to x=zero
+			mDecoratorManager.GetDisplay().RenderLine(mInitialOriginMM.x * tWidthPX + (-1)*0.1*i*tWidthPX*scAxesOnSheet*mInitialOriginCoords.x, mInitialOriginMM.y * tHeightPX,
+					mInitialOriginMM.x * tWidthPX + (-1)*0.1*i*tWidthPX*scAxesOnSheet*mInitialOriginCoords.x, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX,
+					0.0f, 0.0f, 0.0f, 0.2f); //Vertical line from team's origin to y=zero
+		}
+		else{
+			mDecoratorManager.GetDisplay().RenderLine(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX + 0.1*i*tHeightPX*scAxesOnSheet*mInitialOriginCoords.y,
+					mInitialOriginMM.x * tWidthPX + (-1)*mInitialOriginCoords.x*tWidthPX, mInitialOriginMM.y * tHeightPX + 0.1*i*tHeightPX*scAxesOnSheet*mInitialOriginCoords.y,
+					0.0f, 0.0f, 0.0f, 0.1f); //Horizontal 0.1 lines from team's origin to x=zero
+			mDecoratorManager.GetDisplay().RenderLine(mInitialOriginMM.x * tWidthPX + (-1)*0.1*i*tWidthPX*scAxesOnSheet*mInitialOriginCoords.x, mInitialOriginMM.y * tHeightPX,
+					mInitialOriginMM.x * tWidthPX + (-1)*0.1*i*tWidthPX*scAxesOnSheet*mInitialOriginCoords.x, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX,
+					0.0f, 0.0f, 0.0f, 0.1f); //Vertical line from team's origin to y=zero
+		}
+
+	}
 
 
 //	mDecoratorManager.GetDisplay().RenderQuad(mAreaOfInterest[0].x, mAreaOfInterest[0].y,
 //			mAreaOfInterest[1].x, mAreaOfInterest[1].y, mAreaOfInterest[2].x, mAreaOfInterest[2].y,
 //			mAreaOfInterest[3].x, mAreaOfInterest[3].y, 0.0f, 0.0f, 0.0f, 1.0f);
+
+	//We mark the origin
+	//TODO: this should be updated with the last move of the team from the network!
+	mDecoratorManager.GetDisplay().RenderEllipse(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX,
+			15.0f, 15.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+
 	mDecoratorManager.GetDisplay().PopTransformation();
 
 }
