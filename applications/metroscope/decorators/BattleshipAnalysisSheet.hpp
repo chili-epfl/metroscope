@@ -26,6 +26,11 @@
 
 #include <vector>
 
+static const float scPX2MM = 1.72f;
+
+static const float scAxesOnSheet = 0.75f; //How much of the sheet represents the 1 unit of coords
+
+
 namespace decorators {
 
 
@@ -40,15 +45,22 @@ class BattleshipAnalysisSheet : public FiducialDecorator
 				const FiducialMarker *pBRMarker,
 				const FiducialMarker *pBLMarker,
 				float pWorldWidth,
-				float pWorldHeight);
+				float pWorldHeight,
+				int pTeam, float pOriginCoordsX, float pOriginCoordsY,
+				float pOriginMMX, float pOriginMMY);
 
 		virtual ~BattleshipAnalysisSheet();
 
 	protected:
 		void update();
+		void DisplayGrid();
 		const FiducialMarker *mTRMarker;
 		const FiducialMarker *mBRMarker;
 		const FiducialMarker *mBLMarker;
+
+		const int mTeam;
+		wykobi::point2d<float> mInitialOriginCoords;
+		wykobi::point2d<float> mInitialOriginMM;//This goes from 0 to 1, representing in the screen 0 to width/height;
 
 		wykobi::polygon<float, 2> mAreaOfInterest;
 

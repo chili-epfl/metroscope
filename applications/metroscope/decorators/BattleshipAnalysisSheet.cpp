@@ -28,21 +28,23 @@
 const std::string decorators::BattleshipAnalysisSheet::scDecoratorName("BattleshipAnalysisSheet");
 const DecoratorManager::Registerer decorators::BattleshipAnalysisSheet::mRegisterer(decorators::BattleshipAnalysisSheet::scDecoratorName, &decorators::BattleshipAnalysisSheet::create);
 
-static const float scPX2MM = 1.73f;
-
 
 
 decorators::FiducialDecorator *decorators::BattleshipAnalysisSheet::create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager)
 {
 	try {
 		libconfig::Setting & tWorldSize = pSetting["worldSize"];
+		libconfig::Setting & tOriginCoords = pSetting["initialOriginCoords"];
+		libconfig::Setting & tOriginMM = pSetting["initialOriginMM"];
 		BattleshipAnalysisSheet *tBattleshipAnalysisSheet = new decorators::BattleshipAnalysisSheet(
 				pDecoratorManager,
 				pDecoratorManager.loadMarker(pSetting["TLmarker"]),
 				pDecoratorManager.loadMarker(pSetting["TRmarker"]),
 				pDecoratorManager.loadMarker(pSetting["BRmarker"]),
 				pDecoratorManager.loadMarker(pSetting["BLmarker"]),
-				tWorldSize[0], tWorldSize[1]);
+				tWorldSize[0], tWorldSize[1],
+				pSetting["team"], tOriginCoords[0], tOriginCoords[1],
+								tOriginMM[0], tOriginMM[1]);
 
 		return tBattleshipAnalysisSheet;
 	} catch(libconfig::SettingNotFoundException &e) {
@@ -60,11 +62,14 @@ decorators::BattleshipAnalysisSheet::BattleshipAnalysisSheet(
 		const FiducialMarker *pBRMarker,
 		const FiducialMarker *pBLMarker,
 		float pWorldWidth,
-		float pWorldHeight):
+		float pWorldHeight,
+		int pTeam, float pOriginCoordsX, float pOriginCoordsY,
+		float pOriginMMX, float pOriginMMY):
 FiducialDecorator(pDecoratorManager, pTLMarker),
 mTRMarker(pTRMarker),
 mBRMarker(pBRMarker),
 mBLMarker(pBLMarker),
+mTeam(pTeam),
 mAreaOfInterest()
 {
 	mAreaOfInterest.push_back(wykobi::make_point(0.0f, 0.0f));
@@ -72,7 +77,8 @@ mAreaOfInterest()
 	mAreaOfInterest.push_back(wykobi::make_point(pWorldWidth*10.0f*scPX2MM, pWorldHeight*10.0f*scPX2MM));
 	mAreaOfInterest.push_back(wykobi::make_point(0.0f, pWorldHeight*10.0f*scPX2MM));
 
-
+	mInitialOriginCoords = wykobi::make_point(pOriginCoordsX,pOriginCoordsY);
+	mInitialOriginMM = wykobi::make_point(pOriginMMX,pOriginMMY);
 }
 
 
@@ -87,11 +93,43 @@ void decorators::BattleshipAnalysisSheet::update() {
 			&& mBLMarker->isPresent())
 	{
 
-		mDecoratorManager.GetDisplay().PushTransformation();
-		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-		mDecoratorManager.GetDisplay().RenderQuad(mAreaOfInterest[0].x, mAreaOfInterest[0].y,
-				mAreaOfInterest[1].x, mAreaOfInterest[1].y, mAreaOfInterest[2].x, mAreaOfInterest[2].y,
-				mAreaOfInterest[3].x, mAreaOfInterest[3].y, 0.0f, 0.0f, 0.0f, 1.0f);
-		mDecoratorManager.GetDisplay().PopTransformation();
+		DisplayGrid();
+
+//		mDecoratorManager.GetDisplay().PushTransformation();
+//		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+//		mDecoratorManager.GetDisplay().RenderQuad(mAreaOfInterest[0].x, mAreaOfInterest[0].y,
+//				mAreaOfInterest[1].x, mAreaOfInterest[1].y, mAreaOfInterest[2].x, mAreaOfInterest[2].y,
+//				mAreaOfInterest[3].x, mAreaOfInterest[3].y, 0.0f, 0.0f, 0.0f, 1.0f);
+//		mDecoratorManager.GetDisplay().PopTransformation();
 	}
+}
+
+void decorators::BattleshipAnalysisSheet::DisplayGrid() {
+
+	float tWidthPX = mAreaOfInterest[1].x - mAreaOfInterest[0].x;
+	float tHeightPX = mAreaOfInterest[3].y - mAreaOfInterest[0].y;
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+	//We draw the axis, counting from the mm initial Origin
+	mDecoratorManager.GetDisplay().RenderLine(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX,
+			mInitialOriginMM.x * tWidthPX + (-1)*mInitialOriginCoords.x*tWidthPX*scAxesOnSheet, mInitialOriginMM.y * tHeightPX,
+			0.0f, 0.0f, 0.0f, 1.0f); //Horizontal line from team's origin to x=zero
+	mDecoratorManager.GetDisplay().RenderLine(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX,
+			mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX*scAxesOnSheet,
+			0.0f, 0.0f, 0.0f, 1.0f); //Vertical line from team's origin to y=zero
+	mDecoratorManager.GetDisplay().RenderLine(mInitialOriginMM.x * tWidthPX + (-1)*mInitialOriginCoords.x*tWidthPX*scAxesOnSheet, mInitialOriginMM.y * tHeightPX,
+			mInitialOriginMM.x * tWidthPX + (-1)*mInitialOriginCoords.x*tWidthPX, mInitialOriginMM.y * tHeightPX,
+			0.0f, 0.0f, 0.0f, 0.7f); //Horizontal line from x=zero to end of sheet (lighter)
+	mDecoratorManager.GetDisplay().RenderLine(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX*scAxesOnSheet,
+			mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX + mInitialOriginCoords.y*tHeightPX,
+			0.0f, 0.0f, 0.0f, 0.7f); //Vertical line from y=zero to end of sheet (lighter)
+
+
+//	mDecoratorManager.GetDisplay().RenderQuad(mAreaOfInterest[0].x, mAreaOfInterest[0].y,
+//			mAreaOfInterest[1].x, mAreaOfInterest[1].y, mAreaOfInterest[2].x, mAreaOfInterest[2].y,
+//			mAreaOfInterest[3].x, mAreaOfInterest[3].y, 0.0f, 0.0f, 0.0f, 1.0f);
+	mDecoratorManager.GetDisplay().PopTransformation();
+
 }
