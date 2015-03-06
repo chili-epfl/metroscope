@@ -312,6 +312,8 @@ static const float scREAL_WORLD_MARKER_HEIGHT_MM = 20.0f;
 	static const char * const scDENOMINATOR_LABEL = "How many pieces it takes to make a whole";
 
 
+	static const float scOFFSETMSG_X = 3.0f;
+	static const float scOFFSETMSG_Y = 12.0f;
 
 
 
