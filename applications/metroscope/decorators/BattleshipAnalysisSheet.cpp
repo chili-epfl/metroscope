@@ -73,7 +73,7 @@ mTeam(pTeam),
 mAreaOfInterest()
 {
 	mAreaOfInterest.push_back(wykobi::make_point(0.0f, 0.0f));
-	mAreaOfInterest.push_back(wykobi::make_point(pWorldWidth*10.0f*scPX2MM, 0.0f));
+	mAreaOfInterest.push_back(wykobi::make_point(pWorldWidth*10.0f*scPX2MM, 0.0f));//In MM, from the top left of the area of interest
 	mAreaOfInterest.push_back(wykobi::make_point(pWorldWidth*10.0f*scPX2MM, pWorldHeight*10.0f*scPX2MM));
 	mAreaOfInterest.push_back(wykobi::make_point(0.0f, pWorldHeight*10.0f*scPX2MM));
 
@@ -161,15 +161,49 @@ void decorators::BattleshipAnalysisSheet::DisplayGrid() {
 	}
 
 
-//	mDecoratorManager.GetDisplay().RenderQuad(mAreaOfInterest[0].x, mAreaOfInterest[0].y,
-//			mAreaOfInterest[1].x, mAreaOfInterest[1].y, mAreaOfInterest[2].x, mAreaOfInterest[2].y,
-//			mAreaOfInterest[3].x, mAreaOfInterest[3].y, 0.0f, 0.0f, 0.0f, 1.0f);
-
 	//We mark the origin
 	//TODO: this should be updated with the last move of the team from the network!
-	mDecoratorManager.GetDisplay().RenderEllipse(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX,
-			15.0f, 15.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	//mDecoratorManager.GetDisplay().RenderEllipse(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX,
+	//		15.0f, 15.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	//To test, we plot the circle at -0.1, 0.1
+	wykobi::point2d<float> tOriginMarkCoords = wykobi::make_point(-0.1f, 0.1f);
+	wykobi::point2d<float> tOriginMarkMM = ConvertCoords2MM(tOriginMarkCoords);
+	mDecoratorManager.GetDisplay().RenderEllipse(tOriginMarkMM.x, tOriginMarkMM.y,
+				15.0f, 15.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 
 }
+
+//Converts a set of coordinates in the -1,1 range, to MM in the sheet (0,width/height of AOI), for EVERY team taking into account they start in different places the display
+wykobi::point2d<float> decorators::BattleshipAnalysisSheet::ConvertCoords2MM(wykobi::point2d<float> pCoords){
+
+	float MMx = 0;
+	float MMy = 0;
+
+	float tWidthMM = mAreaOfInterest[1].x - mAreaOfInterest[0].x; //This is the length in MM of the area of interest (partial view of the coordinate plane)
+	float tHeightMM = mAreaOfInterest[3].y - mAreaOfInterest[0].y;
+
+	float tWidthPlaneMM = tWidthMM*2.0f*scAxesOnSheet;//Length of the whole coordinate plane (beyond our area of interest)
+	float tHeightPlaneMM = tHeightMM*2.0f*scAxesOnSheet;
+
+	//Transformation coefficients for the two coordinate systems as per https://msdn.microsoft.com/en-us/library/ie/jj635757(v=vs.85).aspx
+	//This transformation gets game coordinates (-1,1) and transforms it into another that goes (0,widthplane|heightplane)
+	// a = Wp+Hp / 4 ; b = -Wp+Hp / 4 ; c = Wp/2 ; d = Hp/2
+	//x' = a*x+b*y+c ; y' = b*x-a*y+d
+	MMx = ((tWidthPlaneMM+tHeightPlaneMM)/4.0f)*pCoords.x + ((-tWidthPlaneMM+tHeightPlaneMM)/4.0f)*pCoords.y + tWidthPlaneMM/2.0f;
+	MMy =  ((-tWidthPlaneMM+tHeightPlaneMM)/4.0f)*pCoords.x - ((tWidthPlaneMM+tHeightPlaneMM)/4.0f)*pCoords.y + tHeightPlaneMM/2.0f;
+
+	std::cout << "Partial conversion to pixels of " << pCoords.x << "," << pCoords.y << ": " << MMx << "," << MMy << std::endl;
+
+	//We take into account the offset introduced by the fact that the different sheets have different displacement/view of the whole plane
+	MMx = MMx - mInitialOriginMM.x*(tWidthPlaneMM-tWidthMM);
+	MMy = MMy - mInitialOriginMM.y*(tHeightPlaneMM-tHeightMM);
+
+	std::cout << "Complete conversion to pixels of " << pCoords.x << "," << pCoords.y << ": " << MMx << "," << MMy << std::endl;
+
+	wykobi::point2d<float> newMM = wykobi::make_point(MMx,MMy);
+	return newMM;
+
+}
+

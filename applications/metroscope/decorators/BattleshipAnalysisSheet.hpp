@@ -54,6 +54,8 @@ class BattleshipAnalysisSheet : public FiducialDecorator
 	protected:
 		void update();
 		void DisplayGrid();
+		wykobi::point2d<float> ConvertCoords2MM(wykobi::point2d<float> pCoords);
+
 		const FiducialMarker *mTRMarker;
 		const FiducialMarker *mBRMarker;
 		const FiducialMarker *mBLMarker;
