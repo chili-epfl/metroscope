@@ -23,6 +23,7 @@
 #include "../Pipeable.hpp"
 #include "../../components/vision/FiducialMarker.hpp"
 #include "../../components/vision/PlaneCoordinateMapper.hpp"
+#include <vector>
 
 class OpenGl2DDisplay: public Pipeable
 {
@@ -145,6 +146,11 @@ class OpenGl2DDisplay: public Pipeable
 				float x3, float y3,
 				float x4, float y4,
 				float r, float g, float b, float a = 1.0f);
+
+		void RenderPolygon(std::vector<float> vertices,
+				float r, float g, float b, float a);
+		void RenderPolygonFilled(std::vector<float> vertices,
+				float r, float g, float b, float a);
 
 		int LoadTexture(const char *pImagePath);
 		void ReleaseTexture(unsigned int pTextureId);

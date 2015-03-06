@@ -54,7 +54,10 @@ class BattleshipAnalysisSheet : public FiducialDecorator
 	protected:
 		void update();
 		void DisplayGrid();
+		void DisplayMoves();
+		void DisplayOriginMarker(move thismove);
 		wykobi::point2d<float> ConvertCoords2MM(wykobi::point2d<float> pCoords);
+		wykobi::polygon<float, 2> ConvertPolyCoords2MM(wykobi::polygon<float, 2> pPolyCoords);
 
 		const FiducialMarker *mTRMarker;
 		const FiducialMarker *mBRMarker;
@@ -73,6 +76,10 @@ class BattleshipAnalysisSheet : public FiducialDecorator
 		BattleshipAnalysisSheet& operator=(const BattleshipAnalysisSheet& );
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
+
+		wykobi::polygon<float, 2> rotatePolygon(wykobi::polygon<float, 2> polygon, int rotation);
+		std::vector<float> polygonToVertices(wykobi::polygon<float, 2> polygon);
+
 };
 
 }

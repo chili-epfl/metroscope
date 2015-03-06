@@ -158,8 +158,9 @@ int main(int argc, char* argv[])
 
 	//We extract the meteor IDs to pass them to the state manager (it is the only part we know in advance)
     //std::cout << "Extracting meteor ids from command line" << std::endl;
-	std::string deviceMeteorId = extractIdFromURL(tUrlDevice);
-	stateManager->SetDeviceMeteorId(deviceMeteorId);
+	//Not needed for now in battleship!
+	//std::string deviceMeteorId = extractIdFromURL(tUrlDevice);
+	//stateManager->SetDeviceMeteorId(deviceMeteorId);
 
 	//Initializing the networking pipeables...
     //std::cout << "Initializing networking pipeables" << std::endl;
@@ -168,7 +169,7 @@ int main(int argc, char* argv[])
 	PutPostRemoteJSONString tPutRemoteDevice(tUrlDevice, tUrlDeviceHistory, DEVICE);
 	PutPostRemoteJSONString tPutRemoteClassroom(tUrlClassroom, tUrlClassroomHistory, CLASSROOM);
 	GetRemoteJSONString tGetRemoteClassroom(tUrlClassroom, CLASSROOM);
-
+	GetRemoteJSONString tGetRemoteDevices(tUrlDevice, DEVICE);
 
 	//Initializing the CV and tag detection pipeables...
 	if (!tGrabber)
@@ -221,6 +222,13 @@ int main(int argc, char* argv[])
 //    | tPutRemoteDevice;
 
 //    tPutRemoteDevice.startNoWait();
+
+	//Devices Getting/Putting thread
+	    tGetRemoteDevices
+	    | tWaitDevice
+	    | tGetRemoteDevices;
+
+	    tGetRemoteDevices.startNoWait();
 
 	//Define and start the classroom HTTP getter/putter thread...
 	tGetRemoteClassroom

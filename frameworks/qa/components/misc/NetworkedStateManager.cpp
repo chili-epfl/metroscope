@@ -20,7 +20,7 @@ NetworkedStateManager::NetworkedStateManager(std::string pDeviceMeteorId, std::s
 	devstate_mutex = PTHREAD_MUTEX_INITIALIZER;
 	mClassroomState = new ClassroomState;
 	classstate_mutex = PTHREAD_MUTEX_INITIALIZER;
-	SetDeviceMeteorId(pDeviceMeteorId);
+	//SetDeviceMeteorId(pDeviceMeteorId);
 	SetClassroomMeteorId(pClassroomMeteorId);
 }
 
@@ -28,17 +28,17 @@ NetworkedStateManager::~NetworkedStateManager() {
 	// TODO Auto-generated destructor stub
 }
 
-void NetworkedStateManager::SetDeviceMeteorId(std::string pId){
-
-	pthread_mutex_lock(&devstate_mutex);
-	std::string oldId = mDeviceState->GetMeteorId();
-	if(oldId.compare(pId)!=0){
-		mDeviceState->SetMeteorId(pId);
-		mDeviceState->SetHasChanged(true);
-	}
-	pthread_mutex_unlock(&devstate_mutex);
-
-}
+//void NetworkedStateManager::SetDeviceMeteorId(std::string pId){
+//
+//	pthread_mutex_lock(&devstate_mutex);
+//	std::string oldId = mDeviceState->GetMeteorId();
+//	if(oldId.compare(pId)!=0){
+//		mDeviceState->SetMeteorId(pId);
+//		mDeviceState->SetHasChanged(true);
+//	}
+//	pthread_mutex_unlock(&devstate_mutex);
+//
+//}
 
 void NetworkedStateManager::SetClassroomMeteorId(std::string pId){
 
@@ -92,7 +92,7 @@ std::string NetworkedStateManager::getAlternateDeviceJSON(){
 
 	std::string json;
 	pthread_mutex_lock(&devstate_mutex);
-	json = mDeviceState->getJSON(true);
+	json = mDeviceState->getJSON();
 	pthread_mutex_unlock(&devstate_mutex);
 	return json;
 }
@@ -123,49 +123,6 @@ void NetworkedStateManager::SetHasClassroomChanged(bool changed){
 }
 
 
-void NetworkedStateManager::addMarkerToDeviceState(std::string tagName){
-
-	bool found=false;
-	pthread_mutex_lock(&devstate_mutex);
-	std::vector<std::string> tags = mDeviceState->GetPresentTags();
-	for(unsigned int i=0;i<tags.size();i++){
-		if(tags.at(i).compare(tagName)==0){
-			found=true;//if the tag is already in the vector, later we will do nothing
-		}
-	}
-	//if we did not find the tag in the vector, we add the tag to it
-	if(!found){
-		tags.push_back(tagName);
-		mDeviceState->SetPresentTags(tags);
-		mDeviceState->SetHasChanged(true);
-	}
-	pthread_mutex_unlock(&devstate_mutex);
-}
-
-void NetworkedStateManager::removeMarkerFromDeviceState(std::string tagName){
-	pthread_mutex_lock(&devstate_mutex);
-	std::vector<std::string> tags = mDeviceState->GetPresentTags();
-
-	bool changed = false;
-
-	for(std::vector<std::string>::iterator it = tags.begin(); it != tags.end(); ){
-		if(it->compare(tagName)==0){
-			//if we find the tag, we pop it out
-			tags.erase(it);
-			changed = true;
-		} else {
-			++it;
-		}
-	}
-
-	if(changed){
-		mDeviceState->SetPresentTags(tags);
-		mDeviceState->SetHasChanged(true);
-	}
-	//if we did not find the tag in the vector, we do nothing
-	pthread_mutex_unlock(&devstate_mutex);
-}
-
 void NetworkedStateManager::SetClassroomJSON(std::string jsonData){
 
 	pthread_mutex_lock(&classstate_mutex);
@@ -176,7 +133,7 @@ void NetworkedStateManager::SetClassroomJSON(std::string jsonData){
 void NetworkedStateManager::SetDeviceJSON(std::string jsonData){
 
 	pthread_mutex_lock(&devstate_mutex);
-	mDeviceState->setJSON(jsonData);
+	mDeviceState->setJSON(jsonData, this->getTurn());
 	pthread_mutex_unlock(&devstate_mutex);
 }
 
@@ -289,128 +246,128 @@ void NetworkedStateManager::SetTurn(int pTurn){
 }
 
 
-void NetworkedStateManager::SetActivityCompletedMaps(int pCompleted){
-	pthread_mutex_lock(&devstate_mutex);
+//void NetworkedStateManager::SetActivityCompletedMaps(int pCompleted){
+//	pthread_mutex_lock(&devstate_mutex);
+//
+//	int oldCompleted = mDeviceState->GetActivity().currentState.completedMaps;
+//	if(pCompleted != oldCompleted){
+//		state newState = mDeviceState->GetActivity().currentState;
+//		newState.completedMaps=pCompleted;
+//		activity_state newActivityState = mDeviceState->GetActivity();
+//		newActivityState.currentState = newState;
+//		mDeviceState->SetActivity(newActivityState);
+//		mDeviceState->SetHasChanged(true);
+//	}
+//
+//	pthread_mutex_unlock(&devstate_mutex);
+//}
 
-	int oldCompleted = mDeviceState->GetActivity().currentState.completedMaps;
-	if(pCompleted != oldCompleted){
-		state newState = mDeviceState->GetActivity().currentState;
-		newState.completedMaps=pCompleted;
-		activity_state newActivityState = mDeviceState->GetActivity();
-		newActivityState.currentState = newState;
-		mDeviceState->SetActivity(newActivityState);
-		mDeviceState->SetHasChanged(true);
-	}
-
-	pthread_mutex_unlock(&devstate_mutex);
-}
-
-void NetworkedStateManager::IncrementCompletedMaps(){
-	pthread_mutex_lock(&devstate_mutex);
-
-	int oldCompleted = mDeviceState->GetActivity().currentState.completedMaps;
-	state newState = mDeviceState->GetActivity().currentState;
-	newState.completedMaps=(oldCompleted+1);
-	activity_state newActivityState = mDeviceState->GetActivity();
-	newActivityState.currentState = newState;
-	mDeviceState->SetActivity(newActivityState);
-	mDeviceState->SetHasChanged(true);
-
-	pthread_mutex_unlock(&devstate_mutex);
-}
+//void NetworkedStateManager::IncrementCompletedMaps(){
+//	pthread_mutex_lock(&devstate_mutex);
+//
+//	int oldCompleted = mDeviceState->GetActivity().currentState.completedMaps;
+//	state newState = mDeviceState->GetActivity().currentState;
+//	newState.completedMaps=(oldCompleted+1);
+//	activity_state newActivityState = mDeviceState->GetActivity();
+//	newActivityState.currentState = newState;
+//	mDeviceState->SetActivity(newActivityState);
+//	mDeviceState->SetHasChanged(true);
+//
+//	pthread_mutex_unlock(&devstate_mutex);
+//}
 
 
-void NetworkedStateManager::SetActivityHintPresent(std::string pHint){
-	pthread_mutex_lock(&devstate_mutex);
+//void NetworkedStateManager::SetActivityHintPresent(std::string pHint){
+//	pthread_mutex_lock(&devstate_mutex);
+//
+//	std::string oldHint = mDeviceState->GetActivity().currentState.hintPresent;
+//	if(pHint.compare(oldHint) != 0){
+//		state newState = mDeviceState->GetActivity().currentState;
+//		newState.hintPresent=pHint;
+//		activity_state newActivityState = mDeviceState->GetActivity();
+//		newActivityState.currentState = newState;
+//		mDeviceState->SetActivity(newActivityState);
+//		mDeviceState->SetHasChanged(true);
+//	}
+//	pthread_mutex_unlock(&devstate_mutex);
+//}
 
-	std::string oldHint = mDeviceState->GetActivity().currentState.hintPresent;
-	if(pHint.compare(oldHint) != 0){
-		state newState = mDeviceState->GetActivity().currentState;
-		newState.hintPresent=pHint;
-		activity_state newActivityState = mDeviceState->GetActivity();
-		newActivityState.currentState = newState;
-		mDeviceState->SetActivity(newActivityState);
-		mDeviceState->SetHasChanged(true);
-	}
-	pthread_mutex_unlock(&devstate_mutex);
-}
+//void NetworkedStateManager::UnsetActivityHintPresent(std::string pHint){
+//	pthread_mutex_lock(&devstate_mutex);
+//
+//	std::string oldHint = mDeviceState->GetActivity().currentState.hintPresent;
+//	if(pHint.compare(oldHint) == 0){//It eliminates this hint, if it was the one present before
+//		state newState = mDeviceState->GetActivity().currentState;
+//		newState.hintPresent="";
+//		activity_state newActivityState = mDeviceState->GetActivity();
+//		newActivityState.currentState = newState;
+//		mDeviceState->SetActivity(newActivityState);
+//		mDeviceState->SetHasChanged(true);
+//	}
+//	pthread_mutex_unlock(&devstate_mutex);
+//}
 
-void NetworkedStateManager::UnsetActivityHintPresent(std::string pHint){
-	pthread_mutex_lock(&devstate_mutex);
+//void NetworkedStateManager::SetActivityStepsDone(int pSteps){
+//	pthread_mutex_lock(&devstate_mutex);
+//
+//	int oldSteps = mDeviceState->GetActivity().currentState.stepsDone;
+//	if(pSteps != oldSteps){
+//		state newState = mDeviceState->GetActivity().currentState;
+//		newState.stepsDone=pSteps;
+//		activity_state newActivityState = mDeviceState->GetActivity();
+//		newActivityState.currentState = newState;
+//		mDeviceState->SetActivity(newActivityState);
+//		mDeviceState->SetHasChanged(true);
+//	}
+//
+//	pthread_mutex_unlock(&devstate_mutex);
+//}
+//
+//void NetworkedStateManager::SetActivityStepsToGo(int pSteps){
+//	pthread_mutex_lock(&devstate_mutex);
+//
+//	int oldSteps = mDeviceState->GetActivity().currentState.stepsToGo;
+//	if(pSteps != oldSteps){
+//		state newState = mDeviceState->GetActivity().currentState;
+//		newState.stepsToGo=pSteps;
+//		activity_state newActivityState = mDeviceState->GetActivity();
+//		newActivityState.currentState = newState;
+//		mDeviceState->SetActivity(newActivityState);
+//		mDeviceState->SetHasChanged(true);
+//	}
+//
+//	pthread_mutex_unlock(&devstate_mutex);
+//}
 
-	std::string oldHint = mDeviceState->GetActivity().currentState.hintPresent;
-	if(pHint.compare(oldHint) == 0){//It eliminates this hint, if it was the one present before
-		state newState = mDeviceState->GetActivity().currentState;
-		newState.hintPresent="";
-		activity_state newActivityState = mDeviceState->GetActivity();
-		newActivityState.currentState = newState;
-		mDeviceState->SetActivity(newActivityState);
-		mDeviceState->SetHasChanged(true);
-	}
-	pthread_mutex_unlock(&devstate_mutex);
-}
-
-void NetworkedStateManager::SetActivityStepsDone(int pSteps){
-	pthread_mutex_lock(&devstate_mutex);
-
-	int oldSteps = mDeviceState->GetActivity().currentState.stepsDone;
-	if(pSteps != oldSteps){
-		state newState = mDeviceState->GetActivity().currentState;
-		newState.stepsDone=pSteps;
-		activity_state newActivityState = mDeviceState->GetActivity();
-		newActivityState.currentState = newState;
-		mDeviceState->SetActivity(newActivityState);
-		mDeviceState->SetHasChanged(true);
-	}
-
-	pthread_mutex_unlock(&devstate_mutex);
-}
-
-void NetworkedStateManager::SetActivityStepsToGo(int pSteps){
-	pthread_mutex_lock(&devstate_mutex);
-
-	int oldSteps = mDeviceState->GetActivity().currentState.stepsToGo;
-	if(pSteps != oldSteps){
-		state newState = mDeviceState->GetActivity().currentState;
-		newState.stepsToGo=pSteps;
-		activity_state newActivityState = mDeviceState->GetActivity();
-		newActivityState.currentState = newState;
-		mDeviceState->SetActivity(newActivityState);
-		mDeviceState->SetHasChanged(true);
-	}
-
-	pthread_mutex_unlock(&devstate_mutex);
-}
-
-void NetworkedStateManager::SetActivityWrongMoves(int pWrong){
-	pthread_mutex_lock(&devstate_mutex);
-
-	int oldWrong = mDeviceState->GetActivity().currentState.stepsDone;
-	if(pWrong != oldWrong){
-		state newState = mDeviceState->GetActivity().currentState;
-		newState.wrongMoves=pWrong;
-		activity_state newActivityState = mDeviceState->GetActivity();
-		newActivityState.currentState = newState;
-		mDeviceState->SetActivity(newActivityState);
-		mDeviceState->SetHasChanged(true);
-	}
-
-	pthread_mutex_unlock(&devstate_mutex);
-}
-
-void NetworkedStateManager::IncrementWrongMoves(){
-	pthread_mutex_lock(&devstate_mutex);
-
-	int oldWrong = mDeviceState->GetActivity().currentState.stepsDone;
-	state newState = mDeviceState->GetActivity().currentState;
-	newState.wrongMoves=oldWrong+1;
-	activity_state newActivityState = mDeviceState->GetActivity();
-	newActivityState.currentState = newState;
-	mDeviceState->SetActivity(newActivityState);
-	mDeviceState->SetHasChanged(true);
-
-	pthread_mutex_unlock(&devstate_mutex);
-}
+//void NetworkedStateManager::SetActivityWrongMoves(int pWrong){
+//	pthread_mutex_lock(&devstate_mutex);
+//
+//	int oldWrong = mDeviceState->GetActivity().currentState.stepsDone;
+//	if(pWrong != oldWrong){
+//		state newState = mDeviceState->GetActivity().currentState;
+//		newState.wrongMoves=pWrong;
+//		activity_state newActivityState = mDeviceState->GetActivity();
+//		newActivityState.currentState = newState;
+//		mDeviceState->SetActivity(newActivityState);
+//		mDeviceState->SetHasChanged(true);
+//	}
+//
+//	pthread_mutex_unlock(&devstate_mutex);
+//}
+//
+//void NetworkedStateManager::IncrementWrongMoves(){
+//	pthread_mutex_lock(&devstate_mutex);
+//
+//	int oldWrong = mDeviceState->GetActivity().currentState.stepsDone;
+//	state newState = mDeviceState->GetActivity().currentState;
+//	newState.wrongMoves=oldWrong+1;
+//	activity_state newActivityState = mDeviceState->GetActivity();
+//	newActivityState.currentState = newState;
+//	mDeviceState->SetActivity(newActivityState);
+//	mDeviceState->SetHasChanged(true);
+//
+//	pthread_mutex_unlock(&devstate_mutex);
+//}
 
 
 bool NetworkedStateManager::isClassroomPaused(){
@@ -450,9 +407,23 @@ int NetworkedStateManager::getTurn(){
 }
 
 
-std::string NetworkedStateManager::getDeviceId(){
+std::vector<move> NetworkedStateManager::getMoves(){
 	pthread_mutex_lock(&devstate_mutex);
-	std::string device(mDeviceState->GetMeteorId());
+	std::vector<move> moves(mDeviceState->GetDevice().moves);
 	pthread_mutex_unlock(&devstate_mutex);
-	return device;
+	return moves;
 }
+
+std::vector<move> NetworkedStateManager::getCurrentMove(){
+	pthread_mutex_lock(&devstate_mutex);
+	std::vector<move> current(mDeviceState->GetDevice().currentMove);
+	pthread_mutex_unlock(&devstate_mutex);
+	return current;
+}
+
+//std::string NetworkedStateManager::getDeviceId(){
+//	pthread_mutex_lock(&devstate_mutex);
+//	std::string device(mDeviceState->GetMeteorId());
+//	pthread_mutex_unlock(&devstate_mutex);
+//	return device;
+//}

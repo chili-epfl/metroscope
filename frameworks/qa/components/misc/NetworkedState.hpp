@@ -37,5 +37,13 @@
 		static const std::string scTurn="turn";
 		static const std::string scCurrentStateClassVariables="current_state";
 
+		static const std::string scActivityIdLabel="activity_id";
+		static const std::string scTeamLabel="team";
+		static const std::string scOriginLabel="origin";
+		static const std::string scPolygonLabel="polygon";
+		static const std::string scRotationLabel="rotation";
+		static const std::string scTranslationLabel="translation";
+		static const std::string scIllegalLabel="illegal";
+
 
 #endif

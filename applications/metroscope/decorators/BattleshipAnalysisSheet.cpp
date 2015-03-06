@@ -18,11 +18,19 @@
 *******************************************************************************/
 
 #include "BattleshipAnalysisSheet.hpp"
+
+#include <math.h>
 #include <iostream>
 
+//#include <qa/utils/CvWykobiBridge.hpp>
+//#include <qa/utils/Geometry.hpp>
+#include "../../../frameworks/qa/components/misc/DeviceState.hpp"
+#include "../../../frameworks/qa/components/misc/NetworkedStateManager.hpp"
+#include "../../../frameworks/qa/components/vision/FiducialMarker.hpp"
+#include "../../../frameworks/qa/pipeables/io/OpenGl2DDisplay.hpp"
+#include "../../../frameworks/wykobi/wykobi.hpp"
 
-#include <qa/utils/Geometry.hpp>
-#include <qa/utils/CvWykobiBridge.hpp>
+#define PI 3.14159265
 
 
 const std::string decorators::BattleshipAnalysisSheet::scDecoratorName("BattleshipAnalysisSheet");
@@ -95,6 +103,9 @@ void decorators::BattleshipAnalysisSheet::update() {
 
 		DisplayGrid();
 
+		DisplayMoves();
+
+
 //		mDecoratorManager.GetDisplay().PushTransformation();
 //		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 //		mDecoratorManager.GetDisplay().RenderQuad(mAreaOfInterest[0].x, mAreaOfInterest[0].y,
@@ -161,15 +172,6 @@ void decorators::BattleshipAnalysisSheet::DisplayGrid() {
 	}
 
 
-	//We mark the origin
-	//TODO: this should be updated with the last move of the team from the network!
-	//mDecoratorManager.GetDisplay().RenderEllipse(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX,
-	//		15.0f, 15.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	//To test, we plot the circle at -0.1, 0.1
-	wykobi::point2d<float> tOriginMarkCoords = wykobi::make_point(-0.1f, 0.1f);
-	wykobi::point2d<float> tOriginMarkMM = ConvertCoords2MM(tOriginMarkCoords);
-	mDecoratorManager.GetDisplay().RenderEllipse(tOriginMarkMM.x, tOriginMarkMM.y,
-				15.0f, 15.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 
@@ -207,3 +209,95 @@ wykobi::point2d<float> decorators::BattleshipAnalysisSheet::ConvertCoords2MM(wyk
 
 }
 
+void decorators::BattleshipAnalysisSheet::DisplayMoves() {
+
+	std::vector<move> moves = stateManager->getMoves();
+	if(moves.size()>0){
+
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+		for(unsigned int i=0; i<moves.size(); i++){
+			move thismove = moves.at(i);
+
+			if(thismove.team == mTeam){ //In each sheet, we only display that team's moves
+
+				wykobi::point2d<float> newOrigin = wykobi::make_point(thismove.origin.x+thismove.translation.x,thismove.origin.y+thismove.translation.y);
+			    wykobi::polygon<float, 2> newPolygon = rotatePolygon(thismove.polygon, thismove.rotation);
+			    wykobi::polygon<float, 2> finalPolygon = wykobi::translate(newOrigin.x, newOrigin.y, newPolygon);
+			    //We convert the polygon to draw in coords (-1,1) to the coordinates for display
+			    wykobi::polygon<float, 2> displayPolygon = ConvertPolyCoords2MM(finalPolygon);
+
+			    if(!thismove.illegal){
+				    mDecoratorManager.GetDisplay().RenderPolygonFilled(polygonToVertices(displayPolygon), 0.0f, 0.0f, 0.0f, 0.5f);
+			    }else{
+				    mDecoratorManager.GetDisplay().RenderPolygon(polygonToVertices(displayPolygon), 0.0f, 0.0f, 0.0f, 1.0f);
+			    }
+			    //TODO: fill with the team's colors, with possible variants
+				//TODO: vary the drawing of illegal moves
+
+			    //We draw the origin marker in the last polygon (turn = current turn - 1)
+			    if(thismove.turn == (stateManager->getTurn() - 1)){
+					DisplayOriginMarker(thismove);
+			    }
+
+			}
+
+		}
+
+		mDecoratorManager.GetDisplay().PopTransformation();
+	}
+}
+
+std::vector<float> decorators::BattleshipAnalysisSheet::polygonToVertices(wykobi::polygon<float, 2> polygon){
+	std::vector<float> vertices;
+
+	for(unsigned int i=0; i<polygon.size(); i++){
+		vertices.push_back(polygon[i].x);
+		vertices.push_back(polygon[i].y);
+	}
+	return vertices;
+}
+
+//This function rotates the vertices of a polygon, the rotation given in degrees
+wykobi::polygon<float, 2> decorators::BattleshipAnalysisSheet::rotatePolygon(wykobi::polygon<float, 2> polygon, int rotation){
+	wykobi::polygon<float, 2> newPolygon;
+	for(unsigned int i = 0; i<polygon.size(); i++){
+
+		//float radians = (((float) rotation)/180.0f)*PI;
+
+		//We put a minus sign because wykobi uses counterclockwise angles, and our game considers them clockwise
+		wykobi::point2d<float> newCoords = wykobi::rotate((float) -rotation, polygon[i], wykobi::make_point(0.0f,0.0f));
+
+		newPolygon.push_back(newCoords);
+	}
+	return newPolygon;
+}
+
+
+//Converts a set of coordinates in the -1,1 range, to MM in the sheet (0,width/height of AOI), for EVERY team taking into account they start in different places the display
+wykobi::polygon<float, 2> decorators::BattleshipAnalysisSheet::ConvertPolyCoords2MM(wykobi::polygon<float, 2> pPolyCoords){
+	wykobi::polygon<float, 2> newPoly;
+
+	for(unsigned int i=0; i<pPolyCoords.size(); i++){
+		wykobi::point2d<float> newVertex = ConvertCoords2MM(pPolyCoords[i]);
+		newPoly.push_back(newVertex);
+	}
+
+	return newPoly;
+}
+
+
+void decorators::BattleshipAnalysisSheet::DisplayOriginMarker(move thismove) {
+
+	//We mark the origin
+	//TODO: this should be updated with the last move of the team from the network!
+	//mDecoratorManager.GetDisplay().RenderEllipse(mInitialOriginMM.x * tWidthPX, mInitialOriginMM.y * tHeightPX,
+	//		15.0f, 15.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	//To test, we plot the circle at -0.1, 0.1
+	wykobi::point2d<float> tOriginMarkCoords = wykobi::translate(thismove.translation.x, thismove.translation.y, thismove.origin);
+	wykobi::point2d<float> tOriginMarkMM = ConvertCoords2MM(tOriginMarkCoords);
+	mDecoratorManager.GetDisplay().RenderEllipse(tOriginMarkMM.x, tOriginMarkMM.y,
+				10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+
+}

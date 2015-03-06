@@ -517,6 +517,32 @@ void OpenGl2DDisplay::RenderQuadFilled(
 	glEnd();
 }
 
+void OpenGl2DDisplay::RenderPolygon(std::vector<float> vertices,
+		float r, float g, float b, float a)
+{
+	glColor4f(r,g,b,a);
+	glBegin(GL_LINE_LOOP);
+
+	for(unsigned int i=0; i<(vertices.size()/2); i++){
+		glVertex2f(vertices.at(2*i), vertices.at((2*i)+1));
+	}
+
+	glEnd();
+}
+
+void OpenGl2DDisplay::RenderPolygonFilled(std::vector<float> vertices,
+		float r, float g, float b, float a)
+{
+	glColor4f(r,g,b,a);
+	glBegin(GL_POLYGON);
+
+	for(unsigned int i=0; i<(vertices.size()/2); i++){
+		glVertex2f(vertices.at(2*i), vertices.at((2*i)+1));
+	}
+
+	glEnd();
+}
+
 
 int OpenGl2DDisplay::LoadTexture(const char *pImagePath)
 {

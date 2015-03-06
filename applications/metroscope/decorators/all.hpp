@@ -99,20 +99,22 @@
 */
 //proportions
 //#include "ProportionView.hpp"
-#include "DenominatorsModel.hpp"
-#include "DenominatorCard.hpp"
-#include "TokenModel.hpp"
-#include "FractionToken.hpp"
-#include "RectangleFractionModel.hpp"
-#include "Carte.hpp"
-#include "KillBugModel.hpp"
-#include "FractionCard.hpp"
-#include "CircularFractionModel.hpp"
-#include "FractionBugHint.hpp"
-#include "FractionViewMeasure.hpp"
-#include "EquivalentFractionView.hpp"
-#include "FractionComparisionView.hpp"
-#include "FractionSum.hpp"
+
+//Ladybug, not needed for battleship
+//#include "DenominatorsModel.hpp"
+//#include "DenominatorCard.hpp"
+//#include "TokenModel.hpp"
+//#include "FractionToken.hpp"
+//#include "RectangleFractionModel.hpp"
+//#include "Carte.hpp"
+//#include "KillBugModel.hpp"
+//#include "FractionCard.hpp"
+//#include "CircularFractionModel.hpp"
+//#include "FractionBugHint.hpp"
+//#include "FractionViewMeasure.hpp"
+//#include "EquivalentFractionView.hpp"
+//#include "FractionComparisionView.hpp"
+//#include "FractionSum.hpp"
 
 //networking
 #include "OrchestrationPauseFlipper.hpp"
@@ -128,3 +130,6 @@
 #include "BattleshipGame.hpp"
 #include "BattleshipAnalysisSheet.hpp"
 #include "SimpleText.hpp"
+#include "AngleShoot.hpp"
+#include "RotationShoot.hpp"
+#include "LinearShoot.hpp"

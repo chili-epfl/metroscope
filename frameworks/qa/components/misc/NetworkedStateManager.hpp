@@ -24,7 +24,7 @@ public:
 	bool hasDeviceChanged();
 	bool hasClassroomChanged();
 
-	std::string getDeviceJSON();//gets a JSON string with the current state of the device
+	std::string getDeviceJSON();//gets a JSON string with the current state of the device (single move)
 	std::string getClassroomJSON();//gets a JSON string with the current state of the classroom
 	std::string getAlternateDeviceJSON();//In this case, instead of setting the meteor _id, we set the field deviceid
 	std::string getAlternateClassroomJSON();//In this case, instead of setting the meteor _id, we set the field classroomid
@@ -33,10 +33,12 @@ public:
 //	std::string getMasterHint();
 	std::string getPhase();
 	int getTurn();
-	std::string getDeviceId();
+//	std::string getDeviceId();
 
+	std::vector<move> getMoves();
+	std::vector<move> getCurrentMove();
 
-	void SetDeviceMeteorId(std::string pId);
+	//void SetDeviceMeteorId(std::string pId);
 	void SetClassroomMeteorId(std::string pId);
 
 	void SetHasDeviceChanged(bool changed);
@@ -48,20 +50,20 @@ public:
 	void SetTurn(int pTurn);
 	bool isClassroomPaused();
 
-	void addMarkerToDeviceState(std::string tagName);
-	void removeMarkerFromDeviceState(std::string tagName);
+	//void addMarkerToDeviceState(std::string tagName);
+	//void removeMarkerFromDeviceState(std::string tagName);
 
-	void SetActivityCompletedMaps(int pCompleted);
-	void IncrementCompletedMaps();
-	void SetActivityHintPresent(std::string pHint);
-	void UnsetActivityHintPresent(std::string pHint);//It eliminates this hint, if it was present before
-	void SetActivityStepsDone(int pSteps);
-	void SetActivityStepsToGo(int pSteps);
-	void SetActivityWrongMoves(int pWrong);
-	void IncrementWrongMoves();
+	//void SetActivityCompletedMaps(int pCompleted);
+	//void IncrementCompletedMaps();
+	//void SetActivityHintPresent(std::string pHint);
+	//void UnsetActivityHintPresent(std::string pHint);//It eliminates this hint, if it was present before
+	//void SetActivityStepsDone(int pSteps);
+	//void SetActivityStepsToGo(int pSteps);
+	//void SetActivityWrongMoves(int pWrong);
+	//void IncrementWrongMoves();
 
 	void SetClassroomJSON(std::string jsonData);
-	void SetDeviceJSON(std::string jsonData);
+	void SetDeviceJSON(std::string jsonData);//Sets the device state with the moves (multiple ones!) and the last one
 
 protected:
 	DeviceState* mDeviceState;

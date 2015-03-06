@@ -48,7 +48,7 @@ void decorators::OrchestrationPauseFlipper::update() {
 	if (mFlipper->IsPresent() && mFlipper->GetCurrentSide() != NULL)
 	{
 		//We have the pausing flipper on sight...
-		stateManager->addMarkerToDeviceState("pause");
+		//stateManager->addMarkerToDeviceState("pause");
 
 		//std::cout << "Pausing flipper is present, flipped " << mFlipper->IsFlipped() << ", lastFlip " << mFlipper->GetTimeOfLastFlip() << ", lastToggle " << mLastToggle << std::endl;
 		long tElapsedTime = mFlipper->GetTimeOfLastFlip() - mLastToggle;
@@ -77,7 +77,7 @@ void decorators::OrchestrationPauseFlipper::update() {
 	}
 	else{
 		//The flipper is not on sight
-		stateManager->removeMarkerFromDeviceState("pause");
+		//stateManager->removeMarkerFromDeviceState("pause");
 	}
 
 	//std::cout << "Doing blackout? Classroom pause: " << stateManager->isClassroomPaused() << std::endl;

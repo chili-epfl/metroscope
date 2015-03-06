@@ -11,33 +11,29 @@
 #include <string>
 #include <vector>
 #include <json/json.h>
+#include <wykobi/wykobi_utilities.hpp>
 #include "NetworkedState.hpp"
 
 
 
-enum Representations {circular, rectangular, tokens, tangram};
+struct move{
 
-struct state{
+	int activity_id;
+	int turn;
+	int team;
+	wykobi::point2d<float> origin;
+	wykobi::polygon<float, 2> polygon;
+	int rotation;
+	wykobi::point2d<float> translation;
+	bool illegal;
+	std::string meteorId;
 
-	  //Initial implementation of activity state
-	  //int numerator;
-	  //int denominator;
-	  //float value;
-	  //Representations representation;
-	//'kill the bug' implementation of activity state
-	int completedMaps;
-	int stepsDone;
-	int stepsToGo;
-	std::string hintPresent;
-	int wrongMoves;
+};
 
 
-  };
-
-struct activity_state {
-  int id;
-  std::string name;
-  state currentState;
+struct device_state {
+  std::vector<move> currentMove;
+  std::vector<move> moves;
 };
 
 
@@ -46,36 +42,23 @@ public:
 	DeviceState();
 	virtual ~DeviceState();
 
-	std::string GetMeteorId() {return mMeteorId;}
-    //int GetId() {return mId;};
-	std::string GetName() {return mName;};
-	activity_state GetActivity() {return mActivity;};
-	std::vector<std::string> GetPresentTags() {return mPresentTags;};
+	device_state GetDevice() {return mDevice;};
 	bool hasChanged() {return mChanged;}
 
-	void SetMeteorId(std::string meteorId) {mMeteorId = meteorId;}
-	//void SetId(int id) {mId = id;}
-	void SetName(std::string name) {mName = name;}
-	void SetActivity(activity_state activity) {mActivity = activity;}
-	void SetPresentTags(std::vector<std::string> presentTags) {mPresentTags = presentTags;}
+	void SetDevice(device_state device) {mDevice = device;}
 	void SetHasChanged(bool changed) {mChanged = changed;}
 
 	bool equals(DeviceState* other);
-	std::string getJSON(bool pAlternate=false);
+	bool equalMoves(move move1, move move2);
 
-	void setJSON(std::string jsonstring);
+	std::string getJSON();
+
+	void setJSON(std::string jsonstring, int pTurn);
 	Json::Value getJSONObject(std::string jsonMessage);
 
 private:
-	std::string mMeteorId;
 
-	//int mId;
-
-	std::string mName;
-
-	activity_state mActivity;
-
-	std::vector<std::string> mPresentTags;
+	device_state mDevice;
 
 	bool mChanged;
 
