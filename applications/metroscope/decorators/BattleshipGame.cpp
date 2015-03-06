@@ -20,6 +20,8 @@
 #include "BattleshipGame.hpp"
 #include <qa/utils/Time.hpp>
 #include <wykobi/wykobi_utilities.hpp>
+#include <iostream>
+#include <string>
 
 const std::string decorators::BattleshipGame::scDecoratorName("BattleshipGame");
 const DecoratorManager::Registerer decorators::BattleshipGame::mRegisterer(decorators::BattleshipGame::scDecoratorName, &decorators::BattleshipGame::create);
@@ -37,8 +39,12 @@ decorators::FiducialDecorator *decorators::BattleshipGame::create(libconfig::Set
 			tPolyModels[i] = (PolyModel *) pDecoratorManager.loadDecorator(tPolygonsString[i]);
 		}
 
-		return new decorators::BattleshipGame (pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]), tNumPolygons,
-				(PolyModel **) tPolyModels);
+		return new decorators::BattleshipGame (pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]),
+				tNumPolygons, (PolyModel **) tPolyModels,
+				(RotationShoot *) pDecoratorManager.loadDecorator(pSetting["rotation"]),
+				(LinearShoot *) pDecoratorManager.loadDecorator(pSetting["linear_x"]),
+				(LinearShoot *) pDecoratorManager.loadDecorator(pSetting["linear_y"]),
+				(FiducialMarker *) pDecoratorManager.loadMarker(pSetting["shooting_mark"]));
 
 	}catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
@@ -49,10 +55,15 @@ decorators::FiducialDecorator *decorators::BattleshipGame::create(libconfig::Set
 }
 
 decorators::BattleshipGame::BattleshipGame(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker,
-		int pNumPolygons, PolyModel ** pPolyModels):
+		int pNumPolygons, PolyModel ** pPolyModels,
+		RotationShoot *pRotation, LinearShoot *pLinearX, LinearShoot *pLinearY, FiducialMarker *pMarkerShoot):
 			FiducialDecorator(pDecoratorManager, pMarker),
 			mNumPolygons(pNumPolygons),
-			mPolyModels(pPolyModels)
+			mPolyModels(pPolyModels),
+			mRotation(pRotation),
+			mLinearX(pLinearX),
+			mLinearY(pLinearY),
+			mMarkerShoot(pMarkerShoot)
 {
 }
 
@@ -69,6 +80,85 @@ void decorators::BattleshipGame::update(){
 			tPhase.compare(scGameOver)==0 ||
 			tPhase.compare(scGameWin)==0 ||
 			tPhase.compare(scGameResolve)==0) GreyOutScreen();
+	else if(tPhase.compare(scGameShoot)==0){//If we are in the shooting phase, we display the selected polygon, and the rotated/translated version
+
+		DisplayPolygonAxes();
+
+		if(isPolygonPresent()){
+
+			DisplayFirstPolygon();
+
+			if( mRotation->isPresent() && mLinearX->isPresent() && mLinearY->isPresent()){
+
+				DisplayTranslationArrow();
+
+				DisplayRotationAngle();
+
+				DisplayTransformedPolygon();
+
+			}
+
+
+		}
+
+	}
+
+}
+
+bool decorators::BattleshipGame::isPolygonPresent(){
+
+	for(unsigned int i=0; i<mNumPolygons; i++){
+		if(mPolyModels[i]->getMarker().isPresent()) return true;
+	}
+	return false;
+}
+
+
+void decorators::BattleshipGame::DisplayPolygonAxes(){
+
+	std::ostringstream tmp;
+	tmp << "x";
+	std::string tmp2 = tmp.str();
+	mDecoratorManager.GetDisplay().PushTransformation();
+	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarkerShoot, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+	mDecoratorManager.GetDisplay().RenderCenteredText(tmp2.c_str(), 105.0, 0.0, true, 1.0, 0.0, 0.0, 0.0, 1.0);//X axis
+
+	std::ostringstream tmp3;
+	tmp3 << "y";
+	std::string tmp4 = tmp3.str();
+	mDecoratorManager.GetDisplay().RenderLine(-50.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 1.0);//X axis
+	mDecoratorManager.GetDisplay().RenderLine(0.0, 50.0, 0.0, -100.0, 0.0, 0.0, 0.0, 1.0);//y axis - it is inverted from the coordinates!
+	mDecoratorManager.GetDisplay().RenderCenteredText(tmp4.c_str(), 0.0, -105.0, true, 1.0, 0.0, 0.0, 0.0, 1.0);//y axis
+	std::cout << "Rendered lines!" << std::endl;
+
+	mDecoratorManager.GetDisplay().PopTransformation();
+
+
+}
+
+
+
+void decorators::BattleshipGame::DisplayFirstPolygon(){
+
+	PolyModel *tPolygon;
+	for(unsigned int i=0; i<mNumPolygons; i++){
+		if(mPolyModels[i]->getMarker().isPresent()) tPolygon = mPolyModels[i];
+	}
+
+}
+
+
+void decorators::BattleshipGame::DisplayTranslationArrow(){
+
+
+}
+
+void decorators::BattleshipGame::DisplayRotationAngle(){
+
+
+}
+
+void decorators::BattleshipGame::DisplayTransformedPolygon(){
 
 
 }

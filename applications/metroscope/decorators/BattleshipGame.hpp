@@ -28,6 +28,8 @@
 
 #include "Flipper.hpp"
 #include "PolyModel.hpp"
+#include "RotationShoot.hpp"
+#include "LinearShoot.hpp"
 #include "../FractionsConstants.hpp"
 
 
@@ -50,7 +52,9 @@ class BattleshipGame : public FiducialDecorator
 	public:
 		static FiducialDecorator *create (libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
 
-		BattleshipGame (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pNumPolygons, PolyModel ** pPolyModels);
+		BattleshipGame (DecoratorManager &pDecoratorManager, FiducialMarker *pMarker,
+				int pNumPolygons, PolyModel ** pPolyModels,
+				RotationShoot *pRotation, LinearShoot *pLinearX, LinearShoot *pLinearY, FiducialMarker *pMarkerShoot);
 		~BattleshipGame();
 
 
@@ -60,13 +64,26 @@ class BattleshipGame : public FiducialDecorator
 		void GreyOutScreen();
 //		void UpdateDeviceStatus();
 
+		bool isPolygonPresent();
+		void DisplayPolygonAxes();
+		PolyModel *getFirstPolygon();
+		void DisplayFirstPolygon();
+		void DisplayTranslationArrow();
+		void DisplayRotationAngle();
+		void DisplayTransformedPolygon();
+
+
+
 	private:
 		static const std::string scDecoratorName;
 		static const DecoratorManager::Registerer mRegisterer;
 
 		const int mNumPolygons;
 		PolyModel **mPolyModels;
-
+		RotationShoot *mRotation;
+		LinearShoot *mLinearX;
+		LinearShoot *mLinearY;
+		FiducialMarker *mMarkerShoot;
 
 };
 
