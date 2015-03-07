@@ -88,15 +88,20 @@ void decorators::BattleshipGame::update(){
 
 			DisplayFirstPolygon();
 
-			if( mRotation->isPresent() && mLinearX->isPresent() && mLinearY->isPresent()){
+			if( mLinearX->isPresent() && mLinearY->isPresent()){
 
 				DisplayTranslationArrow();
 
+			}
+
+			if( mRotation->isPresent() ){
+
 				DisplayRotationAngle();
 
-				DisplayTransformedPolygon();
-
 			}
+
+			DisplayTransformedPolygon();
+
 
 
 		}
@@ -122,14 +127,14 @@ void decorators::BattleshipGame::DisplayPolygonAxes(){
 	mDecoratorManager.GetDisplay().PushTransformation();
 	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarkerShoot, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 	mDecoratorManager.GetDisplay().RenderCenteredText(tmp2.c_str(), 105.0, 0.0, true, 1.0, 0.0, 0.0, 0.0, 1.0);//X axis
+	mDecoratorManager.GetDisplay().RenderLine(-50.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 1.0);//X axis
 
 	std::ostringstream tmp3;
 	tmp3 << "y";
 	std::string tmp4 = tmp3.str();
-	mDecoratorManager.GetDisplay().RenderLine(-50.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 1.0);//X axis
 	mDecoratorManager.GetDisplay().RenderLine(0.0, 50.0, 0.0, -100.0, 0.0, 0.0, 0.0, 1.0);//y axis - it is inverted from the coordinates!
 	mDecoratorManager.GetDisplay().RenderCenteredText(tmp4.c_str(), 0.0, -105.0, true, 1.0, 0.0, 0.0, 0.0, 1.0);//y axis
-	std::cout << "Rendered lines!" << std::endl;
+//	std::cout << "Rendered lines!" << std::endl;
 
 	mDecoratorManager.GetDisplay().PopTransformation();
 
@@ -145,20 +150,169 @@ void decorators::BattleshipGame::DisplayFirstPolygon(){
 		if(mPolyModels[i]->getMarker().isPresent()) tPolygon = mPolyModels[i];
 	}
 
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarkerShoot, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+	//We display the polygon
+	wykobi::polygon<float, 2> poly = tPolygon->getPolygon();
+	poly = wykobi::translate(-tPolygon->getOrigin().x, -tPolygon->getOrigin().y, poly);
+	poly = wykobi::mirror(poly, wykobi::make_line(0.0f, 0.0f, 100.0f, 0.0f));//we flip it so that they y coordinates match the direction of the screen
+	poly = wykobi::scale(scMM2DisplayMult, scMM2DisplayMult, poly);//we scale it to visible size
+	std::vector<float> vertices = polygonToVertices(poly);
+	mDecoratorManager.GetDisplay().RenderPolygon(vertices, 0.0f, 0.0f, 0.0f, 0.3f);
+
+
+	//We display the origin marker
+	mDecoratorManager.GetDisplay().RenderEllipse(0.0f, 0.0f, 10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.3f);
+
+
+	mDecoratorManager.GetDisplay().PopTransformation();
+
+}
+
+std::vector<float> decorators::BattleshipGame::polygonToVertices(wykobi::polygon<float, 2> polygon){
+	std::vector<float> vertices;
+
+	for(unsigned int i=0; i<polygon.size(); i++){
+		vertices.push_back(polygon[i].x);
+		vertices.push_back(polygon[i].y);
+	}
+	return vertices;
 }
 
 
 void decorators::BattleshipGame::DisplayTranslationArrow(){
+
+	if(mLinearX->isPresent() && mLinearY->isPresent()){
+
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarkerShoot, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+		wykobi::point2d<float> endpoint = wykobi::make_point(mLinearX->proportion(), mLinearY->proportion());//We construct the endpoint representing the translation
+		endpoint = wykobi::mirror(endpoint, wykobi::make_line(0.0f, 0.0f, 100.0f, 0.0f));
+		endpoint = wykobi::scale(scMM2DisplayMult*scBoard2MMMult, scMM2DisplayMult*scBoard2MMMult, endpoint);
+//		std::cout << "Rendered lines to " << endpoint.x << "," << endpoint.y << std::endl;
+
+		mDecoratorManager.GetDisplay().RenderLine(0.0f, 0.0f, endpoint.x, endpoint.y, 0.0f, 0.0f, 0.0f, 1.0f);
+
+		mDecoratorManager.GetDisplay().PopTransformation();
+
+	}
+
 
 
 }
 
 void decorators::BattleshipGame::DisplayRotationAngle(){
 
+	float translationx;
+	float translationy;
+	if(!mLinearX->isPresent()){
+		translationx = 0.0f;
+	}else{
+		translationx = mLinearX->proportion();
+	}
+	if(!mLinearY->isPresent()){
+		translationy = 0.0f;
+	}else{
+		translationy = mLinearY->proportion();
+	}
+
+	if(mRotation->isPresent()){
+
+		float rotation = 360.0f - mRotation->GetAngle();
+
+		//We draw the two segments, and the arc in between, always starting at x axis
+		wykobi::segment<float,2> line1 = wykobi::make_segment(0.0f, 0.0f, 100.0f, 0.0f);
+		wykobi::segment<float,2> line2 = wykobi::rotate(rotation, line1);
+
+		//We calculate the translation to where this will have to be drawn
+		wykobi::point2d<float> endpoint = wykobi::make_point(translationx, translationy);//We construct the endpoint representing the translation
+		endpoint = wykobi::mirror(endpoint, wykobi::make_line(0.0f, 0.0f, 100.0f, 0.0f));
+		endpoint = wykobi::scale(scMM2DisplayMult*scBoard2MMMult, scMM2DisplayMult*scBoard2MMMult, endpoint);
+
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarkerShoot, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+		mDecoratorManager.GetDisplay().RenderLine(endpoint.x, endpoint.y, endpoint.x+100.0, endpoint.y, 0.0f, 0.0f, 0.0f, 1.0f);
+		mDecoratorManager.GetDisplay().RenderLine(endpoint.x, endpoint.y, endpoint.x+line2[1].x, endpoint.y+line2[1].y, 0.0f, 0.0f, 0.0f, 1.0f);
+//		std::cout << "Rendered lines from " << endpoint.x << "," << endpoint.y << " to " << endpoint.x+line2[1].x << "," << endpoint.y+line2[1].y << std::endl;
+
+		mDecoratorManager.GetDisplay().RenderArc(endpoint.x, endpoint.y, 30.0f, 30.0f, 0.0f, rotation, 0.0f, 0.0f, 0.0f, 1.0f);
+
+		mDecoratorManager.GetDisplay().PopTransformation();
+
+
+
+	}
+
 
 }
 
 void decorators::BattleshipGame::DisplayTransformedPolygon(){
+
+	float translationx;
+	float translationy;
+	float rotation;
+	if(!mLinearX->isPresent()){
+		translationx = 0.0f;
+	}else{
+		translationx = mLinearX->proportion();
+	}
+	if(!mLinearY->isPresent()){
+		translationy = 0.0f;
+	}else{
+		translationy = mLinearY->proportion();
+	}
+	if(mRotation->isPresent()){
+		rotation = 360.0f - mRotation->GetAngle();
+	}else{
+		rotation = 0.0f;
+	}
+
+	if(isPolygonPresent()){
+
+		//We calculate the translation to where this will have to be drawn
+		wykobi::point2d<float> endpoint = wykobi::make_point(translationx, translationy);//We construct the endpoint representing the translation
+		endpoint = wykobi::mirror(endpoint, wykobi::make_line(0.0f, 0.0f, 100.0f, 0.0f));
+		endpoint = wykobi::scale(scMM2DisplayMult*scBoard2MMMult, scMM2DisplayMult*scBoard2MMMult, endpoint);
+
+
+		PolyModel *tPolygon;//We get the first polygon present
+		for(unsigned int i=0; i<mNumPolygons; i++){
+			if(mPolyModels[i]->getMarker().isPresent()) tPolygon = mPolyModels[i];
+		}
+
+
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarkerShoot, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+		//We display the polygon
+		wykobi::polygon<float, 2> poly = tPolygon->getPolygon();
+		poly = wykobi::translate(-tPolygon->getOrigin().x, -tPolygon->getOrigin().y, poly);
+		poly = wykobi::mirror(poly, wykobi::make_line(0.0f, 0.0f, 100.0f, 0.0f));//we flip it so that they y coordinates match the direction of the screen
+		poly = wykobi::scale(scMM2DisplayMult, scMM2DisplayMult, poly);//we scale it to visible size
+
+		//We further translate it by the endpoint
+		poly = wykobi::translate(endpoint.x, endpoint.y, poly);
+		//We rotate it
+		poly = wykobi::rotate(rotation,poly, endpoint);
+
+		std::vector<float> vertices = polygonToVertices(poly);
+		mDecoratorManager.GetDisplay().RenderPolygon(vertices, 0.0f, 0.0f, 0.0f, 1.0f);
+
+
+		//We display the origin marker
+		mDecoratorManager.GetDisplay().RenderEllipse(endpoint.x, endpoint.y, 10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+
+
+		mDecoratorManager.GetDisplay().PopTransformation();
+
+
+
+	}
+
 
 
 }

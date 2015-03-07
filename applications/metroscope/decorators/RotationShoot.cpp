@@ -98,8 +98,6 @@ void decorators::RotationShoot::DisplayValue(){
 			mDecoratorManager.GetDisplay().PopTransformation();
 
 	}else{//It's the display in degrees
-		//TODO: Maybe declare the y axis markers as a rotated marker?
-		//FiducialMarker *rotatedMarker = new RotatedFiducialMarker(*mMarker, -90.0f);
 
 		std::ostringstream tMessage;
 		tMessage.precision(3);

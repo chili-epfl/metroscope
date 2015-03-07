@@ -41,6 +41,8 @@
 	static const char * const scGameWin = "GameWin";
 	static const char * const scGameOver = "GameOver";
 
+	static const float scMM2DisplayMult = 17.0f;
+	static const float scBoard2MMMult = 17.0f;
 
 
 namespace decorators{
@@ -71,6 +73,7 @@ class BattleshipGame : public FiducialDecorator
 		void DisplayTranslationArrow();
 		void DisplayRotationAngle();
 		void DisplayTransformedPolygon();
+		std::vector<float> polygonToVertices(wykobi::polygon<float, 2> polygon);
 
 
 
