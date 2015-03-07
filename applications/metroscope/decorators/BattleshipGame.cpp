@@ -126,14 +126,14 @@ void decorators::BattleshipGame::DisplayPolygonAxes(){
 	std::string tmp2 = tmp.str();
 	mDecoratorManager.GetDisplay().PushTransformation();
 	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarkerShoot, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
-	mDecoratorManager.GetDisplay().RenderCenteredText(tmp2.c_str(), 105.0, 0.0, true, 1.0, 0.0, 0.0, 0.0, 1.0);//X axis
-	mDecoratorManager.GetDisplay().RenderLine(-50.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 1.0);//X axis
+	mDecoratorManager.GetDisplay().RenderCenteredText(tmp2.c_str(), 210.0, 0.0, true, 1.0, 0.0, 0.0, 0.0, 1.0);//X axis
+	mDecoratorManager.GetDisplay().RenderLine(-100.0, 0.0, 200.0, 0.0, 0.0, 0.0, 0.0, 1.0);//X axis
 
 	std::ostringstream tmp3;
 	tmp3 << "y";
 	std::string tmp4 = tmp3.str();
-	mDecoratorManager.GetDisplay().RenderLine(0.0, 50.0, 0.0, -100.0, 0.0, 0.0, 0.0, 1.0);//y axis - it is inverted from the coordinates!
-	mDecoratorManager.GetDisplay().RenderCenteredText(tmp4.c_str(), 0.0, -105.0, true, 1.0, 0.0, 0.0, 0.0, 1.0);//y axis
+	mDecoratorManager.GetDisplay().RenderLine(0.0, 100.0, 0.0, -200.0, 0.0, 0.0, 0.0, 1.0);//y axis - it is inverted from the coordinates!
+	mDecoratorManager.GetDisplay().RenderCenteredText(tmp4.c_str(), 0.0, -210.0, true, 1.0, 0.0, 0.0, 0.0, 1.0);//y axis
 //	std::cout << "Rendered lines!" << std::endl;
 
 	mDecoratorManager.GetDisplay().PopTransformation();

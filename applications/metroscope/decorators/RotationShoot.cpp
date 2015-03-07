@@ -93,7 +93,7 @@ void decorators::RotationShoot::DisplayValue(){
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(mAngleModel->getMarker(), scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 			mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(tmp.c_str(), scTEXT_DELIMITERS,
 					scOFFSETMSG_X, scOFFSETMSG_Y, 600,
-					true, 0.45,
+					true, 0.65,
 					0.0, 0.0, 0.0, 1.0);
 			mDecoratorManager.GetDisplay().PopTransformation();
 
@@ -108,7 +108,7 @@ void decorators::RotationShoot::DisplayValue(){
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(mAngleModel->getMarker(), scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 			mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(tmp.c_str(), scTEXT_DELIMITERS,
 					scOFFSETMSG_X, scOFFSETMSG_Y, 600,
-					true, 0.45,
+					true, 0.65,
 					0.0, 0.0, 0.0, 1.0);
 			mDecoratorManager.GetDisplay().PopTransformation();
 

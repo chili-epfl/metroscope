@@ -75,8 +75,8 @@ void decorators::LinearShoot::update(){
 		if(mProportion > 1) mProportion = 1;
 		if(mProportion < 0) mProportion = 0;
 
-		//once we have the value from 0 to 1, we translate it to -1,1
-		mProportion = (mProportion*2)-1;
+		//once we have the value from 0 to 1, we translate it to -0.5,0.5
+		mProportion = mProportion-0.5f;
 
 		//In principle, we do not do the simplification to fractions
 		//CalculateFractionFromDecimal();
@@ -100,7 +100,7 @@ void decorators::LinearShoot::DisplayValue(){
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 			mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(tmp.c_str(), scTEXT_DELIMITERS,
 					scOFFSETMSG_X, scOFFSETMSG_Y, 600,
-					true, 0.15,
+					true, 0.2,
 					0.0, 0.0, 0.0, 1.0);
 			mDecoratorManager.GetDisplay().PopTransformation();
 
@@ -117,7 +117,7 @@ void decorators::LinearShoot::DisplayValue(){
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 			mDecoratorManager.GetDisplay().RenderCenteredTextFixedWidth(tmp.c_str(), scTEXT_DELIMITERS,
 					scOFFSETMSG_X, scOFFSETMSG_Y, 600,
-					true, 0.15,
+					true, 0.2,
 					0.0, 0.0, 0.0, 1.0);
 			mDecoratorManager.GetDisplay().PopTransformation();
 

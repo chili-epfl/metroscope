@@ -41,7 +41,7 @@
 	static const char * const scGameWin = "GameWin";
 	static const char * const scGameOver = "GameOver";
 
-	static const float scMM2DisplayMult = 17.0f;
+	static const float scMM2DisplayMult = 25.0f;
 	static const float scBoard2MMMult = 17.0f;
 
 
