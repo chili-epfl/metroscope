@@ -170,6 +170,8 @@ int main(int argc, char* argv[])
 	//Not needed for now in battleship!
 	//std::string deviceMeteorId = extractIdFromURL(tUrlDevice);
 	//stateManager->SetDeviceMeteorId(deviceMeteorId);
+	std::string teamMeteorId = extractIdFromURL(tUrlShoot);
+	stateManager->SetTeamMeteorId(teamMeteorId);
 
 	//Initializing the networking pipeables...
     //std::cout << "Initializing networking pipeables" << std::endl;

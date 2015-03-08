@@ -43,6 +43,7 @@ public:
 	std::vector<move> getMoves();
 	std::vector<move> getCurrentMove();
 
+	void SetTeamMeteorId(std::string pId);
 	//void SetDeviceMeteorId(std::string pId);
 //	void SetClassroomMeteorId(std::string pId);
 

@@ -42,6 +42,40 @@ NetworkedStateManager::~NetworkedStateManager() {
 //
 //}
 
+void NetworkedStateManager::SetTeamMeteorId(std::string pId){
+
+	pthread_mutex_lock(&shootstate_mutex);
+	shoot oldShoot = mShootState->GetShoot();
+	if(oldShoot.team_id.compare(pId)!=0){
+		shoot newShoot;
+
+		newShoot.team_id = pId;
+
+		//if(oldShoot.rotation==NULL)
+		newShoot.rotation = 0;
+		//else newShoot.rotation = oldShoot.rotation;
+
+		//if(oldShoot.translation==NULL)
+		newShoot.translation = wykobi::make_point(0.0f,0.0f);
+		//else newShoot.translation = oldShoot.translation;
+
+		//if(oldShoot.polygon==NULL){
+			std::vector<wykobi::point2d<float>> tPoly;
+			tPoly.push_back(wykobi::make_point(0.0f, 0.0f));
+			tPoly.push_back(wykobi::make_point(0.0f, 1.0f));
+			tPoly.push_back(wykobi::make_point(1.0f, 1.0f));
+			tPoly.push_back(wykobi::make_point(1.0f, 0.0f));
+			newShoot.polygon = wykobi::make_polygon(tPoly);
+		//}
+		//else newShoot.polygon = oldShoot.polygon;
+
+		mShootState->SetShoot(newShoot);
+		mShootState->SetHasChanged(true);
+	}
+	pthread_mutex_unlock(&shootstate_mutex);
+
+}
+
 //void NetworkedStateManager::SetClassroomMeteorId(std::string pId){
 //
 //	pthread_mutex_lock(&classstate_mutex);
