@@ -313,7 +313,7 @@ static const float scREAL_WORLD_MARKER_HEIGHT_MM = 20.0f;
 
 
 	static const float scOFFSETMSG_X = 2.0f;
-	static const float scOFFSETMSG_Y = 20.0f;
+	static const float scOFFSETMSG_Y = 17.0f;
 
 
 
