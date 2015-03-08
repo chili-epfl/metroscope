@@ -82,7 +82,7 @@ void decorators::PolyViewCoords::update() {
 			wykobi::point2d<float> tCorner = tPolyCorners[i]-tOrigin;
 			wykobi::point2d<float> tTextPosition = tPolyCorners[i]+50.0f*wykobi::normalize(wykobi::make_vector(tCorner));
 			char tText[20];
-			sprintf(tText, "(%.2f,%.2f)", mPolyModel.getPolygon()[i].x - mPolyModel.getOrigin().x, mPolyModel.getPolygon()[i].y - mPolyModel.getOrigin().y);
+			sprintf(tText, "(%.2f,%.2f)", mPolyModel.getCoords()[i].x, mPolyModel.getCoords()[i].y);
 			mDecoratorManager.GetDisplay().RenderText(tText, tTextPosition.x, tTextPosition.y, 1.0f, scColors[tColorIndices[i]], scColors[tColorIndices[i]+1], scColors[tColorIndices[i]+2]);
 		}
 	}

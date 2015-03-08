@@ -79,7 +79,8 @@ void decorators::PolyViewSideMeasures::update()
 			tSides[i] = tPolyCorners[(i+1)%tNumSides] - tPolyCorners[i];
 			//tMeasures[i] = (int) (0.5f+scCM2MM*wykobi::distance(tPolyCorners[i], tPolyCorners[(i+1)%tNumSides]));
 			//TODO: Modify the scale to fit the board game dimensions
-			tMeasures[i] = (int) (0.5f+scCM2MM*wykobi::distance(tPolyCorners[i], tPolyCorners[(i+1)%tNumSides]));
+			//tMeasures[i] = (int) (0.5f+scCM2MM*wykobi::distance(tPolyCorners[i], tPolyCorners[(i+1)%tNumSides]));
+			tMeasures[i] = wykobi::distance(mPolyModel.getCoords()[i], mPolyModel.getCoords()[(i+1)%tNumSides]);
 		}
 
 		int tInitialColorIndices[6] = { scRed, scYellow, scBlue, scMagenta, scGreen, scCyan};
