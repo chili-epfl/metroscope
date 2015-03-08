@@ -75,20 +75,17 @@ void decorators::PolyViewPerimeter::update() {
 		std::ostringstream tmp;
 		tmp << "x";
 		std::string tmp2 = tmp.str();
-		wykobi::point2d<float> point1 = tOrigin + (mPolyModel.getPolygon()[0].x-5)*tXUnit + mPolyModel.getPolygon()[0].y*tYUnit;
-		wykobi::point2d<float> point2 = tOrigin + (mPolyModel.getPolygon()[0].x+10)*tXUnit + mPolyModel.getPolygon()[0].y*tYUnit;
-		wykobi::point2d<float> point3 = tOrigin + (mPolyModel.getPolygon()[0].x+12)*tXUnit + mPolyModel.getPolygon()[0].y*tYUnit;
-		mDecoratorManager.GetDisplay().RenderCenteredText(tmp2.c_str(), point3.x, point3.y, true, 1.0, 0.0, 0.0, 0.0, 1.0);//X axis
-		mDecoratorManager.GetDisplay().RenderLine(point1.x, point1.y, point2.x, point2.y, 0.0, 0.0, 0.0, 1.0);//X axis
+		mDecoratorManager.GetDisplay().RenderCenteredText(tmp2.c_str(), tPolyCorners[0].x + 70, tPolyCorners[0].y, true, 1.0, 0.0, 0.0, 0.0, 1.0);//X axis
+		mDecoratorManager.GetDisplay().RenderLine(tPolyCorners[0].x - 30.0, tPolyCorners[0].y, tPolyCorners[0].x + 60.0, tPolyCorners[0].y, 0.0, 0.0, 0.0, 1.0);//X axis
 
-		std::ostringstream tmp3;
-		tmp3 << "y";
-		std::string tmp4 = tmp3.str();
-		wykobi::point2d<float> point4 = tOrigin + (mPolyModel.getPolygon()[0].x)*tXUnit + (mPolyModel.getPolygon()[0].y-5)*tYUnit;
-		wykobi::point2d<float> point5 = tOrigin + (mPolyModel.getPolygon()[0].x)*tXUnit + (mPolyModel.getPolygon()[0].y+10)*tYUnit;
-		wykobi::point2d<float> point6 = tOrigin + (mPolyModel.getPolygon()[0].x)*tXUnit + (mPolyModel.getPolygon()[0].y+12)*tYUnit;
-		mDecoratorManager.GetDisplay().RenderLine(point4.x, point4.y, point5.x, point5.y, 0.0, 0.0, 0.0, 1.0);//y axis - it is inverted from the coordinates!
-		mDecoratorManager.GetDisplay().RenderCenteredText(tmp4.c_str(), point6.x, point6.y, true, 1.0, 0.0, 0.0, 0.0, 1.0);//y axis
+//		std::ostringstream tmp3;
+//		tmp3 << "y";
+//		std::string tmp4 = tmp3.str();
+//		wykobi::point2d<float> point4 = tOrigin + (mPolyModel.getPolygon()[0].x)*tXUnit + (mPolyModel.getPolygon()[0].y-5)*tYUnit;
+//		wykobi::point2d<float> point5 = tOrigin + (mPolyModel.getPolygon()[0].x)*tXUnit + (mPolyModel.getPolygon()[0].y+10)*tYUnit;
+//		wykobi::point2d<float> point6 = tOrigin + (mPolyModel.getPolygon()[0].x)*tXUnit + (mPolyModel.getPolygon()[0].y+12)*tYUnit;
+//		mDecoratorManager.GetDisplay().RenderLine(point4.x, point4.y, point5.x, point5.y, 0.0, 0.0, 0.0, 1.0);//y axis - it is inverted from the coordinates!
+//		mDecoratorManager.GetDisplay().RenderCenteredText(tmp4.c_str(), point6.x, point6.y, true, 1.0, 0.0, 0.0, 0.0, 1.0);//y axis
 
 
 
