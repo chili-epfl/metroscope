@@ -246,7 +246,7 @@ void decorators::BattleshipGame::DisplayRotationAngle(){
 
 	if(mRotation->isPresent()){
 
-		float rotation = 360.0f - mRotation->GetAngle();
+		float rotation = mRotation->GetAngle();
 
 		//We draw the two segments, and the arc in between, always starting at x axis
 		wykobi::segment<float,2> line1 = wykobi::make_segment(0.0f, 0.0f, 100.0f, 0.0f);
@@ -291,7 +291,7 @@ void decorators::BattleshipGame::DisplayTransformedPolygon(){
 		translationy = mLinearY->proportion();
 	}
 	if(mRotation->isPresent()){
-		rotation = 360.0f - mRotation->GetAngle();
+		rotation = mRotation->GetAngle();
 	}else{
 		rotation = 0.0f;
 	}
