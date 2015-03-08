@@ -267,6 +267,15 @@ void decorators::BattleshipAnalysisSheet::DisplayMoves() {
 		}
 
 		mDecoratorManager.GetDisplay().PopTransformation();
+	}else{//There are 0 moves, we are in turn one, we just display the origin
+		mDecoratorManager.GetDisplay().PushTransformation();
+		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+
+		wykobi::point2d<float> tInitialOrigin = ConvertCoords2MM(this->mInitialOriginCoords);
+
+		mDecoratorManager.GetDisplay().RenderEllipse(tInitialOrigin.x, tInitialOrigin.y,
+						10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		mDecoratorManager.GetDisplay().PopTransformation();
 	}
 }
 
