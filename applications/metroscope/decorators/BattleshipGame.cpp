@@ -74,6 +74,8 @@ void decorators::BattleshipGame::update(){
 	DisplayPhase();
 	//If we are in the new turn, main menu or game over or game win, we grey out the screen
 	std::string tPhase = stateManager->getPhase();
+
+
 	if(tPhase.compare(scGameNewTurn)==0 ||
 			tPhase.compare(scMainMenu)==0 ||
 			tPhase.compare(scGameOver)==0 ||

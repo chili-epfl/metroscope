@@ -71,7 +71,7 @@ void decorators::RotationShoot::update(){
 
 		mAngle = wykobi::oriented_vertex_angle(tWorldStartPoint, tWorldOriginPoint, tWorldEndPoint, wykobi::Clockwise);
 
-		mProportion = (1 - mAngle/360.0f);
+		mProportion = mAngle/360.0f;
 
 		//CalculateFractionFromDecimal();
 		DisplayValue();
@@ -101,7 +101,7 @@ void decorators::RotationShoot::DisplayValue(){
 
 		std::ostringstream tMessage;
 		tMessage.precision(3);
-		tMessage << "rotation = " << floor(360-mAngle);
+		tMessage << "rotation = " << mAngle;
 		std::string tmp = tMessage.str();
 
 		mDecoratorManager.GetDisplay().PushTransformation();

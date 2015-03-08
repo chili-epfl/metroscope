@@ -47,7 +47,7 @@ bool ClassroomState::equals(ClassroomState* other){
 
 void ClassroomState::setJSON(std::string jsonstring){
 
-	std::cout << "Trying to set classroom state with data: " << jsonstring << std::endl;
+	//std::cout << "Trying to set classroom state with data: " << jsonstring << std::endl;
 
 	Json::Value value = getJSONObject(jsonstring);
 
