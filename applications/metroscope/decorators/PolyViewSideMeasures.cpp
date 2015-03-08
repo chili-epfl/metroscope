@@ -96,7 +96,7 @@ void decorators::PolyViewSideMeasures::update()
 		}
 
 		for (int i = 0; i < tNumSides; ++i) {
-			wykobi::point2d<float> tTextPosition = tMiddles[i]+10.0f*wykobi::normalize(wykobi::perpendicular(tSides[i]));
+			wykobi::point2d<float> tTextPosition = tMiddles[i]+30.0f*wykobi::normalize(wykobi::perpendicular(tSides[i]));
 			mDecoratorManager.GetWorld2Proj().InterpolatedMap(tTextPosition);
 			char tText[20];
 			sprintf(tText, "%1.3f", tMeasures[i]);
