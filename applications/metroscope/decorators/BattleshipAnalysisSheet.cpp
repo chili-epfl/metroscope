@@ -25,6 +25,7 @@
 //#include <qa/utils/CvWykobiBridge.hpp>
 //#include <qa/utils/Geometry.hpp>
 #include "../../../frameworks/qa/components/misc/DeviceState.hpp"
+#include "../../../frameworks/qa/components/misc/ShootState.hpp"
 #include "../../../frameworks/qa/components/misc/NetworkedStateManager.hpp"
 #include "../../../frameworks/qa/components/vision/FiducialMarker.hpp"
 #include "../../../frameworks/qa/pipeables/io/OpenGl2DDisplay.hpp"
@@ -112,6 +113,25 @@ void decorators::BattleshipAnalysisSheet::update() {
 //				mAreaOfInterest[1].x, mAreaOfInterest[1].y, mAreaOfInterest[2].x, mAreaOfInterest[2].y,
 //				mAreaOfInterest[3].x, mAreaOfInterest[3].y, 0.0f, 0.0f, 0.0f, 1.0f);
 //		mDecoratorManager.GetDisplay().PopTransformation();
+
+
+		//We setup the shoot state for the next phase, with this team's id
+		shoot initShoot;
+		std::string teamString;          // string which will contain the result
+		std::ostringstream convert;   // stream used for the conversion
+		convert << this->mTeam;      // insert the textual representation of 'Number' in the characters in the stream
+		teamString = convert.str();
+		initShoot.team_id = teamString;
+		initShoot.rotation = 0;
+		initShoot.translation = wykobi::make_point(0.0f,0.0f);
+		std::vector<wykobi::point2d<float>> tPoly;
+		tPoly.push_back(wykobi::make_point(0.0f, 0.0f));
+		tPoly.push_back(wykobi::make_point(0.0f, 1.0f));
+		tPoly.push_back(wykobi::make_point(1.0f, 1.0f));
+		tPoly.push_back(wykobi::make_point(1.0f, 0.0f));
+		initShoot.polygon = wykobi::make_polygon(tPoly);
+		stateManager->SetShoot(initShoot);
+
 	}
 }
 

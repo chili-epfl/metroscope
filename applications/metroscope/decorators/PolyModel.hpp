@@ -31,16 +31,20 @@ class PolyModel : public FiducialDecorator
 	public:
 		static FiducialDecorator *create(libconfig::Setting &pSetting, DecoratorManager &pDecoratorManager);
 		PolyModel(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pNumVertices,
-				std::vector<float> pCoords, std::vector<float> pOrigin);
+				std::vector<float> pCorners, std::vector<float> pOrigin, std::vector<float> pCoords);
 		const wykobi::polygon<float, 2> &getPolygon() const {return mPolygon;}
 		int getSize() const {return mNumVertices;}
 		const wykobi::point2d<float> &getOrigin() const {return mOrigin;}
+		const wykobi::polygon<float, 2> &getCoords() const {return mPolyCoords;}
 
 	protected:
 		void update(){}
 		wykobi::polygon<float, 2> mPolygon;
 		wykobi::point2d<float> mOrigin;
 		int mNumVertices;
+
+		wykobi::polygon<float, 2> mPolyCoords;
+
 
 	private:
 		static const std::string scDecoratorName;

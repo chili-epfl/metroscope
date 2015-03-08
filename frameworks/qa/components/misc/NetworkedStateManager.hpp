@@ -10,44 +10,51 @@
 
 #include <qa/components/misc/DeviceState.hpp>
 #include <qa/components/misc/ClassroomState.hpp>
+#include <qa/components/misc/ShootState.hpp>
 #include <pthread.h>
 
-enum Entity{CLASSROOM, DEVICE};
+enum Entity{CLASSROOM, DEVICE, SHOOT};
 
 
 class NetworkedStateManager {
 public:
 	NetworkedStateManager();
-	NetworkedStateManager(std::string pDeviceMeteorId, std::string pClassroomMeteorId);
+//	NetworkedStateManager(std::string pDeviceMeteorId, std::string pClassroomMeteorId);
 	virtual ~NetworkedStateManager();
 
 	bool hasDeviceChanged();
 	bool hasClassroomChanged();
+	bool hasShootChanged();
 
 	std::string getDeviceJSON();//gets a JSON string with the current state of the device (single move)
 	std::string getClassroomJSON();//gets a JSON string with the current state of the classroom
-	std::string getAlternateDeviceJSON();//In this case, instead of setting the meteor _id, we set the field deviceid
-	std::string getAlternateClassroomJSON();//In this case, instead of setting the meteor _id, we set the field classroomid
+	std::string getShootJSON();
+
+	//	std::string getAlternateDeviceJSON();//In this case, instead of setting the meteor _id, we set the field deviceid
+//	std::string getAlternateClassroomJSON();//In this case, instead of setting the meteor _id, we set the field classroomid
 
 //	std::string getPauserDevice();
 //	std::string getMasterHint();
 	std::string getPhase();
 	int getTurn();
+	shoot getShoot();
 //	std::string getDeviceId();
 
 	std::vector<move> getMoves();
 	std::vector<move> getCurrentMove();
 
 	//void SetDeviceMeteorId(std::string pId);
-	void SetClassroomMeteorId(std::string pId);
+//	void SetClassroomMeteorId(std::string pId);
 
 	void SetHasDeviceChanged(bool changed);
 	void SetHasClassroomChanged(bool changed);
+	void SetHasShootChanged(bool changed);
 
 	void SetClassroomPaused(bool changed);
 //	void SetMasterHint(std::string pHint);
 	void SetPhase(std::string pPhase);
 	void SetTurn(int pTurn);
+	void SetShoot(shoot pShoot);
 	bool isClassroomPaused();
 
 	//void addMarkerToDeviceState(std::string tagName);
@@ -64,7 +71,7 @@ public:
 
 	void SetClassroomJSON(std::string jsonData);
 	void SetDeviceJSON(std::string jsonData);//Sets the device state with the moves (multiple ones!) and the last one
-
+	void SetShootJSON(std::string jsonData);
 protected:
 	DeviceState* mDeviceState;
 	pthread_mutex_t devstate_mutex;
@@ -72,6 +79,8 @@ protected:
 	ClassroomState* mClassroomState;
 	pthread_mutex_t classstate_mutex;
 
+	ShootState* mShootState;
+	pthread_mutex_t shootstate_mutex;
 };
 
 extern NetworkedStateManager* stateManager;

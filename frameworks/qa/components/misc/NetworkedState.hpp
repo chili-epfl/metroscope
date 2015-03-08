@@ -44,6 +44,7 @@
 		static const std::string scRotationLabel="rotation";
 		static const std::string scTranslationLabel="translation";
 		static const std::string scIllegalLabel="illegal";
+		static const std::string scTeamIdLabel="_id";
 
 
 #endif

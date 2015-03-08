@@ -19,7 +19,6 @@
 
 #include "BattleshipGame.hpp"
 #include <qa/utils/Time.hpp>
-#include <wykobi/wykobi_utilities.hpp>
 #include <iostream>
 #include <string>
 
@@ -106,6 +105,17 @@ void decorators::BattleshipGame::update(){
 
 		}
 
+		//We update the shooting information
+		//We setup the shoot state for the next phase, with this team's id
+		std::string tTeamId = stateManager->getShoot().team_id;
+		shoot tShoot;
+		tShoot.team_id = tTeamId;
+		tShoot.rotation = (this->mRotation->GetProportion())*360;
+		tShoot.translation = wykobi::make_point(this->mLinearX->proportion(),this->mLinearY->proportion());
+		tShoot.polygon = this->getFirstPolygon();
+		stateManager->SetShoot(tShoot);
+
+
 	}
 
 }
@@ -116,6 +126,19 @@ bool decorators::BattleshipGame::isPolygonPresent(){
 		if(mPolyModels[i]->getMarker().isPresent()) return true;
 	}
 	return false;
+}
+
+wykobi::polygon<float,2> decorators::BattleshipGame::getFirstPolygon(){
+
+	wykobi::polygon<float,2> newPoly;
+	for(unsigned int i=0; i<mNumPolygons; i++){
+		if(mPolyModels[i]->getMarker().isPresent()){
+			return mPolyModels[i]->getCoords();
+		}
+	}
+	return newPoly;
+
+
 }
 
 

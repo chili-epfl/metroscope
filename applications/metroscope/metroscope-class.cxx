@@ -72,8 +72,9 @@ int main(int argc, char* argv[])
 	int tWaitClassroomTime = 1000;
 	std::string tUrlDevice = "";
 	std::string tUrlClassroom = "";
-	std::string tUrlDeviceHistory = "";
-	std::string tUrlClassroomHistory = "";
+//	std::string tUrlDeviceHistory = "";
+//	std::string tUrlClassroomHistory = "";
+	std::string tUrlShoot = "";
 
 	//Parsing the arguments from the command line:
 	//metroscope-class [-opencv] [-log] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://...
@@ -134,24 +135,32 @@ int main(int argc, char* argv[])
 			  tUrlClassroom = tArgument.substr(14,tArgument.length());
 			}
 		}
-		else if (tArgument.substr(0,18) == "-urldevicehistory=")
+		else if (tArgument.substr(0,10) == "-urlshoot=")
 		{
-			if(tArgument.length()>18){
-			  tUrlDeviceHistory = tArgument.substr(18,tArgument.length());
+			if(tArgument.length()>10){
+			  tUrlShoot = tArgument.substr(10,tArgument.length());
 			}
 		}
-		else if (tArgument.substr(0,21) == "-urlclassroomhistory=")
-		{
-			if(tArgument.length()>21){
-			  tUrlClassroomHistory = tArgument.substr(21,tArgument.length());
-			}
-		}
+
+		//The history should be handled at the server level!
+//		else if (tArgument.substr(0,18) == "-urldevicehistory=")
+//		{
+//			if(tArgument.length()>18){
+//			  tUrlDeviceHistory = tArgument.substr(18,tArgument.length());
+//			}
+//		}
+//		else if (tArgument.substr(0,21) == "-urlclassroomhistory=")
+//		{
+//			if(tArgument.length()>21){
+//			  tUrlClassroomHistory = tArgument.substr(21,tArgument.length());
+//			}
+//		}
 	}
 
 	//If we do not have URLs, we just quit
-	if(tUrlClassroom.length()==0 || tUrlDevice.length()==0 || tUrlClassroomHistory.length()==0 || tUrlDeviceHistory.length()==0 ){
+	if(tUrlClassroom.length()==0 || tUrlDevice.length()==0 || tUrlShoot.length()==0 ){
 			  std::cout << "Missing parameters: " << std::endl;
-			  std::cout << "metroscope-class [-opencv] [-nolog] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://... -urldevicehistory=http://... -urlclassroomhistory=http://..." << std::endl;
+			  std::cout << "metroscope-class [-opencv] [-nolog] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://... -urlshoot=http://..." << std::endl;
 		      return(0);
 
 			}
@@ -166,8 +175,8 @@ int main(int argc, char* argv[])
     //std::cout << "Initializing networking pipeables" << std::endl;
 	Wait tWaitDevice(tWaitDeviceTime);
 	Wait tWaitClassroom(tWaitClassroomTime);
-	PutPostRemoteJSONString tPutRemoteDevice(tUrlDevice, tUrlDeviceHistory, DEVICE);
-	PutPostRemoteJSONString tPutRemoteClassroom(tUrlClassroom, tUrlClassroomHistory, CLASSROOM);
+	PutPostRemoteJSONString tPutRemoteShoot(tUrlShoot, SHOOT);
+	PutPostRemoteJSONString tPutRemoteClassroom(tUrlClassroom, CLASSROOM);
 	GetRemoteJSONString tGetRemoteClassroom(tUrlClassroom, CLASSROOM);
 	GetRemoteJSONString tGetRemoteDevices(tUrlDevice, DEVICE);
 
@@ -223,8 +232,9 @@ int main(int argc, char* argv[])
 
 //    tPutRemoteDevice.startNoWait();
 
-	//Devices Getting/Putting thread
+	//Devices+shoot Getting/Putting thread
 	    tGetRemoteDevices
+	    | tPutRemoteShoot
 	    | tWaitDevice
 	    | tGetRemoteDevices;
 
@@ -257,8 +267,8 @@ int main(int argc, char* argv[])
 	tGrabber->stop();
 	tGrabber->join();
 
-//	tPutRemoteDevice.stop();
-//	tPutRemoteDevice.join();
+	tGetRemoteDevices.stop();
+	tGetRemoteDevices.join();
 
 	tGetRemoteClassroom.stop();
 	tGetRemoteClassroom.join();
@@ -274,6 +284,12 @@ int main(int argc, char* argv[])
 	delete tCraftagUpdate;
 	delete tPreProcess;
 	delete tGrabber;
+	delete &tGetRemoteClassroom;
+	delete &tWaitClassroom;
+	delete &tGetRemoteDevices;
+	delete &tPutRemoteShoot;
+	delete &tWaitDevice;
+
 
 	return 0;
 }

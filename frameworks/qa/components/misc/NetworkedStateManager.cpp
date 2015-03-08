@@ -13,16 +13,18 @@ NetworkedStateManager::NetworkedStateManager() {
 	devstate_mutex = PTHREAD_MUTEX_INITIALIZER;
 	mClassroomState = new ClassroomState;
 	classstate_mutex = PTHREAD_MUTEX_INITIALIZER;
+	mShootState = new ShootState;
+	shootstate_mutex = PTHREAD_MUTEX_INITIALIZER;
 }
 
-NetworkedStateManager::NetworkedStateManager(std::string pDeviceMeteorId, std::string pClassroomMeteorId) {
-	mDeviceState = new DeviceState;
-	devstate_mutex = PTHREAD_MUTEX_INITIALIZER;
-	mClassroomState = new ClassroomState;
-	classstate_mutex = PTHREAD_MUTEX_INITIALIZER;
-	//SetDeviceMeteorId(pDeviceMeteorId);
-	SetClassroomMeteorId(pClassroomMeteorId);
-}
+//NetworkedStateManager::NetworkedStateManager(std::string pDeviceMeteorId, std::string pClassroomMeteorId) {
+//	mDeviceState = new DeviceState;
+//	devstate_mutex = PTHREAD_MUTEX_INITIALIZER;
+//	mClassroomState = new ClassroomState;
+//	classstate_mutex = PTHREAD_MUTEX_INITIALIZER;
+//	//SetDeviceMeteorId(pDeviceMeteorId);
+//	SetClassroomMeteorId(pClassroomMeteorId);
+//}
 
 NetworkedStateManager::~NetworkedStateManager() {
 	// TODO Auto-generated destructor stub
@@ -40,17 +42,17 @@ NetworkedStateManager::~NetworkedStateManager() {
 //
 //}
 
-void NetworkedStateManager::SetClassroomMeteorId(std::string pId){
-
-	pthread_mutex_lock(&classstate_mutex);
-	std::string oldId = mClassroomState->GetMeteorId();
-	if(oldId.compare(pId)!=0){
-		mClassroomState->SetMeteorId(pId);
-		mClassroomState->SetHasChanged(true);
-	}
-	pthread_mutex_unlock(&classstate_mutex);
-
-}
+//void NetworkedStateManager::SetClassroomMeteorId(std::string pId){
+//
+//	pthread_mutex_lock(&classstate_mutex);
+//	std::string oldId = mClassroomState->GetMeteorId();
+//	if(oldId.compare(pId)!=0){
+//		mClassroomState->SetMeteorId(pId);
+//		mClassroomState->SetHasChanged(true);
+//	}
+//	pthread_mutex_unlock(&classstate_mutex);
+//
+//}
 
 
 bool NetworkedStateManager::hasDeviceChanged(){
@@ -71,6 +73,15 @@ bool NetworkedStateManager::hasClassroomChanged(){
 	return change;
 }
 
+bool NetworkedStateManager::hasShootChanged(){
+
+	bool change;
+	pthread_mutex_lock(&shootstate_mutex);
+	change = mShootState->hasChanged();
+	pthread_mutex_unlock(&shootstate_mutex);
+	return change;
+}
+
 std::string NetworkedStateManager::getDeviceJSON(){
 
 	std::string json;
@@ -88,22 +99,30 @@ std::string NetworkedStateManager::getClassroomJSON(){
 	return json;
 }
 
-std::string NetworkedStateManager::getAlternateDeviceJSON(){
-
+std::string NetworkedStateManager::getShootJSON(){
 	std::string json;
-	pthread_mutex_lock(&devstate_mutex);
-	json = mDeviceState->getJSON();
-	pthread_mutex_unlock(&devstate_mutex);
+	pthread_mutex_lock(&shootstate_mutex);
+	json = mShootState->getJSON();
+	pthread_mutex_unlock(&shootstate_mutex);
 	return json;
 }
 
-std::string NetworkedStateManager::getAlternateClassroomJSON(){
-	std::string json;
-	pthread_mutex_lock(&classstate_mutex);
-	json = mClassroomState->getJSON(true);
-	pthread_mutex_unlock(&classstate_mutex);
-	return json;
-}
+//std::string NetworkedStateManager::getAlternateDeviceJSON(){
+//
+//	std::string json;
+//	pthread_mutex_lock(&devstate_mutex);
+//	json = mDeviceState->getJSON();
+//	pthread_mutex_unlock(&devstate_mutex);
+//	return json;
+//}
+//
+//std::string NetworkedStateManager::getAlternateClassroomJSON(){
+//	std::string json;
+//	pthread_mutex_lock(&classstate_mutex);
+//	json = mClassroomState->getJSON(true);
+//	pthread_mutex_unlock(&classstate_mutex);
+//	return json;
+//}
 
 
 
@@ -122,6 +141,13 @@ void NetworkedStateManager::SetHasClassroomChanged(bool changed){
 	pthread_mutex_unlock(&classstate_mutex);
 }
 
+void NetworkedStateManager::SetHasShootChanged(bool changed){
+
+	pthread_mutex_lock(&shootstate_mutex);
+	mShootState->SetHasChanged(changed);
+	pthread_mutex_unlock(&shootstate_mutex);
+}
+
 
 void NetworkedStateManager::SetClassroomJSON(std::string jsonData){
 
@@ -135,6 +161,13 @@ void NetworkedStateManager::SetDeviceJSON(std::string jsonData){
 	pthread_mutex_lock(&devstate_mutex);
 	mDeviceState->setJSON(jsonData, this->getTurn());
 	pthread_mutex_unlock(&devstate_mutex);
+}
+
+void NetworkedStateManager::SetShootJSON(std::string jsonData){
+
+	pthread_mutex_lock(&shootstate_mutex);
+	mShootState->setJSON(jsonData);
+	pthread_mutex_unlock(&shootstate_mutex);
 }
 
 void NetworkedStateManager::SetClassroomPaused(bool paused){
@@ -243,6 +276,28 @@ void NetworkedStateManager::SetTurn(int pTurn){
 	//else, we do nothing
 
 	pthread_mutex_unlock(&classstate_mutex);
+}
+
+void NetworkedStateManager::SetShoot(shoot pShoot){
+
+	pthread_mutex_lock(&shootstate_mutex);
+	shoot oldShoot = mShootState->GetShoot();
+
+	if(!mShootState->equalShoots(oldShoot,pShoot)){
+		shoot newShoot;
+		newShoot.team_id = pShoot.team_id;
+		newShoot.rotation = pShoot.rotation;
+		newShoot.translation = pShoot.translation;
+		newShoot.polygon = pShoot.polygon;
+
+
+		mShootState->SetShoot(newShoot);
+		mShootState->SetHasChanged(true);
+	}
+
+	//else, we do nothing
+
+	pthread_mutex_unlock(&shootstate_mutex);
 }
 
 
@@ -406,6 +461,12 @@ int NetworkedStateManager::getTurn(){
 	return turn;
 }
 
+shoot NetworkedStateManager::getShoot(){
+	pthread_mutex_lock(&shootstate_mutex);
+	shoot tShoot = mShootState->GetShoot();
+	pthread_mutex_unlock(&shootstate_mutex);
+	return tShoot;
+}
 
 std::vector<move> NetworkedStateManager::getMoves(){
 	pthread_mutex_lock(&devstate_mutex);

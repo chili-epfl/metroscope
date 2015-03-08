@@ -22,6 +22,7 @@
 
 #include <qa/pipeables/misc/DecoratorManager.hpp>
 #include <qa/components/misc/NetworkedStateManager.hpp>
+#include <wykobi/wykobi_utilities.hpp>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -68,7 +69,7 @@ class BattleshipGame : public FiducialDecorator
 
 		bool isPolygonPresent();
 		void DisplayPolygonAxes();
-		PolyModel *getFirstPolygon();
+		wykobi::polygon<float,2> getFirstPolygon();
 		void DisplayFirstPolygon();
 		void DisplayTranslationArrow();
 		void DisplayRotationAngle();

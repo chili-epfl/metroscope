@@ -27,6 +27,7 @@ decorators::FiducialDecorator *decorators::PolyModel::create(libconfig::Setting 
 {
 	try {
 			libconfig::Setting & tCorners = pSetting["corners"];
+			libconfig::Setting & tCoords = pSetting["coords"];
 
 			int pNumVertices = pSetting["num_vertices"];
 
@@ -37,13 +38,20 @@ decorators::FiducialDecorator *decorators::PolyModel::create(libconfig::Setting 
 				polygonVertices.push_back(tCorners[(2*i)+1]);
 			}
 
+			std::vector<float> polygonCoords;
+
+			for(int i=0; i<pNumVertices; i++){
+				polygonCoords.push_back(tCoords[2*i]);
+				polygonCoords.push_back(tCoords[(2*i)+1]);
+			}
+
 			libconfig::Setting & tOrigin = pSetting["origin"];
 
 			std::vector<float> originCoords;
 			originCoords.push_back(tOrigin[0]);
 			originCoords.push_back(tOrigin[1]);
 
-			return new decorators::PolyModel(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]),pNumVertices, polygonVertices, originCoords);
+			return new decorators::PolyModel(pDecoratorManager, pDecoratorManager.loadMarker(pSetting["marker"]),pNumVertices, polygonVertices, originCoords, polygonCoords);
 	} catch(libconfig::SettingNotFoundException &e) {
 		std::cerr << "Failed to load " << scDecoratorName << ". Marker parameter not found: " << e.getPath() << std::endl;
 	} catch(libconfig::SettingTypeException &e) {
@@ -53,7 +61,7 @@ decorators::FiducialDecorator *decorators::PolyModel::create(libconfig::Setting 
 }
 
 decorators::PolyModel::PolyModel(DecoratorManager &pDecoratorManager, FiducialMarker *pMarker, int pNumVertices,
-		std::vector<float> pCoords, std::vector<float> pOrigin):
+		std::vector<float> pPolygon, std::vector<float> pOrigin, std::vector<float> pCoords):
 FiducialDecorator(pDecoratorManager, pMarker),
 mNumVertices(pNumVertices)
 {
@@ -63,9 +71,10 @@ mNumVertices(pNumVertices)
 
 	for(int i=0; i<pNumVertices; i++){
 
-		mPolygon.push_back(wykobi::make_point<float>(pCoords[2*i],pCoords[(2*i)+1]));
+		mPolygon.push_back(wykobi::make_point<float>(pPolygon[2*i],pPolygon[(2*i)+1]));
 //		mPolygon[i].x = pCoords[2*i];
 //		mPolygon[i].y = pCoords[(2*i)+i];
+		mPolyCoords.push_back(wykobi::make_point<float>(pCoords[2*i],pCoords[(2*i)+1]));
 	}
 
 }
