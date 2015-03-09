@@ -82,14 +82,14 @@ void decorators::BattleshipGame::update(){
 			tPhase.compare(scGameWin)==0 ||
 			tPhase.compare(scGameResolve)==0) GreyOutScreen();
 	else if(tPhase.compare(scGameShoot)==0){//If we are in the shooting phase, we display the selected polygon, and the rotated/translated version
-
-		DisplayPolygonAxes();
+		//Wendy thought the axes were confusing
+		//DisplayPolygonAxes();
 
 		if(isPolygonPresent()){
 
 			DisplayFirstPolygon();
 
-			if( mLinearX->isPresent() && mLinearY->isPresent()){
+			if( mLinearX->isPresent() &&  mLinearY->isPresent()){
 
 				DisplayTranslationArrow();
 
