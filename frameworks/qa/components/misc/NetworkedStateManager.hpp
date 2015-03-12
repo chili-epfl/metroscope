@@ -37,6 +37,7 @@ public:
 //	std::string getMasterHint();
 	std::string getPhase();
 	int getTurn();
+//	int** getBoard();
 	shoot getShoot();
 //	std::string getDeviceId();
 

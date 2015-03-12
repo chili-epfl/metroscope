@@ -55,6 +55,7 @@ class BattleshipAnalysisSheet : public FiducialDecorator
 		void update();
 		void DisplayGrid();
 		void DisplayMoves();
+		void DisplayVirus();
 		void DisplayOriginMarker(move thismove);
 		wykobi::point2d<float> ConvertCoords2MM(wykobi::point2d<float> pCoords);
 		wykobi::polygon<float, 2> ConvertPolyCoords2MM(wykobi::polygon<float, 2> pPolyCoords);

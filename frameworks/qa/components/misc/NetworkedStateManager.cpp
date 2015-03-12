@@ -495,6 +495,19 @@ int NetworkedStateManager::getTurn(){
 	return turn;
 }
 
+//int** NetworkedStateManager::getBoard(){
+//	pthread_mutex_lock(&classstate_mutex);
+//	int** matrix = new int*[201];
+//	for (int i = 0; i < 201; ++i)
+//	    matrix[i] = new int[201];
+//	//We copy the matrix elements one by one??? I think this is what makes the application laggy...
+//	for(int i=0;i<201;i++){
+//		for(int j=0;j<201;j++) matrix[i][j] = mClassroomState->GetGlobal().board[i][j];
+//	}
+//	pthread_mutex_unlock(&classstate_mutex);
+//	return matrix;
+//}
+
 shoot NetworkedStateManager::getShoot(){
 	pthread_mutex_lock(&shootstate_mutex);
 	shoot tShoot = mShootState->GetShoot();

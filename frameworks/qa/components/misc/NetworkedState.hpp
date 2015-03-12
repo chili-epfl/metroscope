@@ -45,6 +45,10 @@
 		static const std::string scTranslationLabel="translation";
 		static const std::string scIllegalLabel="illegal";
 		static const std::string scTeamIdLabel="_id";
+		static const std::string scNumVirusLabel="num_virus_cells";
+		static const std::string scBoardLabel="board";
+		static const std::string scTeamPointsLabel1="team";
+		static const std::string scTeamPointsLabel2="_points";
 
 
 #endif

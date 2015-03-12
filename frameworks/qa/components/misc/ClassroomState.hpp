@@ -10,6 +10,7 @@
 
 
 #include <string>
+#include <sstream>
 #include <vector>
 #include <json/json.h>
 #include "NetworkedState.hpp"
@@ -21,6 +22,9 @@ struct global_class{
 //	  std::string pauserDevice;
 	  std::string phase;
 	  int turn;
+//	  int board[201][201];
+//	  int num_virus_cells;
+//	  int team_points[4];
 };
 
 

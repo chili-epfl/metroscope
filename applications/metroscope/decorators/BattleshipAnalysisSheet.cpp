@@ -102,10 +102,18 @@ void decorators::BattleshipAnalysisSheet::update() {
 			&& mBLMarker->isPresent())
 	{
 
+		// Display things only in the analysis phase?
+		//		if(stateManager->getPhase().compare(scGameAnalysis)==0){
+
 		DisplayGrid();
 
 		DisplayMoves();
 
+		//Incomplete! and make the application laggy!
+		//DisplayVirus();
+
+
+//		}
 
 //		mDecoratorManager.GetDisplay().PushTransformation();
 //		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
@@ -329,5 +337,23 @@ void decorators::BattleshipAnalysisSheet::DisplayOriginMarker(move thismove) {
 	wykobi::point2d<float> tOriginMarkMM = ConvertCoords2MM(tOriginMarkCoords);
 	mDecoratorManager.GetDisplay().RenderEllipse(tOriginMarkMM.x, tOriginMarkMM.y,
 				10.0f, 10.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+
+}
+
+void decorators::BattleshipAnalysisSheet::DisplayVirus() {
+
+	//int** board = stateManager->getBoard();
+
+	//We calculate the range within the board that interests us (depending on the team's starting point)
+	float length_sheet = 1/scAxesOnSheet;//Length of the visible part of the board, in board units
+	//TODO: We calculate the part of the matrix that interests us
+
+
+	mDecoratorManager.GetDisplay().PushTransformation();
+	mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarker, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
+	//TODO: We paint the viruses in the board
+
+	mDecoratorManager.GetDisplay().PopTransformation();
+
 
 }

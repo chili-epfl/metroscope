@@ -13,6 +13,7 @@ ClassroomState::ClassroomState() {//The initialization always sets paused to fal
 //	global.pauserDevice="";
 	global.phase="";
 	global.turn=0;
+//	global.num_virus_cells=0;
 	mGlobal = global;
 }
 
@@ -39,7 +40,19 @@ bool ClassroomState::equals(ClassroomState* other){
 	if(this->mGlobal.paused!=other->GetGlobal().paused) return false;
 	if(this->mGlobal.phase.compare(other->GetGlobal().phase)!=0) return false;
 
-	if(mGlobal.turn != other->GetGlobal().turn) return false;
+	if(this->mGlobal.turn != other->GetGlobal().turn) return false;
+
+//	if(this->mGlobal.num_virus_cells != other->GetGlobal().num_virus_cells) return false;
+//
+//	for(int i=0; i<4; i++){
+//		if(this->mGlobal.team_points[i] != other->GetGlobal().team_points[i]) return false;
+//	}
+//
+//	for(int i=0; i<201; i++){
+//		for(int j=0; j<201; j++){
+//			if(this->mGlobal.board[i][j] != other->GetGlobal().board[i][j]) return false;
+//		}
+//	}
 
 	//If all else failed, they must be equal!
 	return true;
@@ -81,6 +94,29 @@ void ClassroomState::setJSON(std::string jsonstring){
 //	classVariables.phase = global[scMasterHint].asString();
 	classVariables.phase = global[scPhase].asString();
 	classVariables.turn = global[scTurn].asInt();
+//	classVariables.num_virus_cells = global[scNumVirusLabel].asInt();
+//	Json::Value rows = global[scBoardLabel];
+//	if(!rows.isArray()){
+//		std::cout << "Something's wrong, the board is not an array!" << std::endl;
+//		return;
+//	}else{
+//		for(int i=0; i<rows.size(); i++){
+//			Json::Value cells = rows[i];
+//			if(!cells.isArray()){
+//					std::cout << "Something's wrong, the board rows are not an array!" << std::endl;
+//					return;
+//				}else{
+//					for(int j=0;j<rows[i].size();j++) classVariables.board[i][j] = cells[j].asInt();
+//				}
+//		}
+//	}
+//
+//	for(int i=1; i<=4; i++){
+//		std::ostringstream variable;
+//		variable << scTeamPointsLabel1 << i << scTeamPointsLabel2;
+//		classVariables.team_points[i-1] = global[variable.str()].asInt();
+//	}
+
 	mGlobal = classVariables;
 
 	this->mChanged = false;
@@ -119,6 +155,23 @@ std::string ClassroomState::getJSON(bool pAlternate){
 //	global[scPauserDevice] = this->mGlobal.pauserDevice;
 	global[scPhase] = this->mGlobal.phase;
 	global[scTurn] = this->mGlobal.turn;
+//	global[scNumVirusLabel] = this->mGlobal.num_virus_cells;
+//	for(int i=1; i<=4; i++){
+//		std::ostringstream variable;
+//		variable << scTeamPointsLabel1 << i << scTeamPointsLabel2;
+//		global[variable.str()] = this->mGlobal.team_points[i-1];
+//	}
+//
+//	Json::Value board;
+//	for(int i=0; i<201; i++){
+//		Json::Value row;
+//		for(int j=0;j<201;j++){
+//			row.append(this->mGlobal.board[i][j]);
+//		}
+//		board.append(row);
+//	}
+//	json[scBoardLabel] = board;
+
 	json[scCurrentStateClassVariables] = global;
 
 
