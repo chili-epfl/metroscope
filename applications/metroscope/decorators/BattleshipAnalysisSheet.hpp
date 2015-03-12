@@ -28,7 +28,7 @@
 
 static const float scPX2MM = 1.72f;
 
-static const float scAxesOnSheet = 0.75f; //How much of the sheet represents the 1 unit of coords
+static const float scAxesOnSheet = 0.82f; //How much of the sheet represents the 1 unit of coords
 
 
 namespace decorators {
