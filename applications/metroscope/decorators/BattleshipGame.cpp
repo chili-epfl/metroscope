@@ -87,35 +87,40 @@ void decorators::BattleshipGame::update(){
 
 		if(isPolygonPresent()){
 
+			//We update the shooting information
+			//We setup the shoot state for the next phase, with this team's id
+			std::string tTeamId = stateManager->getShoot().team_id;
+			shoot tShoot;
+			tShoot.team_id = tTeamId;
+
+			tShoot.polygon = this->getFirstPolygon();
 			DisplayFirstPolygon();
 
-			if( mLinearX->isPresent() &&  mLinearY->isPresent()){
-
-				DisplayTranslationArrow();
+			float x = 0.0f;
+			float y = 0.0f;
+			if( mLinearX->isPresent()){
+				x = this->mLinearX->proportion();
+			}
+			if(mLinearY->isPresent()){
+				y = this->mLinearY->proportion();
 
 			}
+			tShoot.translation = wykobi::make_point(x,y);
+			DisplayTranslationArrow(x,y);
 
+			int rotation = 0;
 			if( mRotation->isPresent() ){
-
-				DisplayRotationAngle();
-
+				rotation = (this->mRotation->GetProportion())*360;
 			}
+			tShoot.rotation = rotation;
+			DisplayRotationAngle(x, y, rotation);
 
-			DisplayTransformedPolygon();
+			DisplayTransformedPolygon(x,y,rotation);
 
-
+			stateManager->SetShoot(tShoot);
 
 		}
 
-		//We update the shooting information
-		//We setup the shoot state for the next phase, with this team's id
-		std::string tTeamId = stateManager->getShoot().team_id;
-		shoot tShoot;
-		tShoot.team_id = tTeamId;
-		tShoot.rotation = (this->mRotation->GetProportion())*360;
-		tShoot.translation = wykobi::make_point(this->mLinearX->proportion(),this->mLinearY->proportion());
-		tShoot.polygon = this->getFirstPolygon();
-		stateManager->SetShoot(tShoot);
 
 
 	}
@@ -207,14 +212,14 @@ std::vector<float> decorators::BattleshipGame::polygonToVertices(wykobi::polygon
 }
 
 
-void decorators::BattleshipGame::DisplayTranslationArrow(){
+void decorators::BattleshipGame::DisplayTranslationArrow(float pX, float pY){
 
-	if(mLinearX->isPresent() && mLinearY->isPresent()){
+		if(pX==0 && pY==0) return;
 
 		mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarkerShoot, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
 
-		wykobi::point2d<float> endpoint = wykobi::make_point(mLinearX->proportion(), mLinearY->proportion());//We construct the endpoint representing the translation
+		wykobi::point2d<float> endpoint = wykobi::make_point(pX, pY);//We construct the endpoint representing the translation
 		endpoint = wykobi::mirror(endpoint, wykobi::make_line(0.0f, 0.0f, 100.0f, 0.0f));
 		endpoint = wykobi::scale(scMM2DisplayMult*scBoard2MMMult, scMM2DisplayMult*scBoard2MMMult, endpoint);
 //		std::cout << "Rendered lines to " << endpoint.x << "," << endpoint.y << std::endl;
@@ -223,37 +228,19 @@ void decorators::BattleshipGame::DisplayTranslationArrow(){
 
 		mDecoratorManager.GetDisplay().PopTransformation();
 
-	}
-
-
 
 }
 
-void decorators::BattleshipGame::DisplayRotationAngle(){
+void decorators::BattleshipGame::DisplayRotationAngle(float pX, float pY, int pRotation){
 
-	float translationx;
-	float translationy;
-	if(!mLinearX->isPresent()){
-		translationx = 0.0f;
-	}else{
-		translationx = mLinearX->proportion();
-	}
-	if(!mLinearY->isPresent()){
-		translationy = 0.0f;
-	}else{
-		translationy = mLinearY->proportion();
-	}
-
-	if(mRotation->isPresent()){
-
-		float rotation = mRotation->GetAngle();
+		if(pRotation==0) return;
 
 		//We draw the two segments, and the arc in between, always starting at x axis
 		wykobi::segment<float,2> line1 = wykobi::make_segment(0.0f, 0.0f, 100.0f, 0.0f);
-		wykobi::segment<float,2> line2 = wykobi::rotate(rotation, line1);
+		wykobi::segment<float,2> line2 = wykobi::rotate((float) pRotation, line1);
 
 		//We calculate the translation to where this will have to be drawn
-		wykobi::point2d<float> endpoint = wykobi::make_point(translationx, translationy);//We construct the endpoint representing the translation
+		wykobi::point2d<float> endpoint = wykobi::make_point(pX, pY);//We construct the endpoint representing the translation
 		endpoint = wykobi::mirror(endpoint, wykobi::make_line(0.0f, 0.0f, 100.0f, 0.0f));
 		endpoint = wykobi::scale(scMM2DisplayMult*scBoard2MMMult, scMM2DisplayMult*scBoard2MMMult, endpoint);
 
@@ -264,42 +251,19 @@ void decorators::BattleshipGame::DisplayRotationAngle(){
 		mDecoratorManager.GetDisplay().RenderLine(endpoint.x, endpoint.y, endpoint.x+line2[1].x, endpoint.y+line2[1].y, 0.0f, 0.0f, 0.0f, 1.0f);
 //		std::cout << "Rendered lines from " << endpoint.x << "," << endpoint.y << " to " << endpoint.x+line2[1].x << "," << endpoint.y+line2[1].y << std::endl;
 
-		mDecoratorManager.GetDisplay().RenderArc(endpoint.x, endpoint.y, 30.0f, 30.0f, 0.0f, rotation, 0.0f, 0.0f, 0.0f, 1.0f);
+		mDecoratorManager.GetDisplay().RenderArc(endpoint.x, endpoint.y, 30.0f, 30.0f, 0, pRotation, 0.0f, 0.0f, 0.0f, 1.0f);
 
 		mDecoratorManager.GetDisplay().PopTransformation();
 
 
 
-	}
-
-
 }
 
-void decorators::BattleshipGame::DisplayTransformedPolygon(){
+void decorators::BattleshipGame::DisplayTransformedPolygon(float pX, float pY, int pRotation){
 
-	float translationx;
-	float translationy;
-	float rotation;
-	if(!mLinearX->isPresent()){
-		translationx = 0.0f;
-	}else{
-		translationx = mLinearX->proportion();
-	}
-	if(!mLinearY->isPresent()){
-		translationy = 0.0f;
-	}else{
-		translationy = mLinearY->proportion();
-	}
-	if(mRotation->isPresent()){
-		rotation = mRotation->GetAngle();
-	}else{
-		rotation = 0.0f;
-	}
-
-	if(isPolygonPresent()){
 
 		//We calculate the translation to where this will have to be drawn
-		wykobi::point2d<float> endpoint = wykobi::make_point(translationx, translationy);//We construct the endpoint representing the translation
+		wykobi::point2d<float> endpoint = wykobi::make_point(pX, pY);//We construct the endpoint representing the translation
 		endpoint = wykobi::mirror(endpoint, wykobi::make_line(0.0f, 0.0f, 100.0f, 0.0f));
 		endpoint = wykobi::scale(scMM2DisplayMult*scBoard2MMMult, scMM2DisplayMult*scBoard2MMMult, endpoint);
 
@@ -322,7 +286,7 @@ void decorators::BattleshipGame::DisplayTransformedPolygon(){
 		//We further translate it by the endpoint
 		poly = wykobi::translate(endpoint.x, endpoint.y, poly);
 		//We rotate it
-		poly = wykobi::rotate(rotation,poly, endpoint);
+		poly = wykobi::rotate((float) pRotation,poly, endpoint);
 
 		std::vector<float> vertices = polygonToVertices(poly);
 		mDecoratorManager.GetDisplay().RenderPolygon(vertices, 0.0f, 0.0f, 0.0f, 1.0f);
@@ -333,11 +297,6 @@ void decorators::BattleshipGame::DisplayTransformedPolygon(){
 
 
 		mDecoratorManager.GetDisplay().PopTransformation();
-
-
-
-	}
-
 
 
 }

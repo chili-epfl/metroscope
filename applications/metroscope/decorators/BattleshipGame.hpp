@@ -71,9 +71,9 @@ class BattleshipGame : public FiducialDecorator
 		void DisplayPolygonAxes();
 		wykobi::polygon<float,2> getFirstPolygon();
 		void DisplayFirstPolygon();
-		void DisplayTranslationArrow();
-		void DisplayRotationAngle();
-		void DisplayTransformedPolygon();
+		void DisplayTranslationArrow(float pX, float pY);
+		void DisplayRotationAngle(float pX, float pY, int pRotation);
+		void DisplayTransformedPolygon(float pX, float pY, int pRotation);
 		std::vector<float> polygonToVertices(wykobi::polygon<float, 2> polygon);
 
 
