@@ -98,10 +98,10 @@ void decorators::BattleshipGame::update(){
 
 			float x = 0.0f;
 			float y = 0.0f;
-			if( mLinearX->isPresent()){
+			if( this->mLinearX->isPresent()){
 				x = this->mLinearX->proportion();
 			}
-			if(mLinearY->isPresent()){
+			if(this->mLinearY->isPresent()){
 				y = this->mLinearY->proportion();
 
 			}
@@ -109,7 +109,7 @@ void decorators::BattleshipGame::update(){
 			DisplayTranslationArrow(x,y);
 
 			int rotation = 0;
-			if( mRotation->isPresent() ){
+			if( this->mRotation->isPresent() ){
 				rotation = (this->mRotation->GetProportion())*360;
 			}
 			tShoot.rotation = rotation;
@@ -214,7 +214,7 @@ std::vector<float> decorators::BattleshipGame::polygonToVertices(wykobi::polygon
 
 void decorators::BattleshipGame::DisplayTranslationArrow(float pX, float pY){
 
-		if(pX==0 && pY==0) return;
+		if(pX==0.0f && pY==0.0f) return;
 
 		mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().TransformToMarkersLocalCoordinatesFixed(*mMarkerShoot, scREAL_WORLD_MARKER_WIDTH_MM, scREAL_WORLD_MARKER_HEIGHT_MM, mDecoratorManager.GetCam2World(), mDecoratorManager.GetWorld2Proj());
