@@ -1,5 +1,5 @@
 /*
- * DeviceState.hpp
+ * ShootState.hpp
  *
  *  Created on: May 13, 2014
  *      Author: lprisan

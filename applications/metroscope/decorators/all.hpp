@@ -128,7 +128,7 @@
 #include "PolyViewCoords.hpp"
 #include "PolyViewSideMeasures.hpp"
 #include "BattleshipGame.hpp"
-#include "BattleshipAnalysisSheet.hpp"
+//#include "BattleshipAnalysisSheet.hpp"//Not needed in polyfut game
 #include "SimpleText.hpp"
 #include "AngleShoot.hpp"
 #include "RotationShoot.hpp"

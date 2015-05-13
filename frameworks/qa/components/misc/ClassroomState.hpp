@@ -22,6 +22,7 @@ struct global_class{
 //	  std::string pauserDevice;
 	  std::string phase;
 	  int turn;
+	  std::string title;
 //	  int board[201][201];
 //	  int num_virus_cells;
 //	  int team_points[4];
@@ -54,6 +55,8 @@ public:
 
 	void setJSON(std::string jsonstring);
 	Json::Value getJSONObject(std::string jsonMessage);
+
+
 
 
 private:

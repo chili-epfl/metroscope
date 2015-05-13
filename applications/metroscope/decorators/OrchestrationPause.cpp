@@ -44,11 +44,11 @@ void decorators::OrchestrationPause::update() {
 	//std::cout << "Entering orchestration decorator. Classroom pause: " << stateManager->isClassroomPaused() << std::endl;
 	if (mMarker->isPresent())
 	{
-		stateManager->addMarkerToDeviceState("pause");
+		//stateManager->addMarkerToDeviceState("pause");
 		stateManager->SetClassroomPaused(true);
 	}
 	else{
-		stateManager->removeMarkerFromDeviceState("pause");
+		//stateManager->removeMarkerFromDeviceState("pause");
 		if(stateManager->getPauserDevice().compare(stateManager->getDeviceId())==0) stateManager->SetClassroomPaused(false);//if this was the device that paused, we unpause
 	}
 	if(stateManager->isClassroomPaused()) blackoutScreen();

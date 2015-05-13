@@ -44,7 +44,7 @@ mLastToggle(Time::MillisTimestamp())
 }
 
 void decorators::OrchestrationPauseFlipper::update() {
-	std::cout << "Entering orchestration decorator. Classroom pause: " << stateManager->isClassroomPaused() << std::endl;
+	//std::cout << "Entering orchestration decorator. Classroom pause: " << stateManager->isClassroomPaused() << std::endl;
 	if (mFlipper->IsPresent() && mFlipper->GetCurrentSide() != NULL)
 	{
 		//We have the pausing flipper on sight...

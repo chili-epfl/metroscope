@@ -13,6 +13,7 @@ ClassroomState::ClassroomState() {//The initialization always sets paused to fal
 //	global.pauserDevice="";
 	global.phase="";
 	global.turn=0;
+	global.title="";
 //	global.num_virus_cells=0;
 	mGlobal = global;
 }
@@ -39,7 +40,7 @@ bool ClassroomState::equals(ClassroomState* other){
 
 	if(this->mGlobal.paused!=other->GetGlobal().paused) return false;
 	if(this->mGlobal.phase.compare(other->GetGlobal().phase)!=0) return false;
-
+	if(this->mGlobal.title.compare(other->GetGlobal().title)!=0) return false;
 	if(this->mGlobal.turn != other->GetGlobal().turn) return false;
 
 //	if(this->mGlobal.num_virus_cells != other->GetGlobal().num_virus_cells) return false;
@@ -93,6 +94,7 @@ void ClassroomState::setJSON(std::string jsonstring){
 //	classVariables.pauserDevice = global[scPauserDevice].asString();
 //	classVariables.phase = global[scMasterHint].asString();
 	classVariables.phase = global[scPhase].asString();
+	classVariables.title = value[scTitle].asString();
 	classVariables.turn = global[scTurn].asInt();
 //	classVariables.num_virus_cells = global[scNumVirusLabel].asInt();
 //	Json::Value rows = global[scBoardLabel];
@@ -121,7 +123,7 @@ void ClassroomState::setJSON(std::string jsonstring){
 
 	this->mChanged = false;
 
-	std::cout << "Classroom state set. Phase " << mGlobal.phase << std::endl;
+	//std::cout << "Classroom state set. Title " << mGlobal.title << std::endl;
 
 }
 
@@ -135,6 +137,9 @@ std::string ClassroomState::getJSON(bool pAlternate){
 
 	if(!pAlternate)	json[scMeteorIdLabel] = this->mMeteorId;//The normal encoding sets the meteor _id
 	else json[scClassroomIdLabel] = this->mMeteorId;//The alternate encoding sets the classroomid
+
+	json[scTitle] = this->mGlobal.title;
+
 
 	//devices
 /*

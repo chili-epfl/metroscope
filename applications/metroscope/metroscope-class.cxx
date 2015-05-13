@@ -178,9 +178,9 @@ int main(int argc, char* argv[])
 	Wait tWaitDevice(tWaitDeviceTime);
 	Wait tWaitClassroom(tWaitClassroomTime);
 	PutPostRemoteJSONString tPutRemoteShoot(tUrlShoot, SHOOT);
-	PutPostRemoteJSONString tPutRemoteClassroom(tUrlClassroom, CLASSROOM);
+//	PutPostRemoteJSONString tPutRemoteClassroom(tUrlClassroom, CLASSROOM);
 	GetRemoteJSONString tGetRemoteClassroom(tUrlClassroom, CLASSROOM);
-	GetRemoteJSONString tGetRemoteDevices(tUrlDevice, DEVICE);
+//	GetRemoteJSONString tGetRemoteDevices(tUrlDevice, DEVICE);
 
 	//Initializing the CV and tag detection pipeables...
 	if (!tGrabber)
@@ -231,16 +231,19 @@ int main(int argc, char* argv[])
 //    tPutRemoteDevice
 //    | tWaitDevice
 //    | tPutRemoteDevice;
-
 //    tPutRemoteDevice.startNoWait();
 
 	//Devices+shoot Getting/Putting thread
-	    tGetRemoteDevices
-	    | tPutRemoteShoot
-	    | tWaitDevice
-	    | tGetRemoteDevices;
-
-	    tGetRemoteDevices.startNoWait();
+//	    tGetRemoteDevices
+//	    | tPutRemoteShoot
+//	    | tWaitDevice
+//	    | tGetRemoteDevices;
+//	    tGetRemoteDevices.startNoWait();
+	// For polyfut we only need to put the current shooting position, not get the others
+	tPutRemoteShoot
+	| tWaitDevice
+	| tPutRemoteShoot;
+	tPutRemoteShoot.startNoWait();
 
 	//Define and start the classroom HTTP getter/putter thread...
 	tGetRemoteClassroom
@@ -269,8 +272,10 @@ int main(int argc, char* argv[])
 	tGrabber->stop();
 	tGrabber->join();
 
-	tGetRemoteDevices.stop();
-	tGetRemoteDevices.join();
+//	tGetRemoteDevices.stop();
+//	tGetRemoteDevices.join();
+	tPutRemoteShoot.stop();
+	tPutRemoteShoot.join();
 
 	tGetRemoteClassroom.stop();
 	tGetRemoteClassroom.join();
@@ -288,7 +293,7 @@ int main(int argc, char* argv[])
 	delete tGrabber;
 	delete &tGetRemoteClassroom;
 	delete &tWaitClassroom;
-	delete &tGetRemoteDevices;
+//	delete &tGetRemoteDevices;
 	delete &tPutRemoteShoot;
 	delete &tWaitDevice;
 

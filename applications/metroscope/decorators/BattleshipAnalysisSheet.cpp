@@ -24,7 +24,7 @@
 
 //#include <qa/utils/CvWykobiBridge.hpp>
 //#include <qa/utils/Geometry.hpp>
-#include "../../../frameworks/qa/components/misc/DeviceState.hpp"
+//#include "../../../frameworks/qa/components/misc/DeviceState.hpp"
 #include "../../../frameworks/qa/components/misc/ShootState.hpp"
 #include "../../../frameworks/qa/components/misc/NetworkedStateManager.hpp"
 #include "../../../frameworks/qa/components/vision/FiducialMarker.hpp"
@@ -251,17 +251,17 @@ void decorators::BattleshipAnalysisSheet::DisplayMoves() {
 
 			if(thismove.team == mTeam){ //In each sheet, we only display that team's moves
 
-				wykobi::point2d<float> newOrigin = wykobi::make_point(thismove.origin.x+thismove.translation.x,thismove.origin.y+thismove.translation.y);
+				//wykobi::point2d<float> newOrigin = wykobi::make_point(thismove.origin.x+thismove.translation.x,thismove.origin.y+thismove.translation.y);
 			    wykobi::polygon<float, 2> newPolygon = rotatePolygon(thismove.polygon, thismove.rotation);
 			    wykobi::polygon<float, 2> finalPolygon = wykobi::translate(newOrigin.x, newOrigin.y, newPolygon);
 			    //We convert the polygon to draw in coords (-1,1) to the coordinates for display
 			    wykobi::polygon<float, 2> displayPolygon = ConvertPolyCoords2MM(finalPolygon);
 
-			    if(!thismove.illegal){
-				    mDecoratorManager.GetDisplay().RenderPolygonFilled(polygonToVertices(displayPolygon), 0.0f, 0.0f, 0.0f, 0.5f);
-			    }else{
-				    mDecoratorManager.GetDisplay().RenderPolygon(polygonToVertices(displayPolygon), 0.0f, 0.0f, 0.0f, 1.0f);
-			    }
+//			    if(!thismove.illegal){
+//				    mDecoratorManager.GetDisplay().RenderPolygonFilled(polygonToVertices(displayPolygon), 0.0f, 0.0f, 0.0f, 0.5f);
+//			    }else{
+//				    mDecoratorManager.GetDisplay().RenderPolygon(polygonToVertices(displayPolygon), 0.0f, 0.0f, 0.0f, 1.0f);
+//			    }
 			    //TODO: fill with the team's colors, with possible variants
 				//TODO: vary the drawing of illegal moves
 

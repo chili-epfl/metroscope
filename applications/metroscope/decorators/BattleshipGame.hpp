@@ -34,13 +34,18 @@
 #include "../FractionsConstants.hpp"
 
 
-	static const char * const scMainMenu = "MainMenu";
-	static const char * const scGameNewTurn = "GameNewTurn";
-	static const char * const scGameAnalysis = "GameAnalysis";
-	static const char * const scGameShoot = "GameShoot";
-	static const char * const scGameResolve = "GameResolve";
-	static const char * const scGameWin = "GameWin";
-	static const char * const scGameOver = "GameOver";
+//	static const char * const scMainMenu = "MainMenu";
+//	static const char * const scGameNewTurn = "GameNewTurn";
+//	static const char * const scGameAnalysis = "GameAnalysis";
+//	static const char * const scGameShoot = "GameShoot";
+//	static const char * const scGameResolve = "GameResolve";
+//	static const char * const scGameWin = "GameWin";
+//	static const char * const scGameOver = "GameOver";
+	static const char * const scGameInitial = "Initial";
+	static const char * const scGameNewTurn = "NewTurn";
+	static const char * const scGameShoot = "Shoot";
+	static const char * const scGameResolve = "Resolution";
+	static const char * const scGameOver = "EndGame";
 
 	static const float scMM2DisplayMult = 25.0f;
 	static const float scBoard2MMMult = 17.0f;

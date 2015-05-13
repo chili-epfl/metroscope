@@ -9,8 +9,8 @@
 
 
 NetworkedStateManager::NetworkedStateManager() {
-	mDeviceState = new DeviceState;
-	devstate_mutex = PTHREAD_MUTEX_INITIALIZER;
+	//mDeviceState = new DeviceState;
+	//devstate_mutex = PTHREAD_MUTEX_INITIALIZER;
 	mClassroomState = new ClassroomState;
 	classstate_mutex = PTHREAD_MUTEX_INITIALIZER;
 	mShootState = new ShootState;
@@ -89,14 +89,14 @@ void NetworkedStateManager::SetTeamMeteorId(std::string pId){
 //}
 
 
-bool NetworkedStateManager::hasDeviceChanged(){
-
-	bool change;
-	pthread_mutex_lock(&devstate_mutex);
-	change = mDeviceState->hasChanged();
-	pthread_mutex_unlock(&devstate_mutex);
-	return change;
-}
+//bool NetworkedStateManager::hasDeviceChanged(){
+//
+//	bool change;
+//	pthread_mutex_lock(&devstate_mutex);
+//	change = mDeviceState->hasChanged();
+//	pthread_mutex_unlock(&devstate_mutex);
+//	return change;
+//}
 
 bool NetworkedStateManager::hasClassroomChanged(){
 
@@ -116,14 +116,14 @@ bool NetworkedStateManager::hasShootChanged(){
 	return change;
 }
 
-std::string NetworkedStateManager::getDeviceJSON(){
-
-	std::string json;
-	pthread_mutex_lock(&devstate_mutex);
-	json = mDeviceState->getJSON();
-	pthread_mutex_unlock(&devstate_mutex);
-	return json;
-}
+//std::string NetworkedStateManager::getDeviceJSON(){
+//
+//	std::string json;
+//	pthread_mutex_lock(&devstate_mutex);
+//	json = mDeviceState->getJSON();
+//	pthread_mutex_unlock(&devstate_mutex);
+//	return json;
+//}
 
 std::string NetworkedStateManager::getClassroomJSON(){
 	std::string json;
@@ -161,12 +161,12 @@ std::string NetworkedStateManager::getShootJSON(){
 
 
 
-void NetworkedStateManager::SetHasDeviceChanged(bool changed){
-
-	pthread_mutex_lock(&devstate_mutex);
-	mDeviceState->SetHasChanged(changed);
-	pthread_mutex_unlock(&devstate_mutex);
-}
+//void NetworkedStateManager::SetHasDeviceChanged(bool changed){
+//
+//	pthread_mutex_lock(&devstate_mutex);
+//	mDeviceState->SetHasChanged(changed);
+//	pthread_mutex_unlock(&devstate_mutex);
+//}
 
 void NetworkedStateManager::SetHasClassroomChanged(bool changed){
 
@@ -190,12 +190,12 @@ void NetworkedStateManager::SetClassroomJSON(std::string jsonData){
 	pthread_mutex_unlock(&classstate_mutex);
 }
 
-void NetworkedStateManager::SetDeviceJSON(std::string jsonData){
-
-	pthread_mutex_lock(&devstate_mutex);
-	mDeviceState->setJSON(jsonData, this->getTurn());
-	pthread_mutex_unlock(&devstate_mutex);
-}
+//void NetworkedStateManager::SetDeviceJSON(std::string jsonData){
+//
+//	pthread_mutex_lock(&devstate_mutex);
+//	mDeviceState->setJSON(jsonData, this->getTurn());
+//	pthread_mutex_unlock(&devstate_mutex);
+//}
 
 void NetworkedStateManager::SetShootJSON(std::string jsonData){
 
@@ -212,6 +212,7 @@ void NetworkedStateManager::SetClassroomPaused(bool paused){
 //	std::string oldMasterHint = mClassroomState->GetGlobal().masterHint;
 	std::string oldPhase = mClassroomState->GetGlobal().phase;
 	int oldTurn = mClassroomState->GetGlobal().turn;
+	std::string oldTitle = mClassroomState->GetGlobal().title;
 
 	//if currently it is unpaused and we want to pause it, we just do it
 	if(!oldPause && paused){
@@ -221,6 +222,7 @@ void NetworkedStateManager::SetClassroomPaused(bool paused){
 //		newGlobal.pauserDevice = newPauser;
 //		newGlobal.masterHint = oldMasterHint;
 		newGlobal.phase = oldPhase;
+		newGlobal.title = oldTitle;
 		newGlobal.turn = oldTurn;
 		mClassroomState->SetGlobal(newGlobal);
 		mClassroomState->SetHasChanged(true);
@@ -236,6 +238,7 @@ void NetworkedStateManager::SetClassroomPaused(bool paused){
 //		newGlobal.pauserDevice = "";
 //		newGlobal.masterHint = oldMasterHint;
 		newGlobal.phase = oldPhase;
+		newGlobal.title = oldTitle;
 		newGlobal.turn = oldTurn;
 		mClassroomState->SetGlobal(newGlobal);
 		mClassroomState->SetHasChanged(true);
@@ -274,12 +277,14 @@ void NetworkedStateManager::SetPhase(std::string pPhase){
 	std::string oldPhase = mClassroomState->GetGlobal().phase;
 	bool oldPaused = mClassroomState->GetGlobal().paused;
 	int oldTurn = mClassroomState->GetGlobal().turn;
+	std::string oldTitle = mClassroomState->GetGlobal().title;
 
 	//if the current hint is different from the one passed, we change it
 	if(oldPhase.compare(pPhase)!=0){
 		global_class newGlobal;
 		newGlobal.paused = oldPaused;
 		newGlobal.phase = pPhase;
+		newGlobal.title = oldTitle;
 		newGlobal.turn = oldTurn;
 		mClassroomState->SetGlobal(newGlobal);
 		mClassroomState->SetHasChanged(true);
@@ -290,18 +295,45 @@ void NetworkedStateManager::SetPhase(std::string pPhase){
 	pthread_mutex_unlock(&classstate_mutex);
 }
 
+void NetworkedStateManager::SetTitle(std::string pTitle){
+
+	pthread_mutex_lock(&classstate_mutex);
+	std::string oldPhase = mClassroomState->GetGlobal().title;
+	bool oldPaused = mClassroomState->GetGlobal().paused;
+	int oldTurn = mClassroomState->GetGlobal().turn;
+	std::string oldTitle = mClassroomState->GetGlobal().title;
+
+	//if the current hint is different from the one passed, we change it
+	if(oldTitle.compare(pTitle)!=0){
+		global_class newGlobal;
+		newGlobal.paused = oldPaused;
+		newGlobal.phase = oldPhase;
+		newGlobal.title = pTitle;
+		newGlobal.turn = oldTurn;
+		mClassroomState->SetGlobal(newGlobal);
+		mClassroomState->SetHasChanged(true);
+	}
+
+	//else, we do nothing
+
+	pthread_mutex_unlock(&classstate_mutex);
+}
+
+
 void NetworkedStateManager::SetTurn(int pTurn){
 
 	pthread_mutex_lock(&classstate_mutex);
 	std::string oldPhase = mClassroomState->GetGlobal().phase;
 	bool oldPaused = mClassroomState->GetGlobal().paused;
 	int oldTurn = mClassroomState->GetGlobal().turn;
+	std::string oldTitle = mClassroomState->GetGlobal().title;
 
 	//if the current hint is different from the one passed, we change it
 	if(oldTurn != pTurn){
 		global_class newGlobal;
 		newGlobal.paused = oldPaused;
 		newGlobal.phase = oldPhase;
+		newGlobal.title = oldTitle;
 		newGlobal.turn = pTurn;
 		mClassroomState->SetGlobal(newGlobal);
 		mClassroomState->SetHasChanged(true);
@@ -488,6 +520,14 @@ std::string NetworkedStateManager::getPhase(){
 	return phase;
 }
 
+std::string NetworkedStateManager::getTitle(){
+	pthread_mutex_lock(&classstate_mutex);
+	std::string title(mClassroomState->GetGlobal().title);
+	pthread_mutex_unlock(&classstate_mutex);
+	return title;
+}
+
+
 int NetworkedStateManager::getTurn(){
 	pthread_mutex_lock(&classstate_mutex);
 	int turn = mClassroomState->GetGlobal().turn;
@@ -515,19 +555,19 @@ shoot NetworkedStateManager::getShoot(){
 	return tShoot;
 }
 
-std::vector<move> NetworkedStateManager::getMoves(){
-	pthread_mutex_lock(&devstate_mutex);
-	std::vector<move> moves(mDeviceState->GetDevice().moves);
-	pthread_mutex_unlock(&devstate_mutex);
-	return moves;
-}
+//std::vector<move> NetworkedStateManager::getMoves(){
+//	pthread_mutex_lock(&devstate_mutex);
+//	std::vector<move> moves(mDeviceState->GetDevice().moves);
+//	pthread_mutex_unlock(&devstate_mutex);
+//	return moves;
+//}
 
-std::vector<move> NetworkedStateManager::getCurrentMove(){
-	pthread_mutex_lock(&devstate_mutex);
-	std::vector<move> current(mDeviceState->GetDevice().currentMove);
-	pthread_mutex_unlock(&devstate_mutex);
-	return current;
-}
+//std::vector<move> NetworkedStateManager::getCurrentMove(){
+//	pthread_mutex_lock(&devstate_mutex);
+//	std::vector<move> current(mDeviceState->GetDevice().currentMove);
+//	pthread_mutex_unlock(&devstate_mutex);
+//	return current;
+//}
 
 //std::string NetworkedStateManager::getDeviceId(){
 //	pthread_mutex_lock(&devstate_mutex);

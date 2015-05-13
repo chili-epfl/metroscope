@@ -76,12 +76,14 @@ void decorators::BattleshipGame::update(){
 	std::string tPhase = stateManager->getPhase();
 
 
-	if(tPhase.compare(scGameNewTurn)==0 ||
-			tPhase.compare(scMainMenu)==0 ||
-			tPhase.compare(scGameOver)==0 ||
-			tPhase.compare(scGameWin)==0 ||
-			tPhase.compare(scGameResolve)==0) GreyOutScreen();
-	else if(tPhase.compare(scGameShoot)==0){//If we are in the shooting phase, we display the selected polygon, and the rotated/translated version
+//	if(tPhase.compare(scGameNewTurn)==0 ||
+//			tPhase.compare(scMainMenu)==0 ||
+//			tPhase.compare(scGameOver)==0 ||
+//			tPhase.compare(scGameWin)==0 ||
+//			tPhase.compare(scGameResolve)==0) GreyOutScreen();
+
+
+	if(tPhase.compare(scGameNewTurn)==0){//If we are in the turn phase, we display the selected polygon, and the rotated/translated version
 		//Wendy thought the axes were confusing
 		//DisplayPolygonAxes();
 
@@ -307,25 +309,25 @@ void decorators::BattleshipGame::DisplayPhase(){
 	//We generate the title for this phase
 	int tTurn = stateManager->getTurn();
 	std::string tPhase = stateManager->getPhase();
+	std::string tTitle = stateManager->getTitle();
+
+	//std::cout << "Title: " << tTitle << " Phase: " << tPhase << " Turn: " << tTurn << std::endl;
+
 	if(tTurn!=0){
-		tMessage << "Turn " << tTurn << " - ";
+		tMessage << "Tour " << tTurn;
+		if(tPhase.compare(scGameNewTurn)==0){
+			//Just the turn number is OK
+		} else if(tPhase.compare(scGameOver)==0){
+			tMessage  << " - C'est fini!";
+		} else if(tPhase.compare(scGameShoot)==0){
+			tMessage << " - Tir";
+		} else if(tPhase.compare(scGameResolve)==0){
+			tMessage << " - Voilà!";
+		}
+	}else{
+		tMessage << tTitle;
 	}
 
-	if(tPhase.compare(scGameNewTurn)==0){
-		tMessage << "New Turn";
-	} else if(tPhase.compare(scMainMenu)==0){
-		tMessage << "";
-	} else if(tPhase.compare(scGameOver)==0){
-		tMessage << "Game Over";
-	} else if(tPhase.compare(scGameWin)==0){
-		tMessage << "Well Done!";
-	} else if(tPhase.compare(scGameAnalysis)==0){
-		tMessage << "Analysis Phase";
-	} else if(tPhase.compare(scGameShoot)==0){
-		tMessage << "Shooting Phase";
-	} else if(tPhase.compare(scGameResolve)==0){
-		tMessage << "Results";
-	}
 
 	const std::string tmp = tMessage.str();
 
