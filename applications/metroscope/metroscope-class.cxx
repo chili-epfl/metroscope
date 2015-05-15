@@ -123,12 +123,12 @@ int main(int argc, char* argv[])
 
 			}
 		}
-		else if (tArgument.substr(0,11) == "-urldevice=")
-		{
-			if(tArgument.length()>11){
-			  tUrlDevice = tArgument.substr(11,tArgument.length());
-			}
-		}
+//		else if (tArgument.substr(0,11) == "-urldevice=")
+//		{
+//			if(tArgument.length()>11){
+//			  tUrlDevice = tArgument.substr(11,tArgument.length());
+//			}
+//		}
 		else if (tArgument.substr(0,14) == "-urlclassroom=")
 		{
 			if(tArgument.length()>14){
@@ -158,9 +158,11 @@ int main(int argc, char* argv[])
 	}
 
 	//If we do not have URLs, we just quit
-	if(tUrlClassroom.length()==0 || tUrlDevice.length()==0 || tUrlShoot.length()==0 ){
+//	if(tUrlClassroom.length()==0 || tUrlDevice.length()==0 || tUrlShoot.length()==0 ){
+	if(tUrlClassroom.length()==0 || tUrlShoot.length()==0 ){
 			  std::cout << "Missing parameters: " << std::endl;
-			  std::cout << "metroscope-class [-opencv] [-nolog] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://... -urlshoot=http://..." << std::endl;
+			  //std::cout << "metroscope-class [-opencv] [-nolog] [-waitdevice=500] [-waitclassroom=1000] -urldevice=http://... -urlclassroom=http://... -urlshoot=http://..." << std::endl;
+			  std::cout << "metroscope-class [-opencv] [-nolog] [-waitdevice=500] [-waitclassroom=1000] -urlclassroom=http://... -urlshoot=http://..." << std::endl;
 		      return(0);
 
 			}
