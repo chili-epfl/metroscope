@@ -74,7 +74,7 @@ void decorators::BattleshipGame::update(){
 	DisplayPhase();
 	//If we are in the new turn, main menu or game over or game win, we grey out the screen
 	std::string tPhase = stateManager->getPhase();
-
+	int tTurn = stateManager->getTurn();
 
 //	if(tPhase.compare(scGameNewTurn)==0 ||
 //			tPhase.compare(scMainMenu)==0 ||
@@ -83,9 +83,7 @@ void decorators::BattleshipGame::update(){
 //			tPhase.compare(scGameResolve)==0) GreyOutScreen();
 
 
-	if(tPhase.compare(scGameNewTurn)==0){//If we are in the turn phase, we display the selected polygon, and the rotated/translated version
-		//Wendy thought the axes were confusing
-		DisplayPolygonAxes();
+	if(tPhase.compare(scGameNewTurn)==0 || tTurn==0){//If we are in the turn phase (or in one of the other activities), we display the selected polygon, and the rotated/translated version
 
 		//We update the shooting information
 		//We setup the shoot state for the next phase, with this team's id
@@ -102,7 +100,12 @@ void decorators::BattleshipGame::update(){
 			y = this->mLinearY->proportion();
 		}
 		tShoot.translation = wykobi::make_point(x,y);
-		if( this->mLinearX->isPresent() || this->mLinearY->isPresent() ) DisplayTranslationArrow(x,y);
+		if( this->mLinearX->isPresent() || this->mLinearY->isPresent() ){
+			//Wendy thought the axes were confusing
+			DisplayPolygonAxes();
+
+			DisplayTranslationArrow(x,y);
+		}
 
 		int rotation = 0;
 		if( this->mRotation->isPresent() ){

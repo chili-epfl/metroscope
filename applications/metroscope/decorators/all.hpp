@@ -120,7 +120,7 @@
 #include "OrchestrationPauseFlipper.hpp"
 
 
-//Battleship
+//Battleship/Polyfut
 #include "PolyModel.hpp"
 #include "PolyViewPerimeter.hpp"
 #include "PolyViewAngleMeasures.hpp"
@@ -133,3 +133,4 @@
 #include "AngleShoot.hpp"
 #include "RotationShoot.hpp"
 #include "LinearShoot.hpp"
+#include "CoordinateExercise.hpp"
