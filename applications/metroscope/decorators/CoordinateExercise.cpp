@@ -84,7 +84,7 @@ void decorators::CoordinateExercise::update() {
 		sprintf(tText, "[ %d , %d ]", tX, tY);
 		mDecoratorManager.GetDisplay().PushTransformation();
 		mDecoratorManager.GetDisplay().Rotate(-wykobi::cartesian_angle(tXUnit), tOrigin.x, tOrigin.y);
-		mDecoratorManager.GetDisplay().RenderText(tText, tOrigin.x, tOrigin.y, 1.0f, tRed, tGreen, tBlue);
+		mDecoratorManager.GetDisplay().RenderText(tText, tOrigin.x-15, tOrigin.y+70, 0.7f, tRed, tGreen, tBlue);
 		mDecoratorManager.GetDisplay().PopTransformation();
 	}
 }

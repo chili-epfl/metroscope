@@ -99,7 +99,7 @@ void decorators::PolyViewSideMeasures::update()
 			wykobi::point2d<float> tTextPosition = tMiddles[i]+30.0f*wykobi::normalize(wykobi::perpendicular(tSides[i]));
 			mDecoratorManager.GetWorld2Proj().InterpolatedMap(tTextPosition);
 			char tText[20];
-			sprintf(tText, "%1.3f", tMeasures[i]);
+			sprintf(tText, "%1.1f", tMeasures[i]);
 			mDecoratorManager.GetDisplay().RenderText(tText, tTextPosition.x, tTextPosition.y, 1.0f, scColors[tColorIndices[i]], scColors[tColorIndices[i]+1], scColors[tColorIndices[i]+2]);
 		}
 	}
