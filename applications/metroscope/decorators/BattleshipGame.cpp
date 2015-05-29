@@ -85,44 +85,45 @@ void decorators::BattleshipGame::update(){
 
 	if(tPhase.compare(scGameNewTurn)==0){//If we are in the turn phase, we display the selected polygon, and the rotated/translated version
 		//Wendy thought the axes were confusing
-		//DisplayPolygonAxes();
+		DisplayPolygonAxes();
 
+		//We update the shooting information
+		//We setup the shoot state for the next phase, with this team's id
+		std::string tTeamId = stateManager->getShoot().team_id;
+		shoot tShoot;
+		tShoot.team_id = tTeamId;
+
+		float x = 0.0f;
+		float y = 0.0f;
+		if( this->mLinearX->isPresent()){
+			x = this->mLinearX->proportion();
+		}
+		if(this->mLinearY->isPresent()){
+			y = this->mLinearY->proportion();
+		}
+		tShoot.translation = wykobi::make_point(x,y);
+		if( this->mLinearX->isPresent() || this->mLinearY->isPresent() ) DisplayTranslationArrow(x,y);
+
+		int rotation = 0;
+		if( this->mRotation->isPresent() ){
+			rotation = (this->mRotation->GetProportion())*360;
+		}
+		tShoot.rotation = rotation;
+		if( this->mRotation->isPresent() ) DisplayRotationAngle(x, y, rotation);
+
+		tShoot.polygon = NULL;
 		if(isPolygonPresent()){
-
-			//We update the shooting information
-			//We setup the shoot state for the next phase, with this team's id
-			std::string tTeamId = stateManager->getShoot().team_id;
-			shoot tShoot;
-			tShoot.team_id = tTeamId;
 
 			tShoot.polygon = this->getFirstPolygon();
 			DisplayFirstPolygon();
 
-			float x = 0.0f;
-			float y = 0.0f;
-			if( this->mLinearX->isPresent()){
-				x = this->mLinearX->proportion();
-			}
-			if(this->mLinearY->isPresent()){
-				y = this->mLinearY->proportion();
-
-			}
-			tShoot.translation = wykobi::make_point(x,y);
-			DisplayTranslationArrow(x,y);
-
-			int rotation = 0;
-			if( this->mRotation->isPresent() ){
-				rotation = (this->mRotation->GetProportion())*360;
-			}
-			tShoot.rotation = rotation;
-			DisplayRotationAngle(x, y, rotation);
 
 			DisplayTransformedPolygon(x,y,rotation);
 
-			stateManager->SetShoot(tShoot);
 
 		}
 
+		stateManager->SetShoot(tShoot);
 
 
 	}
@@ -216,6 +217,8 @@ std::vector<float> decorators::BattleshipGame::polygonToVertices(wykobi::polygon
 
 void decorators::BattleshipGame::DisplayTranslationArrow(float pX, float pY){
 
+		float scRADIUSPOINT = 5.0f;
+
 		if(pX==0.0f && pY==0.0f) return;
 
 		mDecoratorManager.GetDisplay().PushTransformation();
@@ -227,6 +230,7 @@ void decorators::BattleshipGame::DisplayTranslationArrow(float pX, float pY){
 //		std::cout << "Rendered lines to " << endpoint.x << "," << endpoint.y << std::endl;
 
 		mDecoratorManager.GetDisplay().RenderLine(0.0f, 0.0f, endpoint.x, endpoint.y, 0.0f, 0.0f, 0.0f, 1.0f);
+		mDecoratorManager.GetDisplay().RenderFilledEllipse(endpoint.x, endpoint.y, scRADIUSPOINT, scRADIUSPOINT, 0.0f, 0.0f, 0.0f, 1.0f);
 
 		mDecoratorManager.GetDisplay().PopTransformation();
 
@@ -253,7 +257,8 @@ void decorators::BattleshipGame::DisplayRotationAngle(float pX, float pY, int pR
 		mDecoratorManager.GetDisplay().RenderLine(endpoint.x, endpoint.y, endpoint.x+line2[1].x, endpoint.y+line2[1].y, 0.0f, 0.0f, 0.0f, 1.0f);
 //		std::cout << "Rendered lines from " << endpoint.x << "," << endpoint.y << " to " << endpoint.x+line2[1].x << "," << endpoint.y+line2[1].y << std::endl;
 
-		mDecoratorManager.GetDisplay().RenderArc(endpoint.x, endpoint.y, 30.0f, 30.0f, 0, pRotation, 0.0f, 0.0f, 0.0f, 1.0f);
+		//mDecoratorManager.GetDisplay().RenderArc(endpoint.x, endpoint.y, 30.0f, 30.0f, 0, pRotation, 0.0f, 0.0f, 0.0f, 1.0f);
+		mDecoratorManager.GetDisplay().RenderFilledSector(endpoint.x, endpoint.y, 30.0f, 30.0f, pRotation, 360.0f-pRotation, scORANGE.r, scORANGE.g, scORANGE.b, 1.0f);
 
 		mDecoratorManager.GetDisplay().PopTransformation();
 

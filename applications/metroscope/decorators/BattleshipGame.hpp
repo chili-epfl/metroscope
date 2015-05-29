@@ -48,8 +48,8 @@
 	static const char * const scGameOver = "EndGame";
 
 	static const float scMM2DisplayMult = 25.0f;
-	static const float scBoard2MMMult = 17.0f;
-
+	//static const float scBoard2MMMult = 17.0f;
+	static const float scBoard2MMMult = 1.70f;
 
 namespace decorators{
 

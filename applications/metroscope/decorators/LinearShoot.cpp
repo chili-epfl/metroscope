@@ -76,7 +76,9 @@ void decorators::LinearShoot::update(){
 		if(mProportion < 0) mProportion = 0;
 
 		//once we have the value from 0 to 1, we translate it to -0.5,0.5
-		mProportion = mProportion-0.5f;
+		//mProportion = mProportion-0.5f;
+		//For polyfut, the range of values is -10,10 (whole numbers)
+		mProportion = round((mProportion*20)-10);
 
 		//In principle, we do not do the simplification to fractions
 		//CalculateFractionFromDecimal();
@@ -93,7 +95,7 @@ void decorators::LinearShoot::DisplayValue(){
 	if(mAxis==scAXIS_X){//It's the X shooter
 		std::ostringstream tMessage;
 		tMessage.precision(3);
-		tMessage << "x = " << mProportion;
+		tMessage << "x = " << ((int) mProportion);
 		std::string tmp = tMessage.str();
 
 		mDecoratorManager.GetDisplay().PushTransformation();
@@ -110,7 +112,7 @@ void decorators::LinearShoot::DisplayValue(){
 
 		std::ostringstream tMessage;
 		tMessage.precision(3);
-		tMessage << "y = " << mProportion;
+		tMessage << "y = " << ((int) mProportion);
 		std::string tmp = tMessage.str();
 
 		mDecoratorManager.GetDisplay().PushTransformation();
