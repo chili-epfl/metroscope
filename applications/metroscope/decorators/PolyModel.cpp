@@ -41,8 +41,8 @@ decorators::FiducialDecorator *decorators::PolyModel::create(libconfig::Setting 
 			std::vector<float> polygonCoords;
 
 			for(int i=0; i<pNumVertices; i++){
-				polygonCoords.push_back(tCoords[2*i]);
-				polygonCoords.push_back(tCoords[(2*i)+1]);
+				polygonCoords.push_back(((float) tCoords[2*i])*10);
+				polygonCoords.push_back(((float) tCoords[(2*i)+1])*10);
 			}
 
 			libconfig::Setting & tOrigin = pSetting["origin"];
