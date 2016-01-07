@@ -120,6 +120,7 @@ mExtractedImage(0)
 		mPipeables.push_back(new Normalize(((Sharpen *)mPipeables.back())->GetOutputImage()));
 		mPipeables.push_back(new Gray2Color(((Normalize *)mPipeables.back())->GetOutputImage()));
 		mPipeables.push_back(new OpenGLTextureLoader(((Gray2Color *)mPipeables.back())->GetOutputImage()));
+
 		mTextureId = ((OpenGLTextureLoader *)mPipeables.back())->Texture();
 
 		for(std::vector<Pipeable *>::iterator it = mPipeables.begin(); (it+1) != mPipeables.end(); ++it)
